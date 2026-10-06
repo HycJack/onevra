@@ -13,19 +13,6 @@
       "options": {
         "cwd": "${workspaceFolder}/source"
       }
-    },
-    {
-      "label": "build",
-      "type": "shell",
-      "command": "go",
-      "args": [
-        "tool",
-        "mygo",
-        "build"
-      ],
-      "options": {
-        "cwd": "${workspaceFolder}/source"
-      }
     }
   ]
 }

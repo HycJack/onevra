@@ -1,63 +1,47 @@
 # oneo-go architecture
 
-oneo-go is an experimental, product-neutral Go component library based on MyGo native UI. The Go module in `source/` is `github.com/oneo-me/oneo-go`; its Go package is `oneogo`. This repository owns component implementation, documentation, examples and tests. No consumer application or sibling repository is required.
+oneo-go is an experimental, product-neutral Go component library built on MyGo. It provides reusable native UI compositions and Lucide SVG assets without introducing an application framework. The library is unpublished and its public API is not stable.
 
-Read this overview before changes, then choose the relevant Subjects. [README.md](README.md) introduces usage and [development](docs/build.md) owns verification commands.
+## System boundaries
 
-## Boundaries
+- MyGo owns rendering, layout, input, native controls and desktop integration.
+- oneo-go composes MyGo primitives, rather than wrapping every upstream API or maintaining a parallel UI system.
+- Applications own business state, localized text, persistence, background work and application lifetime.
+- Components use the current MyGo theme without mutating global appearance. The operating system owns window chrome.
 
-1. MyGo owns rendering, layout, input, focus, native controls and desktop integration.
-2. oneo-go composes those primitives; it does not wrap every MyGo API or impose an application framework.
-3. Callers own business state, localized text, actions, persistence and background work. Components build synchronously on the UI thread.
-4. Components use the current MyGo theme without mutating it. Product-specific page widths and window chrome remain outside the library.
-5. Public API is experimental. The module is local and unpublished; its path does not imply a downloadable remote repository or released version.
-
-## Modules and flow
+## Components and flow
 
 ```text
-Consumer / standalone gallery
-  ├─ oneogo components → MyGo ui
+Application / standalone gallery
+  ├─ oneo-go components → MyGo → native desktop
   └─ MyGo directly
 ```
 
-The module-root package in `source/` exports EmptyState, Section and Notice. Each returns a native `*ui.Element`, enabling layout modifiers and keys. Caller callbacks build optional content and native controls; their events update caller state.
+An application creates a Shell after MyGo is ready and supplies synchronous UI-thread content builders. Shell configures and creates a MyGo window, preprocesses its content through a shared page container, and presents either the default three-column page or an application-supplied replacement. It exposes the native window handle for application-owned events and lifecycle handling. Layout and appearance ownership are described in [Components](docs/architecture/components.md).
 
 The `icons/lucide` package supplies lazily parsed, shared MyGo SVGs independently of UI components. MyGo owns their rendering, sizing, color and accessibility. Generated named accessors have no full-library runtime registry or eager parsing, so ordinary consumers need not retain every icon. Upstream resources and licenses are pinned and checked in; a Lucide checkout is only needed for [maintainer updates](docs/build.md#updating-lucide-icons), not consumer builds.
 
-The gallery executable uses `source/internal/gallery` for its view and demonstration state. It does not write content or application settings. Its native smoke test isolates user data in a temporary directory. There is no application dependency, filesystem service, persistence layer or network client in public components.
+The gallery is an independent consumer of the public API, not a dependency of the library. It holds only in-memory demonstration state and provides a place to review native behavior.
 
-Dependencies and the Go toolchain requirement are pinned in `source/go.mod` and `source/go.sum`. There is one Go module and no required `go.work`, sibling-module replacement or nested repository.
+## Repository landmarks
 
-## Repository layout
+There is one Go module under `source/`, with module path `github.com/oneo-me/oneo-go`:
 
-```text
-AGENTS.md                 Contributor constraints
-ARCHITECTURE.md           Overview and subject index
-README.md / README.zh-CN.md Usage and quick start
-CHANGELOG.md              Pending API/gallery changes
-LICENSE                   MIT license
-source/
-  go.mod / go.sum         Module and pinned dependencies
-  *.go                    Public components and headless tests
-  mygo.json               Gallery app identity and MyGo build configuration
-  icons/lucide/           Public icon assets and upstream provenance
-  examples/gallery/       Standalone native executable
-  internal/gallery/       Demonstration view and its tests
-  .mygo/                  Ignored development app bundles
-docs/architecture/        Owning subject documents
-docs/build.md             Checks, platforms and release boundaries
-dist/                     Ignored local binaries and captures
-```
+- `source/components/`: public UI compositions.
+- `source/icons/lucide/`: public icon assets and upstream provenance.
+- `source/examples/gallery/`: runnable example.
+- `source/internal/gallery/`: gallery presentation and native review support.
+- [Development guide](docs/build.md): build, verification and release procedures.
+
+No sibling application or shared workspace is required. The source subdirectory and current module path support local development; remote publication still requires a repository-layout or module-path decision.
 
 ## Subjects
 
-| Document | Read before changing |
+| Document | When to read |
 | --- | --- |
-| [Components](docs/architecture/components.md) | Public component contracts, ownership, theme usage and composition |
-| [Gallery](docs/architecture/gallery.md) | Example state, executable, native capture and acceptance boundaries |
+| [Components](docs/architecture/components.md) | Changing composition boundaries, lifecycle ownership or platform styling |
+| [Gallery](docs/architecture/gallery.md) | Changing the standalone example's role or native verification approach |
 
-## Verification and releases
+## Platform confidence
 
-Headless tests exercise component composition, caller-owned actions, disabled controls, scaling, narrow layout and theme preservation. Opt-in macOS native captures exercise light, dark and narrow gallery windows. These do not establish complete keyboard, accessibility, IME or Windows/Linux acceptance.
-
-[CHANGELOG.md](CHANGELOG.md) owns consumer-visible changes. There is no release automation or published version. Publishing a remote repository, assigning versions, creating tags and pushing require separate authorization.
+Headless tests and opt-in native captures serve different purposes: the former check component behavior, while the latter exercise desktop startup and rendering. Neither alone establishes complete keyboard or accessibility support. Windows and Linux require their own native review; do not infer support from compilation alone.

@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/egoist/mygo"
-	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/oneo-go/components"
 )
 
 // Ordinary tests never open windows.
@@ -42,8 +42,22 @@ func TestNativeGallery(t *testing.T) {
 		t.Skip("requires a desktop session")
 	}
 	g := &Gallery{}
-	win := mygo.NewWindow(mygo.WindowOptions{Title: "oneo-go Gallery", Width: 820, Height: 1000, Content: ui.View(g.View)})
+	var shell *components.Shell
+	mygo.RunOnMain(func() { shell = g.New() })
+	win := shell.Window()
 	defer win.Destroy()
+	if win.Page() != nil || win.Title() != "oneo-go Gallery" {
+		t.Fatal("expected native content and caller title")
+	}
+	var blank *mygo.Window
+	mygo.RunOnMain(func() { blank = components.NewShell(components.ShellOptions{}).Window() })
+	if blank.Page() != nil {
+		t.Error("nil content created a web page")
+	}
+	if width, height := blank.Size(); width != 800 || height != 600 {
+		t.Errorf("default size = %dx%d", width, height)
+	}
+	blank.Destroy()
 	dir := os.Getenv("ONEO_GO_SCREENSHOTS")
 	if dir == "" {
 		dir = t.TempDir()
@@ -52,17 +66,44 @@ func TestNativeGallery(t *testing.T) {
 		t.Fatal(err)
 	}
 	for _, mode := range []struct {
-		name  string
-		theme mygo.ThemeSource
-		width int
+		name            string
+		theme           mygo.ThemeSource
+		width           int
+		right, settings bool
 	}{
-		{"light", mygo.ThemeLight, 820},
-		{"dark", mygo.ThemeDark, 820},
-		{"narrow", mygo.ThemeLight, 360},
+		{"light", mygo.ThemeLight, 820, false, false},
+		{"dark", mygo.ThemeDark, 820, false, false},
+		{"inspector", mygo.ThemeLight, 820, true, false},
+		{"settings", mygo.ThemeLight, 820, true, true},
+		{"restored", mygo.ThemeDark, 820, true, false},
+		{"narrow", mygo.ThemeLight, 360, false, false},
 	} {
 		mygo.Theme.SetSource(mode.theme)
-		win.SetSize(mode.width, 1000)
+		mygo.RunOnMain(func() {
+			shell.SetPage(nil)
+			shell.SetRightExpanded(false)
+		})
 		time.Sleep(400 * time.Millisecond)
+		var before mygo.Rectangle
+		mygo.RunOnMain(func() {
+			win.SetSize(mode.width, 900)
+			before = win.Bounds()
+			shell.SetRightExpanded(mode.right)
+			if mode.settings {
+				shell.SetPage(g.Settings)
+			}
+		})
+		time.Sleep(400 * time.Millisecond)
+		mygo.RunOnMain(func() {
+			after := win.Bounds()
+			wantWidth := mode.width
+			if mode.right && !mode.settings {
+				wantWidth += 280
+			}
+			if after.Width != wantWidth || after.X != before.X || after.Y != before.Y || after.Height != before.Height {
+				t.Errorf("%s: bounds = %+v, expected width %d and unchanged origin/height (%+v)", mode.name, after, wantWidth, before)
+			}
+		})
 		data, err := win.CapturePage()
 		if err != nil {
 			t.Fatal(err)

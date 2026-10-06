@@ -1,11 +1,11 @@
 # Changelog
 
-Pending API and gallery changes for oneo-go consumers. This module is not yet published;
+User-facing updates for oneo-go library consumers. No version has been published yet.
 
 ## [Unreleased]
 
 - Use 1,866 Lucide icons directly with MyGo through `icons/lucide`, with named accessors, first-use parsing and inherited text colors. Preview representative icons at multiple sizes in the gallery.
 
-- Run the gallery as a live-reloading macOS development app from `source/` with `go tool mygo dev`, or build local app bundles with `go tool mygo build`; matching VS Code tasks are included. Go source, tests, module files and MyGo configuration live in `source/`; build output remains in the repository-root `dist/`.
-- Compose empty states, sections and persistent notices using native MyGo widgets, caller-owned state and the current theme.
-- Preview components in a standalone gallery with light/dark appearances and interactive create/reset and disabled-action examples.
+- Create a native Shell with system window controls, full-height sidebars with Lucide toggle controls: an interior sidebar revealed beneath the main content and an optional inspector revealed as the window expands to the right. Sidebar content keeps its width during these animations, with overlay separators that leave no gap when collapsed. Resize the left sidebar by dragging its separator or using arrow keys when focused. Animations respect Reduced Motion. On macOS, the sidebar exposes the window's blurred background up to the top edge; content and inspector regions remain opaque.
+- Replace the entire three-column page with application content such as settings, then restore the previous sidebar state.
+- Try Shell in the standalone gallery, including light/dark appearances, sidebar controls and a replacement settings page.

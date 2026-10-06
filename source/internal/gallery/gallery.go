@@ -2,15 +2,54 @@
 package gallery
 
 import (
+	"fmt"
+
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/oneo-go"
+	"github.com/oneo-me/oneo-go/components"
 	"github.com/oneo-me/oneo-go/icons/lucide"
 )
 
 // Gallery owns only demonstration state.
 type Gallery struct {
-	Disabled bool
-	Created  bool
+	Clicks int
+	Shell  *components.Shell
+}
+
+// New creates the standalone shell demonstration.
+func (g *Gallery) New() *components.Shell {
+	g.Shell = components.NewShell(components.ShellOptions{
+		Title: "oneo-go Gallery", Width: 820, Height: 900,
+		MinWidth: 360, MinHeight: 480,
+		Left: g.Left, Content: g.View, Right: g.Right,
+	})
+	return g.Shell
+}
+
+func (g *Gallery) Left(c *ui.Context) {
+	ui.Column(c).Fill().Padding(16).Gap(12).Children(func() {
+		ui.Text(c, "Workspace").Bold()
+		ui.Text(c, "The window supplies the blur.").Wrap()
+		if ui.Button(c, "Settings").Clicked() && g.Shell != nil {
+			g.Shell.SetPage(g.Settings)
+		}
+	})
+}
+
+func (g *Gallery) Right(c *ui.Context) {
+	ui.Column(c).Fill().Padding(16).Gap(12).Children(func() {
+		ui.Text(c, "Inspector").Bold()
+		ui.Text(c, "Opening this panel extends the window to the right.").Wrap()
+	})
+}
+
+func (g *Gallery) Settings(c *ui.Context) {
+	ui.Column(c).Fill().Padding(24).Gap(16).Children(func() {
+		ui.Text(c, "Settings").FontSize(c.Theme().Rem(2)).Bold()
+		ui.Text(c, "A replacement page outside the three-column layout.").Wrap()
+		if ui.Button(c, "Back").Clicked() && g.Shell != nil {
+			g.Shell.SetPage(nil)
+		}
+	})
 }
 
 // iconSamples uses only named accessors, not a full-library runtime registry.
@@ -43,43 +82,18 @@ func iconSamples(c *ui.Context) {
 	})
 }
 
-// View builds the same showcase for native windows and headless checks.
+// View builds the default page's main content.
 func (g *Gallery) View(c *ui.Context) {
 	t := c.Theme()
-	ui.Scroll(c).Fill().Background(t.Background).Children(func() {
-		ui.Column(c).FillWidth().MaxWidth(t.Rem(52)).Margin(0, ui.Auto).Padding(t.Space(6)).Gap(t.Space(6)).Children(func() {
-			ui.Text(c, "oneo-go").FontSize(t.Rem(2)).Bold()
-			ui.Text(c, "Native compositions. Your state, your application.").TextColor(t.TextMuted)
-			ui.Divider(c)
-			oneogo.Section(c, "Empty state", "A starting point with a caller-owned action.", func() {
-				ui.Checkbox(c, &g.Disabled, "Disable example action")
-				oneogo.EmptyState(c, oneogo.EmptyStateOptions{
-					Title:       "Nothing here yet",
-					Description: "Create your first item to get started. 内容由使用方提供，组件不绑定业务。",
-					Actions: func() {
-						if ui.PrimaryButton(c, "Create item").Disabled(g.Disabled).Clicked() {
-							g.Created = true
-						}
-					},
-				})
-				if g.Created {
-					oneogo.Notice(c, oneogo.NoticeOptions{Kind: oneogo.NoticeSuccess, Title: "Item created", Description: "This is demo state only; no files were written.", Actions: func() {
-						if ui.Button(c, "Reset example").Clicked() {
-							g.Created = false
-						}
-					}})
-				}
-			})
-			ui.Divider(c)
-			oneogo.Section(c, "Notices", "Persistent feedback without taking over the page.", func() {
-				oneogo.Notice(c, oneogo.NoticeOptions{Title: "Information", Description: "Theme, focus and text scale come from MyGo."})
-				oneogo.Notice(c, oneogo.NoticeOptions{Kind: oneogo.NoticeWarning, Title: "Needs attention", Description: "Long descriptions wrap naturally as the window narrows. 调整窗口宽度可检查中英文混排。"})
-				oneogo.Notice(c, oneogo.NoticeOptions{Kind: oneogo.NoticeError, Title: "Could not complete the action", Description: "Applications supply recovery actions and manage their own asynchronous work."})
-			})
-			ui.Divider(c)
-			oneogo.Section(c, "Composition", "Section accepts ordinary MyGo widgets; there is no second widget system.", func() {
-				ui.Text(c, "Buttons, inputs, focus and keyboard behavior remain upstream.")
-			})
+	ui.Scroll(c).Fill().Children(func() {
+		ui.Column(c).FillWidth().Padding(t.Space(6)).Gap(t.Space(4)).Children(func() {
+			ui.Text(c, "Shell").FontSize(t.Rem(2)).Bold()
+			ui.Text(c, "Three columns, one native window.").TextColor(t.TextMuted).Wrap()
+			ui.Text(c, "Toggle the sidebar inside the window, or extend it with the inspector. Open Settings to replace the entire page.").Wrap()
+			if ui.Button(c, "Count").Clicked() {
+				g.Clicks++
+			}
+			ui.Text(c, fmt.Sprintf("Clicks: %d", g.Clicks))
 			iconSamples(c)
 		})
 	})

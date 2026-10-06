@@ -14,9 +14,15 @@ oneo-go is an independent Go component library built on MyGo. Read [ARCHITECTURE
 
 ## Maintenance
 
-Update the owning subject, affected overview and usage instructions alongside mechanism changes. Record completed user-visible API and gallery changes under Unreleased in CHANGELOG.md; pure refactors and tests do not need release notes. Keep documentation and code on the same branch and reconcile definitions and verification evidence during merges.
+Update documentation in the same change only when its reader-needed facts change. Implementation edits alone do not require prose changes.
 
-Keep ARCHITECTURE.md within 16 KiB and each subject within 24 KiB; split by responsibility and update Subjects when needed.
+- README.md and README.zh-CN.md cover the project introduction, basic usage and contributor onboarding. Link to deeper material instead of expanding the quick start.
+- ARCHITECTURE.md and docs/ explain system boundaries, core flows, design rationale and important constraints. Keep property definitions, defaults and local implementation details in code; do not duplicate them in prose or create a document per task.
+- CHANGELOG.md records only completed outcomes visible to library consumers under Unreleased. Describe supported usage or public-contract changes, not internal refactors, source layout, tests or tooling. Consolidate evolving unreleased work; do not present an unreleased experiment as a removed released feature.
+
+Keep documentation and code on the same branch and reconcile definitions during merges. Each explanation has one owning location; link rather than repeat it.
+
+The 16 KiB overview and 24 KiB subject budgets are ceilings, not targets. Remove redundancy before splitting; add subjects only for distinct, lasting design questions. Keep Subjects and references current.
 
 ## Verification
 

@@ -2,44 +2,58 @@
 
 **English** | [简体中文](README.zh-CN.md)
 
-Experimental, product-neutral compositions for MyGo v0.2.12. The package name is `oneogo`; the module path is `github.com/oneo-me/oneo-go`. It is an independent repository and is not yet published as a downloadable module. Public API stability is not promised.
+Experimental, product-neutral Go components built on [MyGo](https://github.com/egoist/mygo). Currently provides a native Shell component, Lucide icons for MyGo and a standalone gallery.
 
-## Run the gallery
+The library is not yet published as a downloadable module, and its API is not stable.
 
-With Go 1.27.1 or later, enter the source module from the repository root:
+## Try the gallery
+
+Requires Go 1.27.1 or later and a native desktop session. Linux also requires GTK 3, Pango and OpenGL.
+
+From the repository root:
 
 ```sh
 cd source
 go tool mygo dev
-go run ./examples/gallery -theme dark
-go run ./examples/gallery -theme light
 ```
 
-On macOS, `go tool mygo dev` runs a development `.app` with live reload. `go tool mygo build` produces a local `.app` and `.dmg` under the repository-root `dist/`. The `go run` commands above are direct executable runs for theme checks, not app bundles. See [build details](docs/build.md#app-bundles).
+On macOS this runs a live-reloading development app. To preview a specific appearance, use `go run ./examples/gallery -theme light` or `-theme dark`.
 
-A native desktop session is required. Linux additionally requires GTK 3, Pango and OpenGL. The gallery writes no application settings or content files.
+## Basic usage
 
-## Components
-
-- `Section(c, title, description, content)`: heading and optional content.
-- `EmptyState(c, EmptyStateOptions{...})`: explanation and optional actions.
-- `Notice(c, NoticeOptions{...})`: persistent information, warning, error or success feedback.
-
-Components return `*ui.Element` for native layout modifiers and keys. Callbacks build content synchronously during the view. Callers own state, localized text and actions. Use distinct keys for repeated components; internal content uses MyGo's normal positional identity.
+Until publication, use a local Go workspace that includes your application and this repository's `source/` directory. Import `github.com/oneo-me/oneo-go/components`:
 
 ```go
-oneogo.EmptyState(c, oneogo.EmptyStateOptions{
-    Title: "No items",
-    Description: "Create an item to get started.",
-    Actions: func() {
-        if ui.Button(c, "Create").Clicked() {
-            // Update caller-owned state.
-        }
-    },
-})
+package main
+
+import (
+    "log"
+
+    "github.com/egoist/mygo"
+    "github.com/egoist/mygo/ui"
+    "github.com/oneo-me/oneo-go/components"
+)
+
+func main() {
+    mygo.App.WhenReady(func() {
+        shell := components.NewShell(components.ShellOptions{
+            Title: "Hello",
+            Left: func(c *ui.Context) {
+                ui.Text(c, "Navigation")
+            },
+            Content: func(c *ui.Context) {
+                ui.Text(c, "Hello, Shell")
+            },
+        })
+        shell.Window().OnClosed(func() { mygo.App.Quit() })
+    })
+    if err := mygo.App.Run(); err != nil {
+        log.Fatal(err)
+    }
+}
 ```
 
-Import `github.com/egoist/mygo/ui` and alias `github.com/oneo-me/oneo-go` as `oneogo`. All components use the current MyGo theme; configure it through MyGo, not a parallel theme manager. Notice is a labeled group, not an automatic live alert. Supply a meaningful status title rather than relying on color alone.
+Create a Shell when the app is ready; build its columns with MyGo widgets. Supply `Right` to enable the optional inspector. Use `shell.SetPage(view)` to replace the entire three-column page (for example, with settings), and `shell.SetPage(nil)` to restore it. Your application owns business state and lifecycle handling. See the [runnable gallery](source/examples/gallery/main.go) for another example.
 
 ## Lucide icons
 
@@ -52,18 +66,17 @@ ui.SidebarItem(c, "settings", lucide.Settings(), "Settings")
 
 Icons are parsed on first use and reused. MyGo controls sizing, text-color inheritance and accessibility; no component wrapper is required. The package includes the pinned upstream's regular icons, not lab icons or aliases. See the [package contract](source/icons/lucide/doc.go) and [update workflow](docs/build.md#updating-lucide-icons).
 
-## Checks
+## Contributing
 
-Run from `source/`:
+Read the [architecture overview](ARCHITECTURE.md) before changing code. Run the basic checks from `source/`:
 
 ```sh
 GOWORK=off go test ./...
-GOWORK=off go test -race ./...
 GOWORK=off go vet ./...
-GOWORK=off go build -o ../dist/oneo-go-gallery ./examples/gallery
-ONEO_GO_NATIVE_SMOKE=1 go test ./internal/gallery -run '^TestNativeGallery$' -count=1 -v
 ```
 
-Native smoke is opt-in and captures light, dark and narrow windows, then closes them. Set `ONEO_GO_SCREENSHOTS` to retain PNGs. Headless tests cover composition, actions, disabled controls, themes, text scaling and narrow layouts. Captures establish rendering, not complete keyboard, screen-reader or other-platform acceptance.
+See [development](docs/build.md) for packaging and native review, and [release notes](CHANGELOG.md) for user-facing updates.
 
-See [architecture](ARCHITECTURE.md), [development](docs/build.md) and [release notes](CHANGELOG.md). Project code: [MIT](LICENSE). Lucide assets retain their [upstream ISC and Feather MIT notices](source/icons/lucide/LICENSE).
+## License
+
+Project code: [MIT](LICENSE). Lucide assets retain their [upstream ISC and Feather MIT notices](source/icons/lucide/LICENSE).
