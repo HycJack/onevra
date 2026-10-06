@@ -4,7 +4,7 @@
 
 The executable accepts `-theme system`, `-theme light` or `-theme dark` and rejects other values. It opens an 820 × 900 window with a 360 × 480 minimum. Closing the window quits the app. The view uses a scrolling, bounded column with headings and dividers; it demonstrates empty state, notices and section composition.
 
-Create item and Reset example change in-memory demonstration state only. A checkbox disables the create action through MyGo. Mixed English/Chinese descriptions exercise wrapping. The gallery does not read or write user content or application settings.
+Create item and Reset example change in-memory demonstration state only. A checkbox disables the create action through MyGo. Mixed English/Chinese descriptions exercise wrapping. The gallery does not read or write user content or application settings. Its icon samples use named public accessors at multiple sizes and inherited text colors; they are not an exhaustive runtime catalog.
 
 ## Application packaging
 

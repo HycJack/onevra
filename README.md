@@ -41,6 +41,17 @@ oneogo.EmptyState(c, oneogo.EmptyStateOptions{
 
 Import `github.com/egoist/mygo/ui` and alias `github.com/oneo-me/oneo-go` as `oneogo`. All components use the current MyGo theme; configure it through MyGo, not a parallel theme manager. Notice is a labeled group, not an automatic live alert. Supply a meaningful status title rather than relying on color alone.
 
+## Lucide icons
+
+Import `github.com/oneo-me/oneo-go/icons/lucide` and use named accessors directly with MyGo:
+
+```go
+ui.Icon(c, lucide.Search()).Size(20, 20)
+ui.SidebarItem(c, "settings", lucide.Settings(), "Settings")
+```
+
+Icons are parsed on first use and reused. MyGo controls sizing, text-color inheritance and accessibility; no component wrapper is required. The package includes the pinned upstream's regular icons, not lab icons or aliases. See the [package contract](source/icons/lucide/doc.go) and [update workflow](docs/build.md#updating-lucide-icons).
+
 ## Checks
 
 Run from `source/`:
@@ -55,4 +66,4 @@ ONEO_GO_NATIVE_SMOKE=1 go test ./internal/gallery -run '^TestNativeGallery$' -co
 
 Native smoke is opt-in and captures light, dark and narrow windows, then closes them. Set `ONEO_GO_SCREENSHOTS` to retain PNGs. Headless tests cover composition, actions, disabled controls, themes, text scaling and narrow layouts. Captures establish rendering, not complete keyboard, screen-reader or other-platform acceptance.
 
-See [architecture](ARCHITECTURE.md), [development](docs/build.md) and [release notes](CHANGELOG.md). Licensed under [MIT](LICENSE).
+See [architecture](ARCHITECTURE.md), [development](docs/build.md) and [release notes](CHANGELOG.md). Project code: [MIT](LICENSE). Lucide assets retain their [upstream ISC and Feather MIT notices](source/icons/lucide/LICENSE).

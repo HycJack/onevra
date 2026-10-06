@@ -22,6 +22,8 @@ Consumer / standalone gallery
 
 The module-root package in `source/` exports EmptyState, Section and Notice. Each returns a native `*ui.Element`, enabling layout modifiers and keys. Caller callbacks build optional content and native controls; their events update caller state.
 
+The `icons/lucide` package supplies lazily parsed, shared MyGo SVGs independently of UI components. MyGo owns their rendering, sizing, color and accessibility. Generated named accessors have no full-library runtime registry or eager parsing, so ordinary consumers need not retain every icon. Upstream resources and licenses are pinned and checked in; a Lucide checkout is only needed for [maintainer updates](docs/build.md#updating-lucide-icons), not consumer builds.
+
 The gallery executable uses `source/internal/gallery` for its view and demonstration state. It does not write content or application settings. Its native smoke test isolates user data in a temporary directory. There is no application dependency, filesystem service, persistence layer or network client in public components.
 
 Dependencies and the Go toolchain requirement are pinned in `source/go.mod` and `source/go.sum`. There is one Go module and no required `go.work`, sibling-module replacement or nested repository.
@@ -38,6 +40,7 @@ source/
   go.mod / go.sum         Module and pinned dependencies
   *.go                    Public components and headless tests
   mygo.json               Gallery app identity and MyGo build configuration
+  icons/lucide/           Public icon assets and upstream provenance
   examples/gallery/       Standalone native executable
   internal/gallery/       Demonstration view and its tests
   .mygo/                  Ignored development app bundles

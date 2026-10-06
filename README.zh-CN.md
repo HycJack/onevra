@@ -41,6 +41,17 @@ oneogo.EmptyState(c, oneogo.EmptyStateOptions{
 
 导入 `github.com/egoist/mygo/ui`，并将 `github.com/oneo-me/oneo-go` 别名设为 `oneogo`。所有组件使用当前 MyGo 主题，通过 MyGo 配置，不另建主题管理器。Notice 是带标签的分组，不是自动播报的实时警报；应提供明确的状态标题，避免仅通过颜色传达含义。
 
+## Lucide 图标
+
+导入 `github.com/oneo-me/oneo-go/icons/lucide`，直接将具名访问函数用于 MyGo：
+
+```go
+ui.Icon(c, lucide.Search()).Size(20, 20)
+ui.SidebarItem(c, "settings", lucide.Settings(), "Settings")
+```
+
+图标首次使用时解析，之后复用。尺寸、文本颜色继承和无障碍语义由 MyGo 管理，无需额外的组件封装。图标包包含固定上游版本的正式图标，不包含 lab 图标或别名。参见[包契约](source/icons/lucide/doc.go)和[更新流程](docs/build.md#updating-lucide-icons)。
+
 ## 检查
 
 在 `source/` 目录运行：
@@ -55,4 +66,4 @@ ONEO_GO_NATIVE_SMOKE=1 go test ./internal/gallery -run '^TestNativeGallery$' -co
 
 原生冒烟检查需显式启用，捕获浅色、深色和窄窗口后关闭窗口。设置 `ONEO_GO_SCREENSHOTS` 可保留 PNG。无头测试覆盖组合、操作、禁用控件、主题、文字缩放与窄布局。截图证明渲染可用，不代表完整键盘、屏幕阅读器或其他平台验收。
 
-参见[架构](ARCHITECTURE.md)、[开发说明](docs/build.md)和[发布说明](CHANGELOG.md)。采用 [MIT 协议](LICENSE)。
+参见[架构](ARCHITECTURE.md)、[开发说明](docs/build.md)和[发布说明](CHANGELOG.md)。项目代码采用 [MIT](LICENSE) 协议。Lucide 资源保留[上游 ISC 和 Feather MIT 声明](source/icons/lucide/LICENSE)。

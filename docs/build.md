@@ -49,6 +49,20 @@ ONEO_GO_NATIVE_SMOKE=1 ONEO_GO_SCREENSHOTS="$PWD/../dist/preview" \
 
 This opens a real window, captures light/dark/narrow states and closes it. Default output uses a temporary test directory. macOS native rendering has been exercised; cross-compilation does not establish Windows/Linux acceptance. See [gallery verification](architecture/gallery.md#tests-and-captures) for manual checks.
 
+## Updating Lucide icons
+
+Ordinary builds use checked-in generated Go assets and do not need Node or a Lucide checkout. To update, obtain a clean checkout of [Lucide](https://github.com/lucide-icons/lucide) and explicitly select its full commit hash. From `source/`:
+
+```sh
+go run ./internal/cmd/lucidegen -upstream /path/to/lucide -commit FULL_COMMIT_HASH
+# Repeat without writing to check reproducibility:
+go run ./internal/cmd/lucidegen -upstream /path/to/lucide -commit FULL_COMMIT_HASH -check
+```
+
+The generator validates every regular SVG with MyGo and records the commit and input digest in [upstream.json](../source/icons/lucide/upstream.json). It copies the full upstream license and reports accessor additions and removals. Review the generated diff for renames or removals before accepting an update: upstream changes can affect this library's public API. The test-only collection exercises every accessor without introducing a runtime registry.
+
+Run the development checks and review the gallery's icon samples in both appearances, including small sizes and complex strokes. Parsing tests alone do not prove visual fidelity. When changing the cache or generated representation, compare minimal named-icon and full-collection builds to check unused-resource elimination.
+
 ## Consumer integration
 
 The module path is `github.com/oneo-me/oneo-go`, package name `oneogo`. No remote or released version is configured by this scaffold. The module currently lives in a repository subdirectory while retaining its original import path for local use. Remote publication requires a separate module-path or repository-layout decision; this layout is not yet a downloadable module.

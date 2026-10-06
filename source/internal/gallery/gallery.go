@@ -4,12 +4,43 @@ package gallery
 import (
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/oneo-go"
+	"github.com/oneo-me/oneo-go/icons/lucide"
 )
 
 // Gallery owns only demonstration state.
 type Gallery struct {
 	Disabled bool
 	Created  bool
+}
+
+// iconSamples uses only named accessors, not a full-library runtime registry.
+func iconSamples(c *ui.Context) {
+	ui.Text(c, "Lucide icons").Bold()
+	ui.Text(c, "Original strokes at 16, 24 and 32 DIP; colors inherit from MyGo.").Wrap()
+	for _, sample := range []struct {
+		name string
+		get  func() *ui.SVG
+	}{
+		{"Search", lucide.Search},
+		{"Settings", lucide.Settings},
+		{"Cloud rain", lucide.CloudRain},
+		{"Fingerprint", lucide.FingerprintPattern},
+		{"Accessibility", lucide.Accessibility},
+	} {
+		ui.Column(c).Gap(4).Children(func() {
+			ui.Text(c, sample.name)
+			ui.Row(c).Gap(12).Children(func() {
+				for _, size := range []float32{16, 24, 32} {
+					ui.Icon(c, sample.get()).Size(size, size)
+				}
+			})
+		})
+	}
+	ui.Row(c).Gap(12).TextColor(c.Theme().TextMuted).Children(func() {
+		ui.Icon(c, lucide.Sun())
+		ui.Icon(c, lucide.Moon())
+		ui.Text(c, "Inherited muted color")
+	})
 }
 
 // View builds the same showcase for native windows and headless checks.
@@ -49,6 +80,7 @@ func (g *Gallery) View(c *ui.Context) {
 			oneogo.Section(c, "Composition", "Section accepts ordinary MyGo widgets; there is no second widget system.", func() {
 				ui.Text(c, "Buttons, inputs, focus and keyboard behavior remain upstream.")
 			})
+			iconSamples(c)
 		})
 	})
 }
