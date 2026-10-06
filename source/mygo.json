@@ -1,0 +1,7 @@
+{
+  "name": "oneo-go Gallery",
+  "identifier": "me.oneo.oneogo.gallery",
+  "version": "0.0.0",
+  "main": "./examples/gallery",
+  "out": "../dist"
+}

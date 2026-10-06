@@ -1,0 +1,31 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "dev",
+      "type": "shell",
+      "command": "go",
+      "args": [
+        "tool",
+        "mygo",
+        "dev"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/source"
+      }
+    },
+    {
+      "label": "build",
+      "type": "shell",
+      "command": "go",
+      "args": [
+        "tool",
+        "mygo",
+        "build"
+      ],
+      "options": {
+        "cwd": "${workspaceFolder}/source"
+      }
+    }
+  ]
+}

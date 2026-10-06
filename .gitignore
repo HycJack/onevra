@@ -1,0 +1,4 @@
+/dist/
+/.mygo/
+/source/.mygo/
+.DS_Store
