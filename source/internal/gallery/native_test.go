@@ -72,13 +72,17 @@ func TestNativeGallery(t *testing.T) {
 		theme           mygo.ThemeSource
 		width           int
 		right, settings bool
+		icons           bool
 	}{
-		{"light", mygo.ThemeLight, 820, false, false},
-		{"dark", mygo.ThemeDark, 820, false, false},
-		{"inspector", mygo.ThemeLight, 820, true, false},
-		{"settings", mygo.ThemeLight, 820, true, true},
-		{"restored", mygo.ThemeDark, 820, true, false},
-		{"narrow", mygo.ThemeLight, 360, false, false},
+		{"light", mygo.ThemeLight, 820, false, false, false},
+		{"dark", mygo.ThemeDark, 820, false, false, false},
+		{"inspector", mygo.ThemeLight, 820, true, false, false},
+		{"settings", mygo.ThemeLight, 820, true, true, false},
+		{"restored", mygo.ThemeDark, 820, true, false, false},
+		{"narrow", mygo.ThemeLight, 360, false, false, false},
+		{"icons-light", mygo.ThemeLight, 820, false, false, true},
+		{"icons-dark", mygo.ThemeDark, 820, false, false, true},
+		{"icons-narrow", mygo.ThemeLight, 360, false, false, true},
 	} {
 		mygo.Theme.SetSource(mode.theme)
 		mygo.RunOnMain(func() {
@@ -88,6 +92,10 @@ func TestNativeGallery(t *testing.T) {
 		time.Sleep(400 * time.Millisecond)
 		var before mygo.Rectangle
 		mygo.RunOnMain(func() {
+			g.page = shellPage
+			if mode.icons {
+				g.page = lucidePage
+			}
 			win.SetSize(mode.width, 900)
 			before = win.Bounds()
 			shell.SetRightExpanded(mode.right)

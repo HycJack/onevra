@@ -11,8 +11,12 @@ import (
 
 // Gallery owns only demonstration state.
 type Gallery struct {
-	Clicks int
-	Shell  *components.Shell
+	Clicks       int
+	Shell        *components.Shell
+	page         galleryPage
+	query        string
+	grid         ui.GridState
+	selectedIcon int
 }
 
 // New creates the standalone shell demonstration.
@@ -27,13 +31,22 @@ func (g *Gallery) New() *components.Shell {
 }
 
 func (g *Gallery) Titlebar(c *ui.Context) {
-	ui.Text(c, "Component gallery").Bold().SingleLine()
+	title := "Component gallery"
+	if g.page == lucidePage {
+		title = "Icon library / Lucide"
+	}
+	ui.Text(c, title).Bold().SingleLine()
 }
 
 func (g *Gallery) Left(c *ui.Context) {
-	ui.Column(c).Fill().Padding(16).Gap(12).Children(func() {
-		ui.Text(c, "Workspace").Bold()
-		ui.Text(c, "The window supplies the blur.").Wrap()
+	ui.Scroll(c).Fill().Children(func() {
+		ui.Column(c).FillWidth().Padding(12).Gap(4).Children(func() {
+			g.navigationGroup(c, "Components")
+			g.navigationItem(c, "Shell", lucide.PanelsTopLeft(), shellPage)
+			ui.Box(c).Height(16)
+			g.navigationGroup(c, "Icon library")
+			g.navigationItem(c, "Lucide", lucide.Shapes(), lucidePage)
+		})
 	})
 }
 
@@ -93,6 +106,10 @@ func iconSamples(c *ui.Context) {
 
 // View builds the default page's main content.
 func (g *Gallery) View(c *ui.Context) {
+	if g.page == lucidePage {
+		g.Icons(c)
+		return
+	}
 	t := c.Theme()
 	ui.Scroll(c).Fill().Children(func() {
 		ui.Column(c).FillWidth().Padding(t.Space(6)).Gap(t.Space(4)).Children(func() {

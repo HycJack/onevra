@@ -6,7 +6,7 @@ The gallery is a standalone example and a native review surface for the public c
 
 The [entry point](../../source/examples/gallery/main.go) owns application startup, appearance selection and shutdown. The [internal gallery](../../source/internal/gallery/gallery.go) owns demonstration content and in-memory state. Neither is part of the public component API.
 
-Examples should demonstrate ordinary consumer integration, not introduce gallery-only behavior into components. The gallery does not read or write user content or application settings. Its icon samples use named public accessors at multiple sizes and inherited text colors; they are not an exhaustive runtime catalog.
+Examples should demonstrate ordinary consumer integration, not introduce gallery-only behavior into components. The gallery does not read or write user content or application settings. Its grouped sidebar navigates between component demonstrations and a searchable Lucide icon library. The exhaustive catalog belongs only to the gallery and references public named accessors; ordinary library consumers retain no runtime registry. MyGo's virtualized grid builds visible icons on demand. The Shell demonstration also shows sample icons at multiple sizes and inherited text colors.
 
 Packaging belongs to the gallery application, not the library. Build commands and distribution limitations are maintained in the [development guide](../build.md#app-bundles).
 
