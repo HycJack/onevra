@@ -14,6 +14,7 @@ type fakeWindow struct {
 	maximized, fullscreen  bool
 	limit                  int
 	changes, invalidations int
+	onResize               func()
 }
 
 func (w *fakeWindow) Bounds() mygo.Rectangle { return w.bounds }
@@ -23,6 +24,9 @@ func (w *fakeWindow) SetBounds(b mygo.Rectangle) {
 	}
 	w.bounds = b
 	w.changes++
+	if w.onResize != nil {
+		w.onResize()
+	}
 }
 func (w *fakeWindow) IsMaximized() bool  { return w.maximized }
 func (w *fakeWindow) IsFullScreen() bool { return w.fullscreen }
@@ -421,7 +425,11 @@ func TestShellSeparatorsDoNotReserveSpace(t *testing.T) {
 	assertPixel := func(x, y int, red bool) {
 		t.Helper()
 		p := tt.Image().RGBAAt(x, y)
-		if (red && (p.R != 200 || p.B != 0)) || (!red && (p.R != 0 || p.B != 200)) {
+		blue := uint8(200)
+		if runtime.GOOS == "darwin" && x > 820 && s.rightOpen && s.page == nil {
+			blue = 170 // Premultiplied inspector tint at 85% opacity.
+		}
+		if (red && (p.R != 200 || p.B != 0)) || (!red && (p.R != 0 || p.B != blue)) {
 			t.Fatalf("pixel (%d,%d) = %+v, separator=%v", x, y, p, red)
 		}
 	}
@@ -472,7 +480,7 @@ func TestShellBackgroundsAndScaling(t *testing.T) {
 		for _, p := range []struct {
 			x     int
 			alpha uint32
-		}{{100, 0}, {400, 65535}, {1000, 65535}} {
+		}{{100, 0}, {400, 65535}, {1000, 217 * 257}} {
 			for _, y := range []int{2, 400, 599} {
 				_, _, _, a := tt.Image().At(p.x, y).RGBA()
 				want := p.alpha

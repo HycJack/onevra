@@ -20,19 +20,28 @@ func (g *Gallery) New() *components.Shell {
 	g.Shell = components.NewShell(components.ShellOptions{
 		Title: "oneo-go Gallery", Width: 820, Height: 900,
 		MinWidth: 360, MinHeight: 480,
-		Left: g.Left, Content: g.View, Right: g.Right,
+		Left: g.Left, Content: g.View, Right: g.Right, LeftToolbar: g.LeftToolbar,
+		ContentTitle: g.Titlebar,
 	})
 	return g.Shell
+}
+
+func (g *Gallery) Titlebar(c *ui.Context) {
+	ui.Text(c, "Component gallery").Bold().SingleLine()
 }
 
 func (g *Gallery) Left(c *ui.Context) {
 	ui.Column(c).Fill().Padding(16).Gap(12).Children(func() {
 		ui.Text(c, "Workspace").Bold()
 		ui.Text(c, "The window supplies the blur.").Wrap()
-		if ui.Button(c, "Settings").Clicked() && g.Shell != nil {
-			g.Shell.SetPage(g.Settings)
-		}
 	})
+}
+
+func (g *Gallery) LeftToolbar(c *ui.Context) {
+	ui.Spacer(c)
+	if components.ToolbarIconButton(c, lucide.Settings(), "Settings").Clicked() && g.Shell != nil {
+		g.Shell.SetPage(g.Settings)
+	}
 }
 
 func (g *Gallery) Right(c *ui.Context) {

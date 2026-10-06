@@ -1,0 +1,46 @@
+package components
+
+import (
+	"testing"
+
+	"github.com/egoist/mygo/ui"
+)
+
+func TestShellContentTitle(t *testing.T) {
+	s, _ := fixture()
+	var title *ui.Element
+	s.options.ContentTitle = func(c *ui.Context) {
+		title = ui.Text(c, "Current document").SingleLine().Grow(1).MinWidth(0)
+	}
+	tt := ui.NewTester(s.view, 820, 600)
+	tt.SetTitleBar(ui.TitleBar{Height: 48, Left: 80})
+	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
+	if r := title.Bounds(); r.X != 236 || r.Y < 0 || r.Y+r.H > 48 {
+		t.Fatal("title is not on the leading main-content titlebar", r)
+	}
+	for _, width := range []int{360, 820} {
+		for _, scale := range []float32{1, 1.5, 2} {
+			for _, leftOpen := range []bool{true, false} {
+				s.SetLeftExpanded(leftOpen)
+				tt.SetSize(width, 600)
+				tt.SetPreferences(ui.Preferences{TextScale: scale, ReduceMotion: true})
+				left, _ := tt.Find("Toggle sidebar")
+				right, _ := tt.Find("Toggle inspector")
+				r := title.Bounds()
+				if r.X < left.X+left.W || r.X+r.W > right.X || r.Y < 0 || r.Y+r.H > max(48, 48*scale) {
+					t.Fatalf("width=%d scale=%v left=%v: title overlaps controls: %+v, left %+v, right %+v", width, scale, leftOpen, r, left, right)
+				}
+			}
+		}
+	}
+	s.SetPage(func(*ui.Context) {})
+	tt.Frame()
+	if tt.HasText("Current document") {
+		t.Fatal("replacement page retained content title")
+	}
+	s.SetPage(nil)
+	tt.Frame()
+	if !tt.HasText("Current document") {
+		t.Fatal("returning did not restore content title")
+	}
+}

@@ -18,6 +18,13 @@ type ShellOptions struct {
 	Width, Height, MinWidth, MinHeight int
 	// Left and Content build the default page. Nil leaves the region empty.
 	Left, Content func(*ui.Context)
+	// ContentTitle builds the leading main-content titlebar area. It may contain
+	// a title, breadcrumbs or actions; nil leaves it blank. Shell clips it to
+	// the room between the sidebar controls and hides it on replacement pages.
+	ContentTitle func(*ui.Context)
+	// LeftToolbar builds a fixed bottom toolbar beneath Left; nil omits it.
+	// Use ToolbarIconButton for actions and ui.Spacer for trailing alignment.
+	LeftToolbar func(*ui.Context)
 	// Right enables the optional inspector and its toggle; nil disables both.
 	Right func(*ui.Context)
 	// Initial sidebar widths in DIPs; non-positive values use 220 and 280.
@@ -44,6 +51,12 @@ type Shell struct {
 	extension           int
 	requestedExtension  int
 	leftWidth           float32
+	// Native resizing must run outside MyGo's build/layout/paint transaction.
+	post             func(func())
+	resizeQueued     bool
+	pendingExtension int
+	resizing         bool
+	resizeBaseWidth  int
 }
 
 type shellWindow interface {
@@ -61,6 +74,9 @@ func NewShell(options ShellOptions) *Shell {
 	s := newShell(options)
 	s.window = mygo.NewWindow(s.nativeOptions())
 	s.host = s.window
+	// RunOnMain is synchronous on the UI thread. Dispatch from a goroutine so
+	// AppKit can redraw at the new size without reentering an unfinished frame.
+	s.post = func(fn func()) { go mygo.RunOnMain(fn) }
 	return s
 }
 
@@ -144,8 +160,28 @@ func (s *Shell) refresh() {
 	}
 }
 
-// syncWidth applies one animation step, retaining only the width the OS
-// actually granted. User resizing remains part of the base window width.
+// requestWidth coalesces resize requests from MyGo's build passes. A queued
+// callback reads the latest target, including reversals and page changes.
+func (s *Shell) requestWidth(requested int) {
+	if s.post == nil {
+		// Headless fixtures can apply the step without a native event loop.
+		s.syncWidth(requested)
+		return
+	}
+	s.pendingExtension = requested
+	if s.resizeQueued || requested == s.requestedExtension || s.host.IsMaximized() || s.host.IsFullScreen() {
+		return
+	}
+	s.resizeQueued = true
+	s.post(func() {
+		s.syncWidth(s.pendingExtension)
+		s.resizeQueued = false
+		s.refresh()
+	})
+}
+
+// syncWidth applies one animation step outside rendering, retaining only the
+// width the OS actually granted. User resizing remains part of the base width.
 func (s *Shell) syncWidth(requested int) {
 	if s.host == nil || s.host.IsMaximized() || s.host.IsFullScreen() {
 		return
@@ -160,11 +196,16 @@ func (s *Shell) syncWidth(requested int) {
 		delta = -min(-delta, s.extension)
 	}
 	after.Width += delta
+	// SetBounds can synchronously ask MyGo to draw. Publish the layout target
+	// first; those frames measure the granted extension from the native bounds.
+	s.requestedExtension = requested
+	s.resizeBaseWidth = before.Width - s.extension
+	s.resizing = true
 	if after.Width != before.Width {
 		s.host.SetBounds(after)
 	}
-	s.extension = max(0, s.extension+s.host.Bounds().Width-before.Width)
-	s.requestedExtension = requested
+	s.extension = max(0, s.host.Bounds().Width-s.resizeBaseWidth)
+	s.resizing = false
 }
 
 const sidebarDuration = 220 * time.Millisecond
@@ -181,6 +222,10 @@ func (s *Shell) view(c *ui.Context) {
 		c.Root().Background(ui.Transparent)
 	}
 	background := c.Theme().Background.Alpha(1)
+	inspectorBackground := background
+	if runtime.GOOS == "darwin" {
+		inspectorBackground = background.Alpha(0.85)
+	}
 	root := ui.Column(c).Fill().Clip()
 	if runtime.GOOS != "darwin" {
 		root.Background(background)
@@ -195,12 +240,27 @@ func (s *Shell) view(c *ui.Context) {
 	if c.Preferences().ReduceMotion {
 		leftProgress, rightProgress = leftTarget, rightTarget
 	}
-	s.syncWidth(int(math.Round(float64(rightProgress * float32(s.options.RightWidth)))))
+	requested := int(math.Round(float64(rightProgress * float32(s.options.RightWidth))))
+	s.requestWidth(requested)
 	bar := c.TitleBar()
 	headerHeight := max(48, bar.Height, c.Theme().Rem(3))
 	width, _ := c.Size()
-	leftWidth := min(s.leftWidth, width*0.4)
-	rightWidth := min(float32(s.options.RightWidth), width*0.4)
+	baseWidth := width
+	visibleRight := float32(requested)
+	if s.host != nil && !s.host.IsMaximized() && !s.host.IsFullScreen() {
+		extension := s.extension
+		if s.resizing {
+			extension = max(0, s.host.Bounds().Width-s.resizeBaseWidth)
+		}
+		baseWidth = max(0, width-float32(extension))
+		// Use the applied request, never the animation's next native size.
+		visibleRight = float32(s.requestedExtension)
+	}
+	leftWidth := min(s.leftWidth, baseWidth*0.4)
+	rightWidth := float32(s.options.RightWidth)
+	// If the OS cannot grant enough room, reveal inside the existing window
+	// while keeping some space for the main region. Inspector content stays fixed.
+	visibleRight = min(visibleRight, max(0, width-leftWidth*leftProgress-min(160, baseWidth*0.6)))
 	root.Children(func() {
 		ui.Column(c).Key(page != nil).Fill().Clip().Children(func() {
 			if page != nil {
@@ -214,8 +274,14 @@ func (s *Shell) view(c *ui.Context) {
 					ui.Column(c).Key("left").Width(leftWidth * leftProgress).Shrink(0).FillHeight().Clip().Children(func() {
 						ui.Column(c).Width(leftWidth).Shrink(0).FillHeight().Padding(headerHeight, 0, 0, 0).
 							Disabled(!s.leftOpen).Children(func() {
-							if s.options.Left != nil {
-								s.options.Left(c)
+							ui.Column(c).FillWidth().Grow(1).MinHeight(0).Clip().Children(func() {
+								if s.options.Left != nil {
+									s.options.Left(c)
+								}
+							})
+							if s.options.LeftToolbar != nil {
+								ui.Toolbar(c, func() { s.options.LeftToolbar(c) }).
+									FillWidth().Shrink(0).Padding(8)
 							}
 						})
 					})
@@ -230,10 +296,10 @@ func (s *Shell) view(c *ui.Context) {
 						shellSeparator(c)
 					}
 				})
-				if rightProgress > 0 && s.options.Right != nil {
+				if visibleRight > 0 && s.options.Right != nil {
 					// Reveal a full-width inspector through the growing window edge,
 					// rather than reflowing its contents at each animation step.
-					ui.Column(c).Key("right").Width(rightWidth * rightProgress).Shrink(0).FillHeight().Background(background).Clip().Children(func() {
+					ui.Column(c).Key("right").Width(visibleRight).Shrink(0).FillHeight().Background(inspectorBackground).Clip().Children(func() {
 						ui.Column(c).Width(rightWidth).Shrink(0).FillHeight().Padding(headerHeight, 0, 0, 0).
 							Disabled(!s.rightOpen).Children(func() { s.options.Right(c) })
 						shellSeparator(c)
@@ -242,20 +308,41 @@ func (s *Shell) view(c *ui.Context) {
 			})
 		})
 		if page == nil && s.leftOpen && leftProgress == 1 {
-			s.resizeHandle(c, leftWidth, width*0.4, headerHeight)
+			s.resizeHandle(c, leftWidth, baseWidth*0.4, headerHeight)
 		}
 		// An unpainted header overlays the full-height columns. Only its controls
 		// occupy the safe area; column content is kept below it by top padding.
+		leftInset := max(8, bar.Left)
+		if runtime.GOOS == "darwin" && bar.Left > 0 {
+			leftInset += 16
+		}
+		rightInset := max(8, bar.Right)
+		if page == nil {
+			// Anchor the inspector control to the main content's right edge.
+			// In tight windows, keep both controls inside the native safe area.
+			rightInset = max(rightInset, min(visibleRight+8, width-leftInset-2*max(32, c.Theme().Rem(2))-8))
+		}
 		ui.Row(c).Key("header").Absolute().Top(0).Left(0).Right(0).Height(headerHeight).
-			Padding(6, max(8, bar.Right), 6, max(8, bar.Left)).
+			AlignItems(ui.Center).Padding(6, rightInset, 6, leftInset).
 			DragWindow().Children(func() {
 			if page == nil {
-				if shellIconButton(c, lucide.PanelLeft(), s.options.LeftToggleLabel).Clicked() {
+				if ToolbarIconButton(c, lucide.PanelLeft(), s.options.LeftToggleLabel).Clicked() {
 					s.SetLeftExpanded(!s.leftOpen)
 				}
-				ui.Spacer(c)
-				if s.options.Right != nil && shellIconButton(c, lucide.PanelRight(), s.options.RightToggleLabel).Clicked() {
-					s.SetRightExpanded(!s.rightOpen)
+				// Align the title with the main surface, but keep it beyond the
+				// leading toggle when the sidebar is narrow or collapsed.
+				titleInset := max(8, leftWidth*leftProgress+16-leftInset-max(32, c.Theme().Rem(2)))
+				ui.Row(c).Grow(1).MinWidth(0).FillHeight().Clip().Padding(0, 8, 0, titleInset).Children(func() {
+					if s.options.ContentTitle != nil {
+						s.options.ContentTitle(c)
+					}
+				})
+				if s.options.Right != nil {
+					ui.Toolbar(c, func() {
+						if ToolbarIconButton(c, lucide.PanelRight(), s.options.RightToggleLabel).Clicked() {
+							s.SetRightExpanded(!s.rightOpen)
+						}
+					}).Padding(0).Width(max(32, c.Theme().Rem(2))).Shrink(0)
 				}
 			}
 		})
@@ -288,10 +375,4 @@ func (s *Shell) resizeHandle(c *ui.Context, width, maxWidth, top float32) {
 // Separators overlay the surface; they never reserve layout space.
 func shellSeparator(c *ui.Context) {
 	ui.Box(c).Key("separator").Absolute().Left(0).Top(0).Bottom(0).Width(1).Background(c.Theme().Border)
-}
-
-func shellIconButton(c *ui.Context, icon *ui.SVG, label string) *ui.Element {
-	return ui.Button(c, "").Label(label).Tooltip(label).Children(func() {
-		ui.Icon(c, icon).FontSize(c.Theme().Rem(1.25))
-	})
 }

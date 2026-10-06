@@ -25,6 +25,8 @@ func TestMain(m *testing.M) {
 	}
 	mygo.App.SetName("oneo-go smoke")
 	mygo.App.SetPath(mygo.PathUserData, dir)
+	// Tests own separate windows; only the end of m.Run should quit the app.
+	mygo.App.OnWindowAllClosed(func() {})
 	result := make(chan int, 1)
 	mygo.App.WhenReady(func() { go func() { result <- m.Run(); mygo.App.Quit() }() })
 	if err := mygo.App.Run(); err != nil {
