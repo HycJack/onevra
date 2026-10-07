@@ -36,8 +36,8 @@ Hybrid composition is rectangular: rounded browser clips, transforms, opacity tr
 
 ## Native appearance
 
-MyGo and the operating system provide window controls and interaction semantics. Shell uses the active theme rather than creating a separate theme manager or custom window chrome.
+MyGo and the operating system provide native window interaction semantics. On Windows, Shell uses MyGo's frameless window and composes rounded toolbar-style minimize, maximize/restore and close buttons in the shared header, including replacement pages. Labels are application-localizable; close requests retain MyGo's cancellable application lifecycle. Maximize/restore follows the actual window state. Shell uses the active theme rather than creating a separate theme manager. These UI buttons do not implement Windows' native maximize-hover Snap Layouts flyout.
 
-On macOS, a transparent native window and transparent UI root expose a blurred system material. The left sidebar paints no background. Main content and replacement pages remain opaque, extending behind the unpainted header. Other platforms retain an opaque theme background rather than claiming unverified blur support.
+On macOS, a transparent native window and transparent UI root expose a blurred system material. The left sidebar paints no background. Main content and replacement pages remain opaque, extending behind the unpainted header. Windows and Linux retain an opaque theme background. The pinned MyGo Windows native Surface uses a child-window swap chain or GDI copy, not the transparent composition path used by its WebView backend. Setting a DWM backdrop alone does not establish native UI material support. Windows 11 Mica and older-Windows blur fallback require upstream native Surface composition support before Shell can expose them without a parallel renderer.
 
 Application builders can obscure the material by painting their own backgrounds. Preserve transparency through the window and sidebar when changing styling; content captures alone do not include the OS-composited blur.

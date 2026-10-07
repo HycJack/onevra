@@ -39,7 +39,7 @@ func TestShellNativeOptions(t *testing.T) {
 	if runtime.GOOS == "darwin" {
 		material = mygo.VibrancyTitlebar
 	}
-	if o.Transparent != (runtime.GOOS == "darwin") || o.Vibrancy != material || o.Frameless || o.DisableResize || o.StateKey != "" {
+	if o.Transparent != (runtime.GOOS == "darwin") || o.Vibrancy != material || o.Frameless != (runtime.GOOS == "windows") || o.DisableResize || o.StateKey != "" {
 		t.Fatal(o)
 	}
 }

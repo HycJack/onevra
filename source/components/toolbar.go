@@ -7,6 +7,11 @@ import "github.com/egoist/mygo/ui"
 // in ui.Toolbar. Applications own the label and handle Clicked on the result.
 // The face is transparent at rest; hover and press use translucent text color.
 func ToolbarIconButton(c *ui.Context, icon *ui.SVG, label string) *ui.Element {
+	return toolbarIconButton(c, icon, label, c.Theme().Rem(1.25))
+}
+
+// toolbarIconButton varies the glyph size without shrinking the hit target.
+func toolbarIconButton(c *ui.Context, icon *ui.SVG, label string, iconSize float32) *ui.Element {
 	t := c.Theme()
 	size := max(32, t.Rem(2))
 	b := ui.ButtonBase(c).Size(size, size).Radius(t.Radius).
@@ -22,7 +27,7 @@ func ToolbarIconButton(c *ui.Context, icon *ui.SVG, label string) *ui.Element {
 			p.Fill(r, t.Text.Alpha(0.08), t.Radius)
 		}
 	}).Children(func() {
-		ui.Icon(c, icon).Size(t.Rem(1.25), t.Rem(1.25))
+		ui.Icon(c, icon).Size(iconSize, iconSize)
 	})
 	return b
 }

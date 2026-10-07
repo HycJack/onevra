@@ -40,6 +40,8 @@ type ShellOptions struct {
 	LeftToggleLabel string
 	// LeftResizeLabel names the draggable, keyboard-accessible separator.
 	LeftResizeLabel string
+	// Windows caption button labels; empty values use English defaults.
+	MinimizeLabel, MaximizeLabel, RestoreLabel, CloseLabel string
 }
 
 // Shell owns window presentation, sidebar state and the active page.
@@ -59,12 +61,17 @@ type shellWindow interface {
 }
 
 // NewShell creates a native window and installs the page container.
-// It configures system controls and behind-window blur on macOS; other
-// platforms retain their native window background. It does not persist state.
+// It configures system controls and behind-window blur on macOS, and custom
+// caption buttons on Windows. Other platforms retain their native controls.
+// Windows and Linux use an opaque background. It does not persist state.
 func NewShell(options ShellOptions) *Shell {
 	s := newShell(options)
 	s.window = mygo.NewWindow(s.nativeOptions())
 	s.host = s.window
+	if runtime.GOOS == "windows" {
+		s.window.OnMaximize(s.refresh)
+		s.window.OnUnmaximize(s.refresh)
+	}
 	return s
 }
 
@@ -95,6 +102,7 @@ func (s *Shell) nativeOptions() mygo.WindowOptions {
 		Title: o.Title, Width: o.Width, Height: o.Height,
 		MinWidth: o.MinWidth, MinHeight: o.MinHeight,
 		TitleBarStyle:        mygo.TitleBarHidden,
+		Frameless:            runtime.GOOS == "windows",
 		TrafficLightPosition: &mygo.Point{X: 16, Y: 16},
 		Transparent:          runtime.GOOS == "darwin",
 		Vibrancy:             shellVibrancy(),
@@ -233,6 +241,12 @@ func (s *Shell) view(c *ui.Context) {
 						s.options.ContentTitle(c)
 					}
 				})
+			}
+			if runtime.GOOS == "windows" {
+				if page != nil {
+					ui.Spacer(c)
+				}
+				s.captionButtons(c)
 			}
 		})
 	})
