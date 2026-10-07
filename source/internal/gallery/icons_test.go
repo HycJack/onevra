@@ -61,6 +61,47 @@ func TestFilterIcons(t *testing.T) {
 	}
 }
 
+func TestIconBrowserLayout(t *testing.T) {
+	for _, width := range []int{220, 600} {
+		g := &Gallery{page: lucidePage}
+		tt := ui.NewTester(g.Icons, width, 480)
+		if tt.HasText("Lucide") || tt.HasText(" of ") {
+			t.Fatal("content repeats the title or icon count", tt.Texts())
+		}
+		grid, ok := tt.Find("Icon grid")
+		if !ok || grid.X != 0 || grid.W != float32(width) || grid.Y+grid.H != 480 {
+			t.Fatalf("grid must reach the side and bottom edges: %v", grid)
+		}
+		first, ok := tt.Find(iconCatalog[0].name)
+		if !ok || first.X-grid.X != 16 || first.Y-grid.Y < 16 || first.X+first.W > grid.X+grid.W-16 {
+			t.Fatalf("grid content must retain internal padding: grid=%v, first=%v", grid, first)
+		}
+		input, ok := tt.Find("Search icons")
+		if !ok || input.H <= 0 || input.Y+input.H > grid.Y {
+			t.Fatalf("search field must remain above the grid: %v", input)
+		}
+		// The decorative icon must not intercept clicks on the input.
+		tt.ClickAt(input.X+19, input.Y+input.H/2)
+		tt.Type("cloud")
+		if g.query != "cloud" {
+			t.Fatal("search icon intercepted input focus")
+		}
+	}
+}
+
+func TestGalleryTitlebar(t *testing.T) {
+	g := &Gallery{}
+	tt := ui.NewTester(g.Titlebar, 400, 48)
+	if !tt.HasText("Shell") {
+		t.Fatal(tt.Texts())
+	}
+	g.page = lucidePage
+	tt.Frame()
+	if !tt.HasText("Icon library / Lucide") {
+		t.Fatal(tt.Texts())
+	}
+}
+
 func TestIconNavigationAndSearch(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(func(c *ui.Context) {

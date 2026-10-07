@@ -31,7 +31,7 @@ func (g *Gallery) New() *components.Shell {
 }
 
 func (g *Gallery) Titlebar(c *ui.Context) {
-	title := "Component gallery"
+	title := "Shell"
 	if g.page == lucidePage {
 		title = "Icon library / Lucide"
 	}
@@ -40,10 +40,10 @@ func (g *Gallery) Titlebar(c *ui.Context) {
 
 func (g *Gallery) Left(c *ui.Context) {
 	ui.Scroll(c).Fill().Children(func() {
-		ui.Column(c).FillWidth().Padding(12).Gap(4).Children(func() {
+		ui.Column(c).FillWidth().Padding(0, 12, 12, 12).Gap(4).Children(func() {
 			g.navigationGroup(c, "Components")
 			g.navigationItem(c, "Shell", lucide.PanelsTopLeft(), shellPage)
-			ui.Box(c).Height(16)
+			ui.Box(c).Height(4)
 			g.navigationGroup(c, "Icon library")
 			g.navigationItem(c, "Lucide", lucide.Shapes(), lucidePage)
 		})
@@ -113,7 +113,6 @@ func (g *Gallery) View(c *ui.Context) {
 	t := c.Theme()
 	ui.Scroll(c).Fill().Children(func() {
 		ui.Column(c).FillWidth().Padding(t.Space(6)).Gap(t.Space(4)).Children(func() {
-			ui.Text(c, "Shell").FontSize(t.Rem(2)).Bold()
 			ui.Text(c, "Three columns, one native window.").TextColor(t.TextMuted).Wrap()
 			ui.Text(c, "Toggle the sidebar inside the window, or extend it with the inspector. Open Settings to replace the entire page.").Wrap()
 			if ui.Button(c, "Count").Clicked() {
