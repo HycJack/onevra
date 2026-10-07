@@ -38,7 +38,7 @@ From `source/`, in a macOS desktop session:
 
 ```sh
 ONEO_GO_NATIVE_SMOKE=1 ONEO_GO_SCREENSHOTS="$PWD/../dist/preview" \
-  go test ./internal/gallery -run '^TestNative(Gallery|MyGo|Controls|Terminal)$' -count=1 -v
+  go test ./examples/gallery/internal/gallery -run '^TestNative(Gallery|MyGo|Controls|Terminal)$' -count=1 -v
 ```
 
 The tests open windows, capture appearance variants (including every oneo-go control and MyGo example in light, dark and narrow layouts), exercise terminal input and cleanup, check that replacement pages preserve window bounds, and close the windows. Omit `ONEO_GO_SCREENSHOTS` to use temporary output.
@@ -50,14 +50,14 @@ For UI changes, manually review both themes, narrow layouts, text scaling, windo
 Ordinary builds use checked-in generated Go assets and do not need Node or a Lucide checkout. To update, obtain a clean checkout of [Lucide](https://github.com/lucide-icons/lucide) and explicitly select its full commit hash. From `source/`:
 
 ```sh
-go run ./internal/cmd/lucidegen -upstream /path/to/lucide -commit FULL_COMMIT_HASH
+go run ./tools/lucidegen -upstream /path/to/lucide -commit FULL_COMMIT_HASH
 # Repeat without writing to check reproducibility:
-go run ./internal/cmd/lucidegen -upstream /path/to/lucide -commit FULL_COMMIT_HASH -check
+go run ./tools/lucidegen -upstream /path/to/lucide -commit FULL_COMMIT_HASH -check
 ```
 
 The generator validates every regular SVG with MyGo and records the commit and input digest in [upstream.json](../source/icons/lucide/upstream.json). It copies the full upstream license and reports accessor additions and removals. Review the generated diff for renames or removals before accepting an update: upstream changes can affect this library's public API. The test-only collection exercises every accessor without introducing a runtime registry.
 
-After updating the accessors, run `go generate ./internal/gallery` to refresh the gallery-only catalog from the checked-in assets. Run the development checks and review the gallery's searchable icon grid and icon samples in both appearances, including small sizes and complex strokes. Parsing tests alone do not prove visual fidelity. When changing the cache or generated representation, compare minimal named-icon and full-collection builds to check unused-resource elimination.
+After updating the accessors, run `go generate ./examples/gallery/internal/gallery` to refresh the gallery-only catalog from the checked-in assets. Run the development checks and review the gallery's searchable icon grid and icon samples in both appearances, including small sizes and complex strokes. Parsing tests alone do not prove visual fidelity. When changing the cache or generated representation, compare minimal named-icon and full-collection builds to check unused-resource elimination.
 
 ## Publication
 

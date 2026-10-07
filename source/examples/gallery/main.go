@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/egoist/mygo"
-	"github.com/oneo-me/oneo-go/internal/gallery"
+	"github.com/oneo-me/oneo-go/examples/gallery/internal/gallery"
 )
 
 func main() {

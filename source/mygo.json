@@ -1,5 +1,5 @@
 {
-  "name": "oneo-go Gallery",
+  "name": "ONEO Go Gallery",
   "identifier": "me.oneo.oneogo.gallery",
   "version": "0.0.0",
   "main": "./examples/gallery",
