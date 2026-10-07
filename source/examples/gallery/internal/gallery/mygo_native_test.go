@@ -37,6 +37,8 @@ func captureCatalog(t *testing.T, controls bool) {
 	mygo.RunOnMain(func() { shell = g.New() })
 	win := shell.Window()
 	defer win.Destroy()
+	// Only native captures relax the default minimum to exercise narrow layouts.
+	mygo.RunOnMain(func() { win.SetMinimumSize(360, 480) })
 	dir := os.Getenv("ONEO_GO_SCREENSHOTS")
 	if dir == "" {
 		dir = t.TempDir()

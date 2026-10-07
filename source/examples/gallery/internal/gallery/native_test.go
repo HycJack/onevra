@@ -51,12 +51,17 @@ func TestNativeGallery(t *testing.T) {
 	if win.Page() != nil || win.Title() != "oneo-go Gallery" {
 		t.Fatal("expected native content and caller title")
 	}
+	if width, height := win.Size(); width != 820 || height != 600 {
+		t.Errorf("gallery default size = %dx%d, want 820x600", width, height)
+	}
+	// Only native captures relax the default minimum to exercise narrow layouts.
+	mygo.RunOnMain(func() { win.SetMinimumSize(360, 480) })
 	var blank *mygo.Window
 	mygo.RunOnMain(func() { blank = oneoshell.NewShell(oneoshell.ShellOptions{}).Window() })
 	if blank.Page() != nil {
 		t.Error("nil content created a web page")
 	}
-	if width, height := blank.Size(); width != 800 || height != 600 {
+	if width, height := blank.Size(); width != 820 || height != 600 {
 		t.Errorf("default size = %dx%d", width, height)
 	}
 	blank.Destroy()

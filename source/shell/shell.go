@@ -14,7 +14,10 @@ import (
 // Content builders run synchronously on the UI thread.
 type ShellOptions struct {
 	Title string
-	// Window dimensions and constraints are outer DIPs. Zero uses MyGo defaults.
+	// Window dimensions and constraints are outer DIPs. Non-positive width and
+	// height default to 820 and 600, respectively, for both initial and minimum
+	// sizes. Explicit positive values override each default independently.
+	// Initial dimensions are raised to the corresponding minimum if needed.
 	Width, Height, MinWidth, MinHeight int
 	// Left and Content build the default page. Nil leaves the region empty.
 	Left, Content func(*ui.Context)
@@ -80,7 +83,26 @@ func NewShell(options ShellOptions) *Shell {
 	return s
 }
 
+const (
+	defaultWindowWidth  = 820
+	defaultWindowHeight = 600
+)
+
 func newShell(options ShellOptions) *Shell {
+	if options.Width <= 0 {
+		options.Width = defaultWindowWidth
+	}
+	if options.Height <= 0 {
+		options.Height = defaultWindowHeight
+	}
+	if options.MinWidth <= 0 {
+		options.MinWidth = defaultWindowWidth
+	}
+	if options.MinHeight <= 0 {
+		options.MinHeight = defaultWindowHeight
+	}
+	options.Width = max(options.Width, options.MinWidth)
+	options.Height = max(options.Height, options.MinHeight)
 	if options.LeftWidth <= 0 {
 		options.LeftWidth = 220
 	}

@@ -24,8 +24,7 @@ type Gallery struct {
 // New creates the standalone shell demonstration.
 func (g *Gallery) New() *oneoshell.Shell {
 	g.Shell = oneoshell.NewShell(oneoshell.ShellOptions{
-		Title: "oneo-go Gallery", Width: 820, Height: 900,
-		MinWidth: 360, MinHeight: 480,
+		Title:     "oneo-go Gallery",
 		LeftWidth: 220, LeftMinWidth: 220, LeftMaxWidth: 520,
 		Left: g.Left, Content: g.View, LeftToolbar: g.LeftToolbar,
 		ContentTitle: g.Titlebar,
