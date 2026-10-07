@@ -54,9 +54,6 @@ func (g *Gallery) Left(c *ui.Context) {
 func (g *Gallery) navigation(c *ui.Context) {
 	ui.Scroll(c).Fill().Children(func() {
 		ui.Column(c).FillWidth().Padding(0, 12, 12, 12).Gap(4).Children(func() {
-			g.navigationGroup(c, "Application")
-			g.navigationItem(c, "Shell", lucide.PanelsTopLeft(), shellPage)
-			ui.Box(c).Height(4)
 			g.navigationGroup(c, "Icon library")
 			g.navigationItem(c, "Lucide", lucide.Shapes(), lucidePage)
 			ui.Box(c).Height(4)

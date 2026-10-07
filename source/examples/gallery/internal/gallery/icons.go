@@ -12,8 +12,8 @@ import (
 type galleryPage int
 
 const (
-	shellPage galleryPage = iota
-	lucidePage
+	lucidePage galleryPage = iota
+	shellPage
 )
 
 type iconEntry struct {

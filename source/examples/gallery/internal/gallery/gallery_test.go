@@ -7,7 +7,7 @@ import (
 )
 
 func TestShellContent(t *testing.T) {
-	g := &Gallery{}
+	g := &Gallery{page: shellPage}
 	tt := ui.NewTester(g.View, 360, 480)
 	if tt.HasText("Shell") || !tt.HasText("Clicks: 0") {
 		t.Fatal(tt.Texts())

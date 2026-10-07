@@ -92,12 +92,12 @@ func TestIconBrowserLayout(t *testing.T) {
 func TestGalleryTitlebar(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.Titlebar, 400, 48)
-	if !tt.HasText("Shell") {
+	if !tt.HasText("Icon library / Lucide") {
 		t.Fatal(tt.Texts())
 	}
-	g.page = lucidePage
+	g.page = shellPage
 	tt.Frame()
-	if !tt.HasText("Icon library / Lucide") {
+	if !tt.HasText("Shell") {
 		t.Fatal(tt.Texts())
 	}
 }
@@ -110,6 +110,9 @@ func TestIconNavigationAndSearch(t *testing.T) {
 			ui.Column(c).Grow(1).FillHeight().Children(func() { g.View(c) })
 		})
 	}, 820, 700)
+	if g.page != lucidePage || !tt.HasText("Search icons") {
+		t.Fatal("default page is not the icon library")
+	}
 	if err := tt.Click("Lucide"); err != nil {
 		t.Fatal(err)
 	}
@@ -129,10 +132,7 @@ func TestIconNavigationAndSearch(t *testing.T) {
 	if g.query != "" || tt.HasText("No icons found. Try another name.") {
 		t.Fatal(tt.Texts())
 	}
-	if err := tt.Click("Shell"); err != nil {
-		t.Fatal(err)
-	}
-	if g.page != shellPage || !tt.HasText("Clicks: 0") {
-		t.Fatal(tt.Texts())
+	if tt.HasText("Shell") || tt.HasText("Application") {
+		t.Fatal("removed Shell navigation is still visible")
 	}
 }

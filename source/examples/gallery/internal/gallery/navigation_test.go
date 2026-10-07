@@ -11,12 +11,12 @@ import (
 func TestNavigationSpacing(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.Left, 220, 480)
-	first, ok := tt.Find("Application")
+	first, ok := tt.Find("Icon library")
 	if !ok || first.Y != 48 {
 		t.Fatalf("first group must start at the shell's safe content edge: %v", first)
 	}
-	item, _ := tt.Find("Shell")
-	next, _ := tt.Find("Icon library")
+	item, _ := tt.Find("Lucide")
+	next, _ := tt.Find("Components")
 	if gap := next.Y - item.Y - item.H; math.Abs(float64(gap-12)) > 0.001 {
 		t.Fatalf("group gap = %v, want 12", gap)
 	}
@@ -26,7 +26,7 @@ func TestNavigationGroupOrder(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.Left, 220, 6000)
 	var bottom float32
-	for _, label := range []string{"Application", "Shell", "Icon library", "Lucide", "Components", "Plugins", "Terminal", "MyGo components", "Actions", "Media & text"} {
+	for _, label := range []string{"Icon library", "Lucide", "Components", "Plugins", "Terminal", "MyGo components", "Actions", "Media & text"} {
 		r, ok := tt.Find(label)
 		if !ok || r.Y < bottom {
 			t.Fatalf("%s missing or out of order: %v (previous bottom %v)", label, r, bottom)
@@ -49,7 +49,7 @@ func TestNavigationSelectionAndHover(t *testing.T) {
 			g := &Gallery{}
 			tt := ui.NewTester(g.Left, 220, 480)
 			tt.SetDark(dark)
-			for _, label := range []string{"Shell", "Lucide"} {
+			for _, label := range []string{"Lucide", "Buttons"} {
 				tt.Move(219, 479)
 				before := bytes.Clone(tt.Image().Pix)
 				r, _ := tt.Find(label)
@@ -58,7 +58,7 @@ func TestNavigationSelectionAndHover(t *testing.T) {
 					t.Fatalf("%s changed appearance on hover", label)
 				}
 			}
-			for _, label := range []string{"Lucide", "Shell"} {
+			for _, label := range []string{"Buttons", "Lucide"} {
 				if err := tt.Click(label); err != nil {
 					t.Fatal(err)
 				}
