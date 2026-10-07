@@ -75,6 +75,21 @@ shell := components.NewShell(components.ShellOptions{
 
 The palettes follow the Light and Shadow (light-shadow) design style from [oneo-me/desgin-styles](https://github.com/oneo-me/desgin-styles): a warm white light mode and a deep navy dark mode. See the [theme package](source/theme/doc.go) and [appearance design](docs/architecture/components.md#native-appearance).
 
+## Controls
+
+Import `github.com/oneo-me/oneo-go/controls` for oneo-styled common controls built on MyGo's unstyled bases: buttons, check boxes, switches, radio buttons, text fields and areas, selects, sliders and tabs. Colors come from the active theme:
+
+```go
+if controls.Button(c, "Save", controls.ButtonPrimary, controls.ButtonMedium).Clicked() {
+    // ...
+}
+
+controls.Checkbox(c, &agreed, "I agree")
+controls.Switch(c, &wifi, "Wi-Fi")
+```
+
+Keyboard, pointer and accessibility behavior come from MyGo's bases. See the [package contract](source/controls/doc.go).
+
 ## Lucide icons
 
 Import `github.com/oneo-me/oneo-go/icons/lucide` and use named accessors directly with MyGo:

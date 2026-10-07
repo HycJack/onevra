@@ -4,6 +4,8 @@ User-facing updates for oneo-go library consumers. No version has been published
 
 ## [Unreleased]
 
+- Use oneo-styled common controls from `controls`: buttons (primary, default, outline, ghost and link variants in three sizes), check boxes, switches, radio buttons, text fields and areas, drop-down selects, sliders and tab rows. They are built on MyGo's unstyled bases, so pointer, keyboard and accessibility behavior come from MyGo, while colors follow oneo-go's built-in themes.
+
 - Use 1,866 Lucide icons directly with MyGo through `icons/lucide`, with named accessors, first-use parsing and inherited text colors. Preview representative icons at multiple sizes in the gallery.
 
 - Create a native Shell with system window controls on macOS/Linux and rounded, localizable toolbar-style minimize, maximize/restore and close buttons on Windows and a full-height left sidebar with a Lucide toggle. The sidebar reveals beneath the main content without resizing the window and keeps its content width during animations. An overlay separator leaves no gap when collapsed; drag it or use arrow keys when focused to resize the sidebar within configurable minimum and maximum widths. Set a default width and restore it by double-clicking the separator. Animations respect Reduced Motion. On macOS, the sidebar exposes the window's blurred background up to the top edge, while main content remains opaque. The toggle keeps clearance from traffic lights. On Windows, a theme-aware gray sidebar background distinguishes navigation from the main content.

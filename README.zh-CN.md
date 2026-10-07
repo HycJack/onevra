@@ -75,6 +75,21 @@ shell := components.NewShell(components.ShellOptions{
 
 色板遵循 [oneo-me/desgin-styles](https://github.com/oneo-me/desgin-styles) 的 Light and Shadow（light-shadow）设计风格：暖白色浅色模式与深海军蓝深色模式。参见 [theme 包](source/theme/doc.go)与[外观设计](docs/architecture/components.md#native-appearance)。
 
+## 控件
+
+导入 `github.com/oneo-me/oneo-go/controls` 使用基于 MyGo 无样式基座的 oneo 风格常用控件：按钮、复选框、开关、单选按钮、文本框与文本域、下拉选择、滑块和选项卡。颜色取自当前主题：
+
+```go
+if controls.Button(c, "Save", controls.ButtonPrimary, controls.ButtonMedium).Clicked() {
+    // ...
+}
+
+controls.Checkbox(c, &agreed, "I agree")
+controls.Switch(c, &wifi, "Wi-Fi")
+```
+
+键盘、指针与无障碍行为由 MyGo 基座提供。参见[包契约](source/controls/doc.go)。
+
 ## Lucide 图标
 
 导入 `github.com/oneo-me/oneo-go/icons/lucide`，直接将具名访问函数用于 MyGo：
