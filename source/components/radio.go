@@ -30,7 +30,7 @@ func Radio[T comparable](c *ui.Context, selected *T, value T, label string) *ui.
 		})
 		if label != "" {
 			row.Label(label)
-			ui.Text(c, label)
+			Text(c, label)
 		}
 	})
 	return dimmed(row)

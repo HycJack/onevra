@@ -32,7 +32,7 @@ func Tabs(c *ui.Context, selected *int, labels ...string) ui.TabsParts {
 					p.FocusRing(r, [4]float32{t.Radius, t.Radius, t.Radius, t.Radius})
 				}
 			})
-			tab.Children(func() { ui.Text(c, label).SingleLine() })
+			tab.Children(func() { Text(c, label).SingleLine() })
 		}
 	})
 	return tabs

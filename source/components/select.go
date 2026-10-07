@@ -8,7 +8,7 @@ import "github.com/egoist/mygo/ui"
 // with the accent color:
 //
 //	sel := components.Select(c, &choice)
-//	sel.Trigger.Children(func() { ui.Text(c, string(choice)).SingleLine() })
+//	sel.Trigger.Children(func() { components.Text(c, string(choice)).SingleLine() })
 //	sel.Popup(func(panel *ui.Element) {
 //		t := c.Theme()
 //		panel.Padding(t.Space(1)).Radius(t.Radius).Background(t.Background).Border(1, t.Border)
@@ -17,7 +17,7 @@ import "github.com/egoist/mygo/ui"
 //			if item.Highlighted() {
 //				item.Background(t.Accent).TextColor(t.AccentText)
 //			}
-//			item.Children(func() { ui.Text(c, string(opt)).SingleLine() })
+//			item.Children(func() { components.Text(c, string(opt)).SingleLine() })
 //		}
 //	})
 //

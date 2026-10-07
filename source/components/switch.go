@@ -27,7 +27,7 @@ func Switch(c *ui.Context, on *bool, label string) *ui.Element {
 			p.Fill(knob, ui.RGB(255, 255, 255), d/2)
 		})
 		if label != "" {
-			ui.Text(c, label)
+			Text(c, label)
 		}
 	})
 	return dimmed(row)

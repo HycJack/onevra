@@ -62,7 +62,7 @@ func Button(c *ui.Context, label string, variant ButtonVariant) *ui.Element {
 	b.Radius(t.Radius).Background(bg).TextColor(fg).Border(1, border)
 	if label != "" {
 		b.Label(label)
-		b.Children(func() { ui.Text(c, label).SingleLine() })
+		b.Children(func() { Text(c, label).SingleLine() })
 	}
 	return dimmed(b)
 }

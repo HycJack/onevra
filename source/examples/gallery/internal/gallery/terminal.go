@@ -121,15 +121,15 @@ func exampleTerminal(c *ui.Context, s *demoState) {
 		return
 	}
 	if err != nil {
-		ui.Text(c, "Terminal unavailable").Bold()
-		ui.Text(c, err.Error()).TextColor(c.Theme().Danger).Wrap()
+		components.Text(c, "Terminal unavailable").Bold()
+		components.Text(c, err.Error()).TextColor(c.Theme().Danger).Wrap()
 		return
 	}
 	if term == nil {
-		ui.Text(c, "Stopped").TextColor(c.Theme().TextMuted)
+		components.Text(c, "Stopped").TextColor(c.Theme().TextMuted)
 		return
 	}
-	ui.Text(c, "Echo · no shell").TextColor(c.Theme().TextMuted)
+	components.Text(c, "Echo · no shell").TextColor(c.Theme().TextMuted)
 	ui.Row(c).Gap(8).Children(func() {
 		if components.Button(c, "Colors", components.ButtonSecondary).Clicked() {
 			term.Feed([]byte(terminalSample))

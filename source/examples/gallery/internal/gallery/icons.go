@@ -20,7 +20,7 @@ type iconEntry struct {
 }
 
 func (g *Gallery) navigationGroup(c *ui.Context, label string) {
-	ui.Text(c, label).FontSize(c.Theme().Rem(.8)).Bold().TextColor(c.Theme().TextMuted).Padding(4, 8, 4, 8)
+	components.Text(c, label).FontSize(c.Theme().Rem(.8)).Bold().TextColor(c.Theme().TextMuted).Padding(4, 8, 4, 8)
 }
 
 func (g *Gallery) navigationItem(c *ui.Context, label string, icon *ui.SVG, page galleryPage) {
@@ -31,7 +31,7 @@ func (g *Gallery) navigationItem(c *ui.Context, label string, icon *ui.SVG, page
 	}
 	b.Children(func() {
 		ui.Icon(c, icon).Size(18, 18).TextColor(t.Accent)
-		ui.Text(c, label).SingleLine()
+		components.Text(c, label).SingleLine()
 	})
 	if b.Clicked() {
 		g.page = page

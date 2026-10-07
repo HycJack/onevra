@@ -45,7 +45,7 @@ func (g *Gallery) Titlebar(c *ui.Context) {
 	if example, ok := controlExampleFor(g.page); ok {
 		title = "Components / " + example.name
 	}
-	ui.Text(c, title).Bold().SingleLine()
+	components.Text(c, title).Bold().SingleLine()
 }
 
 func (g *Gallery) Left(c *ui.Context) {
@@ -94,8 +94,8 @@ func (g *Gallery) LeftToolbar(c *ui.Context) {
 
 func (g *Gallery) Settings(c *ui.Context) {
 	ui.Column(c).Fill().Padding(shell.HeaderHeight(c)+24, 24, 24, 24).Gap(16).Children(func() {
-		ui.Text(c, "Settings").FontSize(c.Theme().Rem(2)).Bold()
-		ui.Text(c, "A replacement page outside the sidebar-and-content layout.").Wrap()
+		components.Text(c, "Settings").FontSize(c.Theme().Rem(2)).Bold()
+		components.Text(c, "A replacement page outside the sidebar-and-content layout.").Wrap()
 		if components.Button(c, "Back", components.ButtonSecondary).Clicked() && g.Shell != nil {
 			g.Shell.SetPage(nil)
 		}
@@ -104,8 +104,8 @@ func (g *Gallery) Settings(c *ui.Context) {
 
 // iconSamples uses only named accessors, not a full-library runtime registry.
 func iconSamples(c *ui.Context) {
-	ui.Text(c, "Lucide icons").Bold()
-	ui.Text(c, "Original strokes at 16, 24 and 32 DIP; colors inherit from MyGo.").Wrap()
+	components.Text(c, "Lucide icons").Bold()
+	components.Text(c, "Original strokes at 16, 24 and 32 DIP; colors inherit from MyGo.").Wrap()
 	for _, sample := range []struct {
 		name string
 		get  func() *ui.SVG
@@ -117,7 +117,7 @@ func iconSamples(c *ui.Context) {
 		{"Accessibility", lucide.Accessibility},
 	} {
 		ui.Column(c).Gap(4).Children(func() {
-			ui.Text(c, sample.name)
+			components.Text(c, sample.name)
 			ui.Row(c).Gap(12).Children(func() {
 				for _, size := range []float32{16, 24, 32} {
 					ui.Icon(c, sample.get()).Size(size, size)
@@ -128,7 +128,7 @@ func iconSamples(c *ui.Context) {
 	ui.Row(c).Gap(12).TextColor(c.Theme().TextMuted).Children(func() {
 		ui.Icon(c, lucide.Sun())
 		ui.Icon(c, lucide.Moon())
-		ui.Text(c, "Inherited muted color")
+		components.Text(c, "Inherited muted color")
 	})
 }
 
@@ -153,12 +153,12 @@ func (g *Gallery) body(c *ui.Context) {
 	t := c.Theme()
 	ui.Scroll(c).Fill().Children(func() {
 		ui.Column(c).FillWidth().Padding(t.Space(6)).Gap(t.Space(4)).Children(func() {
-			ui.Text(c, "A sidebar and content, one native window.").TextColor(t.TextMuted).Wrap()
-			ui.Text(c, "Toggle or resize the sidebar inside the window. Double-click its separator to restore the default width. Open Settings to replace the entire page.").Wrap()
+			components.Text(c, "A sidebar and content, one native window.").TextColor(t.TextMuted).Wrap()
+			components.Text(c, "Toggle or resize the sidebar inside the window. Double-click its separator to restore the default width. Open Settings to replace the entire page.").Wrap()
 			if components.Button(c, "Count", components.ButtonSecondary).Clicked() {
 				g.Clicks++
 			}
-			ui.Text(c, fmt.Sprintf("Clicks: %d", g.Clicks))
+			components.Text(c, fmt.Sprintf("Clicks: %d", g.Clicks))
 			iconSamples(c)
 		})
 	})

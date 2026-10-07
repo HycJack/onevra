@@ -33,7 +33,7 @@ func Checkbox(c *ui.Context, checked *bool, label string) *ui.Element {
 		})
 		if label != "" {
 			row.Label(label)
-			ui.Text(c, label)
+			Text(c, label)
 		}
 	})
 	return dimmed(row)

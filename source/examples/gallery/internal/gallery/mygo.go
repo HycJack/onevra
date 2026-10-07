@@ -1,6 +1,9 @@
 package gallery
 
-import "github.com/egoist/mygo/ui"
+import (
+	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/components"
+)
 
 const mygoPageStart galleryPage = 2
 
@@ -103,7 +106,7 @@ func (g *Gallery) MyGo(c *ui.Context, example mygoExample) {
 				s := g.mygoState(example.name, variant, i == 0)
 				ui.Column(c).Key(variant).FillWidth().MinWidth(0).Gap(12).Children(func() {
 					if len(variants) > 1 {
-						ui.Text(c, variant).Bold().TextColor(t.TextMuted)
+						components.Text(c, variant).Bold().TextColor(t.TextMuted)
 					}
 					ui.Column(c).FillWidth().MinWidth(0).Gap(12).Disabled(variant == "Disabled").Children(func() {
 						if variant == "Read only" {

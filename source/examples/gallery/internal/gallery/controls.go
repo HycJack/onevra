@@ -21,6 +21,7 @@ type controlState struct {
 }
 
 var controlCatalog = []controlExample{
+	{"Text", "Display text", []string{"Default"}, controlText},
 	{"Button", "Buttons", []string{"Default"}, controlButton},
 	{"Checkbox", "Check boxes", []string{"Off", "On"}, controlCheckbox},
 	{"Switch", "Switches", []string{"Off", "On"}, controlSwitch},
@@ -71,13 +72,26 @@ func (g *Gallery) Controls(c *ui.Context, example controlExample) {
 			for _, variant := range example.variants {
 				s := g.controlState(example.name, variant)
 				ui.Column(c).Key(variant).FillWidth().MinWidth(0).Gap(12).Children(func() {
-					ui.Text(c, variant).Bold().TextColor(t.TextMuted)
+					components.Text(c, variant).Bold().TextColor(t.TextMuted)
 					ui.Column(c).FillWidth().MinWidth(0).Gap(12).Children(func() {
 						example.build(c, s, variant)
 					})
 				})
 			}
 		})
+	})
+}
+
+func controlText(c *ui.Context, _ *controlState, _ string) {
+	components.Text(c, "A heading").FontSize(c.Theme().Rem(1.5)).Bold()
+	components.Text(c, "Hello, world. 你好，世界。こんにちは 🌍")
+	components.Text(c, "Secondary text").TextColor(c.Theme().TextMuted)
+	components.Text(c, "Long text wraps within the available width, including in narrow windows.").FillWidth()
+	components.Text(c, "A single-line label").SingleLine()
+	components.Textf(c, "%s: %d", "Count", 42)
+	ui.RichText(c).Children(func() {
+		components.Text(c, "Inline ")
+		components.Text(c, "bold text").Bold()
 	})
 }
 
@@ -95,17 +109,17 @@ func controlButton(c *ui.Context, s *controlState, _ string) {
 			}
 		}
 	})
-	ui.Textf(c, "Clicks: %d", s.clicks)
+	components.Textf(c, "Clicks: %d", s.clicks)
 }
 
 func controlCheckbox(c *ui.Context, s *controlState, _ string) {
 	components.Checkbox(c, &s.on, "Notifications")
-	ui.Textf(c, "Enabled: %t", s.on)
+	components.Textf(c, "Enabled: %t", s.on)
 }
 
 func controlSwitch(c *ui.Context, s *controlState, _ string) {
 	components.Switch(c, &s.on, "Sound")
-	ui.Textf(c, "Sound: %t", s.on)
+	components.Textf(c, "Sound: %t", s.on)
 }
 
 func controlRadio(c *ui.Context, s *controlState, _ string) {
@@ -114,23 +128,23 @@ func controlRadio(c *ui.Context, s *controlState, _ string) {
 			components.Radio(c, &s.choice, option, option)
 		}
 	}).Label("Size")
-	ui.Text(c, "Selected: "+s.choice)
+	components.Text(c, "Selected: "+s.choice)
 }
 
 func controlTextField(c *ui.Context, s *controlState, variant string) {
 	components.TextField(c, &s.text).Label("Name").Placeholder("Your name").ReadOnly(variant == "Read only").FillWidth().MinWidth(0)
-	ui.Text(c, s.text).Wrap()
+	components.Text(c, s.text).Wrap()
 }
 
 func controlTextArea(c *ui.Context, s *controlState, variant string) {
 	components.TextArea(c, &s.text).Label("Notes").Placeholder("Write a note").ReadOnly(variant == "Read only").Height(100).FillWidth().MinWidth(0)
-	ui.Textf(c, "%d characters", len([]rune(s.text)))
+	components.Textf(c, "%d characters", len([]rune(s.text)))
 }
 
 func controlSelect(c *ui.Context, s *controlState, _ string) {
 	t := c.Theme()
 	selectParts := components.Select(c, &s.choice)
-	selectParts.Trigger.Label("Size").Children(func() { ui.Text(c, s.choice).SingleLine() })
+	selectParts.Trigger.Label("Size").Children(func() { components.Text(c, s.choice).SingleLine() })
 	selectParts.Popup(func(panel *ui.Element) {
 		panel.Padding(t.Space(1)).Radius(t.Radius).Background(t.Background).Border(1, t.Border)
 		for _, option := range []string{"Small", "Medium", "Large"} {
@@ -138,18 +152,18 @@ func controlSelect(c *ui.Context, s *controlState, _ string) {
 			if item.Highlighted() {
 				item.Background(t.Accent).TextColor(t.AccentText)
 			}
-			item.Children(func() { ui.Text(c, option).SingleLine() })
+			item.Children(func() { components.Text(c, option).SingleLine() })
 		}
 	})
-	ui.Text(c, "Selected: "+s.choice)
+	components.Text(c, "Selected: "+s.choice)
 }
 
 func controlSlider(c *ui.Context, s *controlState, _ string) {
 	components.Slider(c, &s.value, 0, 100).Label("Volume").FillWidth().MinWidth(0)
-	ui.Textf(c, "Volume: %.0f", s.value)
+	components.Textf(c, "Volume: %.0f", s.value)
 }
 
 func controlTabs(c *ui.Context, s *controlState, _ string) {
 	components.Tabs(c, &s.index, "General", "Style")
-	ui.Text(c, []string{"General settings", "Style settings"}[s.index])
+	components.Text(c, []string{"General settings", "Style settings"}[s.index])
 }
