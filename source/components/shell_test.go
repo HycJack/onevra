@@ -299,6 +299,42 @@ func TestShellHasOnlyLeftSidebarControl(t *testing.T) {
 	}
 }
 
+func TestShellWindowsSidebarBackground(t *testing.T) {
+	if runtime.GOOS != "windows" {
+		t.Skip("Windows sidebar styling")
+	}
+	for _, dark := range []bool{false, true} {
+		s, _ := fixture()
+		s.options.Left = nil
+		s.options.Content = nil
+		s.options.LeftToolbar = func(c *ui.Context) { ui.Spacer(c) }
+		tt := ui.NewTester(s.view, 820, 600)
+		tt.SetPreferences(ui.Preferences{ReduceMotion: true})
+		tt.SetDark(dark)
+		img := tt.Image()
+		sidebar, main := img.RGBAAt(100, 400), img.RGBAAt(400, 400)
+		if sidebar == main || sidebar.A != 255 {
+			t.Fatalf("dark=%v: sidebar=%v main=%v", dark, sidebar, main)
+		}
+		for _, y := range []int{2, 599} {
+			if got := img.RGBAAt(100, y); got != sidebar {
+				t.Fatalf("dark=%v y=%d: sidebar=%v want=%v", dark, y, got, sidebar)
+			}
+		}
+		s.SetLeftExpanded(false)
+		tt.Frame()
+		if got := tt.Image().RGBAAt(100, 400); got != main {
+			t.Fatalf("collapsed sidebar left a background: %v", got)
+		}
+		s.SetLeftExpanded(true)
+		s.SetPage(func(*ui.Context) {})
+		tt.Frame()
+		if got := tt.Image().RGBAAt(100, 400); got != main {
+			t.Fatalf("replacement page retained sidebar background: %v", got)
+		}
+	}
+}
+
 func TestShellBackgroundsAndScaling(t *testing.T) {
 	for _, dark := range []bool{false, true} {
 		s, _ := fixture()

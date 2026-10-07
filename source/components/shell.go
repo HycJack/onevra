@@ -189,7 +189,11 @@ func (s *Shell) view(c *ui.Context) {
 				if leftProgress > 0 {
 					// Only the visible slice changes width. Sidebar content stays put
 					// while the opaque main region covers or uncovers it.
-					ui.Column(c).Key("left").Width(leftWidth * leftProgress).Shrink(0).FillHeight().Clip().Children(func() {
+					sidebar := ui.Column(c).Key("left").Width(leftWidth * leftProgress).Shrink(0).FillHeight().Clip()
+					if runtime.GOOS == "windows" {
+						sidebar.Background(c.Theme().Surface.Alpha(1))
+					}
+					sidebar.Children(func() {
 						ui.Column(c).Width(leftWidth).Shrink(0).FillHeight().Padding(headerHeight, 0, 0, 0).
 							Disabled(!s.leftOpen).Children(func() {
 							ui.Column(c).FillWidth().Grow(1).MinHeight(0).Clip().Children(func() {
