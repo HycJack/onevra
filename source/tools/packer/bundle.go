@@ -142,8 +142,7 @@ func archive(ctx context.Context, c *config, stage, app string, t target) error 
 	if err := os.Symlink("/Applications", filepath.Join(imageRoot, "Applications")); err != nil {
 		return err
 	}
-	_, err := command(ctx, "hdiutil", "create", "-quiet", "-fs", "HFS+", "-format", "UDZO", "-volname", c.Name, "-srcfolder", imageRoot, base+".dmg")
-	return err
+	return createDMG(ctx, stage, imageRoot, c.Name, filepath.Base(app), base+".dmg")
 }
 
 // publish replaces a development app only after every build step succeeds.

@@ -97,8 +97,8 @@ func TestPublish(t *testing.T) {
 	}
 }
 
-// This opt-in test runs real Apple tools, but does not open a GUI or download
-// native libraries. A tiny Go app verifies packaging and configuration-only launch.
+// This opt-in test runs real Apple tools and briefly opens Finder to save the
+// DMG layout. A tiny Go app verifies packaging without downloading native libraries.
 func TestNativePackaging(t *testing.T) {
 	if runtime.GOOS != "darwin" || os.Getenv("ONEO_PACKER_SMOKE") != "1" {
 		t.Skip("set ONEO_PACKER_SMOKE=1 on macOS with Xcode")
@@ -186,6 +186,28 @@ func main() { if path := os.Getenv("PACKER_TEST_MARKER"); path != "" { if err :=
 		if strings.HasSuffix(entry.Name(), ".zip") || strings.HasSuffix(entry.Name(), ".dmg") {
 			t.Fatalf("DMG contains another archive: %s", entry.Name())
 		}
+	}
+	for _, name := range []string{".DS_Store", ".background/install.png"} {
+		if info, err := os.Stat(filepath.Join(mount, name)); err != nil || info.Size() == 0 {
+			t.Fatalf("missing DMG presentation asset %s: %v", name, err)
+		}
+	}
+	layout, err := command(ctx, "osascript", "-e", `on run argv
+	set imageFolder to POSIX file (item 1 of argv) as alias
+	tell application "Finder"
+		set imageFolder to folder imageFolder
+		open imageFolder
+		delay 1
+		tell imageFolder
+			set options to icon view options of container window
+			set validLayout to (current view of container window is icon view) and (icon size of options is 160) and (arrangement of options is (not arranged)) and (position of item (item 2 of argv) is {180, 185}) and (position of item "Applications" is {540, 185})
+		end tell
+		close container window of imageFolder
+	end tell
+	return validLayout
+end run`, mount, c.Name+".app")
+	if err != nil || strings.TrimSpace(string(layout)) != "true" {
+		t.Fatalf("compressed DMG did not retain Finder layout: %s, %v", layout, err)
 	}
 	if target, err := os.Readlink(filepath.Join(mount, "Applications")); err != nil || target != "/Applications" {
 		t.Fatalf("Applications shortcut: %q, %v", target, err)
