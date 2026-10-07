@@ -19,7 +19,7 @@ cd source
 go tool mygo dev
 ```
 
-侧边栏提供 Shell、Lucide 图标库和 MyGo 组件入口，MyGo 组件按类型分组，各页面仅展示可交互的组件状态和用法变体，不包含代码或教程说明。Plugins / Terminal 页面提供 ANSI 输出和输入回显，不启动系统 Shell；详见[运行依赖](docs/build.md#app-bundles)。
+侧边栏提供 Shell、Lucide 图标库、oneo-go 控件和 MyGo 组件入口。**oneo-go controls** 分组为每个公共控件提供可交互的状态示例，包括全部按钮样式和尺寸。MyGo 组件按类型分组，各页面仅展示可交互的组件状态和用法变体，不包含代码或教程说明。Plugins / Terminal 页面提供 ANSI 输出和输入回显，不启动系统 Shell；详见[运行依赖](docs/build.md#app-bundles)。
 
 在 macOS 上，这会启动支持自动重载的开发版应用。要预览指定外观，可运行 `go run ./examples/gallery -theme light` 或 `-theme dark`。
 

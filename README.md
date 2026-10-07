@@ -19,7 +19,7 @@ cd source
 go tool mygo dev
 ```
 
-The sidebar includes Shell, the Lucide icon library and MyGo components. MyGo components are grouped by type; each page displays interactive component states and variations without code or tutorial text. The Plugins / Terminal page offers ANSI output and input echo without launching a shell; see [runtime requirements](docs/build.md#app-bundles).
+The sidebar includes Shell, the Lucide icon library, oneo-go controls and MyGo components. The **oneo-go controls** group demonstrates each public control with interactive state variants, including all button styles and sizes. MyGo components are grouped by type; each page displays interactive component states and variations without code or tutorial text. The Plugins / Terminal page offers ANSI output and input echo without launching a shell; see [runtime requirements](docs/build.md#app-bundles).
 
 On macOS this runs a live-reloading development app. To preview a specific appearance, use `go run ./examples/gallery -theme light` or `-theme dark`.
 

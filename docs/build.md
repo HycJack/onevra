@@ -38,10 +38,10 @@ From `source/`, in a macOS desktop session:
 
 ```sh
 ONEO_GO_NATIVE_SMOKE=1 ONEO_GO_SCREENSHOTS="$PWD/../dist/preview" \
-  go test ./internal/gallery -run '^TestNative(Gallery|ShellResize|MyGo|Terminal)$' -count=1 -v
+  go test ./internal/gallery -run '^TestNative(Gallery|ShellResize|MyGo|Controls|Terminal)$' -count=1 -v
 ```
 
-The tests open windows, capture appearance variants (including every MyGo example in light, dark and narrow layouts), exercise terminal input and cleanup, check that replacement pages preserve window bounds, and close the windows. On macOS ARM64, the sidebar resize test sends native pointer events to verify configured width limits and double-click reset without resizing the window. Omit `ONEO_GO_SCREENSHOTS` to use temporary output.
+The tests open windows, capture appearance variants (including every oneo-go control and MyGo example in light, dark and narrow layouts), exercise terminal input and cleanup, check that replacement pages preserve window bounds, and close the windows. On macOS ARM64, the sidebar resize test sends native pointer events to verify configured width limits and double-click reset without resizing the window. Omit `ONEO_GO_SCREENSHOTS` to use temporary output.
 
 For UI changes, manually review both themes, narrow layouts, text scaling, window controls, keyboard navigation and accessibility. Inspect background blending over a contrasting backdrop. Captures do not replace interaction review; Windows and Linux need separate desktop checks. See the [gallery verification approach](architecture/gallery.md#verification-approach).
 

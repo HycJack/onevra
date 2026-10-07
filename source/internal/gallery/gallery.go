@@ -11,13 +11,14 @@ import (
 
 // Gallery owns only demonstration state.
 type Gallery struct {
-	Clicks       int
-	Shell        *components.Shell
-	page         galleryPage
-	query        string
-	grid         ui.GridState
-	selectedIcon int
-	mygoStates   map[string]*demoState
+	Clicks        int
+	Shell         *components.Shell
+	page          galleryPage
+	query         string
+	grid          ui.GridState
+	selectedIcon  int
+	mygoStates    map[string]*demoState
+	controlStates map[string]*controlState
 }
 
 // New creates the standalone shell demonstration.
@@ -41,6 +42,9 @@ func (g *Gallery) Titlebar(c *ui.Context) {
 	if example, ok := mygoExampleFor(g.page); ok {
 		title = example.group + " / " + example.name
 	}
+	if example, ok := controlExampleFor(g.page); ok {
+		title = "oneo-go controls / " + example.name
+	}
 	ui.Text(c, title).Bold().SingleLine()
 }
 
@@ -52,6 +56,11 @@ func (g *Gallery) Left(c *ui.Context) {
 			ui.Box(c).Height(4)
 			g.navigationGroup(c, "Icon library")
 			g.navigationItem(c, "Lucide", lucide.Shapes(), lucidePage)
+			ui.Box(c).Height(4)
+			g.navigationGroup(c, "oneo-go controls")
+			for i, example := range controlCatalog {
+				g.navigationItem(c, example.label, lucide.Component(), controlPageStart()+galleryPage(i))
+			}
 			ui.Box(c).Height(4)
 			g.navigationGroup(c, "MyGo components")
 			for _, group := range mygoGroups {
@@ -116,6 +125,10 @@ func iconSamples(c *ui.Context) {
 
 // View builds the default page's main content.
 func (g *Gallery) View(c *ui.Context) {
+	if example, ok := controlExampleFor(g.page); ok {
+		g.Controls(c, example)
+		return
+	}
 	if example, ok := mygoExampleFor(g.page); ok {
 		g.MyGo(c, example)
 		return

@@ -4,7 +4,7 @@ User-facing updates for oneo-go library consumers. No version has been published
 
 ## [Unreleased]
 
-- Use oneo-styled common controls from `controls`: buttons (primary, default, outline, ghost and link variants in three sizes), check boxes, switches, radio buttons, text fields and areas, drop-down selects, sliders and tab rows. They are built on MyGo's unstyled bases, so pointer, keyboard and accessibility behavior come from MyGo, while colors follow oneo-go's built-in themes.
+- Use oneo-styled common controls from `controls`: buttons (primary, default, outline, ghost and link variants in three sizes), check boxes, switches, radio buttons, text fields and areas, drop-down selects, sliders and tab rows. They are built on MyGo's unstyled bases, so pointer, keyboard and accessibility behavior come from MyGo, while colors follow oneo-go's built-in themes. Preview every control in the gallery's **oneo-go controls** group, including button styles and sizes, editable and read-only inputs, and selection states.
 
 - Use 1,866 Lucide icons directly with MyGo through `icons/lucide`, with named accessors, first-use parsing and inherited text colors. Preview representative icons at multiple sizes in the gallery.
 
