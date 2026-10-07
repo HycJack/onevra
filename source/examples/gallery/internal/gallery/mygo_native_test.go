@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/egoist/mygo"
-	oneoui "github.com/oneo-me/oneo-go/ui"
+	oneoshell "github.com/oneo-me/oneo-go/shell"
 )
 
 func TestNativeMyGo(t *testing.T) {
@@ -33,7 +33,7 @@ func captureCatalog(t *testing.T, controls bool) {
 		}
 	}
 	g := &Gallery{}
-	var shell *oneoui.Shell
+	var shell *oneoshell.Shell
 	mygo.RunOnMain(func() { shell = g.New() })
 	win := shell.Window()
 	defer win.Destroy()

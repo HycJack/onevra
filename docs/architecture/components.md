@@ -1,6 +1,6 @@
 # Component design
 
-The public [ui package](../../source/ui/doc.go) provides native UI compositions, not an application framework. Shell owns window presentation and a replaceable page container.
+The public [shell package](../../source/shell/doc.go) owns native window presentation and a replaceable page container, not an application framework. The [ui package](../../source/ui/doc.go) provides common controls independently of Shell. Shell also provides icon buttons for titlebar and toolbar actions. Both packages compose MyGo directly and neither depends on the other.
 
 ## Composition and ownership
 
@@ -8,13 +8,13 @@ Shell creates and configures the MyGo window because transparency, title-bar sty
 
 Applications own business state, localized text, actions and page selection. Content builders and Shell state changes run synchronously on the UI thread; builders must not launch repeated background work during rendering. Shell owns only presentation state, does not persist it, and uses MyGo's rendering, layout and input systems.
 
-For basic usage, see the [README](../../README.md#basic-usage); public contracts and defaults belong to the [API source](../../source/ui/shell.go).
+For basic usage, see the [README](../../README.md#basic-usage); public contracts and defaults belong to the [API source](../../source/shell/shell.go).
 
 ## Page container and layout
 
 The page container reserves space for system window controls and overlays a transparent draggable header with a Lucide sidebar control. The toggle keeps additional clearance from macOS traffic lights. Its default page contains a collapsible left sidebar and a flexible main region. Both regions extend to the top of the window behind the header; their content stays below it. Applications can supply the leading main-content titlebar area for a title, breadcrumbs or actions. It aligns with the main surface, clears the sidebar toggle when collapsed, and clips within the remaining native-control safe area.
 
-The optional left bottom toolbar remains beneath the sidebar body and disappears with the sidebar or on replacement pages. It composes MyGo's toolbar, retaining its focus navigation and overflow behavior. Applications supply actions and labels; the reusable [icon button](../../source/ui/toolbar.go) uses MyGo button semantics with transparent resting faces and translucent text-color interaction feedback.
+The optional left bottom toolbar remains beneath the sidebar body and disappears with the sidebar or on replacement pages. It composes MyGo's toolbar, retaining its focus navigation and overflow behavior. Applications supply actions and labels; the reusable [icon button](../../source/shell/icon_button.go) uses MyGo button semantics with transparent resting faces and translucent text-color interaction feedback.
 
 The left sidebar keeps its content at the full sidebar width while its visible slice animates, so the opaque main region appears to cover or uncover it without resizing the window. A thin separator overlays the main region's left edge, takes no layout space and disappears when the sidebar is fully closed. Its overlaid drag handle sits below the window-control region and supports keyboard arrow adjustment; double-clicking restores the application-configured default width. Applications can bound resizing with minimum and maximum widths. Shell retains the chosen width across toggles and page changes and removes the handle while collapsed or transitioning. Narrow layouts prioritize room for the main region over the configured minimum without discarding the chosen width; widening the window restores it.
 

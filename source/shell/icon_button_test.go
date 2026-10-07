@@ -1,14 +1,13 @@
-package ui
+package shell
 
 import (
-	"runtime"
 	"testing"
 
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/oneo-go/icons/lucide"
 )
 
-func TestToolbarIconButton(t *testing.T) {
+func TestIconButton(t *testing.T) {
 	for _, dark := range []bool{false, true} {
 		clicks := 0
 		disabled := false
@@ -18,7 +17,7 @@ func TestToolbarIconButton(t *testing.T) {
 			c.Root().Background(ui.Transparent)
 			size = max(32, c.Theme().Rem(2))
 			ui.Row(c).Fill().DragWindow().Children(func() {
-				button = ToolbarIconButton(c, lucide.Settings(), "Settings").Disabled(disabled)
+				button = IconButton(c, lucide.Settings(), "Settings").Disabled(disabled)
 				if button.Clicked() {
 					clicks++
 				}
@@ -65,49 +64,5 @@ func TestToolbarIconButton(t *testing.T) {
 		if r := button.Bounds(); r.W != size || r.H != size {
 			t.Fatal("button does not scale", r)
 		}
-	}
-}
-
-func TestShellToolbarPlacement(t *testing.T) {
-	s, _ := fixture()
-	var body *ui.Element
-	clicks := 0
-	s.options.Left = func(c *ui.Context) { body = ui.Box(c).Fill() }
-	s.options.LeftToolbar = func(c *ui.Context) {
-		ui.Spacer(c)
-		if ToolbarIconButton(c, lucide.Settings(), "Settings").Clicked() {
-			clicks++
-		}
-	}
-	tt := ui.NewTester(s.view, 820, 600)
-	tt.SetTitleBar(ui.TitleBar{Height: 48, Left: 80})
-	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
-	left, _ := tt.Find("Toggle sidebar")
-	if runtime.GOOS == "darwin" && left.X < 96 {
-		t.Fatal("sidebar toggle too close to traffic lights", left)
-	}
-	bottom, ok := tt.Find("Settings")
-	if !ok || bottom.Y+bottom.H != 592 || bottom.X+bottom.W != 212 || body.Bounds().Y+body.Bounds().H > bottom.Y {
-		t.Fatal("toolbar not pinned below sidebar content", bottom, body.Bounds())
-	}
-	if err := tt.Click("Settings"); err != nil || clicks != 1 {
-		t.Fatal("bottom toolbar action failed", err, clicks)
-	}
-	s.SetLeftExpanded(false)
-	tt.Frame()
-	if _, ok := tt.Find("Settings"); ok {
-		t.Fatal("collapsed sidebar retains toolbar")
-	}
-	s.SetLeftExpanded(true)
-	tt.Frame()
-	s.SetPage(func(*ui.Context) {})
-	tt.Frame()
-	if _, ok := tt.Find("Settings"); ok {
-		t.Fatal("replacement page retains sidebar toolbar")
-	}
-	s.SetPage(nil)
-	tt.Frame()
-	if _, ok := tt.Find("Settings"); !ok {
-		t.Fatal("returning did not restore sidebar toolbar")
 	}
 }

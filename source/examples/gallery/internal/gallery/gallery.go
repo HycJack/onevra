@@ -6,13 +6,13 @@ import (
 
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/oneo-go/icons/lucide"
-	oneoui "github.com/oneo-me/oneo-go/ui"
+	oneoshell "github.com/oneo-me/oneo-go/shell"
 )
 
 // Gallery owns only demonstration state.
 type Gallery struct {
 	Clicks        int
-	Shell         *oneoui.Shell
+	Shell         *oneoshell.Shell
 	page          galleryPage
 	query         string
 	grid          ui.GridState
@@ -22,8 +22,8 @@ type Gallery struct {
 }
 
 // New creates the standalone shell demonstration.
-func (g *Gallery) New() *oneoui.Shell {
-	g.Shell = oneoui.NewShell(oneoui.ShellOptions{
+func (g *Gallery) New() *oneoshell.Shell {
+	g.Shell = oneoshell.NewShell(oneoshell.ShellOptions{
 		Title: "oneo-go Gallery", Width: 820, Height: 900,
 		MinWidth: 360, MinHeight: 480,
 		LeftWidth: 220, LeftMinWidth: 220, LeftMaxWidth: 520,
@@ -78,7 +78,7 @@ func (g *Gallery) Left(c *ui.Context) {
 
 func (g *Gallery) LeftToolbar(c *ui.Context) {
 	ui.Spacer(c)
-	if oneoui.ToolbarIconButton(c, lucide.Settings(), "Settings").Clicked() && g.Shell != nil {
+	if oneoshell.IconButton(c, lucide.Settings(), "Settings").Clicked() && g.Shell != nil {
 		g.Shell.SetPage(g.Settings)
 	}
 }

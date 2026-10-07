@@ -25,7 +25,7 @@ go tool mygo dev
 
 ## 基本使用
 
-发布前，请使用包含你的应用和本仓库 `source/` 目录的本地 Go workspace。导入 `github.com/oneo-me/oneo-go/ui`：
+发布前，请使用包含你的应用和本仓库 `source/` 目录的本地 Go workspace。导入 `github.com/oneo-me/oneo-go/shell`：
 
 ```go
 package main
@@ -35,12 +35,12 @@ import (
 
     "github.com/egoist/mygo"
     "github.com/egoist/mygo/ui"
-    oneoui "github.com/oneo-me/oneo-go/ui"
+    oneoshell "github.com/oneo-me/oneo-go/shell"
 )
 
 func main() {
     mygo.App.WhenReady(func() {
-        shell := oneoui.NewShell(oneoui.ShellOptions{
+        shell := oneoshell.NewShell(oneoshell.ShellOptions{
             Title: "Hello",
             Left: func(c *ui.Context) {
                 ui.Text(c, "Navigation")
@@ -66,7 +66,7 @@ Shell 使用 oneo-go 内置的浅色与深色主题，通过 MyGo 自身的主�
 ```go
 import "github.com/oneo-me/oneo-go/theme"
 
-shell := oneoui.NewShell(oneoui.ShellOptions{
+shell := oneoshell.NewShell(oneoshell.ShellOptions{
     Title:      "Hello",
     Appearance: theme.Dark,
     // ...
@@ -77,7 +77,7 @@ shell := oneoui.NewShell(oneoui.ShellOptions{
 
 ## 控件
 
-导入 `github.com/oneo-me/oneo-go/ui` 使用基于 MyGo 无样式基座的 oneo 风格常用控件：按钮、复选框、开关、单选按钮、文本框与文本域、下拉选择、滑块和选项卡。沿用上面的 `oneoui` 导入别名，与 MyGo 的 `ui` 区分。颜色取自当前主题：
+导入 `github.com/oneo-me/oneo-go/ui` 使用基于 MyGo 无样式基座的 oneo 风格常用控件：按钮、复选框、开关、单选按钮、文本框与文本域、下拉选择、滑块和选项卡。使用 `oneoui` 导入别名，与 MyGo 的 `ui` 区分。颜色取自当前主题：
 
 ```go
 if oneoui.Button(c, "Save", oneoui.ButtonPrimary, oneoui.ButtonMedium).Clicked() {

@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/egoist/mygo"
-	oneoui "github.com/oneo-me/oneo-go/ui"
+	oneoshell "github.com/oneo-me/oneo-go/shell"
 )
 
 // Ordinary tests never open windows.
@@ -44,7 +44,7 @@ func TestNativeGallery(t *testing.T) {
 		t.Skip("requires a desktop session")
 	}
 	g := &Gallery{}
-	var shell *oneoui.Shell
+	var shell *oneoshell.Shell
 	mygo.RunOnMain(func() { shell = g.New() })
 	win := shell.Window()
 	defer win.Destroy()
@@ -52,7 +52,7 @@ func TestNativeGallery(t *testing.T) {
 		t.Fatal("expected native content and caller title")
 	}
 	var blank *mygo.Window
-	mygo.RunOnMain(func() { blank = oneoui.NewShell(oneoui.ShellOptions{}).Window() })
+	mygo.RunOnMain(func() { blank = oneoshell.NewShell(oneoshell.ShellOptions{}).Window() })
 	if blank.Page() != nil {
 		t.Error("nil content created a web page")
 	}

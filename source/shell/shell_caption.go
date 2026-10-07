@@ -1,4 +1,4 @@
-package ui
+package shell
 
 import (
 	"github.com/egoist/mygo/ui"
@@ -26,7 +26,7 @@ func (s *Shell) captionButtons(c *ui.Context) {
 	iconSize := c.Theme().Rem(0.875)
 	ui.Row(c).Key("window-controls").Shrink(0).Gap(4).AlignItems(ui.Center).Children(func() {
 		// Asymmetric padding lowers the centered glyph by 2 DIPs at normal scale.
-		minimize := toolbarIconButton(c, lucide.Minus(), captionLabel(o.MinimizeLabel, "Minimize window"), iconSize).
+		minimize := iconButton(c, lucide.Minus(), captionLabel(o.MinimizeLabel, "Minimize window"), iconSize).
 			Padding(c.Theme().Rem(0.25), 0, 0, 0)
 		if minimize.Clicked() && w != nil {
 			w.Minimize()
@@ -35,10 +35,10 @@ func (s *Shell) captionButtons(c *ui.Context) {
 		if w != nil && w.IsMaximized() {
 			icon, label = lucide.Copy(), captionLabel(o.RestoreLabel, "Restore window")
 		}
-		if toolbarIconButton(c, icon, label, iconSize).Clicked() && w != nil {
+		if iconButton(c, icon, label, iconSize).Clicked() && w != nil {
 			w.ToggleMaximize()
 		}
-		closeButton := toolbarIconButton(c, lucide.X(), captionLabel(o.CloseLabel, "Close window"), iconSize)
+		closeButton := iconButton(c, lucide.X(), captionLabel(o.CloseLabel, "Close window"), iconSize)
 		if closeButton.Hovered() || closeButton.Pressed() {
 			closeButton.TextColor(ui.RGB(255, 255, 255))
 		}

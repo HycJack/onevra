@@ -27,7 +27,8 @@ The gallery is an independent consumer of the public API, not a dependency of th
 
 There is one Go module under `source/`, with module path `github.com/oneo-me/oneo-go`:
 
-- `source/ui/`: public UI compositions and oneo-styled common controls built on MyGo's unstyled bases.
+- `source/shell/`: native window presentation and the replaceable sidebar-and-content page container.
+- `source/ui/`: oneo-styled common controls built on MyGo's unstyled bases, usable independently of Shell.
 - `source/icons/lucide/`: public icon assets and upstream provenance.
 - `source/tools/`: library maintenance commands, such as the Lucide importer; these share the Go module but are not runtime library dependencies.
 - `source/examples/gallery/`: standalone example, with presentation, native review tests and catalog generation tools under its own `internal/` directory.

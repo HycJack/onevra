@@ -1,17 +1,17 @@
-package ui
+package shell
 
 import "github.com/egoist/mygo/ui"
 
-// ToolbarIconButton creates an icon-only button with a tooltip and accessible
+// IconButton creates an icon-only button with a tooltip and accessible
 // label. It uses MyGo's pointer, keyboard and focus behavior and can be placed
 // in ui.Toolbar. Applications own the label and handle Clicked on the result.
 // The face is transparent at rest; hover and press use translucent text color.
-func ToolbarIconButton(c *ui.Context, icon *ui.SVG, label string) *ui.Element {
-	return toolbarIconButton(c, icon, label, c.Theme().Rem(1.25))
+func IconButton(c *ui.Context, icon *ui.SVG, label string) *ui.Element {
+	return iconButton(c, icon, label, c.Theme().Rem(1.25))
 }
 
-// toolbarIconButton varies the glyph size without shrinking the hit target.
-func toolbarIconButton(c *ui.Context, icon *ui.SVG, label string, iconSize float32) *ui.Element {
+// iconButton varies the glyph size without shrinking the hit target.
+func iconButton(c *ui.Context, icon *ui.SVG, label string, iconSize float32) *ui.Element {
 	t := c.Theme()
 	size := max(32, t.Rem(2))
 	b := ui.ButtonBase(c).Size(size, size).Radius(t.Radius).

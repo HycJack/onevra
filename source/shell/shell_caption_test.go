@@ -1,4 +1,4 @@
-package ui
+package shell
 
 import (
 	"runtime"
@@ -43,9 +43,9 @@ func TestCaptionGlyphSize(t *testing.T) {
 				ui.Column(c).Children(func() {
 					s.captionButtons(c)
 					ui.Row(c).Children(func() {
-						ToolbarIconButton(c, lucide.X(), "Toolbar close")
-						ToolbarIconButton(c, lucide.Square(), "Toolbar maximize")
-						toolbarIconButton(c, lucide.Minus(), "Reference minus", c.Theme().Rem(0.875))
+						IconButton(c, lucide.X(), "Toolbar close")
+						IconButton(c, lucide.Square(), "Toolbar maximize")
+						iconButton(c, lucide.Minus(), "Reference minus", c.Theme().Rem(0.875))
 					})
 				})
 			}, 400, 200)

@@ -25,7 +25,7 @@ On macOS this runs a live-reloading development app. To preview a specific appea
 
 ## Basic usage
 
-Until publication, use a local Go workspace that includes your application and this repository's `source/` directory. Import `github.com/oneo-me/oneo-go/ui`:
+Until publication, use a local Go workspace that includes your application and this repository's `source/` directory. Import `github.com/oneo-me/oneo-go/shell`:
 
 ```go
 package main
@@ -35,12 +35,12 @@ import (
 
     "github.com/egoist/mygo"
     "github.com/egoist/mygo/ui"
-    oneoui "github.com/oneo-me/oneo-go/ui"
+    oneoshell "github.com/oneo-me/oneo-go/shell"
 )
 
 func main() {
     mygo.App.WhenReady(func() {
-        shell := oneoui.NewShell(oneoui.ShellOptions{
+        shell := oneoshell.NewShell(oneoshell.ShellOptions{
             Title: "Hello",
             Left: func(c *ui.Context) {
                 ui.Text(c, "Navigation")
@@ -66,7 +66,7 @@ Shell uses oneo-go's built-in light and dark themes, applied through MyGo's own 
 ```go
 import "github.com/oneo-me/oneo-go/theme"
 
-shell := oneoui.NewShell(oneoui.ShellOptions{
+shell := oneoshell.NewShell(oneoshell.ShellOptions{
     Title:      "Hello",
     Appearance: theme.Dark,
     // ...
@@ -77,7 +77,7 @@ The palettes follow the Light and Shadow (light-shadow) design style from [oneo-
 
 ## Controls
 
-Import `github.com/oneo-me/oneo-go/ui` for oneo-styled common controls built on MyGo's unstyled bases: buttons, check boxes, switches, radio buttons, text fields and areas, selects, sliders and tabs. Use the same `oneoui` import alias as above to distinguish it from MyGo's `ui`. Colors come from the active theme:
+Import `github.com/oneo-me/oneo-go/ui` for oneo-styled common controls built on MyGo's unstyled bases: buttons, check boxes, switches, radio buttons, text fields and areas, selects, sliders and tabs. Use the `oneoui` import alias to distinguish it from MyGo's `ui`. Colors come from the active theme:
 
 ```go
 if oneoui.Button(c, "Save", oneoui.ButtonPrimary, oneoui.ButtonMedium).Clicked() {

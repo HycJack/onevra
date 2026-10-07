@@ -1,4 +1,4 @@
-package ui
+package shell
 
 import (
 	"runtime"
@@ -23,7 +23,7 @@ type ShellOptions struct {
 	// the room after the sidebar control and hides it on replacement pages.
 	ContentTitle func(*ui.Context)
 	// LeftToolbar builds a fixed bottom toolbar beneath Left; nil omits it.
-	// Use ToolbarIconButton for actions and ui.Spacer for trailing alignment.
+	// Use IconButton for actions and ui.Spacer for trailing alignment.
 	LeftToolbar func(*ui.Context)
 	// Default left sidebar width in DIPs; non-positive values use 220.
 	// Clamped to LeftMinWidth/LeftMaxWidth at creation. Dragging or focused
@@ -241,7 +241,7 @@ func (s *Shell) view(c *ui.Context) {
 			AlignItems(ui.Center).Padding(6, rightInset, 6, leftInset).
 			DragWindow().Children(func() {
 			if page == nil {
-				if ToolbarIconButton(c, lucide.PanelLeft(), s.options.LeftToggleLabel).Clicked() {
+				if IconButton(c, lucide.PanelLeft(), s.options.LeftToggleLabel).Clicked() {
 					s.SetLeftExpanded(!s.leftOpen)
 				}
 				// Align the title with the main surface, but keep it beyond the
