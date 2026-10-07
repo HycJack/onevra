@@ -85,8 +85,11 @@ func initMacBridge() {
 		if down {
 			a.lastDown = ev
 		}
-		p = nativeConvert(a.root, objc.RegisterName("convertPoint:fromView:"), p, a.surface)
-		return nativeHit(a.web, objc.RegisterName("hitTest:"), p)
+		// WebKit docks its inspector beside the inspected WKWebView, not
+		// inside it. Hit-test the whole browser subtree so inspector controls
+		// and its split-view divider can receive the original native event.
+		p = nativeConvert(a.parent, objc.RegisterName("convertPoint:fromView:"), p, a.surface)
+		return nativeHit(a.root, objc.RegisterName("hitTest:"), p)
 	}}})
 	macMonitorBlock = objc.NewBlock(func(_ objc.Block, ev objc.ID) objc.ID {
 		win := send(ev, "window")

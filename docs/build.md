@@ -66,7 +66,7 @@ The bridge has macOS and Windows amd64/arm64 implementations. macOS ARM64 has na
 Run native checks sequentially on macOS ARM64:
 
 ```sh
-ONEO_GO_NATIVE_SMOKE=1 go test ./components -run '^TestNative(WebView|HybridComposition)$' -count=1 -v
+ONEO_GO_NATIVE_SMOKE=1 go test ./components -run '^TestNative(WebView|WebInspector|HybridComposition)$' -count=1 -v
 ONEO_GO_NATIVE_SMOKE=1 go test ./internal/gallery -run '^TestNativeHybrid$' -count=1 -v
 go test github.com/egoist/mygo/ui github.com/egoist/mygo/internal/gpu/metal github.com/egoist/mygo/internal/raster
 ```
