@@ -5,9 +5,9 @@ import (
 	"fmt"
 
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/oneo-go/icons/lucide"
-	oneoshell "github.com/oneo-me/oneo-go/shell"
-	oneoui "github.com/oneo-me/oneo-go/ui"
+	"github.com/oneo-me/onevra/components"
+	"github.com/oneo-me/onevra/icons/lucide"
+	"github.com/oneo-me/onevra/shell"
 )
 
 // Gallery owns demonstration state and application preferences.
@@ -15,7 +15,7 @@ type Gallery struct {
 	config        Config
 	configPath    string
 	Clicks        int
-	Shell         *oneoshell.Shell
+	Shell         *shell.Shell
 	page          galleryPage
 	grid          ui.GridState
 	mygoStates    map[string]*demoState
@@ -23,9 +23,9 @@ type Gallery struct {
 }
 
 // New creates the standalone shell demonstration.
-func (g *Gallery) New() *oneoshell.Shell {
-	g.Shell = oneoshell.NewShell(oneoshell.ShellOptions{
-		Title:     "oneo-go Gallery",
+func (g *Gallery) New() *shell.Shell {
+	g.Shell = shell.NewShell(shell.ShellOptions{
+		Title:     "Onevra Gallery",
 		LeftWidth: 220, LeftMinWidth: 220, LeftMaxWidth: 520,
 		Left: g.Left, Content: g.View, LeftToolbar: g.LeftToolbar,
 		ContentTitle: g.Titlebar,
@@ -49,7 +49,7 @@ func (g *Gallery) Titlebar(c *ui.Context) {
 }
 
 func (g *Gallery) Left(c *ui.Context) {
-	ui.Column(c).Fill().Padding(oneoshell.HeaderHeight(c), 0, 0, 0).Children(func() { g.navigation(c) })
+	ui.Column(c).Fill().Padding(shell.HeaderHeight(c), 0, 0, 0).Children(func() { g.navigation(c) })
 }
 
 func (g *Gallery) navigation(c *ui.Context) {
@@ -85,18 +85,18 @@ func (g *Gallery) navigation(c *ui.Context) {
 }
 
 func (g *Gallery) LeftToolbar(c *ui.Context) {
-	oneoshell.IconButton(c, themeIcon(), "Theme").Menu(g.themeMenu)
+	shell.IconButton(c, themeIcon(), "Theme").Menu(g.themeMenu)
 	ui.Spacer(c)
-	if oneoshell.IconButton(c, lucide.Settings(), "Settings").Clicked() && g.Shell != nil {
+	if shell.IconButton(c, lucide.Settings(), "Settings").Clicked() && g.Shell != nil {
 		g.Shell.SetPage(g.Settings)
 	}
 }
 
 func (g *Gallery) Settings(c *ui.Context) {
-	ui.Column(c).Fill().Padding(oneoshell.HeaderHeight(c)+24, 24, 24, 24).Gap(16).Children(func() {
+	ui.Column(c).Fill().Padding(shell.HeaderHeight(c)+24, 24, 24, 24).Gap(16).Children(func() {
 		ui.Text(c, "Settings").FontSize(c.Theme().Rem(2)).Bold()
 		ui.Text(c, "A replacement page outside the sidebar-and-content layout.").Wrap()
-		if oneoui.Button(c, "Back", oneoui.ButtonSecondary).Clicked() && g.Shell != nil {
+		if components.Button(c, "Back", components.ButtonSecondary).Clicked() && g.Shell != nil {
 			g.Shell.SetPage(nil)
 		}
 	})
@@ -134,7 +134,7 @@ func iconSamples(c *ui.Context) {
 
 // View builds the default page's main content.
 func (g *Gallery) View(c *ui.Context) {
-	ui.Column(c).Fill().Padding(oneoshell.HeaderHeight(c), 0, 0, 0).Children(func() { g.body(c) })
+	ui.Column(c).Fill().Padding(shell.HeaderHeight(c), 0, 0, 0).Children(func() { g.body(c) })
 }
 
 func (g *Gallery) body(c *ui.Context) {
@@ -155,7 +155,7 @@ func (g *Gallery) body(c *ui.Context) {
 		ui.Column(c).FillWidth().Padding(t.Space(6)).Gap(t.Space(4)).Children(func() {
 			ui.Text(c, "A sidebar and content, one native window.").TextColor(t.TextMuted).Wrap()
 			ui.Text(c, "Toggle or resize the sidebar inside the window. Double-click its separator to restore the default width. Open Settings to replace the entire page.").Wrap()
-			if oneoui.Button(c, "Count", oneoui.ButtonSecondary).Clicked() {
+			if components.Button(c, "Count", components.ButtonSecondary).Clicked() {
 				g.Clicks++
 			}
 			ui.Text(c, fmt.Sprintf("Clicks: %d", g.Clicks))

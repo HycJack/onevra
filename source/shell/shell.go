@@ -7,8 +7,8 @@ import (
 
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/oneo-go/icons/lucide"
-	"github.com/oneo-me/oneo-go/theme"
+	"github.com/oneo-me/onevra/icons/lucide"
+	"github.com/oneo-me/onevra/theme"
 )
 
 // ShellOptions describes a window and its default sidebar-and-content page.
@@ -51,7 +51,7 @@ type ShellOptions struct {
 	// Windows caption button labels; empty values use English defaults.
 	MinimizeLabel, MaximizeLabel, RestoreLabel, CloseLabel string
 	// Appearance selects the window theme: Auto follows the system
-	// appearance, Light and Dark pin oneo-go's built-in palettes.
+	// appearance, Light and Dark pin Onevra's built-in palettes.
 	// It applies before any content is built; the zero value is Auto.
 	Appearance theme.Mode
 }

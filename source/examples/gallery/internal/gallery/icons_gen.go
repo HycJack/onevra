@@ -2,7 +2,7 @@
 
 package gallery
 
-import "github.com/oneo-me/oneo-go/icons/lucide"
+import "github.com/oneo-me/onevra/icons/lucide"
 
 var iconCatalog = []iconEntry{
 	{"a-arrow-down", lucide.AArrowDown},

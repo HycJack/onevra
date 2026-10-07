@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/egoist/mygo"
-	"github.com/oneo-me/oneo-go/examples/gallery/internal/gallery"
+	"github.com/oneo-me/onevra/examples/gallery/internal/gallery"
 )
 
 func main() {
@@ -23,13 +23,13 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	configDir := filepath.Join(home, ".oneo", "oneo-go")
+	configDir := filepath.Join(home, ".oneo", "onevra")
 	if err := os.MkdirAll(configDir, 0700); err != nil {
 		log.Fatal(err)
 	}
 	mygo.App.SetPath(mygo.PathUserData, configDir)
 	g := &gallery.Gallery{}
-	mygo.App.SetName("oneo-go Gallery")
+	mygo.App.SetName("Onevra Gallery")
 	var override mygo.ThemeSource
 	flag.Visit(func(f *flag.Flag) {
 		if f.Name == "theme" {

@@ -2,7 +2,7 @@ package shell
 
 import (
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/oneo-go/icons/lucide"
+	"github.com/oneo-me/onevra/icons/lucide"
 )
 
 type shellCaptionWindow interface {

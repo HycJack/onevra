@@ -1,4 +1,4 @@
-package ui
+package components
 
 import "github.com/egoist/mygo/ui"
 
@@ -19,7 +19,7 @@ const (
 	ButtonLink
 )
 
-// Button creates a labeled button in the oneo style with a single standard
+// Button creates a labeled button in the Onevra style with a single standard
 // size. Ask Clicked whether it was clicked; give it other content with Children
 // and an empty label. The label is also the accessible name. ButtonLink uses
 // text height without padding or a background and supports RichText composition;

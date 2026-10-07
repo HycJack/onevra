@@ -24,10 +24,10 @@ func TestReleaseDir(t *testing.T) {
 
 func TestArchiveName(t *testing.T) {
 	for _, version := range []string{"0.0.0", "1.2.3", "2.0.0-rc.1+build.42"} {
-		c := &config{Name: "ONEO Go Gallery", Version: version}
+		c := &config{Name: "Onevra Gallery", Version: version}
 		for _, goos := range []string{"darwin", "windows", "linux"} {
 			for _, arch := range []string{"arm64", "amd64"} {
-				if got, want := c.archiveName(target{goos, arch}), "oneo-go-gallery-"+goos+"-"+arch+"-"+version; got != want {
+				if got, want := c.archiveName(target{goos, arch}), "onevra-gallery-"+goos+"-"+arch+"-"+version; got != want {
 					t.Errorf("archive name = %q, want %q", got, want)
 				}
 			}

@@ -30,7 +30,7 @@ func (m Mode) String() string {
 // Accent hover/pressed states derive the same way MyGo derives them, and the
 // control radius follows the style; spacing and font size keep following MyGo.
 
-// LightPalette returns oneo-go's light palette.
+// LightPalette returns Onevra's light palette.
 func LightPalette() *ui.Theme {
 	t := ui.LightTheme()
 	accent := ui.Hex("#bd481b")
@@ -57,7 +57,7 @@ func LightPalette() *ui.Theme {
 	return t
 }
 
-// DarkPalette returns oneo-go's dark palette.
+// DarkPalette returns Onevra's dark palette.
 // MyGo widgets branch on the Dark flag, so it stays set.
 func DarkPalette() *ui.Theme {
 	t := ui.DarkTheme()

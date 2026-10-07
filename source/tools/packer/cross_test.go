@@ -25,8 +25,8 @@ import (
 // Cross-build real executables, but use local synthetic native-library payloads.
 // This proves archive structure and target selection, not Windows/Linux UI behavior.
 func TestCrossPackaging(t *testing.T) {
-	if os.Getenv("ONEO_PACKER_SMOKE") != "1" {
-		t.Skip("set ONEO_PACKER_SMOKE=1 to cross-build Windows and Linux fixtures")
+	if os.Getenv("ONEVRA_PACKER_SMOKE") != "1" {
+		t.Skip("set ONEVRA_PACKER_SMOKE=1 to cross-build Windows and Linux fixtures")
 	}
 	root := t.TempDir()
 	put(t, filepath.Join(root, "go.mod"), "module example.com/crossfixture\n\ngo 1.27.1\n")

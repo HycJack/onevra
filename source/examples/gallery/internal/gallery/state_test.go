@@ -51,7 +51,7 @@ func TestStateRoutes(t *testing.T) {
 }
 
 func TestNativeState(t *testing.T) {
-	if os.Getenv("ONEO_GO_NATIVE_SMOKE") != "1" {
+	if os.Getenv("ONEVRA_NATIVE_SMOKE") != "1" {
 		t.Skip("requires a desktop session")
 	}
 	path := filepath.Join(t.TempDir(), "state.json")

@@ -2,7 +2,7 @@ package gallery
 
 import (
 	"github.com/egoist/mygo/ui"
-	oneoui "github.com/oneo-me/oneo-go/ui"
+	"github.com/oneo-me/onevra/components"
 )
 
 type controlExample struct {
@@ -55,7 +55,7 @@ func (g *Gallery) controlState(name, variant string) *controlState {
 		s.choice, s.index = "Large", 1
 	}
 	if variant != "Empty" {
-		s.text = "Hello oneo-go"
+		s.text = "Hello Onevra"
 	}
 	if name == "TextArea" && variant != "Empty" {
 		s.text += "\nA multiline note."
@@ -85,12 +85,12 @@ func controlButton(c *ui.Context, s *controlState, _ string) {
 	ui.Row(c).FillWidth().MinWidth(0).Wrap().Gap(c.Theme().Space(2)).Children(func() {
 		for _, variant := range []struct {
 			name  string
-			value oneoui.ButtonVariant
+			value components.ButtonVariant
 		}{
-			{"Primary", oneoui.ButtonPrimary}, {"Secondary", oneoui.ButtonSecondary},
-			{"Outline", oneoui.ButtonOutline}, {"Ghost", oneoui.ButtonGhost}, {"Link", oneoui.ButtonLink},
+			{"Primary", components.ButtonPrimary}, {"Secondary", components.ButtonSecondary},
+			{"Outline", components.ButtonOutline}, {"Ghost", components.ButtonGhost}, {"Link", components.ButtonLink},
 		} {
-			if oneoui.Button(c, variant.name, variant.value).Clicked() {
+			if components.Button(c, variant.name, variant.value).Clicked() {
 				s.clicks++
 			}
 		}
@@ -99,37 +99,37 @@ func controlButton(c *ui.Context, s *controlState, _ string) {
 }
 
 func controlCheckbox(c *ui.Context, s *controlState, _ string) {
-	oneoui.Checkbox(c, &s.on, "Notifications")
+	components.Checkbox(c, &s.on, "Notifications")
 	ui.Textf(c, "Enabled: %t", s.on)
 }
 
 func controlSwitch(c *ui.Context, s *controlState, _ string) {
-	oneoui.Switch(c, &s.on, "Sound")
+	components.Switch(c, &s.on, "Sound")
 	ui.Textf(c, "Sound: %t", s.on)
 }
 
 func controlRadio(c *ui.Context, s *controlState, _ string) {
 	ui.RadioGroup(c, func() {
 		for _, option := range []string{"Small", "Medium", "Large"} {
-			oneoui.Radio(c, &s.choice, option, option)
+			components.Radio(c, &s.choice, option, option)
 		}
 	}).Label("Size")
 	ui.Text(c, "Selected: "+s.choice)
 }
 
 func controlTextField(c *ui.Context, s *controlState, variant string) {
-	oneoui.TextField(c, &s.text).Label("Name").Placeholder("Your name").ReadOnly(variant == "Read only").FillWidth().MinWidth(0)
+	components.TextField(c, &s.text).Label("Name").Placeholder("Your name").ReadOnly(variant == "Read only").FillWidth().MinWidth(0)
 	ui.Text(c, s.text).Wrap()
 }
 
 func controlTextArea(c *ui.Context, s *controlState, variant string) {
-	oneoui.TextArea(c, &s.text).Label("Notes").Placeholder("Write a note").ReadOnly(variant == "Read only").Height(100).FillWidth().MinWidth(0)
+	components.TextArea(c, &s.text).Label("Notes").Placeholder("Write a note").ReadOnly(variant == "Read only").Height(100).FillWidth().MinWidth(0)
 	ui.Textf(c, "%d characters", len([]rune(s.text)))
 }
 
 func controlSelect(c *ui.Context, s *controlState, _ string) {
 	t := c.Theme()
-	selectParts := oneoui.Select(c, &s.choice)
+	selectParts := components.Select(c, &s.choice)
 	selectParts.Trigger.Label("Size").Children(func() { ui.Text(c, s.choice).SingleLine() })
 	selectParts.Popup(func(panel *ui.Element) {
 		panel.Padding(t.Space(1)).Radius(t.Radius).Background(t.Background).Border(1, t.Border)
@@ -145,11 +145,11 @@ func controlSelect(c *ui.Context, s *controlState, _ string) {
 }
 
 func controlSlider(c *ui.Context, s *controlState, _ string) {
-	oneoui.Slider(c, &s.value, 0, 100).Label("Volume").FillWidth().MinWidth(0)
+	components.Slider(c, &s.value, 0, 100).Label("Volume").FillWidth().MinWidth(0)
 	ui.Textf(c, "Volume: %.0f", s.value)
 }
 
 func controlTabs(c *ui.Context, s *controlState, _ string) {
-	oneoui.Tabs(c, &s.index, "General", "Style")
+	components.Tabs(c, &s.index, "General", "Style")
 	ui.Text(c, []string{"General settings", "Style settings"}[s.index])
 }

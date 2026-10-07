@@ -1,12 +1,12 @@
-# oneo-go
+# Onevra
 
-oneo-go is an independent Go component library built on MyGo. Read [ARCHITECTURE.md](ARCHITECTURE.md) in full before changing code, then read the relevant Subjects.
+Onevra is an independent Go component library built on MyGo. Read [ARCHITECTURE.md](ARCHITECTURE.md) in full before changing code, then read the relevant Subjects.
 
 ## Boundaries
 
 - Keep Go source, tests, examples, module files and application packaging configuration in `source/`. Run Go commands from that module directory; keep documentation at the repository root and in `docs/`.
 
-- When oneo-go implements a component, use that component instead of MyGo's equivalent styled widget in application and gallery UI. MyGo primitives and unstyled bases remain implementation building blocks; dedicated MyGo component demonstrations are the only styled-widget exception. Check `source/ui/` and `source/shell/` before choosing a control.
+- When Onevra implements a component, use that component instead of MyGo's equivalent styled widget in application and gallery UI. MyGo primitives and unstyled bases remain implementation building blocks; dedicated MyGo component demonstrations are the only styled-widget exception. Check `source/components/` and `source/shell/` before choosing a control.
 - Compose MyGo primitives and unstyled bases; do not create a parallel renderer, input system or theme manager.
 - Keep public components product-neutral. Applications own business state, localized text, persistence and asynchronous work.
 - Read upstream public signatures before using MyGo APIs. Keep examples runnable independently of consumer applications.

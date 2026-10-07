@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/egoist/mygo"
-	oneoshell "github.com/oneo-me/oneo-go/shell"
+	"github.com/oneo-me/onevra/shell"
 )
 
 func TestNativeMyGo(t *testing.T) {
@@ -22,7 +22,7 @@ func TestNativeControls(t *testing.T) {
 
 func captureCatalog(t *testing.T, controls bool) {
 	t.Helper()
-	if os.Getenv("ONEO_GO_NATIVE_SMOKE") != "1" {
+	if os.Getenv("ONEVRA_NATIVE_SMOKE") != "1" {
 		t.Skip("requires a desktop session")
 	}
 	catalog, start, prefix := mygoCatalog, mygoPageStart, "mygo-"
@@ -33,13 +33,13 @@ func captureCatalog(t *testing.T, controls bool) {
 		}
 	}
 	g := &Gallery{}
-	var shell *oneoshell.Shell
-	mygo.RunOnMain(func() { shell = g.New() })
-	win := shell.Window()
+	var appShell *shell.Shell
+	mygo.RunOnMain(func() { appShell = g.New() })
+	win := appShell.Window()
 	defer win.Destroy()
 	// Only native captures relax the default minimum to exercise narrow layouts.
 	mygo.RunOnMain(func() { win.SetMinimumSize(360, 480) })
-	dir := os.Getenv("ONEO_GO_SCREENSHOTS")
+	dir := os.Getenv("ONEVRA_SCREENSHOTS")
 	if dir == "" {
 		dir = t.TempDir()
 	}
@@ -54,7 +54,7 @@ func captureCatalog(t *testing.T, controls bool) {
 		{"light", mygo.ThemeLight, 820}, {"dark", mygo.ThemeDark, 820}, {"narrow", mygo.ThemeLight, 360},
 	} {
 		mygo.Theme.SetSource(mode.theme)
-		mygo.RunOnMain(func() { win.SetSize(mode.width, 900); shell.SetLeftExpanded(mode.width > 360) })
+		mygo.RunOnMain(func() { win.SetSize(mode.width, 900); appShell.SetLeftExpanded(mode.width > 360) })
 		time.Sleep(400 * time.Millisecond)
 		for i, example := range catalog {
 			mygo.RunOnMain(func() { g.page = start + galleryPage(i); win.Invalidate() })

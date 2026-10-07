@@ -9,7 +9,7 @@ import (
 	"testing"
 
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/oneo-go/theme"
+	"github.com/oneo-me/onevra/theme"
 )
 
 func TestIconCatalogCoverage(t *testing.T) {

@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/oneo-go/icons/lucide"
+	"github.com/oneo-me/onevra/icons/lucide"
 )
 
 // demoState is owned by one page, survives navigation, and is never persisted.

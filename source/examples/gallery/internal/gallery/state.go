@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/egoist/mygo"
-	oneoshell "github.com/oneo-me/oneo-go/shell"
+	"github.com/oneo-me/onevra/shell"
 )
 
 // State contains only presentation state, never interactive demo values.
@@ -108,7 +108,7 @@ func pageFromKey(key string) galleryPage {
 
 // NewPersistent is the application-owned startup path. New remains disk-free for
 // isolated demonstrations and tests. Normal close and application quit save state.
-func (g *Gallery) NewPersistent(path string) *oneoshell.Shell {
+func (g *Gallery) NewPersistent(path string) *shell.Shell {
 	state, err := LoadState(path)
 	if err != nil {
 		log.Printf("Load gallery state: %v", err)

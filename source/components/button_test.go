@@ -1,4 +1,4 @@
-package ui
+package components
 
 import (
 	"bytes"
@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/oneo-go/theme"
+	"github.com/oneo-me/onevra/theme"
 )
 
 func TestButtonVariantsClick(t *testing.T) {

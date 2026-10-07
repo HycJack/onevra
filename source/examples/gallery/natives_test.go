@@ -43,9 +43,9 @@ func TestTerminalLibraryLocation(t *testing.T) {
 }
 
 func TestBundledTerminalLoad(t *testing.T) {
-	bundle := os.Getenv("ONEO_GALLERY_BUNDLE")
+	bundle := os.Getenv("ONEVRA_GALLERY_BUNDLE")
 	if runtime.GOOS != "darwin" || bundle == "" {
-		t.Skip("set ONEO_GALLERY_BUNDLE to a Packer-built gallery .app on macOS")
+		t.Skip("set ONEVRA_GALLERY_BUNDLE to a Packer-built gallery .app on macOS")
 	}
 	// Relocate the library so this cannot pass because of the build path or cache.
 	data, err := os.ReadFile(filepath.Join(bundle, "Contents", "Frameworks", "libghostty-vt.dylib"))

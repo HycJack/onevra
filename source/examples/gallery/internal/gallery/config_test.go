@@ -7,7 +7,7 @@ import (
 
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/oneo-go/icons/lucide"
+	"github.com/oneo-me/onevra/icons/lucide"
 )
 
 func TestConfig(t *testing.T) {
@@ -47,7 +47,7 @@ func TestConfig(t *testing.T) {
 }
 
 func TestNativeThemeMenu(t *testing.T) {
-	if os.Getenv("ONEO_GO_NATIVE_SMOKE") != "1" {
+	if os.Getenv("ONEVRA_NATIVE_SMOKE") != "1" {
 		t.Skip("requires a desktop event loop for theme updates")
 	}
 	previous := mygo.Theme.Source()

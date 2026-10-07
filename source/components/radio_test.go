@@ -1,10 +1,10 @@
-package ui
+package components
 
 import (
 	"testing"
 
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/oneo-go/theme"
+	"github.com/oneo-me/onevra/theme"
 )
 
 func TestRadioSelect(t *testing.T) {

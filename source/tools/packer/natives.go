@@ -134,7 +134,7 @@ func nativeBytes(ctx context.Context, cache string, f nativeFile) ([]byte, error
 	if !f.valid() {
 		return nil, fmt.Errorf("invalid native library: %+v", f)
 	}
-	path := filepath.Join(cache, "oneo-packer", "natives", f.SHA256, f.Name)
+	path := filepath.Join(cache, "onevra-packer", "natives", f.SHA256, f.Name)
 	valid := func(data []byte) bool { return fmt.Sprintf("%x", sha256.Sum256(data)) == f.SHA256 }
 	if data, err := os.ReadFile(path); err == nil && valid(data) {
 		return data, nil

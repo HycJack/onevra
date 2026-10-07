@@ -1,6 +1,6 @@
 {
-  "name": "ONEO Go Gallery",
-  "identifier": "me.oneo.oneogo.gallery",
+  "name": "Onevra Gallery",
+  "identifier": "me.oneo.onevra.gallery",
   "version": "0.2026.1",
   "main": "./examples/gallery",
   "out": "../dist",

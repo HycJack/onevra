@@ -1,4 +1,4 @@
-module github.com/oneo-me/oneo-go
+module github.com/oneo-me/onevra
 
 go 1.27.1
 

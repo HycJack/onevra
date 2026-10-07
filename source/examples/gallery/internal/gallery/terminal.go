@@ -9,7 +9,7 @@ import (
 
 	"github.com/egoist/mygo/plugins/terminal"
 	"github.com/egoist/mygo/ui"
-	oneoui "github.com/oneo-me/oneo-go/ui"
+	"github.com/oneo-me/onevra/components"
 )
 
 // terminalDemo loads the optional native library only after an explicit action.
@@ -106,10 +106,10 @@ const terminalSample = "\x1b[1mMyGo Terminal\x1b[0m\r\n" +
 func exampleTerminal(c *ui.Context, s *demoState) {
 	term, loading, err := s.terminal.snapshot()
 	ui.Row(c).Gap(8).Children(func() {
-		if oneoui.Button(c, "Start terminal", oneoui.ButtonSecondary).Disabled(loading || term != nil).Clicked() {
+		if components.Button(c, "Start terminal", components.ButtonSecondary).Disabled(loading || term != nil).Clicked() {
 			s.terminal.start(newPreviewTerminal)
 		}
-		if oneoui.Button(c, "Stop", oneoui.ButtonSecondary).Disabled(!loading && term == nil).Clicked() {
+		if components.Button(c, "Stop", components.ButtonSecondary).Disabled(!loading && term == nil).Clicked() {
 			s.terminal.close()
 		}
 	})
@@ -131,15 +131,15 @@ func exampleTerminal(c *ui.Context, s *demoState) {
 	}
 	ui.Text(c, "Echo · no shell").TextColor(c.Theme().TextMuted)
 	ui.Row(c).Gap(8).Children(func() {
-		if oneoui.Button(c, "Colors", oneoui.ButtonSecondary).Clicked() {
+		if components.Button(c, "Colors", components.ButtonSecondary).Clicked() {
 			term.Feed([]byte(terminalSample))
 		}
-		if oneoui.Button(c, "Scrollback", oneoui.ButtonSecondary).Clicked() {
+		if components.Button(c, "Scrollback", components.ButtonSecondary).Clicked() {
 			for i := range 80 {
 				term.Feed(fmt.Appendf(nil, "\x1b[36m%02d\x1b[0m  Terminal output\r\n", i+1))
 			}
 		}
-		if oneoui.Button(c, "Clear", oneoui.ButtonSecondary).Clicked() {
+		if components.Button(c, "Clear", components.ButtonSecondary).Clicked() {
 			term.Feed([]byte("\x1b[2J\x1b[3J\x1b[H"))
 		}
 	})

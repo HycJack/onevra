@@ -108,7 +108,7 @@ func TestNativeCache(t *testing.T) {
 	if requests.Load() != 1 {
 		t.Fatalf("cache missed: %d requests", requests.Load())
 	}
-	path := filepath.Join(cache, "oneo-packer", "natives", f.SHA256, f.Name)
+	path := filepath.Join(cache, "onevra-packer", "natives", f.SHA256, f.Name)
 	put(t, path, "corrupted")
 	if _, err := nativeBytes(context.Background(), cache, f); err != nil || requests.Load() != 2 {
 		t.Fatalf("corrupt cache not repaired: %v, %d requests", err, requests.Load())
@@ -117,7 +117,7 @@ func TestNativeCache(t *testing.T) {
 	if _, err := nativeBytes(context.Background(), cache, f); err == nil {
 		t.Fatal("accepted incorrect hash")
 	}
-	if _, err := os.Stat(filepath.Join(cache, "oneo-packer", "natives", f.SHA256, f.Name)); !os.IsNotExist(err) {
+	if _, err := os.Stat(filepath.Join(cache, "onevra-packer", "natives", f.SHA256, f.Name)); !os.IsNotExist(err) {
 		t.Fatal("cached unverified bytes")
 	}
 	for _, name := range []string{"../escape", "", "..", "/absolute"} {

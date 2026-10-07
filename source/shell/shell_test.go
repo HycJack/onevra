@@ -7,7 +7,7 @@ import (
 
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/oneo-go/theme"
+	"github.com/oneo-me/onevra/theme"
 )
 
 type fakeWindow struct {

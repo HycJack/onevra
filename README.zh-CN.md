@@ -1,4 +1,4 @@
-# oneo-go
+# Onevra
 
 [English](README.md) | **简体中文**
 
@@ -7,6 +7,12 @@
 尚未发布为可下载的 module，API 暂不稳定。
 
 `main` 使用未经定制补丁修改的上游 MyGo。WebView 合成实验因依赖定制版 MyGo，保留在 `feature/webview` 分支，不属于主线组件。
+
+## 名字由来
+
+**Onevra** 是本项目的自造词名称：保留 **Oneo** 开头的 `One`，再组合 `vra`，形成简短且有辨识度的读音与拼写。词尾是音形上的选择，不是缩写，也没有赋予它特定的词根含义。
+
+命名时优先考虑与 Oneo 的联系和较低的重名概率，而不是采用常见英文单词；同时避免将组件库的身份绑定到 Go、MyGo 或某一种视觉风格。初步 GitHub 仓库名称检索未发现 `onevra` 的匹配结果，但这不代表全网无人使用，也不等于商标可用性确认。
 
 ## 体验展示程序
 
@@ -19,13 +25,13 @@ cd source
 go run ./examples/gallery
 ```
 
-侧边栏提供 Shell、Lucide 图标库、oneo-go 控件和 MyGo 组件入口。**oneo-go controls** 分组为每个公共控件提供可交互的状态示例，包括全部按钮样式。MyGo 组件按类型分组，各页面仅展示可交互的组件状态和用法变体，不包含代码或教程说明。Plugins / Terminal 页面提供 ANSI 输出和输入回显，不启动系统 Shell；详见[运行依赖](docs/build.md#app-bundles)。
+侧边栏提供 Shell、Lucide 图标库、Onevra 控件和 MyGo 组件入口。**Components** 分组为每个公共控件提供可交互的状态示例，包括全部按钮样式。MyGo 组件按类型分组，各页面仅展示可交互的组件状态和用法变体，不包含代码或教程说明。Plugins / Terminal 页面提供 ANSI 输出和输入回显，不启动系统 Shell；详见[运行依赖](docs/build.md#app-bundles)。
 
 要预览指定外观，可追加 `-theme light` 或 `-theme dark`。`go run ./tools/packer run` 编译并启动打包后的开发版应用，不进行热重载；`go run ./tools/packer build` 根据 `source/packer.json` 中选择的目标平台生成发布归档。详见[打包与图标要求](docs/build.md#app-bundles)。
 
 ## 基本使用
 
-发布前，请使用包含你的应用和本仓库 `source/` 目录的本地 Go workspace。导入 `github.com/oneo-me/oneo-go/shell`：
+发布前，请使用包含你的应用和本仓库 `source/` 目录的本地 Go workspace。导入 `github.com/oneo-me/onevra/shell`：
 
 ```go
 package main
@@ -35,25 +41,25 @@ import (
 
     "github.com/egoist/mygo"
     "github.com/egoist/mygo/ui"
-    oneoshell "github.com/oneo-me/oneo-go/shell"
+    "github.com/oneo-me/onevra/shell"
 )
 
 func main() {
     mygo.App.WhenReady(func() {
-        shell := oneoshell.NewShell(oneoshell.ShellOptions{
+        appShell := shell.NewShell(shell.ShellOptions{
             Title: "Hello",
             Left: func(c *ui.Context) {
-                ui.Column(c).Fill().Padding(oneoshell.HeaderHeight(c), 0, 0, 0).Children(func() {
+                ui.Column(c).Fill().Padding(shell.HeaderHeight(c), 0, 0, 0).Children(func() {
                     ui.Text(c, "Navigation")
                 })
             },
             Content: func(c *ui.Context) {
-                ui.Column(c).Fill().Padding(oneoshell.HeaderHeight(c), 0, 0, 0).Children(func() {
+                ui.Column(c).Fill().Padding(shell.HeaderHeight(c), 0, 0, 0).Children(func() {
                     ui.Text(c, "Hello, Shell")
                 })
             },
         })
-        shell.Window().OnClosed(func() { mygo.App.Quit() })
+        appShell.Window().OnClosed(func() { mygo.App.Quit() })
     })
     if err := mygo.App.Run(); err != nil {
         log.Fatal(err)
@@ -61,18 +67,18 @@ func main() {
 }
 ```
 
-在应用就绪后创建 Shell，使用 MyGo 控件构建各栏内容。使用 `shell.SetPage(view)` 替换整个侧边栏与主内容页面（例如显示设置），使用 `shell.SetPage(nil)` 恢复。由应用管理业务状态和生命周期。另可参考[可运行的展示程序](source/examples/gallery/main.go)。
+在应用就绪后创建 Shell，使用 MyGo 控件构建各栏内容。使用 `appShell.SetPage(view)` 替换整个侧边栏与主内容页面（例如显示设置），使用 `appShell.SetPage(nil)` 恢复。由应用管理业务状态和生命周期。另可参考[可运行的展示程序](source/examples/gallery/main.go)。
 
-内容默认延伸到 Shell 的悬浮标题栏下方。需要避让时，使用 `oneoshell.HeaderHeight(c)` 设置顶部内边距；在这个容器上绘制背景，即可覆盖标题栏区域而不遮挡内容控件。替换页也遵循这一规则。
+内容默认延伸到 Shell 的悬浮标题栏下方。需要避让时，使用 `shell.HeaderHeight(c)` 设置顶部内边距；在这个容器上绘制背景，即可覆盖标题栏区域而不遮挡内容控件。替换页也遵循这一规则。
 
 ## 外观
 
-Shell 使用 oneo-go 内置的浅色与深色主题，通过 MyGo 自身的主题机制应用，因此所有 MyGo 控件都能正常工作。`ShellOptions.Appearance` 可选择 `theme.Auto`（默认，跟随系统外观）、`theme.Light` 或 `theme.Dark`：
+Shell 使用 Onevra 内置的浅色与深色主题，通过 MyGo 自身的主题机制应用，因此所有 MyGo 控件都能正常工作。`ShellOptions.Appearance` 可选择 `theme.Auto`（默认，跟随系统外观）、`theme.Light` 或 `theme.Dark`：
 
 ```go
-import "github.com/oneo-me/oneo-go/theme"
+import "github.com/oneo-me/onevra/theme"
 
-shell := oneoshell.NewShell(oneoshell.ShellOptions{
+appShell := shell.NewShell(shell.ShellOptions{
     Title:      "Hello",
     Appearance: theme.Dark,
     // ...
@@ -83,22 +89,22 @@ shell := oneoshell.NewShell(oneoshell.ShellOptions{
 
 ## 控件
 
-导入 `github.com/oneo-me/oneo-go/ui` 使用基于 MyGo 无样式基座的 oneo 风格常用控件：按钮、复选框、开关、单选按钮、文本框与文本域、下拉选择、滑块和选项卡。使用 `oneoui` 导入别名，与 MyGo 的 `ui` 区分。颜色取自当前主题：
+导入 `github.com/oneo-me/onevra/components` 使用基于 MyGo 无样式基座的 Onevra 风格常用控件：按钮、复选框、开关、单选按钮、文本框与文本域、下拉选择、滑块和选项卡。包名为 `components`，可以与 MyGo 的 `ui` 同时导入，无需别名。颜色取自当前主题：
 
 ```go
-if oneoui.Button(c, "Save", oneoui.ButtonPrimary).Clicked() {
+if components.Button(c, "Save", components.ButtonPrimary).Clicked() {
     // ...
 }
 
-oneoui.Checkbox(c, &agreed, "I agree")
-oneoui.Switch(c, &wifi, "Wi-Fi")
+components.Checkbox(c, &agreed, "I agree")
+components.Switch(c, &wifi, "Wi-Fi")
 ```
 
-键盘、指针与无障碍行为由 MyGo 基座提供。参见[包契约](source/ui/doc.go)。
+键盘、指针与无障碍行为由 MyGo 基座提供。参见[包契约](source/components/doc.go)。
 
 ## Lucide 图标
 
-导入 `github.com/oneo-me/oneo-go/icons/lucide`，直接将具名访问函数用于 MyGo：
+导入 `github.com/oneo-me/onevra/icons/lucide`，直接将具名访问函数用于 MyGo：
 
 ```go
 ui.Icon(c, lucide.Search()).Size(20, 20)

@@ -1,19 +1,19 @@
-# oneo-go architecture
+# Onevra architecture
 
-oneo-go is an experimental, product-neutral Go component library built on MyGo. It provides reusable native UI compositions and Lucide SVG assets without introducing an application framework. The library is unpublished and its public API is not stable.
+Onevra is an experimental, product-neutral Go component library built on MyGo. It provides reusable native UI compositions and Lucide SVG assets without introducing an application framework. The library is unpublished and its public API is not stable.
 
 ## System boundaries
 
 - MyGo owns rendering, layout, input, native controls and desktop integration.
-- oneo-go composes MyGo primitives, rather than wrapping every upstream API or maintaining a parallel UI system.
+- Onevra composes MyGo primitives, rather than wrapping every upstream API or maintaining a parallel UI system.
 - Applications own business state, localized text, persistence, background work and application lifetime.
-- Components use oneo-go's built-in light and dark themes, applied per frame through MyGo's theme mechanism without mutating global appearance. MyGo and the operating system own native window behavior; Shell composes caption buttons on Windows.
+- Components use Onevra's built-in light and dark themes, applied per frame through MyGo's theme mechanism without mutating global appearance. MyGo and the operating system own native window behavior; Shell composes caption buttons on Windows.
 
 ## Components and flow
 
 ```text
 Application / standalone gallery
-  ├─ oneo-go components → MyGo → native desktop
+  ├─ Onevra components → MyGo → native desktop
   └─ MyGo directly
 ```
 
@@ -25,10 +25,10 @@ The gallery is an independent consumer of the public API, not a dependency of th
 
 ## Repository landmarks
 
-There is one Go module under `source/`, with module path `github.com/oneo-me/oneo-go`:
+There is one Go module under `source/`, with module path `github.com/oneo-me/onevra`:
 
 - `source/shell/`: native window presentation and the replaceable sidebar-and-content page container.
-- `source/ui/`: oneo-styled common controls built on MyGo's unstyled bases, usable independently of Shell.
+- `source/components/`: common controls built on MyGo's unstyled bases, usable independently of Shell.
 - `source/icons/lucide/`: public icon assets and upstream provenance.
 - `source/tools/`: Packer, the minimal desktop app runner/packager, and library maintenance commands such as the Lucide importer; these share the Go module but are not runtime library dependencies.
 - `source/examples/gallery/`: standalone example, with presentation, native review tests and catalog generation tools under its own `internal/` directory.

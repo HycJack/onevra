@@ -1,13 +1,13 @@
-package ui
+package components
 
 import "github.com/egoist/mygo/ui"
 
 // Select creates a drop-down choosing *selected from options the caller
-// builds in Popup with Item. The trigger has the oneo button look; build
+// builds in Popup with Item. The trigger has the Onevra button look; build
 // the popup and the items with the theme, highlighting the pointed option
 // with the accent color:
 //
-//	sel := oneoui.Select(c, &choice)
+//	sel := components.Select(c, &choice)
 //	sel.Trigger.Children(func() { ui.Text(c, string(choice)).SingleLine() })
 //	sel.Popup(func(panel *ui.Element) {
 //		t := c.Theme()

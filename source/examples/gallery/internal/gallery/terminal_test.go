@@ -96,7 +96,7 @@ func TestTerminalEchoConnection(t *testing.T) {
 }
 
 func TestNativeTerminal(t *testing.T) {
-	if os.Getenv("ONEO_GO_NATIVE_SMOKE") != "1" {
+	if os.Getenv("ONEVRA_NATIVE_SMOKE") != "1" {
 		t.Skip("requires opt-in native library loading")
 	}
 	var d terminalDemo

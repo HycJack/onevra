@@ -103,8 +103,8 @@ func TestPublish(t *testing.T) {
 // This opt-in test runs real Apple tools and briefly opens Finder to save the
 // DMG layout. A tiny Go app verifies packaging without downloading native libraries.
 func TestNativePackaging(t *testing.T) {
-	if runtime.GOOS != "darwin" || os.Getenv("ONEO_PACKER_SMOKE") != "1" {
-		t.Skip("set ONEO_PACKER_SMOKE=1 on macOS with Xcode")
+	if runtime.GOOS != "darwin" || os.Getenv("ONEVRA_PACKER_SMOKE") != "1" {
+		t.Skip("set ONEVRA_PACKER_SMOKE=1 on macOS with Xcode")
 	}
 	ctx := context.Background()
 	root := t.TempDir()

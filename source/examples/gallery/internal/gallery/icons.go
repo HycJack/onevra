@@ -2,7 +2,7 @@ package gallery
 
 import (
 	"github.com/egoist/mygo/ui"
-	oneoui "github.com/oneo-me/oneo-go/ui"
+	"github.com/oneo-me/onevra/components"
 )
 
 //go:generate go run ../cmd/galleryicons
@@ -46,7 +46,7 @@ func (g *Gallery) Icons(c *ui.Context) {
 	ui.GridView(c, &g.grid, len(iconCatalog), buttonSize+4, buttonSize+4, func(i int) {
 		icon := iconCatalog[i]
 		ui.Box(c).Fill().Center().Children(func() {
-			b := oneoui.Button(c, "", oneoui.ButtonOutline).Label(icon.name).Size(buttonSize, buttonSize).Padding(t.Space(2))
+			b := components.Button(c, "", components.ButtonOutline).Label(icon.name).Size(buttonSize, buttonSize).Padding(t.Space(2))
 			b.Children(func() {
 				ui.Icon(c, icon.get()).Size(20, 20)
 			})

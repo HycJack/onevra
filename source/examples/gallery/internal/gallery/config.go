@@ -9,7 +9,7 @@ import (
 
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/oneo-go/icons/lucide"
+	"github.com/oneo-me/onevra/icons/lucide"
 )
 
 // Config holds application preferences, separate from transient window state.

@@ -17,15 +17,15 @@ Packer accepts only the `run` and `build` commands, with no options or applicati
 
 The top-level `platforms` array in [packer.json](../source/packer.json) selects release targets using Go's `GOOS/GOARCH` spelling: `darwin`, `windows` or `linux`, each with `arm64` or `amd64`. The gallery configuration lists all six targets; edit this list to choose a subset, for example `"platforms": ["darwin/arm64", "windows/amd64"]`. If omitted or empty, Packer builds the host platform. Unsupported targets fail before building, and duplicate targets are built once.
 
-`run` always uses the host and ignores the release target list. It compiles once with ordinary Go optimizations and caching, attaches terminal I/O and waits for exit. On macOS it retains `dist/ONEO Go Gallery Dev.app` with a separate `.dev` bundle identifier; Windows and Linux retain a `dist/ONEO Go Gallery Dev/` directory. The next run replaces the development output. There is no file watcher or hot reload.
+`run` always uses the host and ignores the release target list. It compiles once with ordinary Go optimizations and caching, attaches terminal I/O and waits for exit. On macOS it retains `dist/Onevra Gallery Dev.app` with a separate `.dev` bundle identifier; Windows and Linux retain a `dist/Onevra Gallery Dev/` directory. The next run replaces the development output. There is no file watcher or hot reload.
 
 `build` uses `-trimpath` and linker `-s -w` flags to omit symbol tables and debug information. Windows releases also use the GUI subsystem. Packer does not inject framework-specific variables or change application runtime modes. Outputs go into `dist/releases/<version>/`, with no platform subdirectories or retained release application directories:
 
 | Target | Artifacts |
 | --- | --- |
-| macOS | `oneo-go-gallery-darwin-<arch>-<version>.dmg` and `.zip`, containing `ONEO Go Gallery.app`; the DMG opens in a large-icon drag-to-install layout with the app on the left and an Applications shortcut on the right |
-| Windows | `oneo-go-gallery-windows-<arch>-<version>.zip`, containing the app directory and `.exe` |
-| Linux | `oneo-go-gallery-linux-<arch>-<version>.tar.gz`, containing the app directory and executable |
+| macOS | `onevra-gallery-darwin-<arch>-<version>.dmg` and `.zip`, containing `Onevra Gallery.app`; the DMG opens in a large-icon drag-to-install layout with the app on the left and an Applications shortcut on the right |
+| Windows | `onevra-gallery-windows-<arch>-<version>.zip`, containing the app directory and `.exe` |
+| Linux | `onevra-gallery-linux-<arch>-<version>.tar.gz`, containing the app directory and executable |
 
 `<version>` comes from `version` in `packer.json`. The version determines the release directory and archive suffix, not the contained application or development output. For example, version `0.2026.1` writes archives to `dist/releases/0.2026.1/`. Different versions coexist in separate directories; rebuilding the same target and version replaces its archives.
 
@@ -41,7 +41,7 @@ macOS accepts only a prebuilt `.icns` file or an Icon Composer `.icon` directory
 
 Paths in the configuration are relative to its directory. The gallery uses the layered [Icon Composer project](../source/icon.icon) on macOS, a multi-size [ICO](../source/icon.ico) on Windows and a 1024 × 1024 [PNG](../source/icon.png) on Linux. The ICO and PNG are static exports of the layered icon’s default appearance; refresh both when changing the design. The contents of an optional sibling `resources/` directory preserve their relative paths: under `Contents/Resources` on macOS, beside the executable on Windows and Linux. Resource symlinks, special files and collisions with generated files are rejected. Native libraries go into `Contents/Frameworks` on macOS and are signed before the enclosing app; DLLs and shared objects live beside the executable on Windows and Linux. Only macOS packaging invokes Apple's signing and archive tools.
 
-On macOS, the gallery's Terminal page requires macOS 13 or later. Packer verifies manifest-provided downloads and keeps an independent `oneo-packer/natives` user cache. The first build may need network access; packaged apps do not download missing libraries. MyGo's current terminal loader does not search `Contents/Frameworks`, so Gallery startup selects its bundled library through `MYGO_GHOSTTY_VT`, preserving an explicit user override. This application-side adaptation is not injected by Packer. Direct `go run` and ordinary test binaries retain the plugin's normal lookup and may download the terminal library on first use. A missing bundled library is shown as an error on the page rather than silently using a developer's cache.
+On macOS, the gallery's Terminal page requires macOS 13 or later. Packer verifies manifest-provided downloads and keeps an independent `onevra-packer/natives` user cache. The first build may need network access; packaged apps do not download missing libraries. MyGo's current terminal loader does not search `Contents/Frameworks`, so Gallery startup selects its bundled library through `MYGO_GHOSTTY_VT`, preserving an explicit user override. This application-side adaptation is not injected by Packer. Direct `go run` and ordinary test binaries retain the plugin's normal lookup and may download the terminal library on first use. A missing bundled library is shown as an error on the page rather than silently using a developer's cache.
 
 For an unpackaged run on any supported desktop, use `go run ./examples/gallery -theme dark`.
 
@@ -52,7 +52,7 @@ gofmt -l .
 GOWORK=off go test ./...
 GOWORK=off go test -race ./...
 GOWORK=off go vet ./...
-GOWORK=off go build -o ../dist/oneo-go-gallery ./examples/gallery
+GOWORK=off go build -o ../dist/onevra-gallery ./examples/gallery
 (cd .. && git diff --check)
 ```
 
@@ -63,13 +63,13 @@ The formatting check should produce no output. Use a `.exe` output suffix on Win
 From `source/`, in a macOS desktop session:
 
 ```sh
-ONEO_GO_NATIVE_SMOKE=1 ONEO_GO_SCREENSHOTS="$PWD/../dist/preview" \
+ONEVRA_NATIVE_SMOKE=1 ONEVRA_SCREENSHOTS="$PWD/../dist/preview" \
   go test ./examples/gallery/internal/gallery -run '^TestNative(Gallery|MyGo|Controls|Terminal)$' -count=1 -v
 ```
 
-The tests open windows, capture appearance variants (including every oneo-go control and MyGo example in light, dark and narrow layouts), exercise terminal input and cleanup, check that replacement pages preserve window bounds, and close the windows. Omit `ONEO_GO_SCREENSHOTS` to use temporary output.
+The tests open windows, capture appearance variants (including every Onevra control and MyGo example in light, dark and narrow layouts), exercise terminal input and cleanup, check that replacement pages preserve window bounds, and close the windows. Omit `ONEVRA_SCREENSHOTS` to use temporary output.
 
-For packaging changes, run `ONEO_PACKER_SMOKE=1 GOWORK=off go test ./tools/packer -run '^Test(Native|Cross)Packaging$' -count=1 -v`. Cross tests inspect Windows PE headers, embedded ICO/manifest resources, Linux ELF headers, executable permissions and target-specific native payloads for both architectures; they do not execute foreign binaries. The native packaging test uses the real Apple tools on macOS and skips elsewhere. This checks prebuilt ICNS packaging and Icon Composer compilation, payload copying, bundle metadata, signing, versioned release archive outputs, DMG integrity and the retained development bundle using an independent Go fixture. To verify the terminal library from a built bundle, set `ONEO_GALLERY_BUNDLE` to an absolute path to a development app or an extracted release app and run `go test ./examples/gallery -run '^TestBundledTerminalLoad$' -count=1 -v`. This loads a relocated copy from Frameworks rather than the cache. Also run the packaged gallery in a desktop session; archive checks do not establish Finder or Dock appearance.
+For packaging changes, run `ONEVRA_PACKER_SMOKE=1 GOWORK=off go test ./tools/packer -run '^Test(Native|Cross)Packaging$' -count=1 -v`. Cross tests inspect Windows PE headers, embedded ICO/manifest resources, Linux ELF headers, executable permissions and target-specific native payloads for both architectures; they do not execute foreign binaries. The native packaging test uses the real Apple tools on macOS and skips elsewhere. This checks prebuilt ICNS packaging and Icon Composer compilation, payload copying, bundle metadata, signing, versioned release archive outputs, DMG integrity and the retained development bundle using an independent Go fixture. To verify the terminal library from a built bundle, set `ONEVRA_GALLERY_BUNDLE` to an absolute path to a development app or an extracted release app and run `go test ./examples/gallery -run '^TestBundledTerminalLoad$' -count=1 -v`. This loads a relocated copy from Frameworks rather than the cache. Also run the packaged gallery in a desktop session; archive checks do not establish Finder or Dock appearance.
 
 For UI changes, manually review both themes, narrow layouts, text scaling, window controls, keyboard navigation and accessibility. Verify that sidebar dragging respects configured width limits and double-clicking restores the default width without resizing the window. Inspect background blending over a contrasting backdrop. Captures do not replace interaction review; Windows and Linux need separate desktop checks. See the [gallery verification approach](architecture/gallery.md#verification-approach).
 

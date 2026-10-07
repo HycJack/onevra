@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/oneo-go/icons/lucide"
+	"github.com/oneo-me/onevra/icons/lucide"
 )
 
 func TestShellToolbarPlacement(t *testing.T) {

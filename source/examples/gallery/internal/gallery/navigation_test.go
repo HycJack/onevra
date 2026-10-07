@@ -33,7 +33,7 @@ func TestNavigationGroupOrder(t *testing.T) {
 		}
 		bottom = r.Y + r.H
 	}
-	if tt.HasText("oneo-go controls") {
+	if tt.HasText("Onevra controls") {
 		t.Fatal("obsolete component group is still visible")
 	}
 	for _, group := range mygoGroups {
