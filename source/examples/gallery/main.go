@@ -3,6 +3,8 @@ package main
 import (
 	"flag"
 	"log"
+	"os"
+	"path/filepath"
 
 	"github.com/egoist/mygo"
 	"github.com/oneo-me/oneo-go/examples/gallery/internal/gallery"
@@ -17,11 +19,20 @@ func main() {
 	if err := configureTerminalLibrary(); err != nil {
 		log.Fatal(err)
 	}
+	home, err := os.UserHomeDir()
+	if err != nil {
+		log.Fatal(err)
+	}
+	configDir := filepath.Join(home, ".oneo", "oneo-go")
+	if err := os.MkdirAll(configDir, 0700); err != nil {
+		log.Fatal(err)
+	}
+	mygo.App.SetPath(mygo.PathUserData, configDir)
 	g := &gallery.Gallery{}
 	mygo.App.SetName("oneo-go Gallery")
 	mygo.Theme.SetSource(mygo.ThemeSource(*theme))
 	mygo.App.WhenReady(func() {
-		win := g.New().Window()
+		win := g.NewPersistent(filepath.Join(configDir, "state.json")).Window()
 		win.OnClosed(func() { mygo.App.Quit() })
 	})
 	if err := mygo.App.Run(); err != nil {

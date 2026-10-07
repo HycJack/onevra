@@ -1,6 +1,7 @@
 package shell
 
 import (
+	"math"
 	"runtime"
 	"time"
 
@@ -158,6 +159,23 @@ func (s *Shell) Window() *mygo.Window { return s.window }
 // HeaderHeight(c) to keep interactive content below the header.
 func (s *Shell) SetPage(page func(*ui.Context)) {
 	s.page = page
+	s.refresh()
+}
+
+// LeftWidth reports the chosen sidebar width in DIPs, independent of viewport
+// clipping, collapse or page replacement.
+func (s *Shell) LeftWidth() float32 { return s.leftWidth }
+
+// SetLeftWidth restores or changes the chosen width within the configured limits.
+// Non-finite values are ignored. This does not change the double-click default.
+func (s *Shell) SetLeftWidth(width float32) {
+	if math.IsNaN(float64(width)) || math.IsInf(float64(width), 0) {
+		return
+	}
+	s.leftWidth = max(float32(s.options.LeftMinWidth), width)
+	if s.options.LeftMaxWidth > 0 {
+		s.leftWidth = min(s.leftWidth, float32(s.options.LeftMaxWidth))
+	}
 	s.refresh()
 }
 
