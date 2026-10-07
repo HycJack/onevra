@@ -82,29 +82,19 @@ func (g *Gallery) Controls(c *ui.Context, example controlExample) {
 }
 
 func controlButton(c *ui.Context, s *controlState, _ string) {
-	for _, variant := range []struct {
-		name  string
-		value oneoui.ButtonVariant
-	}{
-		{"Primary", oneoui.ButtonPrimary}, {"Neutral", oneoui.ButtonDefault},
-		{"Outline", oneoui.ButtonOutline}, {"Ghost", oneoui.ButtonGhost}, {"Link", oneoui.ButtonLink},
-	} {
-		ui.Column(c).Key(variant.name).Gap(8).Children(func() {
-			ui.Text(c, variant.name).TextColor(c.Theme().TextMuted)
-			ui.Row(c).Gap(8).Children(func() {
-				for _, size := range []struct {
-					name  string
-					value oneoui.ButtonSize
-				}{
-					{"S", oneoui.ButtonSmall}, {"M", oneoui.ButtonMedium}, {"L", oneoui.ButtonLarge},
-				} {
-					if oneoui.Button(c, size.name, variant.value, size.value).Label(variant.name + " " + size.name).Clicked() {
-						s.clicks++
-					}
-				}
-			})
-		})
-	}
+	ui.Row(c).FillWidth().MinWidth(0).Wrap().Gap(c.Theme().Space(2)).Children(func() {
+		for _, variant := range []struct {
+			name  string
+			value oneoui.ButtonVariant
+		}{
+			{"Primary", oneoui.ButtonPrimary}, {"Neutral", oneoui.ButtonDefault},
+			{"Outline", oneoui.ButtonOutline}, {"Ghost", oneoui.ButtonGhost}, {"Link", oneoui.ButtonLink},
+		} {
+			if oneoui.Button(c, variant.name, variant.value).Clicked() {
+				s.clicks++
+			}
+		}
+	})
 	ui.Textf(c, "Clicks: %d", s.clicks)
 }
 

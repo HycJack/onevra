@@ -96,7 +96,7 @@ func TestControlExampleInteractions(t *testing.T) {
 				changed := false
 				switch example.name {
 				case "Button":
-					click("Primary M")
+					click("Primary")
 					changed = s.clicks == 1
 				case "Checkbox":
 					click("Notifications")
@@ -133,6 +133,92 @@ func TestControlExampleInteractions(t *testing.T) {
 					t.Fatalf("changed=%t, disabled=%t", changed, disabled)
 				}
 			})
+		}
+	}
+}
+
+func TestControlButtonWrap(t *testing.T) {
+	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+		for _, width := range []int{540, 200} {
+			s := &controlState{}
+			tt := ui.NewTester(func(c *ui.Context) {
+				theme.Apply(c, mode)
+				ui.Column(c).Fill().Gap(12).Children(func() { controlButton(c, s, "Default") })
+			}, width, 300)
+			var first, previous ui.Rect
+			wrapped := false
+			for i, label := range []string{"Primary", "Neutral", "Outline", "Ghost", "Link"} {
+				r, ok := tt.Find(label)
+				if !ok {
+					t.Fatalf("missing button %s", label)
+				}
+				if r.X < 0 || r.X+r.W > float32(width)+1 {
+					t.Fatalf("%s overflows width %d: %+v", label, width, r)
+				}
+				if i == 0 {
+					first = r
+				} else {
+					if r.Y > previous.Y+1 {
+						wrapped = true
+					} else if r.X < previous.X+previous.W {
+						t.Fatalf("%s overlaps the previous button", label)
+					}
+					if width == 540 && r.Y+r.H/2 != first.Y+first.H/2 {
+						t.Fatal("wide layout should keep buttons on one row")
+					}
+					if i == 1 && r.Y+r.H/2 != first.Y+first.H/2 {
+						t.Fatal("the first two buttons should fit side by side")
+					}
+				}
+				previous = r
+				if err := tt.Click(label); err != nil {
+					t.Fatal(err)
+				}
+			}
+			if width == 200 && !wrapped {
+				t.Fatal("narrow layout should wrap buttons")
+			}
+			if s.clicks != 5 {
+				t.Fatalf("got %d clicks, want 5", s.clicks)
+			}
+		}
+	}
+}
+
+func TestControlButtonPointerStyles(t *testing.T) {
+	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+		for _, disabled := range []bool{false, true} {
+			s := &controlState{}
+			tt := ui.NewTester(func(c *ui.Context) {
+				theme.Apply(c, mode)
+				ui.Column(c).Fill().Disabled(disabled).Children(func() { controlButton(c, s, "Default") })
+			}, 540, 300)
+			for _, label := range []string{"Primary", "Neutral", "Outline", "Ghost"} {
+				r, ok := tt.Find(label)
+				if !ok {
+					t.Fatalf("missing button %s", label)
+				}
+				x, y := r.X+6, r.Y+r.H/2
+				tt.Move(530, 290)
+				rest := tt.Image().RGBAAt(int(x), int(y))
+				tt.Move(x, y)
+				hover := tt.Image().RGBAAt(int(x), int(y))
+				tt.Press(x, y)
+				pressed := tt.Image().RGBAAt(int(x), int(y))
+				tt.Release(x, y)
+				tt.Move(530, 290)
+				reset := tt.Image().RGBAAt(int(x), int(y))
+				if disabled {
+					if hover != rest || pressed != rest {
+						t.Fatalf("%v/%s: disabled button changed on pointer input", mode, label)
+					}
+				} else if hover == rest || pressed == hover {
+					t.Fatalf("%v/%s: missing hover or pressed feedback", mode, label)
+				}
+				if reset != rest {
+					t.Fatalf("%v/%s: pointer exit did not restore resting style", mode, label)
+				}
+			}
 		}
 	}
 }

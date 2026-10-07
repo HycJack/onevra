@@ -14,33 +14,21 @@ const (
 	ButtonOutline
 	// ButtonGhost is the borderless quiet action.
 	ButtonGhost
-	// ButtonLink looks like a text link.
+	// ButtonLink is inline text with an underline on hover.
 	ButtonLink
 )
 
-// ButtonSize selects a button's padding and text size.
-type ButtonSize int
-
-const (
-	ButtonSmall ButtonSize = iota
-	ButtonMedium
-	ButtonLarge
-)
-
-// Button creates a labeled button in the oneo style. Ask Clicked whether it
-// was clicked; give it other content with Children and an empty label. The
-// label is also the accessible name.
-func Button(c *ui.Context, label string, variant ButtonVariant, size ButtonSize) *ui.Element {
-	t := c.Theme()
-	b := ui.ButtonBase(c)
-	switch size {
-	case ButtonSmall:
-		b.Padding(t.Space(1), t.Space(2.5)).FontSize(t.Rem(0.85))
-	case ButtonLarge:
-		b.Padding(t.Space(2), t.Space(4.5)).FontSize(t.Rem(1.125))
-	default:
-		b.Padding(t.Space(1.5), t.Space(3.5))
+// Button creates a labeled button in the oneo style with a single standard
+// size. Ask Clicked whether it was clicked; give it other content with Children
+// and an empty label. The label is also the accessible name. ButtonLink uses
+// text height without padding or a background and supports RichText composition;
+// its children must be text.
+func Button(c *ui.Context, label string, variant ButtonVariant) *ui.Element {
+	if variant == ButtonLink {
+		return dimmed(ui.Link(c, label, ""))
 	}
+	t := c.Theme()
+	b := ui.ButtonBase(c).Padding(t.Space(1.5), t.Space(3.5))
 	bg, hover, pressed, fg, border := t.Surface, t.SurfaceHover, t.SurfacePressed, t.Text, t.Border
 	switch variant {
 	case ButtonPrimary:
@@ -49,9 +37,6 @@ func Button(c *ui.Context, label string, variant ButtonVariant, size ButtonSize)
 		bg, border = ui.Color{}, t.Border
 	case ButtonGhost:
 		bg, border = ui.Color{}, ui.Color{}
-	case ButtonLink:
-		bg, border, fg = ui.Color{}, ui.Color{}, t.Accent
-		b.Cursor(ui.CursorPointer)
 	}
 	if !b.IsDisabled() {
 		switch {

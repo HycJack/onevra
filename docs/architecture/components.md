@@ -2,6 +2,8 @@
 
 The public [shell package](../../source/shell/doc.go) owns native window presentation and a replaceable page container, not an application framework. The [ui package](../../source/ui/doc.go) provides common controls independently of Shell. Shell also provides icon buttons for titlebar and toolbar actions. Both packages compose MyGo directly and neither depends on the other.
 
+Common controls expose at most one visual variant axis, such as button style. Each control has one theme-scaled standard size rather than a separate size enumeration. Interaction and value states are not visual variants.
+
 ## Composition and ownership
 
 Shell creates and configures the MyGo window because transparency, title-bar style and traffic-light placement must be set at creation time. It exposes MyGo's original handle for application events and lifecycle operations, rather than introducing a second event or shutdown system. Applications should not replace the window's content behind Shell.

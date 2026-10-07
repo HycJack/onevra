@@ -19,7 +19,7 @@ cd source
 go tool mygo dev
 ```
 
-侧边栏提供 Shell、Lucide 图标库、oneo-go 控件和 MyGo 组件入口。**oneo-go controls** 分组为每个公共控件提供可交互的状态示例，包括全部按钮样式和尺寸。MyGo 组件按类型分组，各页面仅展示可交互的组件状态和用法变体，不包含代码或教程说明。Plugins / Terminal 页面提供 ANSI 输出和输入回显，不启动系统 Shell；详见[运行依赖](docs/build.md#app-bundles)。
+侧边栏提供 Shell、Lucide 图标库、oneo-go 控件和 MyGo 组件入口。**oneo-go controls** 分组为每个公共控件提供可交互的状态示例，包括全部按钮样式。MyGo 组件按类型分组，各页面仅展示可交互的组件状态和用法变体，不包含代码或教程说明。Plugins / Terminal 页面提供 ANSI 输出和输入回显，不启动系统 Shell；详见[运行依赖](docs/build.md#app-bundles)。
 
 在 macOS 上，这会启动支持自动重载的开发版应用。要预览指定外观，可运行 `go run ./examples/gallery -theme light` 或 `-theme dark`。
 
@@ -86,7 +86,7 @@ shell := oneoshell.NewShell(oneoshell.ShellOptions{
 导入 `github.com/oneo-me/oneo-go/ui` 使用基于 MyGo 无样式基座的 oneo 风格常用控件：按钮、复选框、开关、单选按钮、文本框与文本域、下拉选择、滑块和选项卡。使用 `oneoui` 导入别名，与 MyGo 的 `ui` 区分。颜色取自当前主题：
 
 ```go
-if oneoui.Button(c, "Save", oneoui.ButtonPrimary, oneoui.ButtonMedium).Clicked() {
+if oneoui.Button(c, "Save", oneoui.ButtonPrimary).Clicked() {
     // ...
 }
 
