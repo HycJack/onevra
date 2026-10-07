@@ -40,6 +40,15 @@ func TestNativeMyGo(t *testing.T) {
 		time.Sleep(400 * time.Millisecond)
 		for i, example := range mygoCatalog {
 			mygo.RunOnMain(func() { g.page = mygoPageStart + galleryPage(i); win.Invalidate() })
+			if example.name == "Terminal" {
+				var state *demoState
+				mygo.RunOnMain(func() { state = g.mygoState("Terminal", "Default", true) })
+				state.terminal.start(newPreviewTerminal)
+				if _, err := waitTerminal(t, &state.terminal); err != nil {
+					t.Fatal(err)
+				}
+				win.Invalidate()
+			}
 			time.Sleep(60 * time.Millisecond)
 			data, err := win.CapturePage()
 			if err != nil {

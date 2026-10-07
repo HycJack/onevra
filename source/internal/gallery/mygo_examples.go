@@ -11,6 +11,7 @@ import (
 
 // demoState is owned by one page, survives navigation, and is never persisted.
 type demoState struct {
+	terminal        terminalDemo
 	text            string
 	choice          string
 	on, other, open bool

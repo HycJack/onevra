@@ -3,5 +3,8 @@
   "identifier": "me.oneo.oneogo.gallery",
   "version": "0.0.0",
   "main": "./examples/gallery",
-  "out": "../dist"
+  "out": "../dist",
+  "macos": {
+    "minimumSystemVersion": "13.0"
+  }
 }

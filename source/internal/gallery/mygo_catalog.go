@@ -79,4 +79,5 @@ var mygoCatalog = []mygoExample{
 	{"Column", "Layout", exampleColumn},
 	{"Spacer", "Layout", exampleSpacer},
 	{"Divider", "Layout", exampleDivider},
+	{"Terminal", "Plugins", exampleTerminal},
 }

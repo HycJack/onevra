@@ -8,6 +8,8 @@ The [entry point](../../source/examples/gallery/main.go) owns application startu
 
 Examples should demonstrate ordinary consumer integration, not introduce gallery-only behavior into components. The gallery does not read or write user content or application settings. Its grouped sidebar navigates between oneo-go demonstrations, a searchable Lucide icon library and MyGo's built-in styled widgets and layout primitives. MyGo entries are grouped by type and open separate control-only pages, without source listings or tutorial prose. State and usage variants remain interactive where enabled, with independent in-memory state per page and variant. The catalog follows the pinned upstream UI guide; unstyled Base APIs remain building blocks rather than a duplicate widget catalog. The exhaustive catalog belongs only to the gallery and references public named accessors; ordinary library consumers retain no runtime registry. MyGo's virtualized grid builds visible icons on demand. The Shell demonstration also shows sample icons at multiple sizes and inherited text colors.
 
+The Terminal plugin page starts only on explicit request and uses an in-memory echo connection, never a system shell. MyGo owns emulation and input; the gallery owns asynchronous native-library loading and closes the connection when stopped or when the window closes. Ordinary tests do not load or download the terminal's native library.
+
 Packaging belongs to the gallery application, not the library. Build commands and distribution limitations are maintained in the [development guide](../build.md#app-bundles).
 
 ## Verification approach

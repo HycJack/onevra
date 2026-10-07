@@ -28,6 +28,7 @@ func (g *Gallery) New() *components.Shell {
 		Left: g.Left, Content: g.View, Right: g.Right, LeftToolbar: g.LeftToolbar,
 		ContentTitle: g.Titlebar,
 	})
+	g.Shell.Window().OnClosed(g.Close)
 	return g.Shell
 }
 
