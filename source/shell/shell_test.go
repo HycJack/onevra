@@ -224,7 +224,7 @@ func TestShellSidebarResize(t *testing.T) {
 		t.Fatal("keyboard resize did not move separator", s.leftWidth)
 	}
 	drag(1000)
-	if s.leftWidth != 328 {
+	if s.leftWidth != 817 {
 		t.Fatal("drag exceeded available width", s.leftWidth)
 	}
 	drag(-1000)

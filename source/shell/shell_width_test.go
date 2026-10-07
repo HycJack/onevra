@@ -19,7 +19,8 @@ func TestShellWidthOptions(t *testing.T) {
 		{"above maximum", ShellOptions{LeftWidth: 400, LeftMaxWidth: 300}, 300, 120, 300, 300},
 		{"inverted limits", ShellOptions{LeftMinWidth: 250, LeftMaxWidth: 150}, 250, 250, 250, 250},
 		{"negative", ShellOptions{LeftWidth: -1, LeftMinWidth: -1, LeftMaxWidth: -1}, 220, 120, -1, 220},
-		{"viewport limit", ShellOptions{LeftWidth: 600, LeftMinWidth: 500, LeftMaxWidth: 700}, 600, 500, 700, 400},
+		{"above forty percent", ShellOptions{LeftWidth: 600, LeftMinWidth: 500, LeftMaxWidth: 700}, 600, 500, 700, 600},
+		{"viewport limit", ShellOptions{LeftWidth: 1200, LeftMinWidth: 1100}, 1200, 1100, 0, 997},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			s := newShell(tc.options)
@@ -30,6 +31,34 @@ func TestShellWidthOptions(t *testing.T) {
 			r, ok := tt.Find("Resize sidebar")
 			if !ok || r.X+r.W/2 != float32(tc.wantDisplayed) {
 				t.Fatal("incorrect initial sidebar width", r)
+			}
+		})
+	}
+}
+
+func TestShellResizeBeyondFortyPercent(t *testing.T) {
+	for _, maximum := range []int{0, 700} {
+		t.Run(map[int]string{0: "unbounded", 700: "configured maximum"}[maximum], func(t *testing.T) {
+			var content *ui.Element
+			s := newShell(ShellOptions{
+				LeftMaxWidth: maximum,
+				Content:      func(c *ui.Context) { content = ui.Box(c).Fill() },
+			})
+			tt := ui.NewTester(s.view, 1000, 600)
+			r, ok := tt.Find("Resize sidebar")
+			if !ok {
+				t.Fatal("missing resize handle")
+			}
+			x, y := r.X+r.W/2, r.Y+30
+			tt.Press(x, y)
+			tt.Move(600, y)
+			tt.Release(600, y)
+			if s.leftWidth != 600 || content.Bounds().X != 600 || content.Bounds().W != 400 {
+				t.Fatalf("drag stopped early: width=%v, content=%+v", s.leftWidth, content.Bounds())
+			}
+			tt.Key(0, ui.KeyRight)
+			if s.leftWidth != 610 || content.Bounds().W != 390 {
+				t.Fatalf("keyboard stopped early: width=%v, content=%+v", s.leftWidth, content.Bounds())
 			}
 		})
 	}
@@ -102,15 +131,15 @@ func TestShellWidthLimitsAndReset(t *testing.T) {
 	assertWidth(290, 290)
 
 	// A constrained viewport does not erase the chosen or default width.
-	tt.SetSize(360, 600)
-	assertWidth(290, 144)
+	tt.SetSize(146, 600)
+	assertWidth(290, 143)
 	reset(260)
-	assertWidth(240, 144)
+	assertWidth(240, 143)
 	tt.SetSize(1000, 600)
 	assertWidth(240, 240)
-	tt.SetSize(360, 600)
+	tt.SetSize(146, 600)
 	drag(-50)
-	assertWidth(180, 144)
+	assertWidth(180, 143)
 	tt.SetSize(1000, 600)
 	assertWidth(180, 180)
 	reset(300)

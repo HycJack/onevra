@@ -37,8 +37,9 @@ type ShellOptions struct {
 	LeftWidth int
 	// LeftMinWidth defaults to 120 DIPs when non-positive. A non-positive
 	// LeftMaxWidth adds no fixed limit; a positive maximum below the minimum
-	// is raised to the minimum. Visible width is also capped at 40% of the
-	// viewport, even below the minimum, without discarding the chosen width.
+	// is raised to the minimum. Visible width is capped only to keep the resize
+	// handle inside the viewport, even below the minimum, without discarding
+	// the chosen width.
 	LeftMinWidth, LeftMaxWidth int
 	// The left sidebar starts open.
 	LeftCollapsed bool
@@ -216,7 +217,8 @@ func (s *Shell) view(c *ui.Context) {
 	bar := c.TitleBar()
 	headerHeight := HeaderHeight(c)
 	width, _ := c.Size()
-	maxLeftWidth := width * 0.4
+	// Keep the full resize handle reachable at the window's right edge.
+	maxLeftWidth := max(float32(0), width-3)
 	if s.options.LeftMaxWidth > 0 {
 		maxLeftWidth = min(maxLeftWidth, float32(s.options.LeftMaxWidth))
 	}
