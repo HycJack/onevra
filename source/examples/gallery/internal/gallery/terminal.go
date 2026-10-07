@@ -106,10 +106,10 @@ const terminalSample = "\x1b[1mMyGo Terminal\x1b[0m\r\n" +
 func exampleTerminal(c *ui.Context, s *demoState) {
 	term, loading, err := s.terminal.snapshot()
 	ui.Row(c).Gap(8).Children(func() {
-		if oneoui.Button(c, "Start terminal", oneoui.ButtonDefault).Disabled(loading || term != nil).Clicked() {
+		if oneoui.Button(c, "Start terminal", oneoui.ButtonSecondary).Disabled(loading || term != nil).Clicked() {
 			s.terminal.start(newPreviewTerminal)
 		}
-		if oneoui.Button(c, "Stop", oneoui.ButtonDefault).Disabled(!loading && term == nil).Clicked() {
+		if oneoui.Button(c, "Stop", oneoui.ButtonSecondary).Disabled(!loading && term == nil).Clicked() {
 			s.terminal.close()
 		}
 	})
@@ -131,15 +131,15 @@ func exampleTerminal(c *ui.Context, s *demoState) {
 	}
 	ui.Text(c, "Echo · no shell").TextColor(c.Theme().TextMuted)
 	ui.Row(c).Gap(8).Children(func() {
-		if oneoui.Button(c, "Colors", oneoui.ButtonDefault).Clicked() {
+		if oneoui.Button(c, "Colors", oneoui.ButtonSecondary).Clicked() {
 			term.Feed([]byte(terminalSample))
 		}
-		if oneoui.Button(c, "Scrollback", oneoui.ButtonDefault).Clicked() {
+		if oneoui.Button(c, "Scrollback", oneoui.ButtonSecondary).Clicked() {
 			for i := range 80 {
 				term.Feed(fmt.Appendf(nil, "\x1b[36m%02d\x1b[0m  Terminal output\r\n", i+1))
 			}
 		}
-		if oneoui.Button(c, "Clear", oneoui.ButtonDefault).Clicked() {
+		if oneoui.Button(c, "Clear", oneoui.ButtonSecondary).Clicked() {
 			term.Feed([]byte("\x1b[2J\x1b[3J\x1b[H"))
 		}
 	})

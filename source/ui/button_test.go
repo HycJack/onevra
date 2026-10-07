@@ -10,7 +10,7 @@ import (
 )
 
 func TestButtonVariantsClick(t *testing.T) {
-	variants := []ButtonVariant{ButtonPrimary, ButtonDefault, ButtonOutline, ButtonGhost, ButtonLink}
+	variants := []ButtonVariant{ButtonPrimary, ButtonSecondary, ButtonOutline, ButtonGhost, ButtonLink}
 	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
 		for _, variant := range variants {
 			clicked := false
@@ -127,27 +127,121 @@ func TestButtonLinkInline(t *testing.T) {
 	}
 }
 
-func TestButtonDefaultFill(t *testing.T) {
+func TestButtonSecondaryFill(t *testing.T) {
 	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
 		var want ui.Color
 		tt := ui.NewTester(func(c *ui.Context) {
 			theme.Apply(c, mode)
 			want = c.Theme().Text
-			Button(c, "Default", ButtonDefault)
+			if mode == theme.Light {
+				want = c.Theme().Background.Mix(c.Theme().Text, .08)
+			}
+			Button(c, "Secondary", ButtonSecondary)
 		}, 300, 100)
-		r, _ := tt.Find("Default")
+		r, _ := tt.Find("Secondary")
 		tt.Move(290, 90)
 		pixel := tt.Image().RGBAAt(int(r.X+6), int(r.Y+r.H/2))
 		if pixel.R != want.R || pixel.G != want.G || pixel.B != want.B {
 			t.Fatalf("mode=%v: default fill = %v, want %v", mode, pixel, want)
 		}
+		border := theme.LightPalette().Border
+		if mode == theme.Dark {
+			border = theme.DarkPalette().Border
+		}
+		edge := tt.Image().RGBAAt(int(r.X+r.W/2), int(r.Y))
+		if edge.R != border.R || edge.G != border.G || edge.B != border.B {
+			t.Fatalf("mode=%v: secondary border = %v, want %v", mode, edge, border)
+		}
+		tt.Move(r.X+r.W/2, r.Y+r.H/2)
+		if mode == theme.Light {
+			want = theme.LightPalette().Background.Mix(theme.LightPalette().Text, .12)
+		} else {
+			want = want.Mix(theme.DarkPalette().Background, .12)
+		}
+		pixel = tt.Image().RGBAAt(int(r.X+6), int(r.Y+r.H/2))
+		if pixel.R != want.R || pixel.G != want.G || pixel.B != want.B {
+			t.Fatalf("mode=%v: hovered default fill = %v, want %v", mode, pixel, want)
+		}
+	}
+}
+
+func TestButtonPrimaryBorderAndHeight(t *testing.T) {
+	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+		tt := ui.NewTester(func(c *ui.Context) {
+			theme.Apply(c, mode)
+			ui.Row(c).Gap(12).Children(func() {
+				Button(c, "Primary", ButtonPrimary)
+				Button(c, "Secondary", ButtonSecondary)
+				Button(c, "Outline", ButtonOutline)
+				Button(c, "Ghost", ButtonGhost)
+			})
+		}, 400, 100)
+		primary, ok := tt.Find("Primary")
+		if !ok {
+			t.Fatal("primary button not found")
+		}
+		for _, label := range []string{"Secondary", "Outline", "Ghost"} {
+			r, ok := tt.Find(label)
+			if !ok || r.H != primary.H {
+				t.Fatalf("mode=%v: %s height = %v, primary = %v", mode, label, r.H, primary.H)
+			}
+		}
+		palette := theme.LightPalette()
+		if mode == theme.Dark {
+			palette = theme.DarkPalette()
+		}
+		x, y := primary.X+primary.W/2, primary.Y+primary.H/2
+		check := func(want ui.Color) {
+			t.Helper()
+			edge := tt.Image().RGBAAt(int(x), int(primary.Y))
+			if edge.R != want.R || edge.G != want.G || edge.B != want.B {
+				t.Fatalf("mode=%v: primary border = %v, want %v", mode, edge, want)
+			}
+		}
+		tt.Move(390, 90)
+		check(palette.Accent)
+		tt.Move(x, y)
+		check(palette.AccentHover)
+		tt.Press(x, y)
+		check(palette.AccentPressed)
+		tt.Release(x, y)
+	}
+}
+
+func TestButtonGhostTransparentBorder(t *testing.T) {
+	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+		var palette *ui.Theme
+		tt := ui.NewTester(func(c *ui.Context) {
+			theme.Apply(c, mode)
+			palette = c.Theme()
+			Button(c, "Ghost", ButtonGhost)
+		}, 200, 100)
+		r, ok := tt.Find("Ghost")
+		if !ok {
+			t.Fatal("ghost button not found")
+		}
+		x, y := r.X+r.W/2, r.Y+r.H/2
+		check := func(want ui.Color) {
+			t.Helper()
+			edge := tt.Image().RGBAAt(int(x), int(r.Y))
+			if edge.R != want.R || edge.G != want.G || edge.B != want.B {
+				t.Fatalf("mode=%v: ghost edge = %v, want %v", mode, edge, want)
+			}
+		}
+		tt.Move(190, 90)
+		check(palette.Background)
+		tt.Move(x, y)
+		check(palette.SurfaceHover)
+		tt.Press(x, y)
+		check(palette.SurfacePressed)
+		tt.Release(x, y)
 	}
 }
 
 func TestButtonLabel(t *testing.T) {
 	tt := ui.NewTester(func(c *ui.Context) {
 		theme.Apply(c, theme.Light)
-		Button(c, "Delete", ButtonDefault)
+		Button(c, "Delete", ButtonSecondary)
 	}, 300, 100)
 	if !tt.HasText("Delete") {
 		t.Error("button label not shown")

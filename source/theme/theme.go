@@ -52,7 +52,7 @@ func LightPalette() *ui.Theme {
 	t.Success = ui.Hex("#059669")
 	t.Selection = ui.RGBA(230, 101, 43, 0.22)
 	t.Focus = ui.RGBA(185, 71, 22, 0.55)
-	t.Scrollbar = ui.Hex("#deded5")
+	t.Scrollbar = t.Text.Alpha(.30)
 	t.Radius = 8
 	return t
 }
@@ -82,7 +82,7 @@ func DarkPalette() *ui.Theme {
 	t.Success = ui.Hex("#34d399")
 	t.Selection = ui.RGBA(113, 162, 236, 0.25)
 	t.Focus = ui.RGBA(131, 175, 244, 0.55)
-	t.Scrollbar = ui.Hex("#3b506c")
+	t.Scrollbar = t.Text.Alpha(.35)
 	t.Radius = 8
 	return t
 }

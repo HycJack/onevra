@@ -8,8 +8,9 @@ type ButtonVariant int
 const (
 	// ButtonPrimary is the accent-filled main action.
 	ButtonPrimary ButtonVariant = iota
-	// ButtonDefault is the high-contrast filled action.
-	ButtonDefault
+	// ButtonSecondary is a bordered action with a light fill in light mode
+	// and a high-contrast fill in dark mode.
+	ButtonSecondary
 	// ButtonOutline is the bordered quiet action.
 	ButtonOutline
 	// ButtonGhost is the borderless quiet action.
@@ -34,9 +35,13 @@ func Button(c *ui.Context, label string, variant ButtonVariant) *ui.Element {
 	switch variant {
 	case ButtonPrimary:
 		bg, hover, pressed, fg, border = t.Accent, t.AccentHover, t.AccentPressed, t.AccentText, ui.Color{}
-	case ButtonDefault:
-		bg, fg, border = t.Text, t.Background, ui.Color{}
+	case ButtonSecondary:
+		bg, fg, border = t.Text, t.Background, t.Border
 		hover, pressed = bg.Mix(t.Background, .12), bg.Mix(t.Background, .25)
+		if !t.Dark {
+			bg, fg = t.Background.Mix(t.Text, .08), t.Text
+			hover, pressed = t.Background.Mix(t.Text, .12), t.Background.Mix(t.Text, .18)
+		}
 	case ButtonOutline:
 		bg, border = ui.Color{}, t.Border
 	case ButtonGhost:
@@ -50,10 +55,11 @@ func Button(c *ui.Context, label string, variant ButtonVariant) *ui.Element {
 			bg = hover
 		}
 	}
-	b.Radius(t.Radius).Background(bg).TextColor(fg)
-	if border.A > 0 {
-		b.Border(1, border)
+	if variant == ButtonPrimary {
+		border = bg
 	}
+	// A transparent Ghost border reserves the same space as the filled variants.
+	b.Radius(t.Radius).Background(bg).TextColor(fg).Border(1, border)
 	if label != "" {
 		b.Label(label)
 		b.Children(func() { ui.Text(c, label).SingleLine() })
