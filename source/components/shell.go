@@ -114,7 +114,7 @@ func (s *Shell) nativeOptions() mygo.WindowOptions {
 
 func shellVibrancy() mygo.Vibrancy {
 	if runtime.GOOS == "darwin" {
-		return mygo.VibrancyUnderWindow
+		return mygo.VibrancyTitlebar
 	}
 	return mygo.VibrancyNone
 }
@@ -224,7 +224,7 @@ func (s *Shell) view(c *ui.Context) {
 	background := c.Theme().Background.Alpha(1)
 	inspectorBackground := background
 	if runtime.GOOS == "darwin" {
-		inspectorBackground = background.Alpha(0.85)
+		inspectorBackground = background.Alpha(0.8)
 	}
 	root := ui.Column(c).Fill().Clip()
 	if runtime.GOOS != "darwin" {
