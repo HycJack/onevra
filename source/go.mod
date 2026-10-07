@@ -2,6 +2,9 @@ module github.com/oneo-me/oneo-go
 
 go 1.27.1
 
+// Generated locally by: go run ./internal/cmd/prepare
+replace github.com/egoist/mygo => ./.mygo/mygo
+
 tool github.com/egoist/mygo/cmd/mygo
 
 require (

@@ -1,11 +1,9 @@
-//go:build !darwin || !arm64
+//go:build !darwin && (!windows || (!amd64 && !arm64))
 
 package components
 
 import "github.com/egoist/mygo"
 
-func supported() error {
-	return ErrWebViewUnsupported
+func attachWebView(_ *WebView, _ mygo.NativeComposition) (attachment, error) {
+	return nil, ErrWebViewUnsupported
 }
-
-func attach(_, _ *mygo.Window) (attachment, error) { return nil, supported() }

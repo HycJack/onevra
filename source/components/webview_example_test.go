@@ -21,9 +21,8 @@ func ExampleNewWebView() {
 					}
 					if ui.Button(c, "Show / hide browser").Clicked() {
 						show = !show
-						// Hide before omitting the slot; omission cannot unmount
-						// a system view. Returning reuses the same document.
-						web.SetVisible(show)
+						// Omitting the slot hides the browser automatically.
+						// Returning reuses the same document.
 					}
 					if show {
 						web.View(c).Fill()

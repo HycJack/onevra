@@ -4,7 +4,7 @@ User-facing updates for oneo-go library consumers. No version has been published
 
 ## [Unreleased]
 
-- Embed experimental WebView components in native MyGo windows on macOS ARM64, including multiple independent browser slots, MyGo Page navigation/JavaScript APIs, document-preserving hide/show and automatic cleanup with the host. Try them in Gallery's Native + WebView page. System views remain above MyGo-rendered overlays; scroll clipping, arbitrary transforms and unified composition are not supported.
+- Embed experimental live WebViews in native MyGo windows, retaining MyGo Page APIs, document-preserving hide/show and host-owned cleanup. GPU composition supports native overlays, modal input blocking, rectangular ancestor clipping and automatic hiding when a slot is omitted; these behaviors have macOS ARM64 native checks. Gallery's existing Native + WebView page uses this implementation directly; see [build requirements and platform limitations](docs/build.md#hybrid-experiment).
 
 - Use 1,866 Lucide icons directly with MyGo through `icons/lucide`, with named accessors, first-use parsing and inherited text colors. Preview representative icons at multiple sizes in the gallery.
 

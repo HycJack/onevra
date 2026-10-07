@@ -79,7 +79,7 @@ func (g *Gallery) Hybrid(c *ui.Context) {
 		web.Page().OnDidFinishLoad(func() {
 			if !d.closed {
 				d.ready = true
-				d.status = "Ready · real WKWebView, not a screenshot"
+				d.status = "Ready · live system browser, not a screenshot"
 				win.Invalidate()
 			}
 		})
@@ -96,6 +96,9 @@ func (g *Gallery) Hybrid(c *ui.Context) {
 
 func (d *hybridDemo) build(c *ui.Context) {
 	t := c.Theme()
+	if err := d.web.Err(); err != nil {
+		d.status = "Native attachment: " + err.Error()
+	}
 	ui.Column(c).Fill().MinWidth(0).Padding(16).Gap(10).Children(func() {
 		ui.Row(c).FillWidth().Shrink(0).Wrap().Gap(8).Children(func() {
 			if ui.Button(c, "Send count to web").Disabled(!d.ready || d.busy).Clicked() {
@@ -127,7 +130,7 @@ func (d *hybridDemo) build(c *ui.Context) {
 				ui.Text(c, "WebView hidden").Padding(16).Wrap()
 			}
 		})
-		ui.Text(c, "Experimental · macOS ARM64 · system-view composition, not a shared GPU scene.").TextColor(t.TextMuted).Wrap().Shrink(0)
+		ui.Text(c, "GPU composition · live browser beneath native overlays.").TextColor(t.TextMuted).Wrap().Shrink(0)
 	})
 	d.buildAlert(c)
 	d.web.SetVisible(d.webVisible())
@@ -140,7 +143,7 @@ func (d *hybridDemo) webVisible() bool {
 func (d *hybridDemo) openAlert(hideWeb bool) {
 	d.alertOpen, d.alertHideWeb = true, hideWeb
 	d.alertDeadline = time.Now().Add(8 * time.Second)
-	d.status = "Occlusion probe · WebView stays visible · auto-closes in 8 seconds"
+	d.status = "WebView stays visible · auto-closes in 8 seconds"
 	if hideWeb {
 		d.status = "Alert comparison · WebView explicitly hidden until dismissal"
 	}
@@ -150,9 +153,9 @@ func (d *hybridDemo) buildAlert(c *ui.Context) {
 	if !d.alertOpen {
 		return
 	}
-	message := "The WebView is temporarily hidden. This does not prove shared composition."
+	message := "The WebView is temporarily hidden. Closing this alert restores the same document."
 	if !d.alertHideWeb {
-		message = "The WebView stays visible and may cover this MyGo alert. Auto-closes after 8 seconds; Escape also cancels while native UI has focus."
+		message = "This native alert covers the live browser and blocks its input. The page keeps running underneath. Auto-closes after 8 seconds; Escape cancels."
 		if !time.Now().Before(d.alertDeadline) {
 			d.alertOpen = false
 			d.status = "Overlay test finished · WebView was kept visible"

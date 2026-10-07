@@ -4,6 +4,18 @@ Use Go 1.27.1 or later. Run Go commands from `source/`; dependencies and the MyG
 
 Native windows require a desktop session. Linux also needs GTK 3, Pango and OpenGL system libraries. See the [MyGo native guides](https://github.com/egoist/mygo/tree/v0.2.12/docs/ui) for platform setup.
 
+## Dependency preparation
+
+After checkout, and after changes to the pinned MyGo patch, run:
+
+```sh
+go run ./internal/cmd/prepare
+```
+
+This bootstrap command needs only the standard library and repository patch files. It downloads pinned MyGo, checks patch context exactly, and prepares the ignored `source/.mygo/mygo/` dependency used by the relative replacement in `go.mod`. It does not modify the module cache or vendor upstream source. An unchanged patch is reused; failed patch application leaves the previous dependency intact. Run preparation before, not concurrently with, builds.
+
+Gallery, tests and MyGo packaging then use ordinary commands with no special build tag or alternative example. For local consumers, include this prepared module in their Go workspace, or select the same patched MyGo dependency in their main module.
+
 ## App bundles
 
 ```sh
@@ -47,18 +59,36 @@ For UI changes, manually review both themes, narrow layouts, text scaling, windo
 
 ## Hybrid experiment
 
-Run the gallery normally and open **Experiments / Native + WebView**. On macOS ARM64 it embeds the browser in the main window; other platforms show an unsupported message. Try sidebar resizing, both inputs, scrolling, appearance switching, the Go-to-JavaScript counter, hide/show, navigation away and back, and Settings.
+Open the existing **Experiments / Native + WebView** page with `go tool mygo dev` or `go run ./examples/gallery` after [dependency preparation](#dependency-preparation). This page uses the new GPU-composited WebView directly; there is no separate hybrid example or legacy build mode.
 
-The two AlertDialog buttons compare keeping the WebView visible (an eight-second occlusion probe) with explicitly hiding it until dismissal. Escape cancels when native UI has focus. See [component limitations](architecture/components.md#embedded-webview) before using it elsewhere.
+The bridge has macOS and Windows amd64/arm64 implementations. macOS ARM64 has native click, basic typing, overlay blocking, modal focus recovery, clipping, state/lifecycle and appearance checks. Windows and macOS amd64 require target-desktop review; compilation is not runtime acceptance. Windows needs WebView2 Runtime. [Remaining limitations](architecture/components.md#embedded-webview) apply to both bridges.
 
-From `source/`, run native checks sequentially:
+Run native checks sequentially on macOS ARM64:
 
 ```sh
-ONEO_GO_NATIVE_SMOKE=1 go test ./components -run '^TestNativeWebView$' -count=1 -v
+ONEO_GO_NATIVE_SMOKE=1 go test ./components -run '^TestNative(WebView|HybridComposition)$' -count=1 -v
 ONEO_GO_NATIVE_SMOKE=1 go test ./internal/gallery -run '^TestNativeHybrid$' -count=1 -v
+go test github.com/egoist/mygo/ui github.com/egoist/mygo/internal/gpu/metal github.com/egoist/mygo/internal/raster
 ```
 
-Optionally set `ONEO_GO_SCREENSHOTS="$PWD/../dist/hybrid-gallery"` on the gallery test to capture appearances, narrow layout, Settings and both alert modes. These use macOS `screencapture` and require Screen Recording permission. MyGo's `CapturePage` alone omits the embedded system view.
+Optionally set `ONEO_GO_SCREENSHOTS="$PWD/../dist/gallery-webview"` on the gallery test. OS-composited captures use macOS `screencapture` and require Screen Recording permission. MyGo's `CapturePage` alone omits the browser.
+
+For Windows native review, in PowerShell from `source/`:
+
+```powershell
+$env:ONEO_GO_NATIVE_SMOKE = '1'
+go test ./components -run '^TestNativeHybridComposition$' -count=1 -v
+Remove-Item Env:ONEO_GO_NATIVE_SMOKE
+go test github.com/egoist/mygo/internal/gpu/d3d11 -run '^TestNativeCompositionGPU$' -count=1 -v
+```
+
+The Windows native test moves the pointer and sends real clicks; run it in an otherwise idle desktop session. After preparation on the host, cross-compilation uses ordinary Go commands:
+
+```sh
+GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -o ../dist/oneo-go-gallery-windows-amd64.exe ./examples/gallery
+```
+
+Review sidebar resizing, both inputs, scrolling, appearance, Go-to-JavaScript updates, hide/show, navigation and Settings. The two alerts compare a live browser underneath the modal with explicit hiding. The live-browser alert retains its eight-second escape hatch. Check IME, pointer capture during drags, keyboard navigation, accessibility, DPI changes and device-loss recovery on each target; screenshots and headless tests do not establish these behaviors.
 
 ## Updating Lucide icons
 

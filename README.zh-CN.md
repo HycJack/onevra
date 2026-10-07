@@ -14,6 +14,7 @@
 
 ```sh
 cd source
+go run ./internal/cmd/prepare
 go tool mygo dev
 ```
 
@@ -21,7 +22,7 @@ go tool mygo dev
 
 在 macOS 上，这会启动支持自动重载的开发版应用。要预览指定外观，可运行 `go run ./examples/gallery -theme light` 或 `-theme dark`。
 
-在展示程序中打开 **Experiments / Native + WebView**，可在 macOS ARM64 上体验嵌入式浏览器及原生 AlertDialog 遮挡测试；其他平台会显示不支持提示。这是系统视图混排，不是统一 GPU 渲染器；详见[范围与限制](docs/architecture/components.md#embedded-webview)。复用方式见 [WebView 示例](source/components/webview_example_test.go)和 [API 契约](source/components/webview.go)。
+打开原有的 **Experiments / Native + WebView** 页面，即可体验原生覆盖层下的实时浏览器，包括裁剪和模态输入阻断。该页面默认使用 GPU 合成，已完成 macOS ARM64 原生检查，Windows 实现仍待桌面验证。准备步骤应用固定版本的 MyGo 补丁，不将框架源码纳入仓库；补丁更新后需重新执行。详见[验证说明](docs/build.md#hybrid-experiment)、[限制](docs/architecture/components.md#embedded-webview)及 [WebView 使用示例](source/components/webview_example_test.go)。
 
 ## 基本使用
 

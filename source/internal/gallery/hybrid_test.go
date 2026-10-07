@@ -39,17 +39,20 @@ func TestHybridAlertModes(t *testing.T) {
 	d.openAlert(false)
 	tt.Frame()
 	if !tt.HasText("Native alert / WebView test") || !d.webVisible() {
-		t.Fatal("occlusion probe did not keep the real web visible")
+		t.Fatal("native alert did not keep the real web visible")
+	}
+	if !tt.HasText("This native alert covers the live browser and blocks its input. The page keeps running underneath. Auto-closes after 8 seconds; Escape cancels.") {
+		t.Fatal("gallery is not demonstrating native overlay composition")
 	}
 	d.alertDeadline = time.Now().Add(-time.Second)
 	tt.Frame()
 	if d.alertOpen || !d.webVisible() {
-		t.Fatal("occlusion probe did not safely time out")
+		t.Fatal("native alert did not safely time out")
 	}
 	d.openAlert(true)
 	tt.Frame()
 	if !d.alertOpen || d.webVisible() {
-		t.Fatal("fallback must hide the web explicitly")
+		t.Fatal("visibility comparison must hide the web explicitly")
 	}
 	if err := tt.Click("OK"); err != nil {
 		t.Fatal(err)

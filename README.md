@@ -14,6 +14,7 @@ From the repository root:
 
 ```sh
 cd source
+go run ./internal/cmd/prepare
 go tool mygo dev
 ```
 
@@ -21,7 +22,7 @@ The sidebar includes Shell, the Lucide icon library and MyGo components. MyGo co
 
 On macOS this runs a live-reloading development app. To preview a specific appearance, use `go run ./examples/gallery -theme light` or `-theme dark`.
 
-Open **Experiments / Native + WebView** in the gallery to try the embedded browser on macOS ARM64, including native AlertDialog overlap tests. Other platforms show an unsupported message. This is system-view composition, not a unified GPU renderer; see [scope and limitations](docs/architecture/components.md#embedded-webview). For reuse, see the [WebView example](source/components/webview_example_test.go) and [API contract](source/components/webview.go).
+Open the existing **Experiments / Native + WebView** page to try a live browser beneath native overlays, with clipping and modal input blocking. It uses GPU composition by default, with macOS ARM64 native checks and a Windows implementation awaiting desktop validation. The preparation step applies a pinned MyGo patch without vendoring the toolkit; rerun it after patch updates. See [review instructions](docs/build.md#hybrid-experiment), [limitations](docs/architecture/components.md#embedded-webview) and the [WebView usage example](source/components/webview_example_test.go).
 
 ## Basic usage
 

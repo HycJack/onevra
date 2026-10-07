@@ -112,7 +112,7 @@ func TestNativeWebView(t *testing.T) {
 		t.Fatal(err)
 	}
 	waitWebView(t, "both pages", func() bool {
-		return ready1 && ready2 && first.placed && !first.pending && second.placed && !second.pending
+		return ready1 && ready2 && first.placed && !first.pending && second.placed && !second.pending && first.layout.Visible && second.layout.Visible
 	})
 	if first.Page().Window() == host || first.donor.IsVisible() || second.donor.IsVisible() {
 		t.Fatal("browser owner must be a distinct hidden window")
@@ -205,6 +205,16 @@ func TestNativeWebView(t *testing.T) {
 
 func clickWebButton(t *testing.T, w *WebView) {
 	t.Helper()
+	mygo.RunOnMain(w.host.Focus)
+	// A committed zero-size layout is not yet a visible browser. Injecting a
+	// click then can land in window chrome rather than the document.
+	waitWebView(t, "visible browser in key window", func() bool {
+		if w.closed || w.host.IsDestroyed() || !w.placed || w.pending || !w.layout.Visible {
+			return false
+		}
+		a := w.view.(*macAttachment)
+		return a.shown && send(a.root, "isHidden") == 0 && send(a.host, "isKeyWindow") != 0
+	})
 	v := evalWebView(t, w, "const r=document.querySelector('#increment').getBoundingClientRect(); return {x:r.x+r.width/2,y:r.y+r.height/2}").(map[string]any)
 	mygo.RunOnMain(func() {
 		a := w.view.(*macAttachment)

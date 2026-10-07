@@ -35,7 +35,7 @@ h2 { font-size: 16px; }
 </head>
 <body>
 <div class="hero">
- <div class="tag">WEB / WKWEBVIEW</div>
+ <div class="tag">WEB / SYSTEM BROWSER</div>
  <h1>Two renderers.<br>One window.</h1>
  <p>This panel is HTML and CSS inside MyGo's actual system WebView. Resize the gallery sidebar to watch this page reflow.</p>
 </div>
@@ -50,9 +50,9 @@ h2 { font-size: 16px; }
 </section>
 <section>
  <h2>Scroll inside the WebView</h2>
- <div class="note">MyGo owns navigation, JavaScript evaluation and browser lifetime. The WebView component hosts its AppKit content view in this native window.</div>
+ <div class="note">MyGo owns navigation, JavaScript evaluation and browser lifetime. The WebView component positions its live browser in this native window.</div>
  <div class="note">The gallery remains MyGo-rendered while this page scrolls independently. Hiding the web panel preserves this page's state.</div>
- <div class="note">This is system-view composition, not texture composition. Arbitrary native overlays, transforms and clipping across the web boundary are not supported.</div>
+ <div class="note">Native overlays appear above this live browser and modal dialogs block its input without stopping the page. Native transforms and rounded browser clipping are not supported.</div>
  <div class="note">Local HTML only. No remote resources, system shell or user documents.</div>
 </section>
 <script>

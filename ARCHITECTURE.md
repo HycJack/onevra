@@ -21,7 +21,7 @@ An application creates a Shell after MyGo is ready and supplies synchronous UI-t
 
 The `icons/lucide` package supplies lazily parsed, shared MyGo SVGs independently of UI components. MyGo owns their rendering, sizing, color and accessibility. Generated named accessors have no full-library runtime registry or eager parsing, so ordinary consumers need not retain every icon. Upstream resources and licenses are pinned and checked in; a Lucide checkout is only needed for [maintainer updates](docs/build.md#updating-lucide-icons), not consumer builds.
 
-The gallery is an independent consumer of the public API, not a dependency of the library. It holds only in-memory demonstration state and provides a place to review native behavior. Its [hybrid page](docs/architecture/gallery.md#hybrid-experiment) exercises the experimental WebView component and the limits of macOS system-view composition.
+The gallery is an independent consumer of the public API, not a dependency of the library. It holds only in-memory demonstration state and provides a place to review native behavior. Its existing [WebView page](docs/architecture/gallery.md#hybrid-experiment) uses GPU composition directly. MyGo remains responsible for scene and input integration through a pinned patch, prepared as a local dependency without vendoring the toolkit.
 
 ## Repository landmarks
 
