@@ -6,6 +6,10 @@
       "type": "process",
       "command": "go",
       "args": ["run", "./tools/packer", "run"],
+      "runOptions": {
+        "instanceLimit": 1,
+        "instancePolicy": "terminateOldest"
+      },
       "options": {
         "cwd": "${workspaceFolder}/source"
       },
@@ -16,6 +20,10 @@
       "type": "process",
       "command": "go",
       "args": ["run", "./tools/packer", "build"],
+      "runOptions": {
+        "instanceLimit": 1,
+        "instancePolicy": "terminateOldest"
+      },
       "options": {
         "cwd": "${workspaceFolder}/source"
       },
