@@ -144,3 +144,11 @@ func exampleTerminal(c *ui.Context, s *demoState) {
 	})
 	terminal.View(c, term).Label("Terminal preview").FillWidth().Height(360)
 }
+
+// Close releases gallery-owned native resources. Call on the UI thread when
+// its window closes, or after a headless view is no longer used.
+func (g *Gallery) Close() {
+	for _, s := range g.mygoStates {
+		s.terminal.close()
+	}
+}

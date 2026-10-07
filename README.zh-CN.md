@@ -2,9 +2,11 @@
 
 [English](README.md) | **简体中文**
 
-基于 [MyGo](https://github.com/egoist/mygo) 的实验性通用 Go 组件库。目前提供原生 Shell、实验性嵌入式 WebView、适用于 MyGo 的 Lucide 图标和独立展示程序。
+基于 [MyGo](https://github.com/egoist/mygo) 的实验性通用 Go 组件库。目前提供原生 Shell 组件、适用于 MyGo 的 Lucide 图标和独立展示程序。
 
 尚未发布为可下载的 module，API 暂不稳定。
+
+`main` 使用未经定制补丁修改的上游 MyGo。WebView 合成实验因依赖定制版 MyGo，保留在 `feature/webview` 分支，不属于主线组件。
 
 ## 体验展示程序
 
@@ -14,15 +16,12 @@
 
 ```sh
 cd source
-go run ./internal/cmd/prepare
 go tool mygo dev
 ```
 
 侧边栏提供 Shell、Lucide 图标库和 MyGo 组件入口，MyGo 组件按类型分组，各页面仅展示可交互的组件状态和用法变体，不包含代码或教程说明。Plugins / Terminal 页面提供 ANSI 输出和输入回显，不启动系统 Shell；详见[运行依赖](docs/build.md#app-bundles)。
 
 在 macOS 上，这会启动支持自动重载的开发版应用。要预览指定外观，可运行 `go run ./examples/gallery -theme light` 或 `-theme dark`。
-
-打开原有的 **Experiments / Native + WebView** 页面，即可体验原生覆盖层下的实时浏览器，包括裁剪和模态输入阻断。该页面默认使用 GPU 合成，已完成 macOS ARM64 原生检查，Windows 实现仍待桌面验证。准备步骤应用固定版本的 MyGo 补丁，不将框架源码纳入仓库；补丁更新后需重新执行。详见[验证说明](docs/build.md#hybrid-experiment)、[限制](docs/architecture/components.md#embedded-webview)及 [WebView 使用示例](source/components/webview_example_test.go)。
 
 ## 基本使用
 

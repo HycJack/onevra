@@ -1,6 +1,6 @@
 # Component design
 
-The public [components package](../../source/components/doc.go) provides native UI compositions and experimental system-view hosting, not an application framework. Shell owns window presentation and a replaceable page container.
+The public [components package](../../source/components/doc.go) provides native UI compositions, not an application framework. Shell owns window presentation and a replaceable page container.
 
 ## Composition and ownership
 
@@ -21,18 +21,6 @@ The left sidebar keeps its content at the full sidebar width while its visible s
 A replacement page occupies the entire body beneath the shared window header and hides the default page's titlebar content and sidebar controls. Returning restores the previous sidebar state without changing window geometry. Shell provides this switching mechanism, not a settings implementation or business router.
 
 MyGo's animation values drive the sidebar reveal, without a separate timer or animation loop. Reversing a toggle mid-animation continues from the current visible width; Reduced Motion skips intermediate geometry.
-
-## Embedded WebView
-
-The experimental WebView places a MyGo-owned system browser in a native window's rectangular layout slot. Applications retain instances outside view construction and use MyGo's original Page API. Hiding preserves the document; closing releases the browser without closing the host. Host shutdown closes attached instances automatically. Multiple instances can occupy separate, non-overlapping slots. The hidden MyGo donor window remains the browser's lifecycle owner and must not be manipulated by callers. Geometry updates are coalesced through MyGo's UI queue outside paint; cleanup returns the browser to its donor before destroying it.
-
-The [WebView component](../../source/components/webview.go) places the live browser beneath the Surface, supports rectangular ancestor clipping and automatic unmounting, and integrates native overlay paint order, pointer capture, modal barriers and focus recovery. The existing Gallery page uses this implementation directly, without a separate example or opt-in build tag. See the [dependency preparation](../build.md#dependency-preparation) and [platform review requirements](../build.md#hybrid-experiment).
-
-Hybrid composition keeps the browser renderer separate: no webpage screenshots or frame-by-frame pixel readback. MyGo's scene clears earlier UI backgrounds at each browser slot with a destination-out operation; subsequent widgets blend over the resulting transparent region. Visible browser slots favor GPU scene drawing over MyGo's small-damage raster heuristic; Metal and D3D11 retain the existing raster fallback for GPU unavailability. macOS uses Core Animation with WKWebView beneath the Metal surface. Windows uses a premultiplied D3D11 DirectComposition swap chain above clipped WebView2 child windows. Reusing the native WebView2 controller preserves its OS input path rather than replacing it with synthesized browser events. The Windows bridge observes pointer presses and uses transparent HWND hit testing; the macOS bridge uses an AppKit input router.
-
-MyGo, not the bridge, owns the committed hit chain, capture, modal scope and effective layout clip. The pinned upstream does not expose these integration points, so dependency preparation applies a reviewable [MyGo patch](../../source/internal/mygopatch/changes.patch) to a generated, ignored local dependency selected by the module's relative replacement. MyGo source is not vendored and the module cache is unchanged. All builds use the same prepared dependency. The patch belongs at the toolkit boundary; do not replace it with an independent oneo-go hit-testing or rendering engine. Upstream upgrades require reviewing and replaying this patch and the platform bridges.
-
-Hybrid composition is rectangular: rounded browser clips, transforms, opacity transitions and overlapping browser slots are outside its scope. Unified DOM/native Tab traversal is not implemented. Window-bound browser dialogs, menus, popups and fullscreen still target the hidden owner. IME, accessibility, drag-and-drop, multi-monitor DPI and live-resize synchronization need further native review. MyGo's content capture omits the browser; use an OS-composited capture instead. See the [usage example](../../source/components/webview_example_test.go) and [gallery experiment](gallery.md#hybrid-experiment).
 
 ## Native appearance
 

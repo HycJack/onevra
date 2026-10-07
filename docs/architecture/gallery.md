@@ -12,14 +12,6 @@ The Terminal plugin page starts only on explicit request and uses an in-memory e
 
 Packaging belongs to the gallery application, not the library. Build commands and distribution limitations are maintained in the [development guide](../build.md#app-bundles).
 
-## Hybrid experiment
-
-The **Experiments / Native + WebView** page consumes the public [WebView component](components.md#embedded-webview) in Gallery's main Shell window. It creates the browser lazily outside view construction, loads only local demonstration HTML, hides it when another page or Settings is shown, and restores the same document on return. Manual hide state is preserved across navigation. Unsupported platforms show an explanation rather than opening another window.
-
-Two MyGo AlertDialog actions compare a live browser beneath the dialog with explicit hiding until dismissal. The live-browser alert automatically dismisses after eight seconds. It covers and blocks the live browser using the component's GPU composition path. The existing page displays asynchronous attachment errors; there is no alternate Gallery or legacy composition mode. Leaving the page dismisses the alert. Gallery owns this demonstration policy, not the WebView component.
-
-The macOS opt-in component tests cover multiple views, geometry, AppKit hit testing, web mouse and basic key input, focus recovery, state retention and cleanup. Hybrid checks add overlay click blocking, modal focus takeover while the page keeps running, automatic unmounting and ancestor clipping. The Windows hybrid component and D3D11 composition tests are available for target-desktop review, not a substitute for it. The gallery test covers navigation, Settings, Go-to-JavaScript updates and both alert modes. Optional screenshots capture the OS-composited window, not MyGo's Surface-only content capture. See [running and reviewing the experiment](../build.md#hybrid-experiment).
-
 ## Verification approach
 
 Ordinary tests do not open windows. The opt-in native smoke test runs the actual MyGo event loop with temporary user data and captures light, dark, narrow and replacement-page views. Native bounds assertions check that replacement pages preserve window geometry. A macOS ARM64 pointer test verifies sidebar width limits and double-click reset through the native event path. See [native review](../build.md#native-review) for the command and manual checks.

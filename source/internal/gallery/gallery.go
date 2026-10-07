@@ -18,10 +18,6 @@ type Gallery struct {
 	grid         ui.GridState
 	selectedIcon int
 	mygoStates   map[string]*demoState
-
-	hybrid                               *hybridDemo
-	hybridErr                            error
-	hybridStarting, hybridActive, closed bool
 }
 
 // New creates the standalone shell demonstration.
@@ -37,26 +33,10 @@ func (g *Gallery) New() *components.Shell {
 	return g.Shell
 }
 
-// Close releases gallery-owned native resources. Call on the UI thread when
-// its window closes, or after a headless view is no longer used.
-func (g *Gallery) Close() {
-	g.closed = true
-	if g.hybrid != nil {
-		g.hybrid.closed = true
-		g.hybrid.web.Close()
-	}
-	for _, s := range g.mygoStates {
-		s.terminal.close()
-	}
-}
-
 func (g *Gallery) Titlebar(c *ui.Context) {
 	title := "Shell"
 	if g.page == lucidePage {
 		title = "Icon library / Lucide"
-	}
-	if g.page == hybridPage {
-		title = "Experiments / Native + WebView"
 	}
 	if example, ok := mygoExampleFor(g.page); ok {
 		title = example.group + " / " + example.name
@@ -72,9 +52,6 @@ func (g *Gallery) Left(c *ui.Context) {
 			ui.Box(c).Height(4)
 			g.navigationGroup(c, "Icon library")
 			g.navigationItem(c, "Lucide", lucide.Shapes(), lucidePage)
-			ui.Box(c).Height(4)
-			g.navigationGroup(c, "Experiments")
-			g.navigationItem(c, "Native + WebView", lucide.PanelsTopLeft(), hybridPage)
 			ui.Box(c).Height(4)
 			g.navigationGroup(c, "MyGo components")
 			for _, group := range mygoGroups {
@@ -93,13 +70,11 @@ func (g *Gallery) Left(c *ui.Context) {
 func (g *Gallery) LeftToolbar(c *ui.Context) {
 	ui.Spacer(c)
 	if components.ToolbarIconButton(c, lucide.Settings(), "Settings").Clicked() && g.Shell != nil {
-		g.setHybridActive(false)
 		g.Shell.SetPage(g.Settings)
 	}
 }
 
 func (g *Gallery) Settings(c *ui.Context) {
-	g.setHybridActive(false)
 	ui.Column(c).Fill().Padding(24).Gap(16).Children(func() {
 		ui.Text(c, "Settings").FontSize(c.Theme().Rem(2)).Bold()
 		ui.Text(c, "A replacement page outside the sidebar-and-content layout.").Wrap()
@@ -141,11 +116,6 @@ func iconSamples(c *ui.Context) {
 
 // View builds the default page's main content.
 func (g *Gallery) View(c *ui.Context) {
-	g.setHybridActive(g.page == hybridPage)
-	if g.page == hybridPage {
-		g.Hybrid(c)
-		return
-	}
 	if example, ok := mygoExampleFor(g.page); ok {
 		g.MyGo(c, example)
 		return
