@@ -64,6 +64,7 @@ func run(ctx context.Context, args []string) error {
 	}
 	out := c.path(c.Out)
 	if mode == "build" {
+		out = c.releaseDir()
 		for _, t := range targets {
 			if _, err := build(ctx, c, out, true, t); err != nil {
 				return fmt.Errorf("%s: %w", t.key(), err)
@@ -203,6 +204,10 @@ func (c *config) path(p string) string {
 		return p
 	}
 	return filepath.Join(c.root, p)
+}
+
+func (c *config) releaseDir() string {
+	return filepath.Join(c.path(c.Out), "releases", c.Version)
 }
 
 func (c *config) buildArgs(exe string, release bool, t target) []string {

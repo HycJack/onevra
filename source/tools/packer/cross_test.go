@@ -76,7 +76,7 @@ func TestCrossPackaging(t *testing.T) {
 	}
 	for _, target := range targets {
 		t.Run(target.key(), func(t *testing.T) {
-			path := filepath.Join(c.path(c.Out), "cross-app-"+target.key()+"-0.0.0"+target.archiveSuffixes()[0])
+			path := filepath.Join(c.releaseDir(), "cross-app-"+target.key()+"-0.0.0"+target.archiveSuffixes()[0])
 			entries, modes := readPortableArchive(t, path, target.OS == "windows")
 			prefix := c.Name + "/"
 			if string(entries[prefix+"data/payload.txt"]) != "payload" || string(entries[prefix+files[target.key()].Name]) != "/"+target.key() {
@@ -126,9 +126,9 @@ func TestCrossPackaging(t *testing.T) {
 			}
 		})
 	}
-	entries, err := os.ReadDir(c.path(c.Out))
+	entries, err := os.ReadDir(c.releaseDir())
 	if err != nil || len(entries) != 4 {
-		t.Fatalf("expected four flat archives: %v, %v", entries, err)
+		t.Fatalf("expected four archives in the version directory: %v, %v", entries, err)
 	}
 	for _, entry := range entries {
 		if entry.IsDir() {

@@ -121,14 +121,14 @@ func main() { if path := os.Getenv("PACKER_TEST_MARKER"); path != "" { if err :=
 		t.Fatal(err)
 	}
 	put(t, filepath.Join(root, "resources", "nested", "payload.txt"), "bundled payload")
-	dmg, err := build(ctx, c, c.path(c.Out), true, hostTarget())
+	dmg, err := build(ctx, c, c.releaseDir(), true, hostTarget())
 	if err != nil {
 		t.Fatal(err)
 	}
-	if dmg != filepath.Join(c.path(c.Out), "test-app-darwin-"+runtime.GOARCH+"-0.0.0.dmg") {
+	if dmg != filepath.Join(c.releaseDir(), "test-app-darwin-"+runtime.GOARCH+"-0.0.0.dmg") {
 		t.Fatalf("unexpected archive path: %s", dmg)
 	}
-	published, err := os.ReadDir(c.path(c.Out))
+	published, err := os.ReadDir(c.releaseDir())
 	if err != nil || len(published) != 2 {
 		t.Fatalf("release should retain only two archives: %v, %v", published, err)
 	}
@@ -265,7 +265,7 @@ end run`, mount, c.Name+".app")
 	}
 	// A failed icon build must not remove the previously published artifacts.
 	c.MacOS.Icon = "missing.icon"
-	if _, err := build(ctx, c, c.path(c.Out), true, hostTarget()); err == nil {
+	if _, err := build(ctx, c, c.releaseDir(), true, hostTarget()); err == nil {
 		t.Fatal("expected missing-icon build failure")
 	}
 	if _, err := command(ctx, "hdiutil", "verify", dmg); err != nil {

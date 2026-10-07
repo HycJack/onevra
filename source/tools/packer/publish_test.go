@@ -6,6 +6,22 @@ import (
 	"testing"
 )
 
+func TestReleaseDir(t *testing.T) {
+	root := t.TempDir()
+	for _, out := range []string{"dist", "../dist", filepath.Join(root, "custom")} {
+		for _, version := range []string{"0.2026.1", "1.2.3", "2.0.0-rc.1+build.42"} {
+			c := &config{root: root, Out: out, Version: version}
+			base := out
+			if !filepath.IsAbs(base) {
+				base = filepath.Join(root, base)
+			}
+			if got, want := c.releaseDir(), filepath.Join(base, "releases", version); got != want {
+				t.Errorf("release directory = %q, want %q", got, want)
+			}
+		}
+	}
+}
+
 func TestArchiveName(t *testing.T) {
 	for _, version := range []string{"0.0.0", "1.2.3", "2.0.0-rc.1+build.42"} {
 		c := &config{Name: "ONEO Go Gallery", Version: version}
