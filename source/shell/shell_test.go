@@ -242,13 +242,31 @@ func TestShellSidebarResize(t *testing.T) {
 	if s.leftWidth != 200 {
 		t.Fatal("toggle lost resized width")
 	}
-	if r := separator(); r.X+r.W/2 != 200 || r.Y < 48 {
+	if r := separator(); r.X+r.W/2 != 200 || r.Y != 0 || r.H != 600 {
 		t.Fatal("misplaced resize hit area", r)
 	}
 	s.SetPage(func(*ui.Context) {})
 	tt.Frame()
 	if _, ok := tt.Find("Resize sidebar"); ok {
 		t.Fatal("replacement page kept resize hit area")
+	}
+}
+
+func TestShellSidebarResizeFullHeight(t *testing.T) {
+	for _, y := range []float32{0, 2, 24, 47, 300, 599} {
+		s, w := fixture()
+		tt := ui.NewTester(s.view, 820, 600)
+		tt.SetTitleBar(ui.TitleBar{Height: 48, Left: 80})
+		tt.Move(220, y)
+		if tt.Cursor() != ui.CursorResizeEW {
+			t.Fatalf("y=%v: missing resize cursor", y)
+		}
+		tt.Press(220, y)
+		tt.Move(250, y)
+		tt.Release(250, y)
+		if s.leftWidth != 250 || w.bounds.Width != 820 {
+			t.Fatalf("y=%v: drag did not resize sidebar: width=%v bounds=%+v", y, s.leftWidth, w.bounds)
+		}
 	}
 }
 

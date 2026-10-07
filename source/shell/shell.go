@@ -264,9 +264,6 @@ func (s *Shell) view(c *ui.Context) {
 				})
 			})
 		})
-		if page == nil && s.leftOpen && leftProgress == 1 {
-			s.resizeHandle(c, leftWidth, maxLeftWidth, headerHeight)
-		}
 		// An unpainted header overlays the full-height columns. Only its controls
 		// occupy the safe area; builders decide whether to inset their content.
 		leftInset := max(8, bar.Left)
@@ -297,13 +294,17 @@ func (s *Shell) view(c *ui.Context) {
 				s.captionButtons(c)
 			}
 		})
+		// The full-height handle wins hit testing over the draggable header.
+		if page == nil && s.leftOpen && leftProgress == 1 {
+			s.resizeHandle(c, leftWidth, maxLeftWidth)
+		}
 	})
 }
 
 // resizeHandle uses MyGo's pointer capture and keyboard input, overlaid on
 // the separator rather than inserting another layout column.
-func (s *Shell) resizeHandle(c *ui.Context, width, maxWidth, top float32) {
-	handle := ui.Box(c).Key("left-resize").Absolute().Left(width - 3).Top(top).Bottom(0).Width(6).
+func (s *Shell) resizeHandle(c *ui.Context, width, maxWidth float32) {
+	handle := ui.Box(c).Key("left-resize").Absolute().Left(width - 3).Top(0).Bottom(0).Width(6).
 		Cursor(ui.CursorResizeEW).Focusable().Role(ui.RoleSplitter).Label(s.options.LeftResizeLabel)
 	next := width
 	if dx, _, held := handle.Dragged(); held {
