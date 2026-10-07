@@ -3,6 +3,7 @@
   "identifier": "me.oneo.onevra.gallery",
   "version": "0.2026.1",
   "main": "./examples/gallery",
+  "generate": ["./examples/gallery/internal/gallery"],
   "out": "../dist",
   "platforms": [
     "darwin/arm64",

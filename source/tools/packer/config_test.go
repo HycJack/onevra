@@ -44,6 +44,9 @@ func TestIconDefaults(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		if err := c.resolveIcons(); err != nil {
+			t.Fatal(err)
+		}
 		if c.MacOS.Icon != macos || c.Windows.Icon != windows || c.Linux.Icon != linux {
 			t.Fatalf("icons = %q, %q, %q; want %q, %q, %q", c.MacOS.Icon, c.Windows.Icon, c.Linux.Icon, macos, windows, linux)
 		}
@@ -67,7 +70,11 @@ func TestIconDefaults(t *testing.T) {
 	}
 	put(t, filepath.Join(root, "icon.icon"), "not a directory")
 	put(t, file, `{"name":"App","identifier":"me.app"}`)
-	if _, err := loadConfig(file); err == nil {
+	c, err := loadConfig(file)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := c.resolveIcons(); err == nil {
 		t.Fatal("invalid preferred icon silently fell back to ICNS")
 	}
 }

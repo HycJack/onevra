@@ -24,6 +24,7 @@ type config struct {
 	Main       string   `json:"main"`
 	Out        string   `json:"out"`
 	Platforms  []string `json:"platforms"` // Release targets; omitted means host OS/architecture.
+	Generate   []string `json:"generate"`  // Optional package patterns passed to go generate once on the host.
 	MacOS      struct {
 		Icon                 string `json:"icon"` // ICNS file or an Icon Composer .icon directory.
 		MinimumSystemVersion string `json:"minimumSystemVersion"`
@@ -60,6 +61,12 @@ func run(ctx context.Context, args []string) error {
 		return err
 	}
 	if err := checkHost(targets, runtime.GOOS); err != nil {
+		return err
+	}
+	if err := c.generate(ctx); err != nil {
+		return err
+	}
+	if err := c.resolveIcons(); err != nil {
 		return err
 	}
 	out := c.path(c.Out)
@@ -131,13 +138,34 @@ func loadConfig(path string) (*config, error) {
 	if _, err := parseTargets(c.Platforms); err != nil {
 		return nil, err
 	}
-	if err := c.resolveIcons(); err != nil {
-		return nil, err
+	for _, pkg := range c.Generate {
+		if strings.TrimSpace(pkg) != pkg || pkg == "" || strings.HasPrefix(pkg, "-") || strings.ContainsAny(pkg, "\x00\r\n") {
+			return nil, fmt.Errorf("generate entries must be non-empty package patterns, not flags: %q", pkg)
+		}
 	}
 	if err := c.validateIcons(); err != nil {
 		return nil, err
 	}
 	return c, nil
+}
+
+// Applications own go:generate directives; Packer only schedules their execution
+// before dependency and icon discovery, using the host rather than release target.
+func (c *config) generate(ctx context.Context) error {
+	if len(c.Generate) == 0 {
+		return nil
+	}
+	args := append([]string{"generate"}, c.Generate...)
+	cmd := exec.CommandContext(ctx, "go", args...)
+	cmd.Dir = c.root
+	cmd.Env = append(os.Environ(), "GOOS="+runtime.GOOS, "GOARCH="+runtime.GOARCH)
+	cmd.Stdin, cmd.Stdout, cmd.Stderr = os.Stdin, os.Stdout, os.Stderr
+	if err := cmd.Run(); ctx.Err() != nil {
+		return fmt.Errorf("go generate: %w", ctx.Err())
+	} else if err != nil {
+		return fmt.Errorf("go generate: %w", err)
+	}
+	return nil
 }
 
 // Default icon sources live beside packer.json, never in resources.
