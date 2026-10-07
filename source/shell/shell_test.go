@@ -320,11 +320,11 @@ func TestShellHasOnlyLeftSidebarControl(t *testing.T) {
 	}
 }
 
-func TestShellWindowsSidebarBackground(t *testing.T) {
-	if runtime.GOOS != "windows" {
-		t.Skip("Windows sidebar styling")
-	}
+func TestShellSidebarBackground(t *testing.T) {
 	for _, dark := range []bool{false, true} {
+		if !dark && runtime.GOOS != "windows" {
+			continue
+		}
 		s, _ := fixture()
 		s.options.Left = nil
 		s.options.Content = nil
@@ -334,7 +334,11 @@ func TestShellWindowsSidebarBackground(t *testing.T) {
 		tt.SetDark(dark)
 		img := tt.Image()
 		sidebar, main := img.RGBAAt(100, 400), img.RGBAAt(400, 400)
-		if sidebar == main || sidebar.A != 255 {
+		wantAlpha := uint8(255)
+		if runtime.GOOS == "darwin" {
+			wantAlpha = theme.DarkPalette().Surface.Alpha(0.65).A
+		}
+		if sidebar == main || sidebar.A != wantAlpha || (dark && !(sidebar.B > sidebar.R)) {
 			t.Fatalf("dark=%v: sidebar=%v main=%v", dark, sidebar, main)
 		}
 		for _, y := range []int{2, 599} {
@@ -370,6 +374,8 @@ func TestShellBackgroundsAndScaling(t *testing.T) {
 				want := p.alpha
 				if runtime.GOOS != "darwin" {
 					want = 65535
+				} else if dark && p.x == 100 {
+					want = uint32(theme.DarkPalette().Surface.Alpha(0.65).A) * 257
 				}
 				if a != want {
 					t.Fatalf("dark=%v x=%d y=%d alpha=%d want=%d", dark, p.x, y, a, want)

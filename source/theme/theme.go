@@ -65,11 +65,11 @@ func DarkPalette() *ui.Theme {
 	accent := ui.Hex("#9cbff9")
 	black := ui.RGB(0, 0, 0)
 	white := ui.RGB(255, 255, 255)
-	t.Background = ui.Hex("#090e18")
-	t.Surface = ui.Hex("#101827")
-	t.SurfaceHover = ui.Hex("#1b2940")
-	t.SurfacePressed = ui.Hex("#18253a")
-	t.Border = ui.Hex("#293b56")
+	t.Background = ui.Hex("#192332")
+	t.Surface = ui.Hex("#243247")
+	t.SurfaceHover = ui.Hex("#30435e")
+	t.SurfacePressed = ui.Hex("#2b3c54")
+	t.Border = ui.Hex("#3b506c")
 	t.Text = ui.Hex("#e7edf8")
 	t.TextMuted = ui.Hex("#a4b4cc")
 	t.Accent = accent
@@ -82,7 +82,7 @@ func DarkPalette() *ui.Theme {
 	t.Success = ui.Hex("#34d399")
 	t.Selection = ui.RGBA(113, 162, 236, 0.25)
 	t.Focus = ui.RGBA(131, 175, 244, 0.55)
-	t.Scrollbar = ui.Hex("#293b56")
+	t.Scrollbar = ui.Hex("#3b506c")
 	t.Radius = 8
 	return t
 }
