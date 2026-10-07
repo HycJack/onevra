@@ -59,6 +59,22 @@ func main() {
 
 在应用就绪后创建 Shell，使用 MyGo 控件构建各栏内容。使用 `shell.SetPage(view)` 替换整个侧边栏与主内容页面（例如显示设置），使用 `shell.SetPage(nil)` 恢复。由应用管理业务状态和生命周期。另可参考[可运行的展示程序](source/examples/gallery/main.go)。
 
+## 外观
+
+Shell 使用 oneo-go 内置的浅色与深色主题，通过 MyGo 自身的主题机制应用，因此所有 MyGo 控件都能正常工作。`ShellOptions.Appearance` 可选择 `theme.Auto`（默认，跟随系统外观）、`theme.Light` 或 `theme.Dark`：
+
+```go
+import "github.com/oneo-me/oneo-go/theme"
+
+shell := components.NewShell(components.ShellOptions{
+    Title:      "Hello",
+    Appearance: theme.Dark,
+    // ...
+})
+```
+
+色板遵循 [oneo-me/desgin-styles](https://github.com/oneo-me/desgin-styles) 的 Light and Shadow（light-shadow）设计风格：暖白色浅色模式与深海军蓝深色模式。参见 [theme 包](source/theme/doc.go)与[外观设计](docs/architecture/components.md#native-appearance)。
+
 ## Lucide 图标
 
 导入 `github.com/oneo-me/oneo-go/icons/lucide`，直接将具名访问函数用于 MyGo：

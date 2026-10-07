@@ -7,7 +7,7 @@ oneo-go is an experimental, product-neutral Go component library built on MyGo. 
 - MyGo owns rendering, layout, input, native controls and desktop integration.
 - oneo-go composes MyGo primitives, rather than wrapping every upstream API or maintaining a parallel UI system.
 - Applications own business state, localized text, persistence, background work and application lifetime.
-- Components use the current MyGo theme without mutating global appearance. MyGo and the operating system own native window behavior; Shell composes caption buttons on Windows.
+- Components use oneo-go's built-in light and dark themes, applied per frame through MyGo's theme mechanism without mutating global appearance. MyGo and the operating system own native window behavior; Shell composes caption buttons on Windows.
 
 ## Components and flow
 

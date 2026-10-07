@@ -7,6 +7,7 @@ import (
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/oneo-go/icons/lucide"
+	"github.com/oneo-me/oneo-go/theme"
 )
 
 // ShellOptions describes a window and its default sidebar-and-content page.
@@ -42,6 +43,10 @@ type ShellOptions struct {
 	LeftResizeLabel string
 	// Windows caption button labels; empty values use English defaults.
 	MinimizeLabel, MaximizeLabel, RestoreLabel, CloseLabel string
+	// Appearance selects the window theme: Auto follows the system
+	// appearance, Light and Dark pin oneo-go's built-in palettes.
+	// It applies before any content is built; the zero value is Auto.
+	Appearance theme.Mode
 }
 
 // Shell owns window presentation, sidebar state and the active page.
@@ -155,6 +160,8 @@ func openFraction(open bool) float32 {
 }
 
 func (s *Shell) view(c *ui.Context) {
+	// The theme must be installed before any widget is created.
+	theme.Apply(c, s.options.Appearance)
 	if runtime.GOOS == "darwin" {
 		c.Root().Background(ui.Transparent)
 	}

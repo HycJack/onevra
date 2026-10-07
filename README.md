@@ -59,6 +59,22 @@ func main() {
 
 Create a Shell when the app is ready; build its columns with MyGo widgets. Use `shell.SetPage(view)` to replace the entire sidebar-and-content page (for example, with settings), and `shell.SetPage(nil)` to restore it. Your application owns business state and lifecycle handling. See the [runnable gallery](source/examples/gallery/main.go) for another example.
 
+## Appearance
+
+Shell uses oneo-go's built-in light and dark themes, applied through MyGo's own theme mechanism so every MyGo widget keeps working. `ShellOptions.Appearance` selects `theme.Auto` (the default, follows the system appearance), `theme.Light` or `theme.Dark`:
+
+```go
+import "github.com/oneo-me/oneo-go/theme"
+
+shell := components.NewShell(components.ShellOptions{
+    Title:      "Hello",
+    Appearance: theme.Dark,
+    // ...
+})
+```
+
+The palettes follow the Light and Shadow (light-shadow) design style from [oneo-me/desgin-styles](https://github.com/oneo-me/desgin-styles): a warm white light mode and a deep navy dark mode. See the [theme package](source/theme/doc.go) and [appearance design](docs/architecture/components.md#native-appearance).
+
 ## Lucide icons
 
 Import `github.com/oneo-me/oneo-go/icons/lucide` and use named accessors directly with MyGo:

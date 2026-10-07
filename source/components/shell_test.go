@@ -7,6 +7,7 @@ import (
 
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/oneo-go/theme"
 )
 
 type fakeWindow struct {
@@ -252,22 +253,22 @@ func TestShellSidebarResize(t *testing.T) {
 func TestShellSeparatorsDoNotReserveSpace(t *testing.T) {
 	var main *ui.Element
 	s, _ := fixture()
+	// Shell owns the frame theme; distinguishable pixels come from its own
+	// palette rather than an injected theme.
+	s.options.Appearance = theme.Dark
 	s.options.Content = func(c *ui.Context) { main = ui.Box(c).Fill() }
-	view := func(c *ui.Context) {
-		theme := *c.Theme()
-		theme.Background = ui.RGB(0, 0, 200)
-		theme.Border = ui.RGB(200, 0, 0)
-		c.SetTheme(&theme)
-		s.view(c)
-	}
-	tt := ui.NewTester(view, 820, 600)
+	tt := ui.NewTester(s.view, 820, 600)
 	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
-	assertPixel := func(x, y int, red bool) {
+	palette := theme.DarkPalette()
+	assertPixel := func(x, y int, separator bool) {
 		t.Helper()
 		p := tt.Image().RGBAAt(x, y)
-		blue := uint8(200)
-		if (red && (p.R != 200 || p.B != 0)) || (!red && (p.R != 0 || p.B != blue)) {
-			t.Fatalf("pixel (%d,%d) = %+v, separator=%v", x, y, p, red)
+		want := palette.Background
+		if separator {
+			want = palette.Border
+		}
+		if p.R != want.R || p.G != want.G || p.B != want.B || p.A != want.A {
+			t.Fatalf("pixel (%d,%d) = %+v, separator=%v", x, y, p, separator)
 		}
 	}
 	if r := main.Bounds(); r.X != 220 || r.W != 600 {
