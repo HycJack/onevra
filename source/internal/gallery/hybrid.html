@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'">
+<title>Hybrid playground</title>
+<style>
+:root { color-scheme: light dark; font-family: -apple-system, BlinkMacSystemFont, sans-serif; color: #172239; background: #f0f4fc; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 28px; }
+.tag { font-size: 11px; font-weight: 750; letter-spacing: 2px; color: #526dd8; }
+h1 { font-size: clamp(26px, 4vw, 42px); letter-spacing: -1.5px; margin: 14px 0; }
+p { line-height: 1.6; opacity: .8; }
+.hero { border-radius: 18px; padding: 26px; background: linear-gradient(120deg, #dfe8ff, #eadffc 55%, #d8f4ee); }
+.stats { display: flex; gap: 14px; margin: 20px 0; }
+.card { flex: 1; padding: 20px; border: 1px solid #9eaace40; border-radius: 14px; background: #ffffff80; }
+.number { font-size: 36px; font-weight: 750; margin: 10px 0; }
+button { background: #4969de; color: white; border: none; border-radius: 8px; padding: 10px 14px; font: inherit; cursor: pointer; }
+button:focus-visible, textarea:focus-visible { outline: 3px solid #a184ef; outline-offset: 3px; }
+textarea { width: 100%; min-height: 125px; padding: 14px; border: 1px solid #9eaace70; border-radius: 10px; background: #ffffff90; color: inherit; font: inherit; line-height: 1.6; resize: vertical; }
+section { margin-top: 22px; }
+h2 { font-size: 16px; }
+.note { padding: 18px; margin-top: 12px; border-left: 3px solid #7792ec; background: #ffffff60; line-height: 1.6; }
+@media (prefers-color-scheme: dark) {
+ :root { color: #e5ebff; background: #131b2d; }
+ .hero { background: linear-gradient(120deg, #253659, #362947 55%, #1e4143); }
+ .tag { color: #a6b9ff; }
+ .card, textarea, .note { background: #202c4380; }
+}
+@media (max-width: 480px) {
+ body { padding: 18px; } .stats { flex-direction: column; } .hero { padding: 20px; }
+}
+</style>
+</head>
+<body>
+<div class="hero">
+ <div class="tag">WEB / WKWEBVIEW</div>
+ <h1>Two renderers.<br>One window.</h1>
+ <p>This panel is HTML and CSS inside MyGo's actual system WebView. Resize the gallery sidebar to watch this page reflow.</p>
+</div>
+<div class="stats">
+ <div class="card"><div class="tag">FROM NATIVE GO</div><div class="number" id="native-count">0</div><p>Use “Send count to web” in the native toolbar.</p></div>
+ <div class="card"><div class="tag">INSIDE THE WEB</div><div class="number" id="web-count">0</div><button id="increment">Web counter +1</button></div>
+</div>
+<section>
+ <h2>A real editable web surface</h2>
+ <textarea aria-label="Web text input" spellcheck="false">Type here, select text, try an input method, then click the native input above.
+这里可以测试中文输入。</textarea>
+</section>
+<section>
+ <h2>Scroll inside the WebView</h2>
+ <div class="note">MyGo owns navigation, JavaScript evaluation and browser lifetime. The WebView component hosts its AppKit content view in this native window.</div>
+ <div class="note">The gallery remains MyGo-rendered while this page scrolls independently. Hiding the web panel preserves this page's state.</div>
+ <div class="note">This is system-view composition, not texture composition. Arbitrary native overlays, transforms and clipping across the web boundary are not supported.</div>
+ <div class="note">Local HTML only. No remote resources, system shell or user documents.</div>
+</section>
+<script>
+let webCount = 0;
+document.querySelector('#increment').addEventListener('click', () => {
+ document.querySelector('#web-count').textContent = ++webCount;
+});
+window.receiveNative = count => {
+ document.querySelector('#native-count').textContent = count;
+ return count;
+};
+</script>
+</body>
+</html>

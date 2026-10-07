@@ -45,6 +45,21 @@ The tests open windows, capture appearance variants (including every MyGo exampl
 
 For UI changes, manually review both themes, narrow layouts, text scaling, window controls, keyboard navigation and accessibility. Inspect background blending over a contrasting backdrop. Captures do not replace interaction review; Windows and Linux need separate desktop checks. See the [gallery verification approach](architecture/gallery.md#verification-approach).
 
+## Hybrid experiment
+
+Run the gallery normally and open **Experiments / Native + WebView**. On macOS ARM64 it embeds the browser in the main window; other platforms show an unsupported message. Try sidebar resizing, both inputs, scrolling, appearance switching, the Go-to-JavaScript counter, hide/show, navigation away and back, and Settings.
+
+The two AlertDialog buttons compare keeping the WebView visible (an eight-second occlusion probe) with explicitly hiding it until dismissal. Escape cancels when native UI has focus. See [component limitations](architecture/components.md#embedded-webview) before using it elsewhere.
+
+From `source/`, run native checks sequentially:
+
+```sh
+ONEO_GO_NATIVE_SMOKE=1 go test ./components -run '^TestNativeWebView$' -count=1 -v
+ONEO_GO_NATIVE_SMOKE=1 go test ./internal/gallery -run '^TestNativeHybrid$' -count=1 -v
+```
+
+Optionally set `ONEO_GO_SCREENSHOTS="$PWD/../dist/hybrid-gallery"` on the gallery test to capture appearances, narrow layout, Settings, inspector and both alert modes. These use macOS `screencapture` and require Screen Recording permission. MyGo's `CapturePage` alone omits the embedded system view.
+
 ## Updating Lucide icons
 
 Ordinary builds use checked-in generated Go assets and do not need Node or a Lucide checkout. To update, obtain a clean checkout of [Lucide](https://github.com/lucide-icons/lucide) and explicitly select its full commit hash. From `source/`:

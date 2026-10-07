@@ -1,6 +1,6 @@
 # Component design
 
-The public [components package](../../source/components/doc.go) provides native UI compositions, not an application framework. Shell owns window presentation and a replaceable page container.
+The public [components package](../../source/components/doc.go) provides native UI compositions and experimental system-view hosting, not an application framework. Shell owns window presentation and a replaceable page container.
 
 ## Composition and ownership
 
@@ -25,6 +25,16 @@ MyGo's animation values drive sidebar reveals, without a separate timer or anima
 State changes request a new target; geometry settles across subsequent frames. Reversing a toggle or switching pages mid-animation continues from the current width. Reduced Motion skips intermediate geometry; native changes still use the deferred UI-thread dispatch. MyGo and the OS own presentation and compositing; frame geometry checks do not establish compositor behavior on every display or platform.
 
 Maximized and full-screen windows cannot grow outward. The inspector may display inside their available space; width adjustments are deferred until a subsequent normal-window frame. Screen bounds and native resizing constraints can also prevent exact width preservation.
+
+## Embedded WebView
+
+The experimental [WebView component](../../source/components/webview.go) places a MyGo-owned system browser in a native window's rectangular layout slot. Applications create and retain instances outside view construction, supply content through MyGo's original Page API, and explicitly hide a view before omitting its slot on navigation. Hiding preserves the document; closing releases the browser without closing the host. Host shutdown closes attached instances automatically. Multiple instances can occupy separate slots.
+
+On macOS ARM64, the component reparents the content view of a hidden MyGo web window into the visible host. The hidden window remains the browser's lifecycle owner and must not be manipulated by callers. MyGo still owns page loading, rendering and input. Geometry changes are coalesced through MyGo's UI queue outside paint; cleanup restores the donor's view before destroying it. This bridge relies on the pinned backend's AppKit hierarchy and needs review on upstream upgrades. Other platforms return an unsupported error without creating a browser.
+
+This is OS view composition, not a shared GPU scene. The browser sits above MyGo's native Surface, so MyGo overlays cannot cover it and their modal input barriers do not block it. Applications must explicitly hide affected WebViews for native in-surface dialogs. Ancestor scrolling/clipping of the browser slot, arbitrary transforms and unified Tab navigation are not supported. Window-bound browser dialogs, menus, popups and fullscreen still target the hidden owner and are outside the component's scope. Input methods, edit shortcuts, accessibility and live-resize synchronization need further native review. MyGo's content capture omits these system views; review an OS-composited capture instead.
+
+See the [usage example](../../source/components/webview_example_test.go) and [gallery experiment](gallery.md#hybrid-experiment). The latter deliberately demonstrates both overlay occlusion and explicit hiding; neither is presented as unified composition.
 
 ## Native appearance
 

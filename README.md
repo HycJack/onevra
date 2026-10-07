@@ -2,7 +2,7 @@
 
 **English** | [简体中文](README.zh-CN.md)
 
-Experimental, product-neutral Go components built on [MyGo](https://github.com/egoist/mygo). Currently provides a native Shell component, Lucide icons for MyGo and a standalone gallery.
+Experimental, product-neutral Go components built on [MyGo](https://github.com/egoist/mygo). Currently provides a native Shell, an experimental embedded WebView, Lucide icons for MyGo and a standalone gallery.
 
 The library is not yet published as a downloadable module, and its API is not stable.
 
@@ -20,6 +20,8 @@ go tool mygo dev
 The sidebar includes Shell, the Lucide icon library and MyGo components. MyGo components are grouped by type; each page displays interactive component states and variations without code or tutorial text. The Plugins / Terminal page offers ANSI output and input echo without launching a shell; see [runtime requirements](docs/build.md#app-bundles).
 
 On macOS this runs a live-reloading development app. To preview a specific appearance, use `go run ./examples/gallery -theme light` or `-theme dark`.
+
+Open **Experiments / Native + WebView** in the gallery to try the embedded browser on macOS ARM64, including native AlertDialog overlap tests. Other platforms show an unsupported message. This is system-view composition, not a unified GPU renderer; see [scope and limitations](docs/architecture/components.md#embedded-webview). For reuse, see the [WebView example](source/components/webview_example_test.go) and [API contract](source/components/webview.go).
 
 ## Basic usage
 

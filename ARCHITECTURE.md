@@ -5,7 +5,7 @@ oneo-go is an experimental, product-neutral Go component library built on MyGo. 
 ## System boundaries
 
 - MyGo owns rendering, layout, input, native controls and desktop integration.
-- oneo-go composes MyGo primitives, rather than wrapping every upstream API or maintaining a parallel UI system.
+- oneo-go composes MyGo primitives, rather than wrapping every upstream API or maintaining a parallel UI system. The experimental WebView component hosts a MyGo-owned system view; it does not implement another browser or renderer.
 - Applications own business state, localized text, persistence, background work and application lifetime.
 - Components use the current MyGo theme without mutating global appearance. The operating system owns window chrome.
 
@@ -21,7 +21,7 @@ An application creates a Shell after MyGo is ready and supplies synchronous UI-t
 
 The `icons/lucide` package supplies lazily parsed, shared MyGo SVGs independently of UI components. MyGo owns their rendering, sizing, color and accessibility. Generated named accessors have no full-library runtime registry or eager parsing, so ordinary consumers need not retain every icon. Upstream resources and licenses are pinned and checked in; a Lucide checkout is only needed for [maintainer updates](docs/build.md#updating-lucide-icons), not consumer builds.
 
-The gallery is an independent consumer of the public API, not a dependency of the library. It holds only in-memory demonstration state and provides a place to review native behavior.
+The gallery is an independent consumer of the public API, not a dependency of the library. It holds only in-memory demonstration state and provides a place to review native behavior. Its [hybrid page](docs/architecture/gallery.md#hybrid-experiment) exercises the experimental WebView component and the limits of macOS system-view composition.
 
 ## Repository landmarks
 
@@ -29,7 +29,7 @@ There is one Go module under `source/`, with module path `github.com/oneo-me/one
 
 - `source/components/`: public UI compositions.
 - `source/icons/lucide/`: public icon assets and upstream provenance.
-- `source/examples/gallery/`: runnable example.
+- `source/examples/gallery/`: runnable gallery.
 - `source/internal/gallery/`: gallery presentation and native review support.
 - [Development guide](docs/build.md): build, verification and release procedures.
 
