@@ -17,6 +17,8 @@ cd source
 go tool mygo dev
 ```
 
+侧边栏提供 Shell、Lucide 图标库和 MyGo 组件入口，MyGo 组件按类型分组，各页面仅展示可交互的组件状态和用法变体，不包含代码或教程说明。
+
 在 macOS 上，这会启动支持自动重载的开发版应用。要预览指定外观，可运行 `go run ./examples/gallery -theme light` 或 `-theme dark`。
 
 ## 基本使用

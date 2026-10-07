@@ -17,6 +17,7 @@ type Gallery struct {
 	query        string
 	grid         ui.GridState
 	selectedIcon int
+	mygoStates   map[string]*demoState
 }
 
 // New creates the standalone shell demonstration.
@@ -35,6 +36,9 @@ func (g *Gallery) Titlebar(c *ui.Context) {
 	if g.page == lucidePage {
 		title = "Icon library / Lucide"
 	}
+	if example, ok := mygoExampleFor(g.page); ok {
+		title = example.group + " / " + example.name
+	}
 	ui.Text(c, title).Bold().SingleLine()
 }
 
@@ -46,6 +50,17 @@ func (g *Gallery) Left(c *ui.Context) {
 			ui.Box(c).Height(4)
 			g.navigationGroup(c, "Icon library")
 			g.navigationItem(c, "Lucide", lucide.Shapes(), lucidePage)
+			ui.Box(c).Height(4)
+			g.navigationGroup(c, "MyGo components")
+			for _, group := range mygoGroups {
+				ui.Box(c).Height(4)
+				g.navigationGroup(c, group)
+				for i, example := range mygoCatalog {
+					if example.group == group {
+						g.navigationItem(c, example.name, lucide.Component(), mygoPageStart+galleryPage(i))
+					}
+				}
+			}
 		})
 	})
 }
@@ -106,6 +121,10 @@ func iconSamples(c *ui.Context) {
 
 // View builds the default page's main content.
 func (g *Gallery) View(c *ui.Context) {
+	if example, ok := mygoExampleFor(g.page); ok {
+		g.MyGo(c, example)
+		return
+	}
 	if g.page == lucidePage {
 		g.Icons(c)
 		return

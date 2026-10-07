@@ -2,6 +2,7 @@ package gallery
 
 import (
 	"bytes"
+	"math"
 	"testing"
 
 	"github.com/egoist/mygo/ui"
@@ -16,7 +17,7 @@ func TestNavigationSpacing(t *testing.T) {
 	}
 	item, _ := tt.Find("Shell")
 	next, _ := tt.Find("Icon library")
-	if gap := next.Y - item.Y - item.H; gap != 12 {
+	if gap := next.Y - item.Y - item.H; math.Abs(float64(gap-12)) > 0.001 {
 		t.Fatalf("group gap = %v, want 12", gap)
 	}
 }
