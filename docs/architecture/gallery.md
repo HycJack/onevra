@@ -10,7 +10,7 @@ Examples should demonstrate ordinary consumer integration, not introduce gallery
 
 The Terminal plugin page starts only on explicit request and uses an in-memory echo connection, never a system shell. MyGo owns emulation and input; the gallery owns asynchronous native-library loading and closes the connection when stopped or when the window closes. Ordinary tests do not load or download the terminal's native library.
 
-Packaging belongs to the gallery application, not the library. Build commands and distribution limitations are maintained in the [development guide](../build.md#app-bundles).
+Packaging and native-library path adaptation belong to the gallery application, not the library. Startup selects the bundled Terminal library before the page can load it, without forcing eager native-library initialization. Build commands and distribution limitations are maintained in the [development guide](../build.md#app-bundles).
 
 ## Verification approach
 

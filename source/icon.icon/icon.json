@@ -1,0 +1,56 @@
+{
+  "fill": {
+    "solid": "srgb:0.96500,0.95700,0.93700,1.00000"
+  },
+  "groups": [
+    {
+      "layers": [
+        {
+          "image-name": "01-module-mint.png",
+          "name": "01-module-mint",
+          "position": {
+            "scale": 1,
+            "translation-in-points": [
+              -17,
+              -16
+            ]
+          }
+        },
+        {
+          "image-name": "02-module-teal.png",
+          "name": "02-module-teal",
+          "position": {
+            "scale": 1,
+            "translation-in-points": [
+              -37,
+              -13
+            ]
+          }
+        },
+        {
+          "image-name": "03-module-deep-teal.png",
+          "name": "03-module-deep-teal",
+          "position": {
+            "scale": 0.944,
+            "translation-in-points": [
+              -18,
+              -25
+            ]
+          }
+        }
+      ],
+      "name": "01-modules",
+      "shadow": {
+        "kind": "neutral",
+        "opacity": 0.5
+      },
+      "translucency": {
+        "enabled": true,
+        "value": 0.3
+      }
+    }
+  ],
+  "supported-platforms": {
+    "squares": "shared"
+  }
+}

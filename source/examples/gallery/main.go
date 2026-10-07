@@ -14,6 +14,9 @@ func main() {
 	if *theme != "system" && *theme != "light" && *theme != "dark" {
 		log.Fatal("theme must be system, light, or dark")
 	}
+	if err := configureTerminalLibrary(); err != nil {
+		log.Fatal(err)
+	}
 	g := &gallery.Gallery{}
 	mygo.App.SetName("oneo-go Gallery")
 	mygo.Theme.SetSource(mygo.ThemeSource(*theme))

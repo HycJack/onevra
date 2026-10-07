@@ -4,7 +4,7 @@ oneo-go is an independent Go component library built on MyGo. Read [ARCHITECTURE
 
 ## Boundaries
 
-- Keep Go source, tests, examples, module files and MyGo configuration in `source/`. Run Go commands from that module directory; keep documentation at the repository root and in `docs/`.
+- Keep Go source, tests, examples, module files and application packaging configuration in `source/`. Run Go commands from that module directory; keep documentation at the repository root and in `docs/`.
 
 - Compose MyGo's built-in widgets; do not create a parallel renderer, input system or theme manager.
 - Keep public components product-neutral. Applications own business state, localized text, persistence and asynchronous work.
