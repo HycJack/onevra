@@ -7,6 +7,7 @@ import (
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/oneo-go/icons/lucide"
 	oneoshell "github.com/oneo-me/oneo-go/shell"
+	oneoui "github.com/oneo-me/oneo-go/ui"
 )
 
 // Gallery owns only demonstration state.
@@ -14,9 +15,7 @@ type Gallery struct {
 	Clicks        int
 	Shell         *oneoshell.Shell
 	page          galleryPage
-	query         string
 	grid          ui.GridState
-	selectedIcon  int
 	mygoStates    map[string]*demoState
 	controlStates map[string]*controlState
 }
@@ -94,7 +93,7 @@ func (g *Gallery) Settings(c *ui.Context) {
 	ui.Column(c).Fill().Padding(oneoshell.HeaderHeight(c)+24, 24, 24, 24).Gap(16).Children(func() {
 		ui.Text(c, "Settings").FontSize(c.Theme().Rem(2)).Bold()
 		ui.Text(c, "A replacement page outside the sidebar-and-content layout.").Wrap()
-		if ui.Button(c, "Back").Clicked() && g.Shell != nil {
+		if oneoui.Button(c, "Back", oneoui.ButtonDefault).Clicked() && g.Shell != nil {
 			g.Shell.SetPage(nil)
 		}
 	})
@@ -153,7 +152,7 @@ func (g *Gallery) body(c *ui.Context) {
 		ui.Column(c).FillWidth().Padding(t.Space(6)).Gap(t.Space(4)).Children(func() {
 			ui.Text(c, "A sidebar and content, one native window.").TextColor(t.TextMuted).Wrap()
 			ui.Text(c, "Toggle or resize the sidebar inside the window. Double-click its separator to restore the default width. Open Settings to replace the entire page.").Wrap()
-			if ui.Button(c, "Count").Clicked() {
+			if oneoui.Button(c, "Count", oneoui.ButtonDefault).Clicked() {
 				g.Clicks++
 			}
 			ui.Text(c, fmt.Sprintf("Clicks: %d", g.Clicks))

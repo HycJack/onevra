@@ -147,7 +147,7 @@ func TestControlButtonWrap(t *testing.T) {
 			}, width, 300)
 			var first, previous ui.Rect
 			wrapped := false
-			for i, label := range []string{"Primary", "Neutral", "Outline", "Ghost", "Link"} {
+			for i, label := range []string{"Primary", "Default", "Outline", "Ghost", "Link"} {
 				r, ok := tt.Find(label)
 				if !ok {
 					t.Fatalf("missing button %s", label)
@@ -193,7 +193,7 @@ func TestControlButtonPointerStyles(t *testing.T) {
 				theme.Apply(c, mode)
 				ui.Column(c).Fill().Disabled(disabled).Children(func() { controlButton(c, s, "Default") })
 			}, 540, 300)
-			for _, label := range []string{"Primary", "Neutral", "Outline", "Ghost"} {
+			for _, label := range []string{"Primary", "Default", "Outline", "Ghost"} {
 				r, ok := tt.Find(label)
 				if !ok {
 					t.Fatalf("missing button %s", label)

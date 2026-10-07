@@ -9,6 +9,7 @@ import (
 	"testing"
 
 	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/oneo-go/theme"
 )
 
 func TestIconCatalogCoverage(t *testing.T) {
@@ -39,53 +40,83 @@ func TestIconCatalogCoverage(t *testing.T) {
 	}
 }
 
-func TestFilterIcons(t *testing.T) {
-	for _, query := range []string{"", "  "} {
-		if len(filterIcons(query)) != len(iconCatalog) {
-			t.Fatal("empty search must show all icons")
-		}
-	}
-	for _, query := range []string{"cloud-rain", " CLOUD RAIN ", "rain cloud"} {
-		found := false
-		for _, icon := range filterIcons(query) {
-			if icon.name == "cloud-rain" {
-				found = true
-			}
-		}
-		if !found {
-			t.Fatalf("missing cloud-rain for %q", query)
-		}
-	}
-	if len(filterIcons("no-such-lucide-icon-xyz")) != 0 {
-		t.Fatal("expected no matches")
-	}
-}
-
 func TestIconBrowserLayout(t *testing.T) {
 	for _, width := range []int{220, 600} {
 		g := &Gallery{page: lucidePage}
 		tt := ui.NewTester(g.Icons, width, 480)
-		if tt.HasText("Lucide") || tt.HasText(" of ") {
-			t.Fatal("content repeats the title or icon count", tt.Texts())
+		if _, ok := tt.Find("Search icons"); ok {
+			t.Fatal("search field remains")
 		}
 		grid, ok := tt.Find("Icon grid")
-		if !ok || grid.X != 0 || grid.W != float32(width) || grid.Y+grid.H != 480 {
-			t.Fatalf("grid must reach the side and bottom edges: %v", grid)
+		if !ok || grid.X != 0 || grid.Y != 0 || grid.W != float32(width) || grid.Y+grid.H != 480 {
+			t.Fatalf("grid must fill the content: %v", grid)
 		}
 		first, ok := tt.Find(iconCatalog[0].name)
-		if !ok || first.X-grid.X != 16 || first.Y-grid.Y < 16 || first.X+first.W > grid.X+grid.W-16 {
+		if !ok || first.X < grid.X+16 || first.Y < grid.Y+16 || first.X+first.W > grid.X+grid.W-16 {
 			t.Fatalf("grid content must retain internal padding: grid=%v, first=%v", grid, first)
 		}
-		input, ok := tt.Find("Search icons")
-		if !ok || input.H <= 0 || input.Y+input.H > grid.Y {
-			t.Fatalf("search field must remain above the grid: %v", input)
+		if first.W != first.H {
+			t.Fatalf("icon button must be square: %v", first)
 		}
-		// The decorative icon must not intercept clicks on the input.
-		tt.ClickAt(input.X+19, input.Y+input.H/2)
-		tt.Type("cloud")
-		if g.query != "cloud" {
-			t.Fatal("search icon intercepted input focus")
+		for _, icon := range iconCatalog[:2] {
+			if err := tt.Click(icon.name); err != nil {
+				t.Fatal(err)
+			}
+			if tt.Clipboard() != icon.name {
+				t.Fatalf("copied %q, want %q", tt.Clipboard(), icon.name)
+			}
 		}
+		tt.SetClipboard("")
+		tt.Key(0, ui.KeySpace)
+		if tt.Clipboard() != iconCatalog[1].name {
+			t.Fatal("keyboard activation must copy the focused icon name")
+		}
+		g.grid.ScrollTo(len(iconCatalog)-1, ui.End)
+		tt.Frame()
+		last := iconCatalog[len(iconCatalog)-1]
+		if err := tt.Click(last.name); err != nil {
+			t.Fatal(err)
+		}
+		if tt.Clipboard() != last.name {
+			t.Fatal("scrolled icon copied the wrong name")
+		}
+	}
+}
+
+func TestIconButtonFeedback(t *testing.T) {
+	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+		g := &Gallery{}
+		var palette *ui.Theme
+		tt := ui.NewTester(func(c *ui.Context) {
+			theme.Apply(c, mode)
+			palette = c.Theme()
+			g.Icons(c)
+		}, 600, 480)
+		r, ok := tt.Find(iconCatalog[0].name)
+		if !ok {
+			t.Fatal("missing first icon button")
+		}
+		x, y := r.X+r.W/2, r.Y+r.H/2
+		check := func(state string, want ui.Color) {
+			t.Helper()
+			pixel := tt.Image().RGBAAt(int(r.X+8), int(y))
+			if pixel.R != want.R || pixel.G != want.G || pixel.B != want.B {
+				t.Fatalf("mode=%v %s: pixel=%v, want=%v", mode, state, pixel, want)
+			}
+		}
+		tt.Move(590, 470)
+		check("rest", palette.Background)
+		tt.Move(x, y)
+		check("hover", palette.SurfaceHover)
+		tt.Press(x, y)
+		check("pressed", palette.SurfacePressed)
+		tt.Release(x, y)
+		check("released", palette.SurfaceHover)
+		if tt.Clipboard() != iconCatalog[0].name {
+			t.Fatal("release must copy the icon name")
+		}
+		tt.Move(590, 470)
+		check("pointer exit", palette.Background)
 	}
 }
 
@@ -102,7 +133,7 @@ func TestGalleryTitlebar(t *testing.T) {
 	}
 }
 
-func TestIconNavigationAndSearch(t *testing.T) {
+func TestIconNavigation(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(func(c *ui.Context) {
 		ui.Row(c).Fill().Children(func() {
@@ -110,27 +141,14 @@ func TestIconNavigationAndSearch(t *testing.T) {
 			ui.Column(c).Grow(1).FillHeight().Children(func() { g.View(c) })
 		})
 	}, 820, 700)
-	if g.page != lucidePage || !tt.HasText("Search icons") {
+	if g.page != lucidePage {
 		t.Fatal("default page is not the icon library")
 	}
 	if err := tt.Click("Lucide"); err != nil {
 		t.Fatal(err)
 	}
-	if g.page != lucidePage || !tt.HasText("Search icons") {
-		t.Fatal(tt.Texts())
-	}
-	if err := tt.Click("Search icons"); err != nil {
-		t.Fatal(err)
-	}
-	tt.Type("no-such-lucide-icon-xyz")
-	if !tt.HasText("No icons found. Try another name.") {
-		t.Fatal(tt.Texts())
-	}
-	if err := tt.Click("Clear"); err != nil {
-		t.Fatal(err)
-	}
-	if g.query != "" || tt.HasText("No icons found. Try another name.") {
-		t.Fatal(tt.Texts())
+	if _, ok := tt.Find("Icon grid"); !ok || g.page != lucidePage {
+		t.Fatal("Lucide navigation did not show the icon grid")
 	}
 	if tt.HasText("Shell") || tt.HasText("Application") {
 		t.Fatal("removed Shell navigation is still visible")

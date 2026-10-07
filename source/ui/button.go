@@ -8,7 +8,7 @@ type ButtonVariant int
 const (
 	// ButtonPrimary is the accent-filled main action.
 	ButtonPrimary ButtonVariant = iota
-	// ButtonDefault is the neutral surface action.
+	// ButtonDefault is the high-contrast filled action.
 	ButtonDefault
 	// ButtonOutline is the bordered quiet action.
 	ButtonOutline
@@ -22,7 +22,8 @@ const (
 // size. Ask Clicked whether it was clicked; give it other content with Children
 // and an empty label. The label is also the accessible name. ButtonLink uses
 // text height without padding or a background and supports RichText composition;
-// its children must be text.
+// its children must be text. For stable identity, key a parent container rather
+// than this element: interaction styling is resolved during construction.
 func Button(c *ui.Context, label string, variant ButtonVariant) *ui.Element {
 	if variant == ButtonLink {
 		return dimmed(ui.Link(c, label, ""))
@@ -33,6 +34,9 @@ func Button(c *ui.Context, label string, variant ButtonVariant) *ui.Element {
 	switch variant {
 	case ButtonPrimary:
 		bg, hover, pressed, fg, border = t.Accent, t.AccentHover, t.AccentPressed, t.AccentText, ui.Color{}
+	case ButtonDefault:
+		bg, fg, border = t.Text, t.Background, ui.Color{}
+		hover, pressed = bg.Mix(t.Background, .12), bg.Mix(t.Background, .25)
 	case ButtonOutline:
 		bg, border = ui.Color{}, t.Border
 	case ButtonGhost:

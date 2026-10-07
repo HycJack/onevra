@@ -87,7 +87,7 @@ func controlButton(c *ui.Context, s *controlState, _ string) {
 			name  string
 			value oneoui.ButtonVariant
 		}{
-			{"Primary", oneoui.ButtonPrimary}, {"Neutral", oneoui.ButtonDefault},
+			{"Primary", oneoui.ButtonPrimary}, {"Default", oneoui.ButtonDefault},
 			{"Outline", oneoui.ButtonOutline}, {"Ghost", oneoui.ButtonGhost}, {"Link", oneoui.ButtonLink},
 		} {
 			if oneoui.Button(c, variant.name, variant.value).Clicked() {

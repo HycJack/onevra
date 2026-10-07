@@ -127,6 +127,23 @@ func TestButtonLinkInline(t *testing.T) {
 	}
 }
 
+func TestButtonDefaultFill(t *testing.T) {
+	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+		var want ui.Color
+		tt := ui.NewTester(func(c *ui.Context) {
+			theme.Apply(c, mode)
+			want = c.Theme().Text
+			Button(c, "Default", ButtonDefault)
+		}, 300, 100)
+		r, _ := tt.Find("Default")
+		tt.Move(290, 90)
+		pixel := tt.Image().RGBAAt(int(r.X+6), int(r.Y+r.H/2))
+		if pixel.R != want.R || pixel.G != want.G || pixel.B != want.B {
+			t.Fatalf("mode=%v: default fill = %v, want %v", mode, pixel, want)
+		}
+	}
+}
+
 func TestButtonLabel(t *testing.T) {
 	tt := ui.NewTester(func(c *ui.Context) {
 		theme.Apply(c, theme.Light)
