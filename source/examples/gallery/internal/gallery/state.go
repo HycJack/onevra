@@ -43,14 +43,19 @@ func LoadState(path string) (State, error) {
 
 // SaveState replaces the file only after a complete write in the same directory.
 func SaveState(path string, state State) error {
-	data, err := json.MarshalIndent(state, "", "  ")
+	return saveJSON(path, state)
+}
+
+// saveJSON atomically replaces an application-owned JSON file.
+func saveJSON(path string, value any) error {
+	data, err := json.MarshalIndent(value, "", "  ")
 	if err != nil {
 		return err
 	}
 	if err := os.MkdirAll(filepath.Dir(path), 0700); err != nil {
 		return err
 	}
-	f, err := os.CreateTemp(filepath.Dir(path), ".state-*")
+	f, err := os.CreateTemp(filepath.Dir(path), ".gallery-*")
 	if err != nil {
 		return err
 	}

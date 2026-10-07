@@ -10,8 +10,10 @@ import (
 	oneoui "github.com/oneo-me/oneo-go/ui"
 )
 
-// Gallery owns only demonstration state.
+// Gallery owns demonstration state and application preferences.
 type Gallery struct {
+	config        Config
+	configPath    string
 	Clicks        int
 	Shell         *oneoshell.Shell
 	page          galleryPage
@@ -83,6 +85,7 @@ func (g *Gallery) navigation(c *ui.Context) {
 }
 
 func (g *Gallery) LeftToolbar(c *ui.Context) {
+	oneoshell.IconButton(c, themeIcon(), "Theme").Menu(g.themeMenu)
 	ui.Spacer(c)
 	if oneoshell.IconButton(c, lucide.Settings(), "Settings").Clicked() && g.Shell != nil {
 		g.Shell.SetPage(g.Settings)

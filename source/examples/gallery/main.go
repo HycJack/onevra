@@ -30,7 +30,13 @@ func main() {
 	mygo.App.SetPath(mygo.PathUserData, configDir)
 	g := &gallery.Gallery{}
 	mygo.App.SetName("oneo-go Gallery")
-	mygo.Theme.SetSource(mygo.ThemeSource(*theme))
+	var override mygo.ThemeSource
+	flag.Visit(func(f *flag.Flag) {
+		if f.Name == "theme" {
+			override = mygo.ThemeSource(*theme)
+		}
+	})
+	g.Configure(filepath.Join(configDir, "config.json"), override)
 	mygo.App.WhenReady(func() {
 		win := g.NewPersistent(filepath.Join(configDir, "state.json")).Window()
 		win.OnClosed(func() { mygo.App.Quit() })
