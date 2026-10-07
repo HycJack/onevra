@@ -12,7 +12,7 @@ func TestNavigationSpacing(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.Left, 220, 480)
 	first, ok := tt.Find("Application")
-	if !ok || first.Y != 0 {
+	if !ok || first.Y != 48 {
 		t.Fatalf("first group must start at the shell's safe content edge: %v", first)
 	}
 	item, _ := tt.Find("Shell")

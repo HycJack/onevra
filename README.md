@@ -43,10 +43,14 @@ func main() {
         shell := oneoshell.NewShell(oneoshell.ShellOptions{
             Title: "Hello",
             Left: func(c *ui.Context) {
-                ui.Text(c, "Navigation")
+                ui.Column(c).Fill().Padding(oneoshell.HeaderHeight(c), 0, 0, 0).Children(func() {
+                    ui.Text(c, "Navigation")
+                })
             },
             Content: func(c *ui.Context) {
-                ui.Text(c, "Hello, Shell")
+                ui.Column(c).Fill().Padding(oneoshell.HeaderHeight(c), 0, 0, 0).Children(func() {
+                    ui.Text(c, "Hello, Shell")
+                })
             },
         })
         shell.Window().OnClosed(func() { mygo.App.Quit() })
@@ -58,6 +62,8 @@ func main() {
 ```
 
 Create a Shell when the app is ready; build its columns with MyGo widgets. Use `shell.SetPage(view)` to replace the entire sidebar-and-content page (for example, with settings), and `shell.SetPage(nil)` to restore it. Your application owns business state and lifecycle handling. See the [runnable gallery](source/examples/gallery/main.go) for another example.
+
+Content extends behind Shell's floating header. Use `oneoshell.HeaderHeight(c)` for a top inset when needed; paint the padded container's background to cover the titlebar area without placing controls under it. This also applies to replacement pages.
 
 ## Appearance
 

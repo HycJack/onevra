@@ -19,7 +19,9 @@ type ShellOptions struct {
 	// sizes. Explicit positive values override each default independently.
 	// Initial dimensions are raised to the corresponding minimum if needed.
 	Width, Height, MinWidth, MinHeight int
-	// Left and Content build the default page. Nil leaves the region empty.
+	// Left and Content build full-height regions behind the floating header.
+	// Use HeaderHeight(c) as top padding to keep controls below it while
+	// allowing a region's background to extend to the top. Nil leaves it empty.
 	Left, Content func(*ui.Context)
 	// ContentTitle builds the leading main-content titlebar area. It may contain
 	// a title, breadcrumbs or actions; nil leaves it blank. Shell clips it to
@@ -150,8 +152,9 @@ func (s *Shell) Window() *mygo.Window { return s.window }
 
 // SetPage replaces the entire default page, including sidebar controls.
 // Nil restores the default page and its previous sidebar expansion state.
-// Replacement pages receive an opaque background and the same window-control
-// clearance and draggable header as the default page.
+// Replacement pages receive an opaque background and the same floating header
+// as the default page. The builder owns its top inset; use
+// HeaderHeight(c) to keep interactive content below the header.
 func (s *Shell) SetPage(page func(*ui.Context)) {
 	s.page = page
 	s.refresh()
@@ -170,6 +173,16 @@ func (s *Shell) refresh() {
 	if s.host != nil {
 		s.host.Invalidate()
 	}
+}
+
+// HeaderHeight returns the floating Shell header's height in DIPs for this
+// frame, accounting for native window controls and the active theme's font size.
+// Call it from a content builder; Shell does not automatically inset Left,
+// Content or pages.
+// The header remains above content for window dragging and header controls;
+// keep interactive body content below this height.
+func HeaderHeight(c *ui.Context) float32 {
+	return max(48, c.TitleBar().Height, c.Theme().Rem(3))
 }
 
 const sidebarDuration = 220 * time.Millisecond
@@ -201,7 +214,7 @@ func (s *Shell) view(c *ui.Context) {
 		leftProgress = leftTarget
 	}
 	bar := c.TitleBar()
-	headerHeight := max(48, bar.Height, c.Theme().Rem(3))
+	headerHeight := HeaderHeight(c)
 	width, _ := c.Size()
 	maxLeftWidth := width * 0.4
 	if s.options.LeftMaxWidth > 0 {
@@ -211,7 +224,7 @@ func (s *Shell) view(c *ui.Context) {
 	root.Children(func() {
 		ui.Column(c).Key(page != nil).Fill().Clip().Children(func() {
 			if page != nil {
-				ui.Column(c).Fill().Padding(headerHeight, 0, 0, 0).Background(background).Children(func() { page(c) })
+				ui.Column(c).Fill().Background(background).Children(func() { page(c) })
 				return
 			}
 			ui.Row(c).Fill().Children(func() {
@@ -223,7 +236,7 @@ func (s *Shell) view(c *ui.Context) {
 						sidebar.Background(c.Theme().Surface.Alpha(1))
 					}
 					sidebar.Children(func() {
-						ui.Column(c).Width(leftWidth).Shrink(0).FillHeight().Padding(headerHeight, 0, 0, 0).
+						ui.Column(c).Width(leftWidth).Shrink(0).FillHeight().
 							Disabled(!s.leftOpen).Children(func() {
 							ui.Column(c).FillWidth().Grow(1).MinHeight(0).Clip().Children(func() {
 								if s.options.Left != nil {
@@ -238,7 +251,7 @@ func (s *Shell) view(c *ui.Context) {
 					})
 				}
 				ui.Column(c).Key("content").Grow(1).MinWidth(0).FillHeight().Background(background).Clip().Children(func() {
-					ui.Column(c).Fill().Padding(headerHeight, 0, 0, 0).Children(func() {
+					ui.Column(c).Fill().Children(func() {
 						if s.options.Content != nil {
 							s.options.Content(c)
 						}
@@ -253,7 +266,7 @@ func (s *Shell) view(c *ui.Context) {
 			s.resizeHandle(c, leftWidth, maxLeftWidth, headerHeight)
 		}
 		// An unpainted header overlays the full-height columns. Only its controls
-		// occupy the safe area; column content is kept below it by top padding.
+		// occupy the safe area; builders decide whether to inset their content.
 		leftInset := max(8, bar.Left)
 		if runtime.GOOS == "darwin" && bar.Left > 0 {
 			leftInset += 16

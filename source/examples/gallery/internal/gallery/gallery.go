@@ -48,6 +48,10 @@ func (g *Gallery) Titlebar(c *ui.Context) {
 }
 
 func (g *Gallery) Left(c *ui.Context) {
+	ui.Column(c).Fill().Padding(oneoshell.HeaderHeight(c), 0, 0, 0).Children(func() { g.navigation(c) })
+}
+
+func (g *Gallery) navigation(c *ui.Context) {
 	ui.Scroll(c).Fill().Children(func() {
 		ui.Column(c).FillWidth().Padding(0, 12, 12, 12).Gap(4).Children(func() {
 			g.navigationGroup(c, "Application")
@@ -90,7 +94,7 @@ func (g *Gallery) LeftToolbar(c *ui.Context) {
 }
 
 func (g *Gallery) Settings(c *ui.Context) {
-	ui.Column(c).Fill().Padding(24).Gap(16).Children(func() {
+	ui.Column(c).Fill().Padding(oneoshell.HeaderHeight(c)+24, 24, 24, 24).Gap(16).Children(func() {
 		ui.Text(c, "Settings").FontSize(c.Theme().Rem(2)).Bold()
 		ui.Text(c, "A replacement page outside the sidebar-and-content layout.").Wrap()
 		if ui.Button(c, "Back").Clicked() && g.Shell != nil {
@@ -131,6 +135,10 @@ func iconSamples(c *ui.Context) {
 
 // View builds the default page's main content.
 func (g *Gallery) View(c *ui.Context) {
+	ui.Column(c).Fill().Padding(oneoshell.HeaderHeight(c), 0, 0, 0).Children(func() { g.body(c) })
+}
+
+func (g *Gallery) body(c *ui.Context) {
 	if example, ok := controlExampleFor(g.page); ok {
 		g.Controls(c, example)
 		return

@@ -77,10 +77,12 @@ func TestShellLayoutAndReplacement(t *testing.T) {
 		t.Fatal("left sidebar did not collapse internally")
 	}
 	s.SetPage(func(c *ui.Context) {
-		ui.Text(c, "Settings")
-		if ui.Button(c, "Back").Clicked() {
-			s.SetPage(nil)
-		}
+		ui.Column(c).Fill().Padding(HeaderHeight(c), 0, 0, 0).Children(func() {
+			ui.Text(c, "Settings")
+			if ui.Button(c, "Back").Clicked() {
+				s.SetPage(nil)
+			}
+		})
 	})
 	tt = ui.NewTester(s.view, 820, 600)
 	_, hasLeftToggle := tt.Find("Toggle sidebar")
@@ -358,8 +360,8 @@ func TestShellBackgroundsAndScaling(t *testing.T) {
 		}
 		for _, label := range []string{"Navigation", "Document"} {
 			r, ok := tt.Find(label)
-			if !ok || r.Y < 48 {
-				t.Fatalf("%q overlaps header: %+v", label, r)
+			if !ok || r.Y != 0 {
+				t.Fatalf("%q does not extend behind header: %+v", label, r)
 			}
 		}
 		s.SetLeftExpanded(false)

@@ -43,10 +43,14 @@ func main() {
         shell := oneoshell.NewShell(oneoshell.ShellOptions{
             Title: "Hello",
             Left: func(c *ui.Context) {
-                ui.Text(c, "Navigation")
+                ui.Column(c).Fill().Padding(oneoshell.HeaderHeight(c), 0, 0, 0).Children(func() {
+                    ui.Text(c, "Navigation")
+                })
             },
             Content: func(c *ui.Context) {
-                ui.Text(c, "Hello, Shell")
+                ui.Column(c).Fill().Padding(oneoshell.HeaderHeight(c), 0, 0, 0).Children(func() {
+                    ui.Text(c, "Hello, Shell")
+                })
             },
         })
         shell.Window().OnClosed(func() { mygo.App.Quit() })
@@ -58,6 +62,8 @@ func main() {
 ```
 
 在应用就绪后创建 Shell，使用 MyGo 控件构建各栏内容。使用 `shell.SetPage(view)` 替换整个侧边栏与主内容页面（例如显示设置），使用 `shell.SetPage(nil)` 恢复。由应用管理业务状态和生命周期。另可参考[可运行的展示程序](source/examples/gallery/main.go)。
+
+内容默认延伸到 Shell 的悬浮标题栏下方。需要避让时，使用 `oneoshell.HeaderHeight(c)` 设置顶部内边距；在这个容器上绘制背景，即可覆盖标题栏区域而不遮挡内容控件。替换页也遵循这一规则。
 
 ## 外观
 
