@@ -24,10 +24,16 @@ type ShellOptions struct {
 	// LeftToolbar builds a fixed bottom toolbar beneath Left; nil omits it.
 	// Use ToolbarIconButton for actions and ui.Spacer for trailing alignment.
 	LeftToolbar func(*ui.Context)
-	// Initial left sidebar width in DIPs; non-positive values use 220.
-	// The left width can be changed by dragging its separator or using arrow
-	// keys while the separator is focused. Shell retains it across page changes.
+	// Default left sidebar width in DIPs; non-positive values use 220.
+	// Clamped to LeftMinWidth/LeftMaxWidth at creation. Dragging or focused
+	// arrow keys adjust the width; double-clicking the separator restores it.
+	// Shell retains the chosen width across toggles and page changes.
 	LeftWidth int
+	// LeftMinWidth defaults to 120 DIPs when non-positive. A non-positive
+	// LeftMaxWidth adds no fixed limit; a positive maximum below the minimum
+	// is raised to the minimum. Visible width is also capped at 40% of the
+	// viewport, even below the minimum, without discarding the chosen width.
+	LeftMinWidth, LeftMaxWidth int
 	// The left sidebar starts open.
 	LeftCollapsed bool
 	// Labels allow applications to localize the sidebar controls.
@@ -65,6 +71,14 @@ func NewShell(options ShellOptions) *Shell {
 func newShell(options ShellOptions) *Shell {
 	if options.LeftWidth <= 0 {
 		options.LeftWidth = 220
+	}
+	if options.LeftMinWidth <= 0 {
+		options.LeftMinWidth = 120
+	}
+	options.LeftWidth = max(options.LeftWidth, options.LeftMinWidth)
+	if options.LeftMaxWidth > 0 {
+		options.LeftMaxWidth = max(options.LeftMaxWidth, options.LeftMinWidth)
+		options.LeftWidth = min(options.LeftWidth, options.LeftMaxWidth)
 	}
 	if options.LeftToggleLabel == "" {
 		options.LeftToggleLabel = "Toggle sidebar"
@@ -152,7 +166,11 @@ func (s *Shell) view(c *ui.Context) {
 	bar := c.TitleBar()
 	headerHeight := max(48, bar.Height, c.Theme().Rem(3))
 	width, _ := c.Size()
-	leftWidth := min(s.leftWidth, width*0.4)
+	maxLeftWidth := width * 0.4
+	if s.options.LeftMaxWidth > 0 {
+		maxLeftWidth = min(maxLeftWidth, float32(s.options.LeftMaxWidth))
+	}
+	leftWidth := min(s.leftWidth, maxLeftWidth)
 	root.Children(func() {
 		ui.Column(c).Key(page != nil).Fill().Clip().Children(func() {
 			if page != nil {
@@ -191,7 +209,7 @@ func (s *Shell) view(c *ui.Context) {
 			})
 		})
 		if page == nil && s.leftOpen && leftProgress == 1 {
-			s.resizeHandle(c, leftWidth, width*0.4, headerHeight)
+			s.resizeHandle(c, leftWidth, maxLeftWidth, headerHeight)
 		}
 		// An unpainted header overlays the full-height columns. Only its controls
 		// occupy the safe area; column content is kept below it by top padding.
@@ -236,8 +254,11 @@ func (s *Shell) resizeHandle(c *ui.Context, width, maxWidth, top float32) {
 	if handle.Shortcut(0, ui.KeyRight) {
 		next += 10
 	}
-	if next != width {
-		s.leftWidth = max(min(120, maxWidth), min(next, maxWidth))
+	if handle.DoubleClicked() {
+		s.leftWidth = float32(s.options.LeftWidth)
+		c.Invalidate()
+	} else if next != width {
+		s.leftWidth = max(float32(s.options.LeftMinWidth), min(next, maxWidth))
 		c.Invalidate()
 	}
 	handle.FocusRing(handle.FocusVisible())

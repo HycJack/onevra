@@ -29,6 +29,7 @@ func (g *Gallery) New() *components.Shell {
 	g.Shell = components.NewShell(components.ShellOptions{
 		Title: "oneo-go Gallery", Width: 820, Height: 900,
 		MinWidth: 360, MinHeight: 480,
+		LeftWidth: 220, LeftMinWidth: 220, LeftMaxWidth: 520,
 		Left: g.Left, Content: g.View, LeftToolbar: g.LeftToolbar,
 		ContentTitle: g.Titlebar,
 	})
@@ -157,7 +158,7 @@ func (g *Gallery) View(c *ui.Context) {
 	ui.Scroll(c).Fill().Children(func() {
 		ui.Column(c).FillWidth().Padding(t.Space(6)).Gap(t.Space(4)).Children(func() {
 			ui.Text(c, "A sidebar and content, one native window.").TextColor(t.TextMuted).Wrap()
-			ui.Text(c, "Toggle or resize the sidebar inside the window. Open Settings to replace the entire page.").Wrap()
+			ui.Text(c, "Toggle or resize the sidebar inside the window. Double-click its separator to restore the default width. Open Settings to replace the entire page.").Wrap()
 			if ui.Button(c, "Count").Clicked() {
 				g.Clicks++
 			}

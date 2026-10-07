@@ -22,6 +22,6 @@ The opt-in component test covers multiple views, geometry, AppKit hit testing, w
 
 ## Verification approach
 
-Ordinary tests do not open windows. The opt-in native smoke test runs the actual MyGo event loop with temporary user data and captures light, dark, narrow and replacement-page views. Native bounds assertions check that replacement pages preserve window geometry. See [native review](../build.md#native-review) for the command and manual checks.
+Ordinary tests do not open windows. The opt-in native smoke test runs the actual MyGo event loop with temporary user data and captures light, dark, narrow and replacement-page views. Native bounds assertions check that replacement pages preserve window geometry. A macOS ARM64 pointer test verifies sidebar width limits and double-click reset through the native event path. See [native review](../build.md#native-review) for the command and manual checks.
 
 Content captures establish rendering but omit OS-composited background blur. Review blending in a live window over a contrasting backdrop; a content capture alone cannot prove it works. Keyboard interaction, accessibility and platform-specific window behavior also require native review rather than screenshot assertions.
