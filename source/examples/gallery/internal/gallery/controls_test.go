@@ -57,7 +57,7 @@ func TestControlNavigationAndState(t *testing.T) {
 			t.Fatal("incorrect navigation")
 		}
 		title := ui.NewTester(g.Titlebar, 540, 60)
-		if !title.HasText("oneo-go controls / " + example.name) {
+		if !title.HasText("Components / " + example.name) {
 			t.Fatal("incorrect title")
 		}
 	}

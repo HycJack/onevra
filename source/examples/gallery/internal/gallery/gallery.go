@@ -42,7 +42,7 @@ func (g *Gallery) Titlebar(c *ui.Context) {
 		title = example.group + " / " + example.name
 	}
 	if example, ok := controlExampleFor(g.page); ok {
-		title = "oneo-go controls / " + example.name
+		title = "Components / " + example.name
 	}
 	ui.Text(c, title).Bold().SingleLine()
 }
@@ -50,15 +50,22 @@ func (g *Gallery) Titlebar(c *ui.Context) {
 func (g *Gallery) Left(c *ui.Context) {
 	ui.Scroll(c).Fill().Children(func() {
 		ui.Column(c).FillWidth().Padding(0, 12, 12, 12).Gap(4).Children(func() {
-			g.navigationGroup(c, "Components")
+			g.navigationGroup(c, "Application")
 			g.navigationItem(c, "Shell", lucide.PanelsTopLeft(), shellPage)
 			ui.Box(c).Height(4)
 			g.navigationGroup(c, "Icon library")
 			g.navigationItem(c, "Lucide", lucide.Shapes(), lucidePage)
 			ui.Box(c).Height(4)
-			g.navigationGroup(c, "oneo-go controls")
+			g.navigationGroup(c, "Components")
 			for i, example := range controlCatalog {
 				g.navigationItem(c, example.label, lucide.Component(), controlPageStart()+galleryPage(i))
+			}
+			ui.Box(c).Height(4)
+			g.navigationGroup(c, "Plugins")
+			for i, example := range mygoCatalog {
+				if example.group == "Plugins" {
+					g.navigationItem(c, example.name, lucide.Component(), mygoPageStart+galleryPage(i))
+				}
 			}
 			ui.Box(c).Height(4)
 			g.navigationGroup(c, "MyGo components")

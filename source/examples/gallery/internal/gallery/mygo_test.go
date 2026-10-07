@@ -19,7 +19,7 @@ func TestMyGoCatalog(t *testing.T) {
 			t.Fatalf("wrong route for %s", example.name)
 		}
 	}
-	groups := map[string]int{}
+	groups := map[string]int{"Plugins": 0}
 	for _, group := range mygoGroups {
 		if _, exists := groups[group]; exists {
 			t.Fatalf("duplicate group: %s", group)

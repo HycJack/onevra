@@ -11,7 +11,7 @@ import (
 func TestNavigationSpacing(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.Left, 220, 480)
-	first, ok := tt.Find("Components")
+	first, ok := tt.Find("Application")
 	if !ok || first.Y != 0 {
 		t.Fatalf("first group must start at the shell's safe content edge: %v", first)
 	}
@@ -19,6 +19,27 @@ func TestNavigationSpacing(t *testing.T) {
 	next, _ := tt.Find("Icon library")
 	if gap := next.Y - item.Y - item.H; math.Abs(float64(gap-12)) > 0.001 {
 		t.Fatalf("group gap = %v, want 12", gap)
+	}
+}
+
+func TestNavigationGroupOrder(t *testing.T) {
+	g := &Gallery{}
+	tt := ui.NewTester(g.Left, 220, 6000)
+	var bottom float32
+	for _, label := range []string{"Application", "Shell", "Icon library", "Lucide", "Components", "Plugins", "Terminal", "MyGo components", "Actions", "Media & text"} {
+		r, ok := tt.Find(label)
+		if !ok || r.Y < bottom {
+			t.Fatalf("%s missing or out of order: %v (previous bottom %v)", label, r, bottom)
+		}
+		bottom = r.Y + r.H
+	}
+	if tt.HasText("oneo-go controls") {
+		t.Fatal("obsolete component group is still visible")
+	}
+	for _, group := range mygoGroups {
+		if group == "Plugins" {
+			t.Fatal("plugins must not also appear among built-in MyGo groups")
+		}
 	}
 }
 
