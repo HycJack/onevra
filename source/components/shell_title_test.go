@@ -25,10 +25,9 @@ func TestShellContentTitle(t *testing.T) {
 				tt.SetSize(width, 600)
 				tt.SetPreferences(ui.Preferences{TextScale: scale, ReduceMotion: true})
 				left, _ := tt.Find("Toggle sidebar")
-				right, _ := tt.Find("Toggle inspector")
 				r := title.Bounds()
-				if r.X < left.X+left.W || r.X+r.W > right.X || r.Y < 0 || r.Y+r.H > max(48, 48*scale) {
-					t.Fatalf("width=%d scale=%v left=%v: title overlaps controls: %+v, left %+v, right %+v", width, scale, leftOpen, r, left, right)
+				if r.X < left.X+left.W || r.X+r.W > float32(width)-8 || r.Y < 0 || r.Y+r.H > max(48, 48*scale) {
+					t.Fatalf("width=%d scale=%v left=%v: title overlaps controls: %+v, left %+v", width, scale, leftOpen, r, left)
 				}
 			}
 		}

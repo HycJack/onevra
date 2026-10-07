@@ -158,9 +158,6 @@ func TestNativeHybrid(t *testing.T) {
 			t.Fatal("navigation recreated document")
 		}
 	}
-	mygo.RunOnMain(func() { g.Shell.SetRightExpanded(true) })
-	time.Sleep(400 * time.Millisecond)
-	captureHybrid(t, win, "inspector")
 	mygo.RunOnMain(func() { g.Shell.SetPage(g.Settings) })
 	waitHybrid(t, "hidden in Settings", func() bool { return !visible() })
 	time.Sleep(400 * time.Millisecond)

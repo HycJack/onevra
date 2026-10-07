@@ -17,7 +17,7 @@ Application / standalone gallery
   └─ MyGo directly
 ```
 
-An application creates a Shell after MyGo is ready and supplies synchronous UI-thread content builders. Shell configures and creates a MyGo window, preprocesses its content through a shared page container, and presents either the default three-column page or an application-supplied replacement. It exposes the native window handle for application-owned events and lifecycle handling. Layout and appearance ownership are described in [Components](docs/architecture/components.md).
+An application creates a Shell after MyGo is ready and supplies synchronous UI-thread content builders. Shell configures and creates a MyGo window, preprocesses its content through a shared page container, and presents either the default sidebar-and-content page or an application-supplied replacement. It exposes the native window handle for application-owned events and lifecycle handling. Layout and appearance ownership are described in [Components](docs/architecture/components.md).
 
 The `icons/lucide` package supplies lazily parsed, shared MyGo SVGs independently of UI components. MyGo owns their rendering, sizing, color and accessibility. Generated named accessors have no full-library runtime registry or eager parsing, so ordinary consumers need not retain every icon. Upstream resources and licenses are pinned and checked in; a Lucide checkout is only needed for [maintainer updates](docs/build.md#updating-lucide-icons), not consumer builds.
 

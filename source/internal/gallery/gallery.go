@@ -29,7 +29,7 @@ func (g *Gallery) New() *components.Shell {
 	g.Shell = components.NewShell(components.ShellOptions{
 		Title: "oneo-go Gallery", Width: 820, Height: 900,
 		MinWidth: 360, MinHeight: 480,
-		Left: g.Left, Content: g.View, Right: g.Right, LeftToolbar: g.LeftToolbar,
+		Left: g.Left, Content: g.View, LeftToolbar: g.LeftToolbar,
 		ContentTitle: g.Titlebar,
 	})
 	g.Shell.Window().OnClosed(g.Close)
@@ -97,18 +97,11 @@ func (g *Gallery) LeftToolbar(c *ui.Context) {
 	}
 }
 
-func (g *Gallery) Right(c *ui.Context) {
-	ui.Column(c).Fill().Padding(16).Gap(12).Children(func() {
-		ui.Text(c, "Inspector").Bold()
-		ui.Text(c, "Opening this panel extends the window to the right.").Wrap()
-	})
-}
-
 func (g *Gallery) Settings(c *ui.Context) {
 	g.setHybridActive(false)
 	ui.Column(c).Fill().Padding(24).Gap(16).Children(func() {
 		ui.Text(c, "Settings").FontSize(c.Theme().Rem(2)).Bold()
-		ui.Text(c, "A replacement page outside the three-column layout.").Wrap()
+		ui.Text(c, "A replacement page outside the sidebar-and-content layout.").Wrap()
 		if ui.Button(c, "Back").Clicked() && g.Shell != nil {
 			g.Shell.SetPage(nil)
 		}
@@ -163,8 +156,8 @@ func (g *Gallery) View(c *ui.Context) {
 	t := c.Theme()
 	ui.Scroll(c).Fill().Children(func() {
 		ui.Column(c).FillWidth().Padding(t.Space(6)).Gap(t.Space(4)).Children(func() {
-			ui.Text(c, "Three columns, one native window.").TextColor(t.TextMuted).Wrap()
-			ui.Text(c, "Toggle the sidebar inside the window, or extend it with the inspector. Open Settings to replace the entire page.").Wrap()
+			ui.Text(c, "A sidebar and content, one native window.").TextColor(t.TextMuted).Wrap()
+			ui.Text(c, "Toggle or resize the sidebar inside the window. Open Settings to replace the entire page.").Wrap()
 			if ui.Button(c, "Count").Clicked() {
 				g.Clicks++
 			}

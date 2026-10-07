@@ -93,14 +93,6 @@ func TestShellToolbarPlacement(t *testing.T) {
 	if err := tt.Click("Settings"); err != nil || clicks != 1 {
 		t.Fatal("bottom toolbar action failed", err, clicks)
 	}
-	before, _ := tt.Find("Toggle inspector")
-	s.SetRightExpanded(true)
-	tt.Frame()
-	tt.SetSize(1100, 600)
-	after, _ := tt.Find("Toggle inspector")
-	if before != after || after.X+after.W != 812 {
-		t.Fatal("inspector toggle must stay at content edge", before, after)
-	}
 	s.SetLeftExpanded(false)
 	tt.Frame()
 	if _, ok := tt.Find("Settings"); ok {

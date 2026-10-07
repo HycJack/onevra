@@ -68,26 +68,24 @@ func TestNativeGallery(t *testing.T) {
 		t.Fatal(err)
 	}
 	for _, mode := range []struct {
-		name            string
-		theme           mygo.ThemeSource
-		width           int
-		right, settings bool
-		icons           bool
+		name     string
+		theme    mygo.ThemeSource
+		width    int
+		settings bool
+		icons    bool
 	}{
-		{"light", mygo.ThemeLight, 820, false, false, false},
-		{"dark", mygo.ThemeDark, 820, false, false, false},
-		{"inspector", mygo.ThemeLight, 820, true, false, false},
-		{"settings", mygo.ThemeLight, 820, true, true, false},
-		{"restored", mygo.ThemeDark, 820, true, false, false},
-		{"narrow", mygo.ThemeLight, 360, false, false, false},
-		{"icons-light", mygo.ThemeLight, 820, false, false, true},
-		{"icons-dark", mygo.ThemeDark, 820, false, false, true},
-		{"icons-narrow", mygo.ThemeLight, 360, false, false, true},
+		{"light", mygo.ThemeLight, 820, false, false},
+		{"dark", mygo.ThemeDark, 820, false, false},
+		{"settings", mygo.ThemeLight, 820, true, false},
+		{"restored", mygo.ThemeDark, 820, false, false},
+		{"narrow", mygo.ThemeLight, 360, false, false},
+		{"icons-light", mygo.ThemeLight, 820, false, true},
+		{"icons-dark", mygo.ThemeDark, 820, false, true},
+		{"icons-narrow", mygo.ThemeLight, 360, false, true},
 	} {
 		mygo.Theme.SetSource(mode.theme)
 		mygo.RunOnMain(func() {
 			shell.SetPage(nil)
-			shell.SetRightExpanded(false)
 		})
 		time.Sleep(400 * time.Millisecond)
 		var before mygo.Rectangle
@@ -98,7 +96,6 @@ func TestNativeGallery(t *testing.T) {
 			}
 			win.SetSize(mode.width, 900)
 			before = win.Bounds()
-			shell.SetRightExpanded(mode.right)
 			if mode.settings {
 				shell.SetPage(g.Settings)
 			}
@@ -107,9 +104,6 @@ func TestNativeGallery(t *testing.T) {
 		mygo.RunOnMain(func() {
 			after := win.Bounds()
 			wantWidth := mode.width
-			if mode.right && !mode.settings {
-				wantWidth += 280
-			}
 			if after.Width != wantWidth || after.X != before.X || after.Y != before.Y || after.Height != before.Height {
 				t.Errorf("%s: bounds = %+v, expected width %d and unchanged origin/height (%+v)", mode.name, after, wantWidth, before)
 			}

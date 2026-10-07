@@ -57,7 +57,7 @@ func main() {
 }
 ```
 
-Create a Shell when the app is ready; build its columns with MyGo widgets. Supply `Right` to enable the optional inspector. Use `shell.SetPage(view)` to replace the entire three-column page (for example, with settings), and `shell.SetPage(nil)` to restore it. Your application owns business state and lifecycle handling. See the [runnable gallery](source/examples/gallery/main.go) for another example.
+Create a Shell when the app is ready; build its columns with MyGo widgets. Use `shell.SetPage(view)` to replace the entire sidebar-and-content page (for example, with settings), and `shell.SetPage(nil)` to restore it. Your application owns business state and lifecycle handling. See the [runnable gallery](source/examples/gallery/main.go) for another example.
 
 ## Lucide icons
 

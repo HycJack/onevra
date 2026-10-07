@@ -57,7 +57,7 @@ func main() {
 }
 ```
 
-在应用就绪后创建 Shell，使用 MyGo 控件构建各栏内容。提供 `Right` 即可启用可选的右侧栏；使用 `shell.SetPage(view)` 替换整个三栏页面（例如显示设置），使用 `shell.SetPage(nil)` 恢复。由应用管理业务状态和生命周期。另可参考[可运行的展示程序](source/examples/gallery/main.go)。
+在应用就绪后创建 Shell，使用 MyGo 控件构建各栏内容。使用 `shell.SetPage(view)` 替换整个侧边栏与主内容页面（例如显示设置），使用 `shell.SetPage(nil)` 恢复。由应用管理业务状态和生命周期。另可参考[可运行的展示程序](source/examples/gallery/main.go)。
 
 ## Lucide 图标
 

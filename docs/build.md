@@ -38,10 +38,10 @@ From `source/`, in a macOS desktop session:
 
 ```sh
 ONEO_GO_NATIVE_SMOKE=1 ONEO_GO_SCREENSHOTS="$PWD/../dist/preview" \
-  go test ./internal/gallery -run '^TestNative(Gallery|InspectorFrames|MyGo|Terminal)$' -count=1 -v
+  go test ./internal/gallery -run '^TestNative(Gallery|MyGo|Terminal)$' -count=1 -v
 ```
 
-The tests open windows, capture appearance variants (including every MyGo example in light, dark and narrow layouts), exercise terminal input and cleanup, check layout stability across inspector transition frames and close the windows. Omit `ONEO_GO_SCREENSHOTS` to use temporary output.
+The tests open windows, capture appearance variants (including every MyGo example in light, dark and narrow layouts), exercise terminal input and cleanup, check that replacement pages preserve window bounds, and close the windows. Omit `ONEO_GO_SCREENSHOTS` to use temporary output.
 
 For UI changes, manually review both themes, narrow layouts, text scaling, window controls, keyboard navigation and accessibility. Inspect background blending over a contrasting backdrop. Captures do not replace interaction review; Windows and Linux need separate desktop checks. See the [gallery verification approach](architecture/gallery.md#verification-approach).
 
@@ -58,7 +58,7 @@ ONEO_GO_NATIVE_SMOKE=1 go test ./components -run '^TestNativeWebView$' -count=1 
 ONEO_GO_NATIVE_SMOKE=1 go test ./internal/gallery -run '^TestNativeHybrid$' -count=1 -v
 ```
 
-Optionally set `ONEO_GO_SCREENSHOTS="$PWD/../dist/hybrid-gallery"` on the gallery test to capture appearances, narrow layout, Settings, inspector and both alert modes. These use macOS `screencapture` and require Screen Recording permission. MyGo's `CapturePage` alone omits the embedded system view.
+Optionally set `ONEO_GO_SCREENSHOTS="$PWD/../dist/hybrid-gallery"` on the gallery test to capture appearances, narrow layout, Settings and both alert modes. These use macOS `screencapture` and require Screen Recording permission. MyGo's `CapturePage` alone omits the embedded system view.
 
 ## Updating Lucide icons
 

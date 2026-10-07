@@ -10,33 +10,16 @@ import (
 )
 
 type fakeWindow struct {
-	bounds                 mygo.Rectangle
-	maximized, fullscreen  bool
-	limit                  int
-	changes, invalidations int
-	onResize               func()
+	bounds        mygo.Rectangle
+	invalidations int
 }
 
-func (w *fakeWindow) Bounds() mygo.Rectangle { return w.bounds }
-func (w *fakeWindow) SetBounds(b mygo.Rectangle) {
-	if w.limit > 0 {
-		b.Width = min(b.Width, w.limit)
-	}
-	w.bounds = b
-	w.changes++
-	if w.onResize != nil {
-		w.onResize()
-	}
-}
-func (w *fakeWindow) IsMaximized() bool  { return w.maximized }
-func (w *fakeWindow) IsFullScreen() bool { return w.fullscreen }
-func (w *fakeWindow) Invalidate()        { w.invalidations++ }
+func (w *fakeWindow) Invalidate() { w.invalidations++ }
 
 func fixture() (*Shell, *fakeWindow) {
 	s := newShell(ShellOptions{
 		Left:    func(c *ui.Context) { ui.Text(c, "Navigation") },
 		Content: func(c *ui.Context) { ui.Text(c, "Document") },
-		Right:   func(c *ui.Context) { ui.Text(c, "Inspector") },
 	})
 	w := &fakeWindow{bounds: mygo.Rectangle{X: 50, Y: 60, Width: 820, Height: 600}}
 	s.host = w
@@ -54,98 +37,33 @@ func TestShellNativeOptions(t *testing.T) {
 	}
 	material := mygo.VibrancyNone
 	if runtime.GOOS == "darwin" {
-		material = mygo.VibrancyUnderWindow
+		material = mygo.VibrancyTitlebar
 	}
 	if o.Transparent != (runtime.GOOS == "darwin") || o.Vibrancy != material || o.Frameless || o.DisableResize || o.StateKey != "" {
 		t.Fatal(o)
 	}
 }
 
-// Bounds unit tests apply the final animation step explicitly.
-func settleWidth(s *Shell) {
-	width := 0
-	if s.rightOpen && s.page == nil {
-		width = s.options.RightWidth
-	}
-	s.syncWidth(width)
-}
-
 func TestShellWidthAndPages(t *testing.T) {
 	s, w := fixture()
 	original := w.bounds
-	s.SetLeftExpanded(false)
-	settleWidth(s)
-	if w.bounds != original {
-		t.Fatal("left toggle resized window")
-	}
-	s.SetRightExpanded(true)
-	settleWidth(s)
-	if w.bounds.Width != 1100 || w.bounds.X != original.X || w.bounds.Y != original.Y || w.bounds.Height != original.Height {
-		t.Fatal(w.bounds)
-	}
-	s.SetRightExpanded(true)
-	settleWidth(s)
-	if w.changes != 1 {
-		t.Fatal("repeated expansion resized window")
-	}
-	// Preserve a user's resize while the inspector is open.
-	w.bounds.Width += 100
-	s.SetPage(func(c *ui.Context) { ui.Text(c, "Settings") })
-	settleWidth(s)
-	if w.bounds.Width != 920 || !s.RightExpanded() || s.LeftExpanded() {
-		t.Fatal("page replacement lost sidebar state or width")
-	}
-	s.SetPage(nil)
-	settleWidth(s)
-	if w.bounds.Width != 1200 {
-		t.Fatal(w.bounds)
-	}
-	s.SetRightExpanded(false)
-	settleWidth(s)
-	if w.bounds.Width != 920 {
-		t.Fatal(w.bounds)
-	}
-}
-
-func TestShellConstrainedWidth(t *testing.T) {
-	s, w := fixture()
-	w.limit = 900
-	s.SetRightExpanded(true)
-	settleWidth(s)
-	s.SetRightExpanded(false)
-	settleWidth(s)
-	if w.bounds.Width != 820 {
-		t.Fatal("must undo only actual extension", w.bounds)
-	}
-	for _, fullscreen := range []bool{false, true} {
-		w.maximized, w.fullscreen = !fullscreen, fullscreen
-		s.SetRightExpanded(true)
-		settleWidth(s)
-		if w.bounds.Width != 820 {
-			t.Fatal("resized maximized/fullscreen window")
-		}
-		w.maximized, w.fullscreen = false, false
-		settleWidth(s)
-		if w.bounds.Width != 900 {
-			t.Fatal("deferred expansion missing")
-		}
-		w.maximized = true
-		s.SetPage(func(*ui.Context) {})
-		settleWidth(s)
-		w.maximized = false
-		settleWidth(s)
-		if w.bounds.Width != 820 {
-			t.Fatal("deferred contraction missing")
-		}
-		s.SetRightExpanded(false)
-		settleWidth(s)
+	for _, open := range []bool{false, true} {
+		s.SetLeftExpanded(open)
+		s.SetPage(func(c *ui.Context) { ui.Text(c, "Settings") })
+		ui.NewTester(s.view, 820, 600)
 		s.SetPage(nil)
-		settleWidth(s)
+		ui.NewTester(s.view, 820, 600)
+		if w.bounds != original || s.LeftExpanded() != open {
+			t.Fatal("page replacement changed window bounds or sidebar state")
+		}
+	}
+	if w.invalidations != 6 {
+		t.Fatal("state changes did not invalidate the window", w.invalidations)
 	}
 }
 
 func TestShellLayoutAndReplacement(t *testing.T) {
-	s, w := fixture()
+	s, _ := fixture()
 	tt := ui.NewTester(s.view, 820, 600)
 	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
 	if !tt.HasText("Navigation") || !tt.HasText("Document") || tt.HasText("Inspector") {
@@ -154,14 +72,8 @@ func TestShellLayoutAndReplacement(t *testing.T) {
 	if err := tt.Click("Toggle sidebar"); err != nil {
 		t.Fatal(err)
 	}
-	if tt.HasText("Navigation") || w.changes != 0 {
+	if tt.HasText("Navigation") {
 		t.Fatal("left sidebar did not collapse internally")
-	}
-	if err := tt.Click("Toggle inspector"); err != nil {
-		t.Fatal(err)
-	}
-	if !tt.HasText("Inspector") || w.bounds.Width != 1100 {
-		t.Fatal(tt.Texts(), w.bounds)
 	}
 	s.SetPage(func(c *ui.Context) {
 		ui.Text(c, "Settings")
@@ -180,33 +92,20 @@ func TestShellLayoutAndReplacement(t *testing.T) {
 	}
 	time.Sleep(sidebarDuration + 30*time.Millisecond)
 	tt.Frame()
-	if !tt.HasText("Document") || !tt.HasText("Inspector") || tt.HasText("Navigation") {
+	if !tt.HasText("Document") || tt.HasText("Navigation") {
 		t.Fatal(tt.Texts())
 	}
 }
 
-func TestShellControlClearanceAndStableContent(t *testing.T) {
+func TestShellControlClearance(t *testing.T) {
 	s, _ := fixture()
-	tt := ui.NewTester(s.view, 820, 600)
-	before, ok := tt.Find("Document")
-	if !ok {
-		t.Fatal("missing content")
-	}
-	s.SetRightExpanded(true)
-	tt = ui.NewTester(s.view, 1100, 600)
-	after, ok := tt.Find("Document")
-	if !ok || before.X != after.X || before.W != after.W {
-		t.Fatalf("content moved: %+v -> %+v", before, after)
-	}
 	for _, scale := range []float32{1, 1.5, 2} {
-		tt = ui.NewTester(s.view, 360, 480)
+		tt := ui.NewTester(s.view, 360, 480)
 		tt.SetTitleBar(ui.TitleBar{Height: 48, Left: 80, Right: 100})
 		tt.SetPreferences(ui.Preferences{TextScale: scale})
-		for _, label := range []string{"Toggle sidebar", "Toggle inspector"} {
-			r, ok := tt.Find(label)
-			if !ok || r.X < 80 || r.X+r.W > 260 || r.Y < 0 || r.Y+r.H > max(48, 48*scale) {
-				t.Fatalf("scale %v: control %q overlaps native chrome: %+v", scale, label, r)
-			}
+		r, ok := tt.Find("Toggle sidebar")
+		if !ok || r.X < 80 || r.X+r.W > 260 || r.Y < 0 || r.Y+r.H > max(48, 48*scale) {
+			t.Fatalf("scale %v: sidebar control overlaps native chrome: %+v", scale, r)
 		}
 	}
 }
@@ -251,60 +150,25 @@ func TestShellSidebarAnimations(t *testing.T) {
 		t.Fatal("left collapse did not finish")
 	}
 
-	s.SetRightExpanded(true)
-	tt.Frame()
-	step()
-	if w.bounds.Width <= 820 || w.bounds.Width >= 1100 || w.bounds.X != 50 || w.bounds.Height != 600 {
-		t.Fatalf("right expansion must resize incrementally: %+v", w.bounds)
-	}
-	s.SetRightExpanded(false)
-	tt.Frame()
-	finish()
-	if w.bounds.Width != 820 || tt.HasText("Inspector") {
-		t.Fatal("right reversal did not restore base width", w.bounds)
-	}
-	s.SetRightExpanded(true)
-	tt.Frame()
-	finish()
-	if w.bounds.Width != 1100 {
-		t.Fatal("right expansion did not finish", w.bounds)
-	}
-	// Replacing a page during contraction reverses cleanly on return.
-	s.SetPage(func(c *ui.Context) { ui.Text(c, "Settings") })
-	tt.Frame()
-	step()
-	if w.bounds.Width <= 820 || w.bounds.Width >= 1100 || !tt.HasText("Settings") {
-		t.Fatal("replacement contraction missing", w.bounds)
-	}
-	s.SetPage(nil)
-	tt.Frame()
-	finish()
-	if w.bounds.Width != 1100 || !tt.HasText("Inspector") {
-		t.Fatal("replacement reversal did not restore inspector")
-	}
-
-	// Enabling reduced motion midway must snap both layout and native width.
+	// Enabling reduced motion midway must snap the layout.
 	s.SetLeftExpanded(true)
-	s.SetRightExpanded(false)
 	tt.Frame()
 	step()
 	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
 	if contentX() != startX || w.bounds.Width != 820 || tt.HasText("Inspector") {
 		t.Fatal("Reduce Motion did not finish active animations")
 	}
-	s.SetRightExpanded(true)
 	s.SetLeftExpanded(false)
 	tt.Frame()
-	if contentX() != 0 || w.bounds.Width != 1100 {
+	if contentX() != 0 || w.bounds.Width != 820 {
 		t.Fatal("Reduce Motion animated a new toggle")
 	}
 }
 
-func TestShellSidebarsRevealWithoutReflow(t *testing.T) {
-	var left, right, main *ui.Element
-	s, w := fixture()
+func TestShellSidebarRevealsWithoutReflow(t *testing.T) {
+	var left, main *ui.Element
+	s, _ := fixture()
 	s.options.Left = func(c *ui.Context) { left = ui.Box(c).FillWidth().Height(32) }
-	s.options.Right = func(c *ui.Context) { right = ui.Box(c).FillWidth().Height(32) }
 	s.options.Content = func(c *ui.Context) { main = ui.Box(c).Fill() }
 	tt := ui.NewTester(s.view, 820, 600)
 	leftBefore := left.Bounds()
@@ -322,28 +186,6 @@ func TestShellSidebarsRevealWithoutReflow(t *testing.T) {
 	tt.Frame()
 	if r := main.Bounds(); r.X != 0 || r.W != 820 {
 		t.Fatal("collapsed sidebar reserved space", r)
-	}
-
-	s.SetRightExpanded(true)
-	tt.Frame()
-	time.Sleep(55 * time.Millisecond)
-	tt.Frame()
-	// Follow the fake native window, as the desktop does after each resize.
-	tt.SetSize(w.bounds.Width, 600)
-	if r := right.Bounds(); r.W != 280 || r.H != 32 {
-		t.Fatal("inspector reflowed while being revealed", r)
-	}
-	if w.bounds.Width <= 820 || w.bounds.Width >= 1100 {
-		t.Fatal("missing intermediate window size")
-	}
-	if r := main.Bounds(); r.X != 0 || r.W <= 0 || right.Bounds().X != r.X+r.W {
-		t.Fatal("inspector overlaps the main surface", r, right.Bounds())
-	}
-	time.Sleep(sidebarDuration + 30*time.Millisecond)
-	tt.Frame()
-	tt.SetSize(w.bounds.Width, 600)
-	if r := right.Bounds(); r.W != 280 || r.X != 820 {
-		t.Fatal("inspector ended at wrong geometry", r)
 	}
 }
 
@@ -410,9 +252,7 @@ func TestShellSidebarResize(t *testing.T) {
 func TestShellSeparatorsDoNotReserveSpace(t *testing.T) {
 	var main *ui.Element
 	s, _ := fixture()
-	s.host = nil // Exercise layout independently of native resize acknowledgements.
 	s.options.Content = func(c *ui.Context) { main = ui.Box(c).Fill() }
-	s.SetRightExpanded(true)
 	view := func(c *ui.Context) {
 		theme := *c.Theme()
 		theme.Background = ui.RGB(0, 0, 200)
@@ -420,15 +260,12 @@ func TestShellSeparatorsDoNotReserveSpace(t *testing.T) {
 		c.SetTheme(&theme)
 		s.view(c)
 	}
-	tt := ui.NewTester(view, 1100, 600)
+	tt := ui.NewTester(view, 820, 600)
 	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
 	assertPixel := func(x, y int, red bool) {
 		t.Helper()
 		p := tt.Image().RGBAAt(x, y)
 		blue := uint8(200)
-		if runtime.GOOS == "darwin" && x > 820 && s.rightOpen && s.page == nil {
-			blue = 170 // Premultiplied inspector tint at 85% opacity.
-		}
 		if (red && (p.R != 200 || p.B != 0)) || (!red && (p.R != 0 || p.B != blue)) {
 			t.Fatalf("pixel (%d,%d) = %+v, separator=%v", x, y, p, red)
 		}
@@ -439,8 +276,6 @@ func TestShellSeparatorsDoNotReserveSpace(t *testing.T) {
 	for _, y := range []int{2, 400, 599} {
 		assertPixel(220, y, true)
 		assertPixel(221, y, false)
-		assertPixel(820, y, true)
-		assertPixel(821, y, false)
 	}
 	s.SetLeftExpanded(false)
 	tt.Frame()
@@ -448,39 +283,31 @@ func TestShellSeparatorsDoNotReserveSpace(t *testing.T) {
 		t.Fatal("closed left separator reserved space", r)
 	}
 	assertPixel(0, 400, false)
-	assertPixel(820, 400, true)
-	s.SetRightExpanded(false)
-	tt.Frame()
-	if r := main.Bounds(); r.X != 0 || r.W != 1100 {
-		t.Fatal("closed right separator reserved space", r)
-	}
-	assertPixel(820, 400, false)
 	s.SetPage(func(*ui.Context) {})
 	tt.Frame()
 	assertPixel(220, 400, false)
-	assertPixel(820, 400, false)
 }
 
-func TestShellOptionalInspector(t *testing.T) {
-	s := newShell(ShellOptions{})
-	s.SetRightExpanded(true)
-	tt := ui.NewTester(s.view, 360, 480)
-	_, hasToggle := tt.Find("Toggle inspector")
-	if s.RightExpanded() || hasToggle {
-		t.Fatal("disabled inspector exposed")
+func TestShellHasOnlyLeftSidebarControl(t *testing.T) {
+	s, _ := fixture()
+	tt := ui.NewTester(s.view, 820, 600)
+	if _, ok := tt.Find("Toggle sidebar"); !ok {
+		t.Fatal("missing sidebar control")
+	}
+	if _, ok := tt.Find("Toggle inspector"); ok {
+		t.Fatal("unexpected inspector control")
 	}
 }
 
 func TestShellBackgroundsAndScaling(t *testing.T) {
 	for _, dark := range []bool{false, true} {
 		s, _ := fixture()
-		s.SetRightExpanded(true)
 		tt := ui.NewTester(s.view, 1100, 600)
 		tt.SetDark(dark)
 		for _, p := range []struct {
 			x     int
 			alpha uint32
-		}{{100, 0}, {400, 65535}, {1000, 217 * 257}} {
+		}{{100, 0}, {400, 65535}, {1000, 65535}} {
 			for _, y := range []int{2, 400, 599} {
 				_, _, _, a := tt.Image().At(p.x, y).RGBA()
 				want := p.alpha
@@ -492,7 +319,7 @@ func TestShellBackgroundsAndScaling(t *testing.T) {
 				}
 			}
 		}
-		for _, label := range []string{"Navigation", "Document", "Inspector"} {
+		for _, label := range []string{"Navigation", "Document"} {
 			r, ok := tt.Find(label)
 			if !ok || r.Y < 48 {
 				t.Fatalf("%q overlaps header: %+v", label, r)
