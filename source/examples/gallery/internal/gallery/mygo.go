@@ -5,7 +5,7 @@ import (
 	"github.com/oneo-me/onevra/components"
 )
 
-const mygoPageStart galleryPage = 2
+const mygoPageStart galleryPage = componentStatusPage + 1
 
 type mygoExample struct {
 	name, group string
@@ -111,9 +111,9 @@ func (g *Gallery) MyGo(c *ui.Context, example mygoExample) {
 					ui.Column(c).FillWidth().MinWidth(0).Gap(12).Disabled(variant == "Disabled").Children(func() {
 						if variant == "Read only" {
 							if example.name == "TextInput" {
-								ui.TextInput(c, &s.text).Label("Name").ReadOnly(true).FillWidth()
+								components.TextField(c, &s.text).Label("Name").ReadOnly(true).FillWidth()
 							} else {
-								ui.TextArea(c, &s.text).Label("Notes").ReadOnly(true).Height(140).FillWidth()
+								components.TextArea(c, &s.text).Label("Notes").ReadOnly(true).Height(140).FillWidth()
 							}
 						} else {
 							example.build(c, s)

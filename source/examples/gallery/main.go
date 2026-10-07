@@ -16,6 +16,7 @@ func main() {
 	if *theme != "system" && *theme != "light" && *theme != "dark" {
 		log.Fatal("theme must be system, light, or dark")
 	}
+	gallery.LogMyGoReview(log.Printf)
 	if err := configureTerminalLibrary(); err != nil {
 		log.Fatal(err)
 	}

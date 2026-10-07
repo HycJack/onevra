@@ -1,31 +1,22 @@
 package gallery
 
-// mygoCatalog covers the styled widgets in MyGo v0.2.15's UI guide,
-// plus separately usable variants and basic layout/text primitives.
-// Base APIs are styling building blocks, not a second set of styled widgets.
-var mygoCatalog = []mygoExample{
-	{"Button", "Actions", exampleButton},
-	{"PrimaryButton", "Actions", examplePrimaryButton},
-	{"Link", "Actions", exampleLink},
+// Only unresolved upstream components and composition primitives get examples.
+var mygoCatalog = unhandledMyGoExamples(mygoExamples)
+
+// Hand-built demonstrations are independent of the generated source inventory.
+var mygoExamples = []mygoExample{
 	{"MenuButton", "Actions", exampleMenuButton},
 	{"ContextMenu", "Actions", exampleContextMenu},
 	{"Toggle", "Actions", exampleToggle},
 	{"ToggleGroup", "Actions", exampleToggleGroup},
 	{"Segmented", "Actions", exampleSegmented},
 	{"Toolbar", "Actions", exampleToolbar},
-	{"Checkbox", "Selection", exampleCheckbox},
 	{"CheckboxGroup", "Selection", exampleCheckboxGroup},
-	{"Switch", "Selection", exampleSwitch},
-	{"Radio", "Selection", exampleRadio},
 	{"RadioGroup", "Selection", exampleRadioGroup},
-	{"Select", "Selection", exampleSelect},
-	{"Slider", "Selection", exampleSlider},
 	{"StepSlider", "Selection", exampleStepSlider},
 	{"RangeSlider", "Selection", exampleRangeSlider},
 	{"Stepper", "Selection", exampleStepper},
 	{"Rating", "Selection", exampleRating},
-	{"TextInput", "Text input", exampleTextInput},
-	{"TextArea", "Text input", exampleTextArea},
 	{"NumberInput", "Text input", exampleNumberInput},
 	{"SearchField", "Text input", exampleSearchField},
 	{"Combobox", "Text input", exampleCombobox},
@@ -55,7 +46,6 @@ var mygoCatalog = []mygoExample{
 	{"Form", "Containers", exampleForm},
 	{"Field", "Containers", exampleField},
 	{"Fieldset", "Containers", exampleFieldset},
-	{"Tabs", "Navigation", exampleTabs},
 	{"Sidebar", "Navigation", exampleSidebar},
 	{"Breadcrumbs", "Navigation", exampleBreadcrumbs},
 	{"BackButton", "Navigation", exampleBackButton},
@@ -72,7 +62,6 @@ var mygoCatalog = []mygoExample{
 	{"Image", "Media & text", exampleImage},
 	{"Icon", "Media & text", exampleIcon},
 	{"Avatar", "Media & text", exampleAvatar},
-	{"Text", "Media & text", exampleText},
 	{"RichText", "Media & text", exampleRichText},
 	{"Box", "Layout", exampleBox},
 	{"Row", "Layout", exampleRow},

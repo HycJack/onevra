@@ -39,6 +39,9 @@ func (g *Gallery) Titlebar(c *ui.Context) {
 	if g.page == lucidePage {
 		title = "Icon library / Lucide"
 	}
+	if g.page == componentStatusPage {
+		title = "Component status"
+	}
 	if example, ok := mygoExampleFor(g.page); ok {
 		title = example.group + " / " + example.name
 	}
@@ -55,6 +58,9 @@ func (g *Gallery) Left(c *ui.Context) {
 func (g *Gallery) navigation(c *ui.Context) {
 	ui.Scroll(c).Fill().Children(func() {
 		ui.Column(c).FillWidth().Padding(0, 12, 12, 12).Gap(4).Children(func() {
+			g.navigationGroup(c, "Overview")
+			g.navigationItem(c, "Component status", lucide.Component(), componentStatusPage)
+			ui.Box(c).Height(4)
 			g.navigationGroup(c, "Icon library")
 			g.navigationItem(c, "Lucide", lucide.Shapes(), lucidePage)
 			ui.Box(c).Height(4)
@@ -138,6 +144,10 @@ func (g *Gallery) View(c *ui.Context) {
 }
 
 func (g *Gallery) body(c *ui.Context) {
+	if g.page == componentStatusPage {
+		g.ComponentStatus(c)
+		return
+	}
 	if example, ok := controlExampleFor(g.page); ok {
 		g.Controls(c, example)
 		return

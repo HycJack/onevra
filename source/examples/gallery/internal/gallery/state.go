@@ -75,6 +75,9 @@ func saveJSON(path string, value any) error {
 }
 
 func pageKey(page galleryPage) string {
+	if page == componentStatusPage {
+		return "component-status"
+	}
 	if page == shellPage {
 		return "shell"
 	}
@@ -88,6 +91,9 @@ func pageKey(page galleryPage) string {
 }
 
 func pageFromKey(key string) galleryPage {
+	if key == "component-status" {
+		return componentStatusPage
+	}
 	if key == "shell" {
 		return shellPage
 	}

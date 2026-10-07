@@ -1,0 +1,141 @@
+package gallery
+
+import (
+	"sort"
+)
+
+//go:generate go run ../cmd/mygocomponents
+
+type mygoDecision struct {
+	Replacement string // Empty means excluded, not awaiting implementation.
+	Reason      string
+}
+
+// Record decisions here, never in the generated inventory. Both replacement and
+// exclusion decisions hide upstream examples and suppress pending reminders.
+// To exclude a component, add {Reason: "why this component is not needed"}.
+var mygoHandled = map[string]mygoDecision{
+	"Checkbox":  {Replacement: "components.Checkbox", Reason: "Onevra checkbox styling"},
+	"Switch":    {Replacement: "components.Switch", Reason: "Onevra switch styling"},
+	"Radio":     {Replacement: "components.Radio", Reason: "Onevra radio styling"},
+	"TextInput": {Replacement: "components.TextField", Reason: "Onevra single-line text input"},
+	"TextArea":  {Replacement: "components.TextArea", Reason: "Onevra multiline text input"},
+	"Select":    {Replacement: "components.Select", Reason: "Onevra select parts with application-owned options"},
+	"Slider":    {Replacement: "components.Slider", Reason: "Onevra continuous slider"},
+	"Tabs":      {Replacement: "components.Tabs", Reason: "Onevra tab styling"},
+	"Text":      {Replacement: "components.Text", Reason: "Onevra text defaults"},
+	"Textf":     {Replacement: "components.Textf", Reason: "Formatted Onevra text"},
+
+	"Button":        {Replacement: "components.Button", Reason: "Onevra button styles"},
+	"PrimaryButton": {Replacement: "components.Button / ButtonPrimary", Reason: "A button variant, not a separate component"},
+	"Link":          {Replacement: "components.Button / ButtonLink", Reason: "An inline button variant"},
+}
+
+// These primitives remain available as composition building blocks and examples.
+// Keep this list explicit so new APIs still prompt review. Base constructors are
+// skipped by the scanner itself and are not inventoried as styled components.
+var mygoPrimitives = map[string]bool{
+	"Box": true, "Column": true, "Row": true, "Spacer": true,
+	"Grid": true, "Overlay": true,
+	"Scroll": true, "ScrollHorizontal": true, "ScrollBoth": true,
+	"Image": true, "Icon": true,
+}
+
+type mygoComponent struct{ Name, Source string }
+
+type mygoStatus string
+
+const (
+	mygoReplaced   mygoStatus = "Replaced by Onevra"
+	mygoExcluded   mygoStatus = "Not needed"
+	mygoUpstream   mygoStatus = "Still using MyGo"
+	mygoUnreviewed mygoStatus = "Awaiting review"
+	mygoPrimitive  mygoStatus = "MyGo building blocks"
+)
+
+type mygoReviewEntry struct {
+	mygoComponent
+	Status              mygoStatus
+	Replacement, Reason string
+	HasExample          bool
+}
+
+// The catalog supplements discovery with method-based UI and plugins. An API
+// discovered in source is not proof of application usage: only catalog entries
+// are labeled as upstream examples; others explicitly await review.
+func mygoReviewEntries(discovered []mygoComponent, examples []mygoExample, decisions map[string]mygoDecision) []mygoReviewEntry {
+	found := make(map[string]mygoComponent, len(discovered))
+	for _, entry := range discovered {
+		found[entry.Name] = entry
+	}
+	demonstrated := map[string]bool{}
+	for _, entry := range examples {
+		demonstrated[entry.name] = true
+		if _, ok := found[entry.name]; !ok {
+			found[entry.name] = mygoComponent{entry.name, "gallery catalog"}
+		}
+	}
+	for name := range decisions {
+		if _, ok := found[name]; !ok {
+			found[name] = mygoComponent{name, "Not found in current inventory"}
+		}
+	}
+	entries := make([]mygoReviewEntry, 0, len(found))
+	for name, component := range found {
+		entry := mygoReviewEntry{mygoComponent: component, Status: mygoUnreviewed, HasExample: demonstrated[name]}
+		if entry.HasExample {
+			entry.Status = mygoUpstream
+		}
+		if mygoPrimitives[name] {
+			entry.Status = mygoPrimitive
+		}
+		if decision, handled := decisions[name]; handled {
+			entry.Status, entry.Replacement, entry.Reason, entry.HasExample = mygoExcluded, decision.Replacement, decision.Reason, false
+			if decision.Replacement != "" {
+				entry.Status = mygoReplaced
+			}
+		}
+		entries = append(entries, entry)
+	}
+	sort.Slice(entries, func(i, j int) bool { return entries[i].Name < entries[j].Name })
+	return entries
+}
+
+func pendingMyGo(discovered []mygoComponent, examples []mygoExample) []mygoComponent {
+	var pending []mygoComponent
+	for _, entry := range mygoReviewEntries(discovered, examples, mygoHandled) {
+		if entry.Status == mygoUpstream || entry.Status == mygoUnreviewed {
+			pending = append(pending, entry.mygoComponent)
+		}
+	}
+	return pending
+}
+
+// LogMyGoReview reports outstanding decisions once at application startup, never
+// during rendering. Pending decisions are reminders, not build or runtime errors.
+func LogMyGoReview(printf func(string, ...any)) {
+	pending := pendingMyGo(mygoDiscovered, mygoExamples)
+	printf("[MyGo review] %s: %d pending; see Component status or record decisions in mygo_review.go", mygoScanVersion, len(pending))
+	for _, entry := range mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled) {
+		if entry.Status == mygoUpstream || entry.Status == mygoUnreviewed {
+			detail := entry.Source
+			if !entry.HasExample {
+				detail += "; no gallery example"
+			}
+			printf("[MyGo review] pending: %s (%s)", entry.Name, detail)
+		}
+		if entry.Source == "Not found in current inventory" {
+			printf("[MyGo review] decision no longer matches inventory: %s", entry.Name)
+		}
+	}
+}
+
+func unhandledMyGoExamples(examples []mygoExample) []mygoExample {
+	result := make([]mygoExample, 0, len(examples))
+	for _, entry := range examples {
+		if _, handled := mygoHandled[entry.name]; !handled {
+			result = append(result, entry)
+		}
+	}
+	return result
+}

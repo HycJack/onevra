@@ -1,0 +1,118 @@
+package gallery
+
+import (
+	"reflect"
+	"strings"
+	"testing"
+
+	"github.com/egoist/mygo/ui"
+)
+
+func TestComponentStatuses(t *testing.T) {
+	decisions := map[string]mygoDecision{
+		"Replaced": {Replacement: "components.Button", Reason: "Button variant"},
+		"Excluded": {Reason: "Not needed in Onevra"},
+	}
+	entries := mygoReviewEntries([]mygoComponent{
+		{Name: "Replaced"}, {Name: "Excluded"}, {Name: "Future"}, {Name: "Box"},
+	}, []mygoExample{{name: "Replaced"}, {name: "Excluded"}, {name: "Upstream"}}, decisions)
+	want := map[string]mygoStatus{"Replaced": mygoReplaced, "Excluded": mygoExcluded, "Future": mygoUnreviewed, "Box": mygoPrimitive, "Upstream": mygoUpstream}
+	for i, entry := range entries {
+		if entry.Status != want[entry.Name] {
+			t.Fatalf("wrong status: %+v", entry)
+		}
+		if i > 0 && entries[i-1].Name >= entry.Name {
+			t.Fatal("entries not sorted")
+		}
+		if entry.Status == mygoExcluded || entry.Status == mygoReplaced {
+			if entry.HasExample || entry.Reason == "" {
+				t.Fatalf("invalid handled entry: %+v", entry)
+			}
+		}
+		delete(want, entry.Name)
+	}
+	if len(want) != 0 {
+		t.Fatalf("missing statuses: %v", want)
+	}
+	stale := mygoReviewEntries(nil, nil, decisions)
+	if len(stale) != 2 || stale[0].Source != "Not found in current inventory" {
+		t.Fatal("lost stale decisions")
+	}
+	for name, decision := range mygoHandled {
+		if strings.TrimSpace(decision.Reason) == "" {
+			t.Fatalf("missing reason for %s", name)
+		}
+		for _, example := range mygoCatalog {
+			if example.name == name {
+				t.Fatalf("handled example remains: %s", name)
+			}
+		}
+	}
+}
+
+func TestComponentStatusCards(t *testing.T) {
+	entries := mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled)
+	cards := componentStatusCards(entries, mygoReplaced)
+	if len(cards) != 11 {
+		t.Fatalf("got %d replacement cards", len(cards))
+	}
+	if cards[0].Name != "Button" || !reflect.DeepEqual(cards[0].Replaces, []string{"Button", "Link", "PrimaryButton"}) {
+		t.Fatalf("button variants not grouped: %+v", cards[0])
+	}
+	for _, status := range []mygoStatus{mygoExcluded, mygoUpstream, mygoUnreviewed, mygoPrimitive} {
+		for _, card := range componentStatusCards(entries, status) {
+			if len(card.Replaces) != 0 {
+				t.Fatalf("unexpected replacement names: %+v", card)
+			}
+		}
+	}
+}
+
+func TestComponentStatusPage(t *testing.T) {
+	for _, width := range []int{820, 360} {
+		for _, dark := range []bool{false, true} {
+			g := &Gallery{page: componentStatusPage}
+			tt := ui.NewTester(g.View, width, 900)
+			tt.SetDark(dark)
+			for _, label := range []string{"Replaced by Onevra", "Button", "Button, Link, PrimaryButton"} {
+				if !tt.HasText(label) {
+					t.Fatalf("width=%d dark=%t missing %q", width, dark, label)
+				}
+			}
+			for _, label := range []string{"Component status", "Not needed (0)", "No components in this group.", "Replacement: components.Button", "Onevra button styles", "ui/widgets.go"} {
+				if tt.HasText(label) {
+					t.Fatalf("unexpected metadata: %s", label)
+				}
+			}
+			button, _ := tt.Find("Button")
+			checkbox, _ := tt.Find("Checkbox")
+			if width == 820 && button.Y != checkbox.Y {
+				t.Fatal("wide layout is not a grid")
+			}
+			if width == 360 && checkbox.Y <= button.Y {
+				t.Fatal("narrow layout did not wrap")
+			}
+			if tt.Image() == nil {
+				t.Fatal("missing rendered status page")
+			}
+			title := ui.NewTester(g.Titlebar, width, 60)
+			if !title.HasText("Component status") {
+				t.Fatal("wrong title")
+			}
+		}
+	}
+	g := &Gallery{}
+	nav := ui.NewTester(g.Left, 220, 1800)
+	if err := nav.Click("Component status"); err != nil {
+		t.Fatal(err)
+	}
+	if g.page != componentStatusPage || pageFromKey(pageKey(g.page)) != componentStatusPage {
+		t.Fatal("status route not selected or persistent")
+	}
+	if _, ok := controlExampleFor(componentStatusPage); ok {
+		t.Fatal("status route overlaps controls")
+	}
+	if _, ok := mygoExampleFor(componentStatusPage); ok {
+		t.Fatal("status route overlaps MyGo")
+	}
+}

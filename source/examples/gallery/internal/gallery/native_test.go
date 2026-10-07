@@ -78,15 +78,19 @@ func TestNativeGallery(t *testing.T) {
 		width    int
 		settings bool
 		icons    bool
+		review   bool
 	}{
-		{"light", mygo.ThemeLight, 820, false, false},
-		{"dark", mygo.ThemeDark, 820, false, false},
-		{"settings", mygo.ThemeLight, 820, true, false},
-		{"restored", mygo.ThemeDark, 820, false, false},
-		{"narrow", mygo.ThemeLight, 360, false, false},
-		{"icons-light", mygo.ThemeLight, 820, false, true},
-		{"icons-dark", mygo.ThemeDark, 820, false, true},
-		{"icons-narrow", mygo.ThemeLight, 360, false, true},
+		{"light", mygo.ThemeLight, 820, false, false, false},
+		{"dark", mygo.ThemeDark, 820, false, false, false},
+		{"settings", mygo.ThemeLight, 820, true, false, false},
+		{"restored", mygo.ThemeDark, 820, false, false, false},
+		{"narrow", mygo.ThemeLight, 360, false, false, false},
+		{"icons-light", mygo.ThemeLight, 820, false, true, false},
+		{"icons-dark", mygo.ThemeDark, 820, false, true, false},
+		{"icons-narrow", mygo.ThemeLight, 360, false, true, false},
+		{"status-light", mygo.ThemeLight, 820, false, false, true},
+		{"status-dark", mygo.ThemeDark, 820, false, false, true},
+		{"status-narrow", mygo.ThemeLight, 360, false, false, true},
 	} {
 		mygo.Theme.SetSource(mode.theme)
 		mygo.RunOnMain(func() {
@@ -98,6 +102,9 @@ func TestNativeGallery(t *testing.T) {
 			g.page = shellPage
 			if mode.icons {
 				g.page = lucidePage
+			}
+			if mode.review {
+				g.page = componentStatusPage
 			}
 			win.SetSize(mode.width, 900)
 			before = win.Bounds()
