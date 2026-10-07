@@ -23,9 +23,11 @@ The top-level `platforms` array in [packer.json](../source/packer.json) selects 
 
 | Target | Artifacts |
 | --- | --- |
-| macOS | `oneo-go-gallery-darwin-<arch>.dmg` and `.zip`, containing `ONEO Go Gallery.app`; the DMG opens in a large-icon drag-to-install layout with the app on the left and an Applications shortcut on the right |
-| Windows | `oneo-go-gallery-windows-<arch>.zip`, containing the app directory and `.exe` |
-| Linux | `oneo-go-gallery-linux-<arch>.tar.gz`, containing the app directory and executable |
+| macOS | `oneo-go-gallery-darwin-<arch>-<version>.dmg` and `.zip`, containing `ONEO Go Gallery.app`; the DMG opens in a large-icon drag-to-install layout with the app on the left and an Applications shortcut on the right |
+| Windows | `oneo-go-gallery-windows-<arch>-<version>.zip`, containing the app directory and `.exe` |
+| Linux | `oneo-go-gallery-linux-<arch>-<version>.tar.gz`, containing the app directory and executable |
+
+`<version>` comes from `version` in `packer.json`. The version suffix applies only to release archives, not the contained application or development output. Different versions can coexist in `dist/`; rebuilding the same target and version replaces its archives.
 
 Each target finishes compilation and packaging in staging before publication, with backups for rollback. Targets build sequentially: a later target's failure does not remove an earlier target's successful archives. Development outputs and other targets remain untouched.
 

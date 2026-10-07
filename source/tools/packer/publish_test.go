@@ -3,14 +3,19 @@ package main
 import (
 	"os"
 	"path/filepath"
-	"runtime"
 	"testing"
 )
 
 func TestArchiveName(t *testing.T) {
-	c := &config{Name: "ONEO Go Gallery"}
-	if got, want := c.archiveName(target{"darwin", runtime.GOARCH}), "oneo-go-gallery-darwin-"+runtime.GOARCH; got != want {
-		t.Fatalf("archive name = %q, want %q", got, want)
+	for _, version := range []string{"0.0.0", "1.2.3", "2.0.0-rc.1+build.42"} {
+		c := &config{Name: "ONEO Go Gallery", Version: version}
+		for _, goos := range []string{"darwin", "windows", "linux"} {
+			for _, arch := range []string{"arm64", "amd64"} {
+				if got, want := c.archiveName(target{goos, arch}), "oneo-go-gallery-"+goos+"-"+arch+"-"+version; got != want {
+					t.Errorf("archive name = %q, want %q", got, want)
+				}
+			}
+		}
 	}
 }
 

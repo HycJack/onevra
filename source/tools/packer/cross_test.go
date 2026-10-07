@@ -76,7 +76,7 @@ func TestCrossPackaging(t *testing.T) {
 	}
 	for _, target := range targets {
 		t.Run(target.key(), func(t *testing.T) {
-			path := filepath.Join(c.path(c.Out), "cross-app-"+target.key()+target.archiveSuffixes()[0])
+			path := filepath.Join(c.path(c.Out), "cross-app-"+target.key()+"-0.0.0"+target.archiveSuffixes()[0])
 			entries, modes := readPortableArchive(t, path, target.OS == "windows")
 			prefix := c.Name + "/"
 			if string(entries[prefix+"data/payload.txt"]) != "payload" || string(entries[prefix+files[target.key()].Name]) != "/"+target.key() {

@@ -121,6 +121,9 @@ func loadConfig(path string) (*config, error) {
 			return nil, fmt.Errorf("invalid %s: must be non-empty and cannot contain newlines or NUL", name)
 		}
 	}
+	if !component(c.Version) {
+		return nil, fmt.Errorf("version must be a non-empty filename component, not a path")
+	}
 	if c.Main == "" || strings.HasPrefix(c.Main, "-") || c.Out == "" || c.MacOS.MinimumSystemVersion == "" {
 		return nil, fmt.Errorf("main, out and macos.minimumSystemVersion must be non-empty; main cannot be a flag")
 	}

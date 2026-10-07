@@ -44,6 +44,9 @@ func TestConfig(t *testing.T) {
 		`{"name":"App","identifier":"me.app","macos":{"signingIdentity":"Developer ID"}}`,
 		`{"name":"App","identifier":"me.app","main":"-bad"}`,
 		`{"name":"App","identifier":"me.app","version":"bad\nversion"}`,
+		`{"name":"App","identifier":"me.app","version":"../1.0"}`,
+		`{"name":"App","identifier":"me.app","version":"1\\2"}`,
+		`{"name":"App","identifier":"me.app","version":"1:2"}`,
 		`{"name":"App","identifier":"me.app"} {}`,
 		`null`,
 	} {
@@ -122,7 +125,7 @@ func main() { if path := os.Getenv("PACKER_TEST_MARKER"); path != "" { if err :=
 	if err != nil {
 		t.Fatal(err)
 	}
-	if dmg != filepath.Join(c.path(c.Out), "test-app-darwin-"+runtime.GOARCH+".dmg") {
+	if dmg != filepath.Join(c.path(c.Out), "test-app-darwin-"+runtime.GOARCH+"-0.0.0.dmg") {
 		t.Fatalf("unexpected archive path: %s", dmg)
 	}
 	published, err := os.ReadDir(c.path(c.Out))

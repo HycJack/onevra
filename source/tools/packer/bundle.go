@@ -123,7 +123,7 @@ func (c *config) slug() string {
 	return name
 }
 
-func (c *config) archiveName(t target) string { return c.slug() + "-" + t.key() }
+func (c *config) archiveName(t target) string { return c.slug() + "-" + t.key() + "-" + c.Version }
 
 func archive(ctx context.Context, c *config, stage, app string, t target) error {
 	// ditto preserves macOS bundle metadata and includes the .app parent.
