@@ -21,6 +21,7 @@ type controlState struct {
 	button  buttonExampleState
 	toggles [2]bool
 	value   float64
+	high    float64
 }
 
 var textControlCatalog = []controlExample{
@@ -34,7 +35,7 @@ var controlCatalog = []controlExample{
 	{"Button", "Buttons", []string{"Button", "MenuButton", "ToggleButton"}, controlButton},
 	{"Selection", "Selection", []string{"Checkbox", "Switch", "Radio"}, controlSelection},
 	{"Select", "Selects", []string{"Default", "Selected", "Searchable"}, controlSelect},
-	{"Slider", "Sliders", []string{"Default"}, controlSlider},
+	{"Slider", "Sliders", []string{"Default", "Step", "Range", "Stepped range"}, controlSlider},
 	{"Tabs", "Tab rows", []string{"Default", "Selected"}, controlTabs},
 	{"Icon", "Icons", []string{"Default"}, controlIcon},
 	{"Image", "Images", []string{"Contain", "Cover", "Stretch", "Rounded", "Grayscale"}, controlImage},
@@ -60,7 +61,7 @@ func (g *Gallery) controlState(name, variant string) *controlState {
 	if s := g.controlStates[key]; s != nil {
 		return s
 	}
-	s := &controlState{on: variant == "On", choice: "Small", value: 40, toggles: [2]bool{false, true}}
+	s := &controlState{on: variant == "On", choice: "Small", value: 40, high: 80, toggles: [2]bool{false, true}}
 	if variant == "Selected" {
 		s.choice, s.index = "Large", 1
 	}

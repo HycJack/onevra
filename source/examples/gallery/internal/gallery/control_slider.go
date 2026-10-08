@@ -5,6 +5,13 @@ import (
 	"github.com/oneo-me/onevra/components"
 )
 
-func controlSlider(c *ui.Context, s *controlState, _ string) {
-	components.Slider(c, &s.value, 0, 100).Label("Volume").FillWidth().MinWidth(0)
+func controlSlider(c *ui.Context, s *controlState, variant string) {
+	opts := components.SliderOptions{}
+	if variant == "Step" || variant == "Stepped range" {
+		opts.Step = 20
+	}
+	if variant == "Range" || variant == "Stepped range" {
+		opts.Range = &s.high
+	}
+	components.Slider(c, &s.value, 0, 100, opts).Label("Volume").FillWidth().MinWidth(0)
 }
