@@ -15,6 +15,8 @@ type mygoDecision struct {
 // exclusion decisions hide upstream examples and suppress pending reminders.
 // To exclude a component, add {Reason: "why this component is not needed"}.
 var mygoHandled = map[string]mygoDecision{
+	"Progress":         {Replacement: "components.Progress", Reason: "Onevra determinate and indeterminate progress bar"},
+	"Spinner":          {Replacement: "components.ProgressRing", Reason: "Onevra circular progress and indeterminate activity"},
 	"Avatar":           {Reason: "No Onevra Avatar component is needed"},
 	"Meter":            {Reason: "No Onevra Meter component is needed"},
 	"BackButton":       {Reason: "No Onevra BackButton component is needed"},

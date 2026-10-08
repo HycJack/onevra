@@ -8,7 +8,7 @@ import (
 )
 
 func TestControlPages(t *testing.T) {
-	if len(controlCatalog) != 12 {
+	if len(controlCatalog) != 13 {
 		t.Fatal("missing control examples")
 	}
 	for i, example := range controlCatalog {
@@ -174,6 +174,10 @@ func TestControlExampleInteractions(t *testing.T) {
 						click("Large")
 					}
 					changed = s.choice == "Large"
+				case "Progress":
+					click("Default value")
+					tt.Key(0, ui.KeyRight)
+					changed = s.value != 40
 				case "Slider":
 					click("Volume")
 					tt.Key(0, ui.KeyRight)

@@ -37,6 +37,7 @@ var controlCatalog = []controlExample{
 	{"Select", "Selects", []string{"Default", "Selected", "Searchable", "NativeSelect"}, controlSelect},
 	{"Menu", "Menus", []string{"Left-click", "Right-click"}, controlMenu},
 	{"Slider", "Sliders", []string{"Default", "Step", "Range", "Stepped range"}, controlSlider},
+	{"Progress", "Progress", []string{"Progress", "ProgressRing"}, controlProgress},
 	{"Tabs", "Tabs", []string{"Default"}, controlTabs},
 	{"Icon", "Icons", []string{"Default"}, controlIcon},
 	{"Image", "Images", []string{"Contain", "Cover", "Stretch", "Rounded", "Grayscale"}, controlImage},
@@ -86,7 +87,7 @@ func (g *Gallery) Controls(c *ui.Context, example controlExample) {
 				}
 				return
 			}
-			if example.name == "Button" || example.name == "Selection" {
+			if example.name == "Button" || example.name == "Selection" || example.name == "Progress" {
 				for _, variant := range example.variants {
 					g.controlSection(c, variant, func() {
 						example.build(c, g.controlState(example.name, variant), variant)
@@ -108,7 +109,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 				switch example.name {
 				case "Text":
 					cell.FillWidth()
-				case "TextBox", "TextBox (multiline)", "Slider", "Sidebar", "ScrollView":
+				case "TextBox", "TextBox (multiline)", "Slider", "Sidebar", "ScrollView", "Progress":
 					cell.Width(240)
 				}
 				cell.Children(func() {
