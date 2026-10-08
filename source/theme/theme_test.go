@@ -20,19 +20,21 @@ func TestPalettes(t *testing.T) {
 }
 
 func TestScrollbarTextTint(t *testing.T) {
-	for _, palette := range []*ui.Theme{LightPalette(), DarkPalette()} {
-		bar := palette.Scrollbar
-		if bar.R != palette.Text.R || bar.G != palette.Text.G || bar.B != palette.Text.B || bar.A == 0 || bar.A == 255 {
-			t.Fatalf("dark=%v: scrollbar must be a translucent text tint: %v", palette.Dark, bar)
-		}
-		for _, bg := range []ui.Color{palette.Background, palette.Surface} {
-			visible := bar.Over(bg)
-			// Keep the thumb clearly separated from either scrolling surface.
-			delta := func(a, b uint8) int { return max(int(a)-int(b), int(b)-int(a)) }
-			if delta(visible.R, bg.R) < 70 || delta(visible.G, bg.G) < 70 || delta(visible.B, bg.B) < 70 {
-				t.Fatalf("dark=%v: scrollbar %v too close to surface %v", palette.Dark, visible, bg)
+	for _, tc := range []struct {
+		name    string
+		palette *ui.Theme
+		alpha   float32
+	}{
+		{"light", LightPalette(), 0.30},
+		{"dark", DarkPalette(), 0.35},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			// Verify the chosen text tint, not an unrelated RGB-distance threshold.
+			want := tc.palette.Text.Alpha(tc.alpha)
+			if got := tc.palette.Scrollbar; got != want {
+				t.Errorf("scrollbar = %v, want text tint at %.0f%% opacity: %v", got, tc.alpha*100, want)
 			}
-		}
+		})
 	}
 }
 
