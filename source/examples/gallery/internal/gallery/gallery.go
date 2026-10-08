@@ -13,6 +13,7 @@ import (
 
 // Gallery owns demonstration state and application preferences.
 type Gallery struct {
+	settings      settingsState
 	config        Config
 	configPath    string
 	Clicks        int
@@ -89,19 +90,9 @@ func (g *Gallery) navigation(c *ui.Context) {
 func (g *Gallery) LeftToolbar(c *ui.Context) {
 	shell.IconButton(c, themeIcon(), "Theme").Menu(g.themeMenu)
 	ui.Spacer(c)
-	if shell.IconButton(c, lucide.Settings(), "Settings").Clicked() && g.Shell != nil {
-		g.Shell.SetPage(g.Settings)
+	if shell.IconButton(c, lucide.Settings(), "Settings").Clicked() {
+		g.settings.open = true
 	}
-}
-
-func (g *Gallery) Settings(c *ui.Context) {
-	ui.Column(c).Fill().Padding(shell.HeaderHeight(c)+24, 24, 24, 24).Gap(16).Children(func() {
-		components.Text(c, "Settings").FontSize(c.Theme().Rem(2)).Bold()
-		components.Text(c, "A replacement page outside the sidebar-and-content layout.").Wrap()
-		if components.Button(c, "Back", components.ButtonSecondary).Clicked() && g.Shell != nil {
-			g.Shell.SetPage(nil)
-		}
-	})
 }
 
 // iconSamples uses only named accessors, not a full-library runtime registry.
@@ -137,6 +128,7 @@ func iconSamples(c *ui.Context) {
 // View builds the default page's main content.
 func (g *Gallery) View(c *ui.Context) {
 	ui.Column(c).Fill().Padding(shell.HeaderHeight(c), 0, 0, 0).Children(func() { g.body(c) })
+	g.Settings(c)
 }
 
 func (g *Gallery) body(c *ui.Context) {
@@ -160,7 +152,7 @@ func (g *Gallery) body(c *ui.Context) {
 	components.ScrollView(c, components.ScrollViewOptions{}).Fill().Children(func() {
 		ui.Column(c).FillWidth().Padding(t.Space(6)).Gap(t.Space(4)).Children(func() {
 			components.Text(c, "A sidebar and content, one native window.").TextColor(t.TextMuted).Wrap()
-			components.Text(c, "Toggle or resize the sidebar inside the window. Double-click its separator to restore the default width. Open Settings to replace the entire page.").Wrap()
+			components.Text(c, "Toggle or resize the sidebar inside the window. Double-click its separator to restore the default width. Open Settings in a dialog without leaving this page.").Wrap()
 			if components.Button(c, "Count", components.ButtonSecondary).Clicked() {
 				g.Clicks++
 			}

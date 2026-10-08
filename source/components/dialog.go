@@ -19,6 +19,8 @@ type DialogOptions struct {
 // handle (absent when closed). Applications own open and call Dialog every frame.
 // Build layers in back-to-front order, with stable keyed parents for independent
 // dialogs. Nested calls are supported. MyGo owns focus trapping and restoration.
+// The panel is horizontally centered with spare vertical space biased below it.
+// Its default maximum size leaves 20 logical pixels clear on every viewport edge.
 // Content may customize the panel and should provide scrolling for long pages.
 func Dialog(c *ui.Context, open *bool, options DialogOptions, build func(panel ui.Element)) ui.Element {
 	var panel ui.Element
@@ -27,11 +29,12 @@ func Dialog(c *ui.Context, open *bool, options DialogOptions, build func(panel u
 	}
 	t := c.Theme()
 	w, h := c.Size()
-	// Bias the panel toward the upper third while retaining viewport clearance.
-	bottomInset := max(t.Space(4), h*.34)
+	// Reserve 20 logical pixels on each edge. Distribute the space left after
+	// measuring the panel 1:2 above/below it, so tall dialogs stay in bounds.
+	const inset float32 = 20
 	ui.Overlay(c, func() {
 		back := ui.Column(c).Absolute().Left(0).Top(0).Right(0).Bottom(0).
-			AlignItems(ui.Center).Justify(ui.Center).Padding(t.Space(4), t.Space(4), bottomInset, t.Space(4)).
+			AlignItems(ui.Center).Padding(inset).
 			Modal().Background(ui.RGBA(0, 0, 0, .18))
 		back.Transition(ui.ElementTransition{Duration: 180 * time.Millisecond, Colors: true, Enter: &ui.Motion{Opacity: 0}})
 		clicked := back.Clicked()
@@ -40,8 +43,9 @@ func Dialog(c *ui.Context, open *bool, options DialogOptions, build func(panel u
 			*open = false
 		}
 		back.Children(func() {
+			ui.Box(c).Grow(1).MinHeight(0)
 			panel = ui.Column(c).Role(ui.RoleDialog).Label(options.Label).
-				Width(t.Space(110)).MaxWidth(max(0, w-t.Space(8))).MaxHeight(max(0, h-bottomInset-t.Space(4))).
+				Width(t.Space(110)).MaxWidth(max(0, w-2*inset)).MaxHeight(max(0, h-2*inset)).Shrink(0).
 				Padding(t.Space(5)).Gap(t.Space(3)).Radius(t.Radius*2).
 				Background(t.Background).TextColor(t.Text).
 				Shadow(0, t.Space(2), t.Space(6), 0, ui.RGBA(0, 0, 0, .12))
@@ -55,6 +59,7 @@ func Dialog(c *ui.Context, open *bool, options DialogOptions, build func(panel u
 					build(panel)
 				}
 			})
+			ui.Box(c).Grow(2).MinHeight(0)
 		})
 	})
 	return panel

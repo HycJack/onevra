@@ -101,4 +101,18 @@ func TestNativeThemeMenu(t *testing.T) {
 			t.Fatalf("%s not persisted: %+v, %v", option.label, saved, err)
 		}
 	}
+	g.settings.initialize()
+	g.settings.open, g.settings.page = true, "Appearance"
+	settingsUI := ui.NewTester(g.Settings, 820, 600)
+	settingsUI.SetPreferences(ui.Preferences{ReduceMotion: true})
+	if err := settingsUI.Click("Theme preference"); err != nil {
+		t.Fatal(err)
+	}
+	if err := settingsUI.Click("light"); err != nil {
+		t.Fatal(err)
+	}
+	saved, err = LoadConfig(path)
+	if err != nil || saved.Theme != mygo.ThemeLight || mygo.Theme.Source() != mygo.ThemeLight {
+		t.Fatalf("settings theme did not apply and persist: %+v, %v", saved, err)
+	}
 }

@@ -1,8 +1,11 @@
 package components
 
 import (
-	"github.com/egoist/mygo/ui"
+	"fmt"
+	"math"
 	"testing"
+
+	"github.com/egoist/mygo/ui"
 )
 
 func TestDialogLayers(t *testing.T) {
@@ -67,6 +70,36 @@ func TestAlertDialogResults(t *testing.T) {
 	}
 }
 
+func TestDialogViewportClearance(t *testing.T) {
+	for _, size := range [][2]int{{360, 480}, {820, 600}, {820, 900}, {1440, 1000}, {600, 240}} {
+		for _, height := range []float32{80, 320, 720, 1400} {
+			t.Run(fmt.Sprintf("%dx%d/panel-%g", size[0], size[1], height), func(t *testing.T) {
+				open := true
+				var bounds ui.Rect
+				tt := ui.NewTester(func(c *ui.Context) {
+					Dialog(c, &open, DialogOptions{Label: "Geometry"}, func(p ui.Element) {
+						p.Width(1000).Height(height).DrawOver(func(_ *ui.Painter, r ui.Rect) { bounds = r })
+						Text(c, "Content")
+					})
+				}, size[0], size[1])
+				tt.SetPreferences(ui.Preferences{ReduceMotion: true})
+				tt.Frame()
+				w, h := float32(size[0]), float32(size[1])
+				if bounds.X < 19.5 || bounds.Y < 19.5 || bounds.X+bounds.W > w-19.5 || bounds.Y+bounds.H > h-19.5 {
+					t.Fatalf("dialog escaped 20px margins: %+v", bounds)
+				}
+				wantY := 20 + (h-40-bounds.H)/3
+				if math.Abs(float64(bounds.X-(w-bounds.W)/2)) > 1 || math.Abs(float64(bounds.Y-wantY)) > 1 {
+					t.Fatalf("not centered with remaining space biased upward: %+v, want y=%g", bounds, wantY)
+				}
+				if math.Abs(float64(bounds.H-min(height, h-40))) > 1 {
+					t.Fatalf("panel height unnecessarily restricted: %+v", bounds)
+				}
+			})
+		}
+	}
+}
+
 func TestDialogGeometryAndNotice(t *testing.T) {
 	open := true
 	var bounds ui.Rect
@@ -78,7 +111,7 @@ func TestDialogGeometryAndNotice(t *testing.T) {
 	}, 280, 480)
 	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
 	tt.Frame()
-	if bounds.X < 0 || bounds.X+bounds.W > 280 || bounds.Y < 0 || bounds.Y+bounds.H/2 > 480*.36 || bounds.Y+bounds.H/2 < 480*.30 {
+	if bounds.X < 20 || bounds.X+bounds.W > 260 || bounds.Y < 20 || bounds.Y+bounds.H > 460 || bounds.Y+bounds.H/2 >= 240 {
 		t.Fatalf("bounds: %+v", bounds)
 	}
 	tt.Key(0, ui.KeyEscape)
