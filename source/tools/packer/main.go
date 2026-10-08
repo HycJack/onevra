@@ -1,10 +1,9 @@
-// Command packer builds and runs desktop Go applications using packer.json.
+// Command packer builds and runs desktop Go applications using packer.yaml.
 // It reads plugin manifests as data; no application framework is imported.
 package main
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -15,28 +14,50 @@ import (
 	"runtime"
 	"strings"
 	"syscall"
+
+	"go.yaml.in/yaml/v3"
 )
 
 type config struct {
-	Name       string   `json:"name"`
-	Identifier string   `json:"identifier"`
-	Version    string   `json:"version"`
-	Main       string   `json:"main"`
-	Out        string   `json:"out"`
-	Platforms  []string `json:"platforms"` // Release targets; omitted means host OS/architecture.
-	Generate   []string `json:"generate"`  // Optional package patterns passed to go generate once on the host.
+	Name       string          `yaml:"name"`
+	Identifier string          `yaml:"identifier"`
+	Version    string          `yaml:"version"`
+	Main       string          `yaml:"main"`
+	Out        string          `yaml:"out"`
+	Platforms  []string        `yaml:"platforms"` // Release targets; omitted means host OS/architecture.
+	Generate   packagePatterns `yaml:"generate"`  // Optional package patterns passed to go generate once on the host.
 	MacOS      struct {
-		DisableDMG           bool   `json:"disableDMG"` // Skip release disk images; ZIP output is always retained.
-		Icon                 string `json:"icon"`       // ICNS file or an Icon Composer .icon directory.
-		MinimumSystemVersion string `json:"minimumSystemVersion"`
-	} `json:"macos"`
+		DisableDMG           bool   `yaml:"disableDMG"` // Skip release disk images; ZIP output is always retained.
+		Icon                 string `yaml:"icon"`       // ICNS file or an Icon Composer .icon directory.
+		MinimumSystemVersion string `yaml:"minimumSystemVersion"`
+	} `yaml:"macos"`
 	Windows struct {
-		Icon string `json:"icon"` // ICO embedded into the executable.
-	} `json:"windows"`
+		Icon string `yaml:"icon"` // ICO embedded into the executable.
+	} `yaml:"windows"`
 	Linux struct {
-		Icon string `json:"icon"` // PNG or SVG included with the executable.
-	} `json:"linux"`
+		Icon string `yaml:"icon"` // PNG or SVG included with the executable.
+	} `yaml:"linux"`
 	root string
+}
+
+// packagePatterns rejects YAML's implicit number-to-string coercion for Go packages.
+type packagePatterns []string
+
+func (p *packagePatterns) UnmarshalYAML(node *yaml.Node) error {
+	if node.Kind != yaml.SequenceNode {
+		return fmt.Errorf("generate must be a sequence of package patterns")
+	}
+	for _, item := range node.Content {
+		if item.Kind != yaml.ScalarNode || item.Tag != "!!str" {
+			return fmt.Errorf("generate entries must be strings")
+		}
+	}
+	var values []string
+	if err := node.Decode(&values); err != nil {
+		return err
+	}
+	*p = values
+	return nil
 }
 
 func main() {
@@ -50,10 +71,10 @@ func main() {
 
 func run(ctx context.Context, args []string) error {
 	if len(args) != 1 || (args[0] != "run" && args[0] != "build") {
-		return fmt.Errorf("usage: go run ./tools/packer {run|build}; all settings belong in packer.json")
+		return fmt.Errorf("usage: go run ./tools/packer {run|build}; all settings belong in packer.yaml")
 	}
 	mode := args[0]
-	c, err := loadConfig("packer.json")
+	c, err := loadConfig("packer.yaml")
 	if err != nil {
 		return err
 	}
@@ -114,13 +135,13 @@ func loadConfig(path string) (*config, error) {
 	defer f.Close()
 	c := &config{Version: "0.0.0", Main: ".", Out: "dist", root: filepath.Dir(path)}
 	c.MacOS.MinimumSystemVersion = "13.0"
-	d := json.NewDecoder(f)
-	d.DisallowUnknownFields() // Never silently ignore signing or resource settings.
+	d := yaml.NewDecoder(f)
+	d.KnownFields(true) // Never silently ignore signing or resource settings.
 	if err := d.Decode(c); err != nil {
 		return nil, fmt.Errorf("%s (supported fields are defined in tools/packer): %w", path, err)
 	}
 	if err := d.Decode(new(any)); err != io.EOF {
-		return nil, fmt.Errorf("%s: expected one JSON object", path)
+		return nil, fmt.Errorf("%s: expected one YAML document", path)
 	}
 	if !component(c.Name) {
 		return nil, fmt.Errorf("name must be a non-empty filename, not a path")
@@ -169,7 +190,7 @@ func (c *config) generate(ctx context.Context) error {
 	return nil
 }
 
-// Default icon sources live beside packer.json, never in resources.
+// Default icon sources live beside packer.yaml, never in resources.
 func (c *config) resolveIcons() error {
 	for _, platform := range []struct {
 		icon  *string

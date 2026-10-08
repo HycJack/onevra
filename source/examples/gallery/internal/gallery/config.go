@@ -1,7 +1,6 @@
 package gallery
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -10,11 +9,12 @@ import (
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/icons/lucide"
+	"go.yaml.in/yaml/v3"
 )
 
 // Config holds application preferences, separate from transient window state.
 type Config struct {
-	Theme mygo.ThemeSource `json:"theme"`
+	Theme mygo.ThemeSource `yaml:"theme"`
 }
 
 func validTheme(source mygo.ThemeSource) bool {
@@ -31,7 +31,7 @@ func LoadConfig(path string) (Config, error) {
 		return fallback, err
 	}
 	config := fallback
-	if err := json.Unmarshal(data, &config); err != nil {
+	if err := yaml.Unmarshal(data, &config); err != nil {
 		return fallback, err
 	}
 	if !validTheme(config.Theme) {
@@ -44,7 +44,7 @@ func SaveConfig(path string, config Config) error {
 	if !validTheme(config.Theme) {
 		return fmt.Errorf("unknown theme %q", config.Theme)
 	}
-	return saveJSON(path, config)
+	return saveYAML(path, config)
 }
 
 // Configure loads preferences before window creation. A nonempty override

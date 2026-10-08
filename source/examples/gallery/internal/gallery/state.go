@@ -1,7 +1,6 @@
 package gallery
 
 import (
-	"encoding/json"
 	"errors"
 	"log"
 	"os"
@@ -10,21 +9,22 @@ import (
 
 	"github.com/egoist/mygo"
 	"github.com/oneo-me/onevra/shell"
+	"go.yaml.in/yaml/v3"
 )
 
 // State contains only presentation state, never interactive demo values.
 type State struct {
-	Window           *WindowState `json:"window,omitempty"`
-	SidebarWidth     float32      `json:"sidebar_width,omitempty"`
-	SidebarCollapsed bool         `json:"sidebar_collapsed"`
-	SelectedItem     string       `json:"selected_item,omitempty"`
+	Window           *WindowState `yaml:"window,omitempty"`
+	SidebarWidth     float32      `yaml:"sidebar_width,omitempty"`
+	SidebarCollapsed bool         `yaml:"sidebar_collapsed"`
+	SelectedItem     string       `yaml:"selected_item,omitempty"`
 }
 
 type WindowState struct {
-	X      int `json:"x"`
-	Y      int `json:"y"`
-	Width  int `json:"width"`
-	Height int `json:"height"`
+	X      int `yaml:"x"`
+	Y      int `yaml:"y"`
+	Width  int `yaml:"width"`
+	Height int `yaml:"height"`
 }
 
 func LoadState(path string) (State, error) {
@@ -36,7 +36,7 @@ func LoadState(path string) (State, error) {
 		return State{}, err
 	}
 	var state State
-	if err := json.Unmarshal(data, &state); err != nil {
+	if err := yaml.Unmarshal(data, &state); err != nil {
 		return State{}, err
 	}
 	return state, nil
@@ -44,12 +44,12 @@ func LoadState(path string) (State, error) {
 
 // SaveState replaces the file only after a complete write in the same directory.
 func SaveState(path string, state State) error {
-	return saveJSON(path, state)
+	return saveYAML(path, state)
 }
 
-// saveJSON atomically replaces an application-owned JSON file.
-func saveJSON(path string, value any) error {
-	data, err := json.MarshalIndent(value, "", "  ")
+// saveYAML atomically replaces an application-owned YAML file.
+func saveYAML(path string, value any) error {
+	data, err := yaml.Marshal(value)
 	if err != nil {
 		return err
 	}
@@ -61,7 +61,7 @@ func saveJSON(path string, value any) error {
 		return err
 	}
 	defer os.Remove(f.Name())
-	if _, err = f.Write(append(data, '\n')); err != nil {
+	if _, err = f.Write(data); err != nil {
 		f.Close()
 		return err
 	}

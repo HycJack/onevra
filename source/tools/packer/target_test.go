@@ -46,7 +46,7 @@ func TestCommandsRejectOptions(t *testing.T) {
 		{"run", "-icon", "icon.png"}, {"build", "-config", "other.json"},
 		{"run", "--", "-theme", "dark"},
 	} {
-		if err := run(context.Background(), args); err == nil || !strings.Contains(err.Error(), "all settings belong in packer.json") {
+		if err := run(context.Background(), args); err == nil || !strings.Contains(err.Error(), "all settings belong in packer.yaml") {
 			t.Fatalf("unexpected command handling for %v: %v", args, err)
 		}
 	}

@@ -2,12 +2,13 @@ package main
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"os"
 	"path/filepath"
 	"strings"
 	"testing"
+
+	"go.yaml.in/yaml/v3"
 )
 
 func generateFixture(t *testing.T) *config {
@@ -15,11 +16,11 @@ func generateFixture(t *testing.T) *config {
 	root := t.TempDir()
 	c := &config{Name: "Fixture", Identifier: "me.test.fixture", Version: "1.0", Main: ".", Out: "dist", Platforms: []string{"linux/amd64", "linux/arm64"}, Generate: []string{"./assets"}, root: root}
 	c.MacOS.MinimumSystemVersion = "13.0"
-	data, err := json.Marshal(c)
+	data, err := yaml.Marshal(c)
 	if err != nil {
 		t.Fatal(err)
 	}
-	put(t, filepath.Join(root, "packer.json"), string(data))
+	put(t, filepath.Join(root, "packer.yaml"), string(data))
 	put(t, filepath.Join(root, "go.mod"), "module example.com/generate\n\ngo 1.27.1\n")
 	put(t, filepath.Join(root, "assets", "generate.go"), "package assets\n//go:generate go run ../generator\n")
 	put(t, filepath.Join(root, "generator", "main.go"), `package main
@@ -102,7 +103,7 @@ func TestGenerateExecution(t *testing.T) {
 }
 
 func TestGenerateConfig(t *testing.T) {
-	file := filepath.Join(t.TempDir(), "packer.json")
+	file := filepath.Join(t.TempDir(), "packer.yaml")
 	for _, value := range []string{`"./assets"`, `[""]`, `["  "]`, `[" ./assets"]`, `["-run=anything"]`, `["./assets", "-n"]`, `["\u0000"]`, `["./assets\n"]`, `[123]`} {
 		put(t, file, `{"name":"App","identifier":"me.app","generate":`+value+`}`)
 		if _, err := loadConfig(file); err == nil {
@@ -115,7 +116,9 @@ func TestGenerateConfig(t *testing.T) {
 			t.Errorf("rejected generate %s: %v", value, err)
 		}
 	}
-	put(t, file, `{"name":"App","identifier":"me.app","preprocess":["go","generate"]}`)
+	put(t, file, `name: "App"
+identifier: "me.app"
+preprocess: ["go","generate"]`)
 	if _, err := loadConfig(file); err == nil {
 		t.Fatal("accepted obsolete preprocess configuration")
 	}

@@ -27,7 +27,7 @@ go run ./examples/gallery
 
 The sidebar includes Shell, the Lucide icon library, Onevra controls and MyGo components. The **Components** group demonstrates each public control with interactive state variants, including all button styles. MyGo components are grouped by type; each page displays interactive component states and variations without code or tutorial text. The Plugins / Terminal page offers ANSI output and input echo without launching a shell; see [runtime requirements](docs/build.md#app-bundles).
 
-To preview a specific appearance, append `-theme light` or `-theme dark`. `go run ./tools/packer run` compiles and starts a packaged development app without hot reload; `go run ./tools/packer build` produces release archives for the targets selected in `source/packer.json`. See [packaging and icon requirements](docs/build.md#app-bundles).
+To preview a specific appearance, append `-theme light` or `-theme dark`. `go run ./tools/packer run` compiles and starts a packaged development app without hot reload; `go run ./tools/packer build` produces release archives for the targets selected in `source/packer.yaml`. See [packaging and icon requirements](docs/build.md#app-bundles).
 
 ## Basic usage
 

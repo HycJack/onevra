@@ -24,8 +24,12 @@ func put(t *testing.T, path, value string) {
 
 func TestConfig(t *testing.T) {
 	root := t.TempDir()
-	file := filepath.Join(root, "packer.json")
-	put(t, file, `{"name":"Test & App","identifier":"me.test.app","macos":{"icon":"icon.icns"}}`)
+	file := filepath.Join(root, "packer.yaml")
+	put(t, file, `# Packaging settings
+name: "Test & App"
+identifier: "me.test.app"
+macos:
+  icon: "icon.icns"`)
 	c, err := loadConfig(file)
 	if err != nil {
 		t.Fatal(err)
@@ -37,18 +41,50 @@ func TestConfig(t *testing.T) {
 		t.Fatal("paths are not relative to the configuration file")
 	}
 	for _, input := range []string{
-		`{"name":"../App","identifier":"me.app"}`,
-		`{"name":"App","identifier":""}`,
-		`{"name":"App","identifier":"me.app","resources":["files"]}`,
-		`{"name":"App","identifier":"me.app","nativeLibraries":{}}`,
-		`{"name":"App","identifier":"me.app","macos":{"signingIdentity":"Developer ID"}}`,
-		`{"name":"App","identifier":"me.app","main":"-bad"}`,
-		`{"name":"App","identifier":"me.app","version":"bad\nversion"}`,
-		`{"name":"App","identifier":"me.app","version":"../1.0"}`,
-		`{"name":"App","identifier":"me.app","version":"1\\2"}`,
-		`{"name":"App","identifier":"me.app","version":"1:2"}`,
+		`name: "../App"
+identifier: "me.app"`,
+		`name: "App"
+identifier: ""`,
+		`name: "App"
+identifier: "me.app"
+resources: ["files"]`,
+		`name: "App"
+identifier: "me.app"
+nativeLibraries:
+`,
+		`name: "App"
+identifier: "me.app"
+macos:
+  signingIdentity: "Developer ID"`,
+		`name: "App"
+identifier: "me.app"
+main: "-bad"`,
+		`name: "App"
+identifier: "me.app"
+version: "bad\nversion"`,
+		`name: "App"
+identifier: "me.app"
+version: "../1.0"`,
+		`name: "App"
+identifier: "me.app"
+version: "1\\2"`,
+		`name: "App"
+identifier: "me.app"
+version: "1:2"`,
 		`{"name":"App","identifier":"me.app"} {}`,
 		`null`,
+		`name: App
+identifier: me.app
+---
+name: Other`,
+		`name: App
+name: Other
+identifier: me.app`,
+		`name: [App]
+identifier: me.app`,
+		`name: App
+identifier: me.app
+macos: [`,
 	} {
 		put(t, file, input)
 		if _, err := loadConfig(file); err == nil {
@@ -113,8 +149,12 @@ func TestNativePackaging(t *testing.T) {
 import "os"
 func main() { if path := os.Getenv("PACKER_TEST_MARKER"); path != "" { if err := os.WriteFile(path, []byte("ran"), 0600); err != nil { panic(err) } } }
 `)
-	file := filepath.Join(root, "packer.json")
-	put(t, file, `{"name":"Test & App","identifier":"me.oneo.fixture","out":"dist","macos":{"icon":"icon.icns"}}`)
+	file := filepath.Join(root, "packer.yaml")
+	put(t, file, `name: "Test & App"
+identifier: "me.oneo.fixture"
+out: "dist"
+macos:
+  icon: "icon.icns"`)
 	put(t, filepath.Join(root, "icon.icns"), string(testICNS(t)))
 	c, err := loadConfig(file)
 	if err != nil {

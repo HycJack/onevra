@@ -4,13 +4,14 @@ import (
 	"os"
 	"path/filepath"
 	"reflect"
+	"strings"
 	"testing"
 
 	"github.com/egoist/mygo"
 )
 
 func TestStateStorage(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "config", "state.json")
+	path := filepath.Join(t.TempDir(), "config", "state.yaml")
 	if state, err := LoadState(path); err != nil || state != (State{}) {
 		t.Fatalf("missing: %+v %v", state, err)
 	}
@@ -21,25 +22,30 @@ func TestStateStorage(t *testing.T) {
 		if err := SaveState(path, want); err != nil {
 			t.Fatal(err)
 		}
+		data, err := os.ReadFile(path)
+		if err != nil || !strings.Contains(string(data), "sidebar_width:") {
+			t.Fatalf("expected YAML state: %s, %v", data, err)
+		}
 		got, err := LoadState(path)
 		if err != nil || !reflect.DeepEqual(got, want) {
 			t.Fatalf("round trip: %+v %v", got, err)
 		}
 	}
-	if err := os.WriteFile(path, []byte(`{"sidebar_width":300,"window":`), 0600); err != nil {
+	if err := os.WriteFile(path, []byte("sidebar_width: 300\nwindow: ["), 0600); err != nil {
 		t.Fatal(err)
 	}
 	if state, err := LoadState(path); err == nil || state != (State{}) {
 		t.Fatalf("corrupt: %+v %v", state, err)
 	}
-	if err := SaveState(filepath.Join(path, "state.json"), want); err == nil {
+	if err := SaveState(filepath.Join(path, "state.yaml"), want); err == nil {
 		t.Fatal("expected write failure")
 	}
 }
 
-func TestLegacyStateSidebar(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "state.json")
-	if err := os.WriteFile(path, []byte(`{"sidebar_width":300}`), 0600); err != nil {
+func TestStateSidebarDefaults(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "state.yaml")
+	if err := os.WriteFile(path, []byte(`# Partial presentation state
+sidebar_width: 300`), 0600); err != nil {
 		t.Fatal(err)
 	}
 	state, err := LoadState(path)
@@ -67,7 +73,7 @@ func TestNativeState(t *testing.T) {
 		t.Skip("requires a desktop session")
 	}
 	for _, collapsed := range []bool{true, false} {
-		path := filepath.Join(t.TempDir(), "state.json")
+		path := filepath.Join(t.TempDir(), "state.yaml")
 		var want State
 		mygo.RunOnMain(func() {
 			g := &Gallery{}

@@ -5,6 +5,7 @@ go 1.27.1
 require (
 	github.com/egoist/mygo v0.2.18
 	github.com/tc-hib/winres v0.3.1
+	go.yaml.in/yaml/v3 v3.0.4
 )
 
 require (

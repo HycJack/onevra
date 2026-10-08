@@ -37,9 +37,9 @@ func main() {
 			override = mygo.ThemeSource(*theme)
 		}
 	})
-	g.Configure(filepath.Join(configDir, "config.json"), override)
+	g.Configure(filepath.Join(configDir, "config.yaml"), override)
 	mygo.App.WhenReady(func() {
-		win := g.NewPersistent(filepath.Join(configDir, "state.json")).Window()
+		win := g.NewPersistent(filepath.Join(configDir, "state.yaml")).Window()
 		win.OnClosed(func() { mygo.App.Quit() })
 	})
 	if err := mygo.App.Run(); err != nil {

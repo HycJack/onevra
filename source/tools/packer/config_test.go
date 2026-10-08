@@ -8,10 +8,22 @@ import (
 
 func TestPlatformIcons(t *testing.T) {
 	root := t.TempDir()
-	file := filepath.Join(root, "packer.json")
+	file := filepath.Join(root, "packer.yaml")
 	for _, config := range []string{
-		`{"name":"App","identifier":"me.app","macos":{"icon":"custom.icon"},"windows":{"icon":"custom.ico"},"linux":{"icon":"custom.svg"}}`,
-		`{"name":"App","identifier":"me.app","macos":{"icon":"custom.icns"},"linux":{"icon":"custom.png"}}`,
+		`name: "App"
+identifier: "me.app"
+macos:
+  icon: "custom.icon"
+windows:
+  icon: "custom.ico"
+linux:
+  icon: "custom.svg"`,
+		`name: "App"
+identifier: "me.app"
+macos:
+  icon: "custom.icns"
+linux:
+  icon: "custom.png"`,
 	} {
 		put(t, file, config)
 		if _, err := loadConfig(file); err != nil {
@@ -19,12 +31,28 @@ func TestPlatformIcons(t *testing.T) {
 		}
 	}
 	for _, config := range []string{
-		`{"name":"App","identifier":"me.app","icon":"icon.png"}`,
-		`{"name":"App","identifier":"me.app","minimumSystemVersion":"13.0"}`,
-		`{"name":"App","identifier":"me.app","macos":{"icon":"icon.ico"}}`,
-		`{"name":"App","identifier":"me.app","macos":{"icon":"icon.png"}}`,
-		`{"name":"App","identifier":"me.app","windows":{"icon":"icon.png"}}`,
-		`{"name":"App","identifier":"me.app","linux":{"icon":"icon.icon"}}`,
+		`name: "App"
+identifier: "me.app"
+icon: "icon.png"`,
+		`name: "App"
+identifier: "me.app"
+minimumSystemVersion: "13.0"`,
+		`name: "App"
+identifier: "me.app"
+macos:
+  icon: "icon.ico"`,
+		`name: "App"
+identifier: "me.app"
+macos:
+  icon: "icon.png"`,
+		`name: "App"
+identifier: "me.app"
+windows:
+  icon: "icon.png"`,
+		`name: "App"
+identifier: "me.app"
+linux:
+  icon: "icon.icon"`,
 	} {
 		put(t, file, config)
 		if _, err := loadConfig(file); err == nil {
@@ -35,8 +63,9 @@ func TestPlatformIcons(t *testing.T) {
 
 func TestIconDefaults(t *testing.T) {
 	root := t.TempDir()
-	file := filepath.Join(root, "packer.json")
-	put(t, file, `{"name":"App","identifier":"me.app"}`)
+	file := filepath.Join(root, "packer.yaml")
+	put(t, file, `name: "App"
+identifier: "me.app"`)
 	put(t, filepath.Join(root, "resources", "icon.png"), "payload, not the app icon")
 	check := func(macos, windows, linux string) {
 		t.Helper()
@@ -63,13 +92,17 @@ func TestIconDefaults(t *testing.T) {
 		t.Fatal(err)
 	}
 	check("icon.icon", "icon.ico", "icon.png")
-	put(t, file, `{"name":"App","identifier":"me.app","macos":{"icon":"alternate.icns"}}`)
+	put(t, file, `name: "App"
+identifier: "me.app"
+macos:
+  icon: "alternate.icns"`)
 	check("alternate.icns", "icon.ico", "icon.png")
 	if err := os.Remove(filepath.Join(root, "icon.icon")); err != nil {
 		t.Fatal(err)
 	}
 	put(t, filepath.Join(root, "icon.icon"), "not a directory")
-	put(t, file, `{"name":"App","identifier":"me.app"}`)
+	put(t, file, `name: "App"
+identifier: "me.app"`)
 	c, err := loadConfig(file)
 	if err != nil {
 		t.Fatal(err)

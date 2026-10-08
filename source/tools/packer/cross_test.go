@@ -64,8 +64,11 @@ func TestCrossPackaging(t *testing.T) {
 	}
 	put(t, filepath.Join(root, "icon.ico"), ico.String())
 	put(t, filepath.Join(root, "icon.svg"), `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"/>`)
-	file := filepath.Join(root, "packer.json")
-	put(t, file, `{"name":"Cross App","identifier":"me.oneo.crossfixture","out":"dist","platforms":["windows/amd64","windows/arm64","linux/amd64","linux/arm64"]}`)
+	file := filepath.Join(root, "packer.yaml")
+	put(t, file, `name: "Cross App"
+identifier: "me.oneo.crossfixture"
+out: "dist"
+platforms: ["windows/amd64","windows/arm64","linux/amd64","linux/arm64"]`)
 	c, err := loadConfig(file)
 	if err != nil {
 		t.Fatal(err)

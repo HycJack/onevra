@@ -20,7 +20,7 @@ func TestDisableDMG(t *testing.T) {
 		{"disabled", `{"disableDMG":true}`, true},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
-			file := filepath.Join(t.TempDir(), "packer.json")
+			file := filepath.Join(t.TempDir(), "packer.yaml")
 			put(t, file, `{"name":"App","identifier":"me.app","macos":`+tc.macos+`}`)
 			c, err := loadConfig(file)
 			if err != nil {
