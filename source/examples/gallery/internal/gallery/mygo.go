@@ -13,7 +13,7 @@ type mygoExample struct {
 }
 
 var mygoGroups = []string{
-	"Text input", "Date & color", "Collections",
+	"Date & color", "Collections",
 	"Overlays",
 }
 

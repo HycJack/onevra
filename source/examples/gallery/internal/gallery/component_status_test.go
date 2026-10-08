@@ -54,7 +54,7 @@ func TestComponentStatuses(t *testing.T) {
 func TestComponentStatusCards(t *testing.T) {
 	entries := mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled)
 	cards := componentStatusCards(entries, mygoReplaced)
-	if len(cards) != 28 {
+	if len(cards) != 29 {
 		t.Fatalf("got %d replacement cards", len(cards))
 	}
 	for _, card := range cards {
@@ -63,6 +63,9 @@ func TestComponentStatusCards(t *testing.T) {
 		}
 		if card.Name == "TextBox" && !reflect.DeepEqual(card.Replaces, []string{"SearchField", "TextArea", "TextInput"}) {
 			t.Fatalf("TextBox modes not grouped: %+v", card)
+		}
+		if card.Name == "TextBoxBuffer" && !reflect.DeepEqual(card.Replaces, []string{"TextAreaBuffer", "TextInputBuffer"}) {
+			t.Fatalf("TextBoxBuffer modes not grouped: %+v", card)
 		}
 		if card.Name == "Select" && !reflect.DeepEqual(card.Replaces, []string{"Autocomplete", "Combobox", "Select"}) {
 			t.Fatalf("Select replacements not grouped: %+v", card)

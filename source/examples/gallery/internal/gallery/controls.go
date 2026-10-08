@@ -18,6 +18,7 @@ type controlState struct {
 	on      bool
 	choice  string
 	text    string
+	buffer  *ui.TextBuffer
 	query   string
 	index   int
 	button  buttonExampleState
@@ -32,6 +33,11 @@ var textBoxControlCatalog = []controlExample{
 	{"TextBox (multiline)", "Text areas", "Text input", []string{"Empty", "Filled", "Read only"}, controlTextBoxMultiline},
 }
 
+var textBoxBufferControlCatalog = []controlExample{
+	{"TextBoxBuffer", "Buffer text boxes", "Text input", []string{"Empty", "Filled", "Read only", "Search"}, controlTextBoxBuffer},
+	{"TextBoxBuffer (multiline)", "Buffer text areas", "Text input", []string{"Empty", "Filled", "Read only"}, controlTextBoxBufferMultiline},
+}
+
 var controlCatalog = []controlExample{
 	{"Badge", "Badge", "Status", []string{"Default", "Accent"}, controlBadge},
 	{"RichText", "RichText", "Media & text", []string{"Default"}, controlRichText},
@@ -39,6 +45,7 @@ var controlCatalog = []controlExample{
 	{"Rating", "Rating", "Selection & values", []string{"Default"}, controlRating},
 	{"Text", "Text", "Media & text", []string{"Default", "Editable"}, controlText},
 	{"TextBox", "TextBox", "Text input", []string{"TextBox", "TextBox (multiline)"}, controlTextBox},
+	{"TextBoxBuffer", "TextBoxBuffer", "Text input", []string{"TextBoxBuffer", "TextBoxBuffer (multiline)"}, controlTextBoxBuffer},
 	{"Button", "Buttons", "Actions", []string{"Button", "ToggleButton"}, controlButton},
 	{"Selection", "Selection", "Selection & values", []string{"Checkbox", "Switch", "Radio"}, controlSelection},
 	{"Select", "Selects", "Selection & values", []string{"Default", "Selected", "Searchable", "NativeSelect"}, controlSelect},
@@ -83,8 +90,11 @@ func (g *Gallery) controlState(name, variant string) *controlState {
 	if variant != "Empty" && variant != "Search" {
 		s.text = "Hello Onevra"
 	}
-	if name == "TextBox (multiline)" && variant != "Empty" {
+	if (name == "TextBox (multiline)" || name == "TextBoxBuffer (multiline)") && variant != "Empty" {
 		s.text += "\nA multiline note."
+	}
+	if name == "TextBoxBuffer" || name == "TextBoxBuffer (multiline)" {
+		s.buffer = ui.NewTextBuffer(s.text)
 	}
 	if name == "Rating" && variant != "Empty" {
 		s.index = 3
@@ -100,8 +110,12 @@ func (g *Gallery) Controls(c *ui.Context, example controlExample) {
 	t := c.Theme()
 	components.ScrollView(c, components.ScrollViewOptions{}).Key("controls-" + example.name).Fill().Children(func() {
 		ui.Column(c).FillWidth().MinWidth(0).Padding(t.Space(6)).Gap(t.Space(6)).Children(func() {
-			if example.name == "TextBox" {
-				for _, textExample := range textBoxControlCatalog {
+			if example.name == "TextBox" || example.name == "TextBoxBuffer" {
+				catalog := textBoxControlCatalog
+				if example.name == "TextBoxBuffer" {
+					catalog = textBoxBufferControlCatalog
+				}
+				for _, textExample := range catalog {
 					g.controlVariants(c, textExample)
 				}
 				return
@@ -151,7 +165,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 				switch example.name {
 				case "Text":
 					cell.FillWidth()
-				case "TextBox", "TextBox (multiline)", "NumberInput", "Slider", "Sidebar", "List", "Split", "ScrollView", "Progress", "Accordion", "Collapsible":
+				case "TextBox", "TextBox (multiline)", "TextBoxBuffer", "TextBoxBuffer (multiline)", "NumberInput", "Slider", "Sidebar", "List", "Split", "ScrollView", "Progress", "Accordion", "Collapsible":
 					cell.Width(240)
 				}
 				cell.Children(func() {

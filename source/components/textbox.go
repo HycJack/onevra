@@ -2,7 +2,7 @@ package components
 
 import "github.com/egoist/mygo/ui"
 
-// TextBoxOptions configures editing behavior and its matching appearance.
+// TextBoxOptions configures TextBox and TextBoxBuffer editing behavior and appearance.
 type TextBoxOptions struct {
 	// Multiline accepts line breaks; the default is a single-line input.
 	Multiline bool
@@ -22,13 +22,33 @@ type TextBoxOptions struct {
 // For stable identity, key a parent container rather than this element:
 // interaction styling is resolved during construction.
 func TextBox(c *ui.Context, value *string, options TextBoxOptions) ui.Element {
-	t := c.Theme()
 	var e ui.Element
 	if options.Multiline {
 		e = ui.TextAreaBase(c, value)
-		e.MinHeight(t.Space(20))
 	} else {
 		e = ui.TextInputBase(c, value)
+	}
+	return styleTextBox(c, e, options)
+}
+
+// TextBoxBuffer creates a text input editing an application-owned buffer.
+// Keep the non-nil buffer across builds; ordinary editing does not materialize
+// the whole document as a string. Options and chained input properties follow
+// TextBox, including its parent-key requirement for stable identity.
+func TextBoxBuffer(c *ui.Context, value *ui.TextBuffer, options TextBoxOptions) ui.Element {
+	var e ui.Element
+	if options.Multiline {
+		e = ui.TextAreaBufferBase(c, value)
+	} else {
+		e = ui.TextInputBufferBase(c, value)
+	}
+	return styleTextBox(c, e, options)
+}
+
+func styleTextBox(c *ui.Context, e ui.Element, options TextBoxOptions) ui.Element {
+	t := c.Theme()
+	if options.Multiline {
+		e.MinHeight(t.Space(20))
 	}
 	e.ReadOnly(options.ReadOnly)
 	background, border := t.Surface, t.Border

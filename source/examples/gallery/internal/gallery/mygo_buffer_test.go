@@ -11,7 +11,7 @@ func TestMyGoBufferExamples(t *testing.T) {
 	for _, name := range []string{"TextInputBuffer", "TextAreaBuffer"} {
 		t.Run(name, func(t *testing.T) {
 			var example mygoExample
-			for _, entry := range mygoCatalog {
+			for _, entry := range mygoExamples {
 				if entry.name == name {
 					example = entry
 					break

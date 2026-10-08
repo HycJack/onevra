@@ -8,7 +8,7 @@ import (
 )
 
 func TestControlPages(t *testing.T) {
-	if len(controlCatalog) != 23 {
+	if len(controlCatalog) != 24 {
 		t.Fatal("missing control examples")
 	}
 	for i, example := range controlCatalog {
@@ -25,7 +25,7 @@ func TestControlPages(t *testing.T) {
 					g := &Gallery{page: page}
 					tt := ui.NewTester(func(c *ui.Context) { theme.Apply(c, mode); g.View(c) }, width, 1800)
 					wantStates := len(example.variants)
-					if example.name == "TextBox" {
+					if example.name == "TextBox" || example.name == "TextBoxBuffer" {
 						wantStates = 7
 					}
 					if tt.Image() == nil || len(g.controlStates) != wantStates {
@@ -178,6 +178,10 @@ func TestControlExampleInteractions(t *testing.T) {
 					click(label)
 					tt.Type("Hello")
 					changed = s.text == "Hello"
+				case "TextBoxBuffer":
+					click("Name")
+					tt.Type("Hello")
+					changed = s.buffer.String() == "Hello"
 				case "Select":
 					click("Size")
 					if !disabled {
