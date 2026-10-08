@@ -56,7 +56,7 @@ func (g *Gallery) Left(c *ui.Context) {
 }
 
 func (g *Gallery) navigation(c *ui.Context) {
-	ui.Scroll(c).Fill().Children(func() {
+	components.ScrollView(c, components.ScrollViewOptions{}).Fill().Children(func() {
 		components.Sidebar(c).Children(func() {
 			components.SidebarSection(c, "Overview", func() {
 				g.navigationItem(c, "Component status", lucide.Component(), componentStatusPage)
@@ -161,7 +161,7 @@ func (g *Gallery) body(c *ui.Context) {
 		return
 	}
 	t := c.Theme()
-	ui.Scroll(c).Fill().Children(func() {
+	components.ScrollView(c, components.ScrollViewOptions{}).Fill().Children(func() {
 		ui.Column(c).FillWidth().Padding(t.Space(6)).Gap(t.Space(4)).Children(func() {
 			components.Text(c, "A sidebar and content, one native window.").TextColor(t.TextMuted).Wrap()
 			components.Text(c, "Toggle or resize the sidebar inside the window. Double-click its separator to restore the default width. Open Settings to replace the entire page.").Wrap()

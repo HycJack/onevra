@@ -53,11 +53,23 @@ func TestComponentStatuses(t *testing.T) {
 func TestComponentStatusCards(t *testing.T) {
 	entries := mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled)
 	cards := componentStatusCards(entries, mygoReplaced)
-	if len(cards) != 14 {
+	if len(cards) != 15 {
 		t.Fatalf("got %d replacement cards", len(cards))
 	}
 	if cards[0].Name != "Button" || !reflect.DeepEqual(cards[0].Replaces, []string{"Button", "Link", "MenuButton", "PrimaryButton"}) {
 		t.Fatalf("button variants not grouped: %+v", cards[0])
+	}
+	foundScrollView := false
+	for _, card := range cards {
+		if card.Name == "ScrollView" {
+			foundScrollView = true
+			if !reflect.DeepEqual(card.Replaces, []string{"Scroll", "ScrollBoth", "ScrollHorizontal"}) {
+				t.Fatalf("scroll variants not grouped: %+v", card)
+			}
+		}
+	}
+	if !foundScrollView {
+		t.Fatal("missing ScrollView replacement")
 	}
 	for _, status := range []mygoStatus{mygoExcluded, mygoUpstream, mygoUnreviewed, mygoPrimitive} {
 		for _, card := range componentStatusCards(entries, status) {

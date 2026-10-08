@@ -15,9 +15,12 @@ type mygoDecision struct {
 // exclusion decisions hide upstream examples and suppress pending reminders.
 // To exclude a component, add {Reason: "why this component is not needed"}.
 var mygoHandled = map[string]mygoDecision{
-	"Sidebar":        {Replacement: "components.Sidebar", Reason: "Onevra grouped navigation with application-owned selection"},
-	"SidebarSection": {Replacement: "components.Sidebar", Reason: "Onevra sidebar section headings"},
-	"SidebarItem":    {Replacement: "components.Sidebar", Reason: "Onevra sidebar navigation items"},
+	"Scroll":           {Replacement: "components.ScrollView", Reason: "Unified scroll container with vertical scrolling by default"},
+	"ScrollHorizontal": {Replacement: "components.ScrollView", Reason: "Horizontal ScrollView axes"},
+	"ScrollBoth":       {Replacement: "components.ScrollView", Reason: "Both ScrollView axes"},
+	"Sidebar":          {Replacement: "components.Sidebar", Reason: "Onevra grouped navigation with application-owned selection"},
+	"SidebarSection":   {Replacement: "components.Sidebar", Reason: "Onevra sidebar section headings"},
+	"SidebarItem":      {Replacement: "components.Sidebar", Reason: "Onevra sidebar navigation items"},
 
 	"Segmented":     {Reason: "No Onevra segmented control component is needed"},
 	"CheckboxGroup": {Reason: "No separate Onevra checkbox group component is needed"},
@@ -48,7 +51,6 @@ var mygoHandled = map[string]mygoDecision{
 var mygoPrimitives = map[string]bool{
 	"Box": true, "Column": true, "Row": true, "Spacer": true,
 	"Grid": true, "Overlay": true,
-	"Scroll": true, "ScrollHorizontal": true, "ScrollBoth": true,
 	"Image": true,
 }
 

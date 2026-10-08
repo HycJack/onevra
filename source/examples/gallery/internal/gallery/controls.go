@@ -37,6 +37,7 @@ var controlCatalog = []controlExample{
 	{"Tabs", "Tab rows", []string{"Default", "Selected"}, controlTabs},
 	{"Icon", "Icons", []string{"Default"}, controlIcon},
 	{"Sidebar", "Sidebar", []string{"Default"}, controlSidebar},
+	{"ScrollView", "Scroll views", []string{"Vertical", "Horizontal", "Both", "Insets"}, controlScrollView},
 }
 
 func controlPageStart() galleryPage { return mygoPageStart + galleryPage(len(mygoCatalog)) }
@@ -73,7 +74,7 @@ func (g *Gallery) controlState(name, variant string) *controlState {
 
 func (g *Gallery) Controls(c *ui.Context, example controlExample) {
 	t := c.Theme()
-	ui.Scroll(c).Key("controls-" + example.name).Fill().Children(func() {
+	components.ScrollView(c, components.ScrollViewOptions{}).Key("controls-" + example.name).Fill().Children(func() {
 		ui.Column(c).FillWidth().MinWidth(0).Padding(t.Space(6)).Gap(t.Space(6)).Children(func() {
 			if example.name == "Text" {
 				for _, textExample := range textControlCatalog {
@@ -103,7 +104,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 				switch example.name {
 				case "Text":
 					cell.FillWidth()
-				case "TextField", "TextArea", "Slider", "Sidebar":
+				case "TextField", "TextArea", "Slider", "Sidebar", "ScrollView":
 					cell.Width(240)
 				}
 				cell.Children(func() {

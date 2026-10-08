@@ -108,7 +108,7 @@ func (g *Gallery) mygoState(name, variant string, first bool) *demoState {
 func (g *Gallery) MyGo(c *ui.Context, example mygoExample) {
 	t := c.Theme()
 	variants := mygoVariants(example.name)
-	ui.Scroll(c).Key("mygo-" + example.name).Fill().Children(func() {
+	components.ScrollView(c, components.ScrollViewOptions{}).Key("mygo-" + example.name).Fill().Children(func() {
 		ui.Column(c).FillWidth().Padding(t.Space(6)).Gap(t.Space(6)).Children(func() {
 			for i, variant := range variants {
 				s := g.mygoState(example.name, variant, i == 0)
