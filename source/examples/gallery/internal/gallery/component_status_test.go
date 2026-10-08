@@ -54,13 +54,13 @@ func TestComponentStatuses(t *testing.T) {
 func TestComponentStatusCards(t *testing.T) {
 	entries := mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled)
 	cards := componentStatusCards(entries, mygoReplaced)
-	if len(cards) != 17 {
+	if len(cards) != 19 {
 		t.Fatalf("got %d replacement cards", len(cards))
 	}
-	if cards[0].Name != "Button" || !reflect.DeepEqual(cards[0].Replaces, []string{"Button", "Link", "MenuButton", "PrimaryButton"}) {
-		t.Fatalf("button variants not grouped: %+v", cards[0])
-	}
 	for _, card := range cards {
+		if card.Name == "Button" && !reflect.DeepEqual(card.Replaces, []string{"Button", "Link", "MenuButton", "PrimaryButton"}) {
+			t.Fatalf("button variants not grouped: %+v", card)
+		}
 		if card.Name == "TextBox" && !reflect.DeepEqual(card.Replaces, []string{"SearchField", "TextArea", "TextInput"}) {
 			t.Fatalf("TextBox modes not grouped: %+v", card)
 		}

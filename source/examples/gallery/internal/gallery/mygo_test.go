@@ -189,7 +189,7 @@ func TestMyGoNavigationAndState(t *testing.T) {
 	if err := tt.Click("Collapsible"); err != nil {
 		t.Fatal(err)
 	}
-	if example, ok := mygoExampleFor(g.page); !ok || example.name != "Collapsible" {
+	if example, ok := controlExampleFor(g.page); !ok || example.name != "Collapsible" {
 		t.Fatal("collapsible route not selected")
 	}
 	detailsPage := g.page
@@ -197,7 +197,7 @@ func TestMyGoNavigationAndState(t *testing.T) {
 	if err := content.Click("Details"); err != nil {
 		t.Fatal(err)
 	}
-	if !g.mygoStates["Collapsible"].open {
+	if !g.controlState("Collapsible", "Right arrow").on {
 		t.Fatal("collapsible did not update state")
 	}
 	if err := tt.Click("Popover"); err != nil {
@@ -209,7 +209,7 @@ func TestMyGoNavigationAndState(t *testing.T) {
 	}
 	g.page = detailsPage
 	ui.NewTester(g.View, 540, 850)
-	if !g.mygoStates["Collapsible"].open {
+	if !g.controlState("Collapsible", "Right arrow").on {
 		t.Fatal("state lost on navigation")
 	}
 }

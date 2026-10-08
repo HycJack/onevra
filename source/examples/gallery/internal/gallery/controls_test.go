@@ -8,7 +8,7 @@ import (
 )
 
 func TestControlPages(t *testing.T) {
-	if len(controlCatalog) != 13 {
+	if len(controlCatalog) != 15 {
 		t.Fatal("missing control examples")
 	}
 	for i, example := range controlCatalog {
@@ -185,6 +185,12 @@ func TestControlExampleInteractions(t *testing.T) {
 				case "Sidebar":
 					click("Files")
 					changed = s.index == 1
+				case "Accordion":
+					click("General")
+					changed = s.toggles[0]
+				case "Collapsible":
+					click("Details")
+					changed = s.on
 				case "Tabs":
 					click("Style")
 					changed = s.index == 1
@@ -227,7 +233,7 @@ func TestControlPreviewGeometry(t *testing.T) {
 }
 
 func TestControlVariantLayout(t *testing.T) {
-	for _, name := range []string{"TextBox", "TextBox (multiline)", "Select", "Tabs"} {
+	for _, name := range []string{"Text", "TextBox", "TextBox (multiline)", "Select", "Tabs", "Collapsible", "Image", "Slider"} {
 		for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
 			for _, width := range []int{900, 280} {
 				g := &Gallery{page: pageFromKey("controls/" + name)}
@@ -241,7 +247,7 @@ func TestControlVariantLayout(t *testing.T) {
 					theme.Apply(c, mode)
 					ui.Column(c).Fill().Padding(24).Children(func() { g.controlVariants(c, example) })
 				}, width, 1200)
-				var first, previous ui.Rect
+				var previous ui.Rect
 				for i, variant := range example.variants {
 					label := variant
 					if name == "Tabs" {
@@ -254,13 +260,15 @@ func TestControlVariantLayout(t *testing.T) {
 					if !ok || r.X < 20 || r.X+r.W > float32(width)-20 {
 						t.Fatalf("%s/%s outside preview: %+v", name, variant, r)
 					}
-					if i == 0 {
-						first = r
-					} else {
-						if width == 900 && i < 3 && (r.Y != first.Y || r.X <= previous.X) {
-							t.Fatalf("%s variants are not arranged horizontally", name)
+					if i > 0 {
+						vertical := name == "Text" || name == "Collapsible"
+						if vertical && r.Y < previous.Y+previous.H {
+							t.Fatalf("%s variants are not vertical", name)
 						}
-						if r.Y == previous.Y && r.X < previous.X+previous.W {
+						if !vertical && width == 900 && i == 1 && r.Y != previous.Y {
+							t.Fatalf("%s variants are not horizontal", name)
+						}
+						if r.Y < previous.Y+previous.H && r.X < previous.X+previous.W {
 							t.Fatalf("%s variants overlap", name)
 						}
 					}

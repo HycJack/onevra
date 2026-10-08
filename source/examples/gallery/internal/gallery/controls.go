@@ -39,6 +39,8 @@ var controlCatalog = []controlExample{
 	{"Slider", "Sliders", []string{"Default", "Step", "Range", "Stepped range"}, controlSlider},
 	{"Progress", "Progress", []string{"Progress", "ProgressRing"}, controlProgress},
 	{"Tabs", "Tabs", []string{"Default"}, controlTabs},
+	{"Accordion", "Accordion", []string{"Default"}, controlAccordion},
+	{"Collapsible", "Collapsible", []string{"Right arrow", "Left arrow"}, controlCollapsible},
 	{"Icon", "Icons", []string{"Default"}, controlIcon},
 	{"Image", "Images", []string{"Contain", "Cover", "Stretch", "Rounded", "Grayscale"}, controlImage},
 	{"Sidebar", "Sidebar", []string{"Default"}, controlSidebar},
@@ -102,14 +104,28 @@ func (g *Gallery) Controls(c *ui.Context, example controlExample) {
 
 func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 	t := c.Theme()
+	if example.name == "Text" || example.name == "Collapsible" {
+		ui.Column(c).Key(example.name).FillWidth().MinWidth(0).Gap(t.Space(4)).Children(func() {
+			components.Text(c, example.name).Bold().TextColor(t.Text)
+			for _, variant := range example.variants {
+				ui.Column(c).Key(variant).FillWidth().MinWidth(0).Gap(12).Children(func() {
+					components.Text(c, variant).TextColor(t.TextMuted)
+					controlPreview(c).Children(func() {
+						example.build(c, g.controlState(example.name, variant), variant)
+					})
+				})
+			}
+		})
+		return
+	}
 	g.controlSection(c, example.name, func() {
-		ui.Row(c).FillWidth().MinWidth(0).Wrap().Gap(t.Space(4)).Children(func() {
+		ui.Row(c).FillWidth().MinWidth(0).Wrap().AlignItems(ui.Start).Gap(t.Space(4)).Children(func() {
 			for _, variant := range example.variants {
 				cell := ui.Column(c).Key(variant).MinWidth(0).MaxWidthPercent(100).Gap(12)
 				switch example.name {
 				case "Text":
 					cell.FillWidth()
-				case "TextBox", "TextBox (multiline)", "Slider", "Sidebar", "ScrollView", "Progress":
+				case "TextBox", "TextBox (multiline)", "Slider", "Sidebar", "ScrollView", "Progress", "Accordion", "Collapsible":
 					cell.Width(240)
 				}
 				cell.Children(func() {
@@ -125,7 +141,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 
 func (g *Gallery) controlSection(c *ui.Context, name string, build func()) {
 	ui.Column(c).Key(name).FillWidth().MinWidth(0).Gap(12).Children(func() {
-		components.Text(c, name).Bold().TextColor(c.Theme().TextMuted)
+		components.Text(c, name).Bold().TextColor(c.Theme().Text)
 		controlPreview(c).Children(build)
 	})
 }

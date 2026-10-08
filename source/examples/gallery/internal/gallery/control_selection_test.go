@@ -66,7 +66,7 @@ func TestSelectionInteractions(t *testing.T) {
 					}
 					if i == 0 {
 						first = r
-					} else if width == 820 && (r.X <= first.X || r.Y != first.Y) {
+					} else if width == 820 && (r.Y != first.Y || r.X < first.X+first.W) {
 						t.Fatalf("%s is not horizontally arranged", label)
 					}
 					if err := tt.Click(label); err != nil {

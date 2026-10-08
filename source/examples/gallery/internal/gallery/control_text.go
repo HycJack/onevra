@@ -10,7 +10,7 @@ func controlText(c *ui.Context, s *controlState, variant string) {
 		components.Text(c, s.text, components.TextOptions{Editable: &s.text}).Label("Editable text").FontSize(c.Theme().Rem(1.5)).Bold()
 		return
 	}
-	ui.Row(c).FillWidth().MinWidth(0).Wrap().Gap(c.Theme().Space(4)).Children(func() {
+	ui.Column(c).FillWidth().MinWidth(0).AlignItems(ui.Start).Gap(c.Theme().Space(4)).Children(func() {
 		components.Text(c, "A heading").FontSize(c.Theme().Rem(1.5)).Bold()
 		components.Text(c, "Hello, world. 你好，世界。こんにちは 🌍")
 		components.Text(c, "Secondary text").TextColor(c.Theme().TextMuted)

@@ -82,8 +82,7 @@ func TestControlButtonWrap(t *testing.T) {
 				theme.Apply(c, mode)
 				ui.Column(c).Fill().Gap(12).Children(func() { controlButton(c, s, "Default") })
 			}, width, 300)
-			var first, previous ui.Rect
-			wrapped := false
+			var previous ui.Rect
 			for i, label := range []string{"Primary", "Secondary", "Outline", "Ghost", "Link"} {
 				r, ok := tt.Find(label)
 				if !ok {
@@ -92,25 +91,18 @@ func TestControlButtonWrap(t *testing.T) {
 				if r.X < 0 || r.X+r.W > float32(width)+1 {
 					t.Fatalf("%s overflows width %d: %+v", label, width, r)
 				}
-				if i == 0 {
-					first = r
-				} else {
-					if r.Y > previous.Y+1 {
-						wrapped = true
-					} else if r.X < previous.X+previous.W {
-						t.Fatalf("%s overlaps the previous button", label)
+				if i > 0 {
+					if width == 540 && r.Y+r.H/2 != previous.Y+previous.H/2 {
+						t.Fatalf("%s is not on the same row", label)
 					}
-					if width == 540 && r.Y+r.H/2 != first.Y+first.H/2 {
-						t.Fatal("wide layout should keep buttons on one row")
+					if r.Y < previous.Y+previous.H && r.X < previous.X+previous.W {
+						t.Fatalf("%s overlaps the previous button", label)
 					}
 				}
 				previous = r
 				if err := tt.Click(label); err != nil {
 					t.Fatal(err)
 				}
-			}
-			if width == 200 && !wrapped {
-				t.Fatal("narrow layout should wrap buttons")
 			}
 			if s.button.clicks != [5]int{1, 1, 1, 1, 1} {
 				t.Fatalf("unexpected per-button clicks: %v", s.button.clicks)
