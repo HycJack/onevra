@@ -13,6 +13,14 @@ type DialogOptions struct {
 	DisableEscapeClose   bool
 	// Label is the accessible name. Applications supply localized text.
 	Label string
+	// Inset is the minimum viewport clearance in DIPs on every edge.
+	// Non-positive values use 20. WindowDragHeight can increase this clearance.
+	Inset float32
+	// WindowDragHeight reserves a full-width native window drag strip at the
+	// viewport top, inside this modal layer. Non-positive values disable it.
+	// Set this and Inset to the host's header height to retain window dragging
+	// without enabling underlying header actions. MyGo owns drag and focus behavior.
+	WindowDragHeight float32
 }
 
 // Dialog builds arbitrary content in a modal panel and returns its frame-local
@@ -20,7 +28,8 @@ type DialogOptions struct {
 // Build layers in back-to-front order, with stable keyed parents for independent
 // dialogs. Nested calls are supported. MyGo owns focus trapping and restoration.
 // The panel is horizontally centered with spare vertical space biased below it.
-// Its default maximum size leaves 20 logical pixels clear on every viewport edge.
+// Its default maximum size leaves 20 logical pixels clear on every viewport edge;
+// Inset overrides the clearance; WindowDragHeight can increase it.
 // Content may customize the panel and should provide scrolling for long pages.
 func Dialog(c *ui.Context, open *bool, options DialogOptions, build func(panel ui.Element)) ui.Element {
 	var panel ui.Element
@@ -29,9 +38,13 @@ func Dialog(c *ui.Context, open *bool, options DialogOptions, build func(panel u
 	}
 	t := c.Theme()
 	w, h := c.Size()
-	// Reserve 20 logical pixels on each edge. Distribute the space left after
-	// measuring the panel 1:2 above/below it, so tall dialogs stay in bounds.
-	const inset float32 = 20
+	// Distribute spare vertical space 1:2 above/below the panel.
+	inset := options.Inset
+	if inset <= 0 {
+		inset = 20
+	}
+	dragHeight := min(max(0, options.WindowDragHeight), max(0, h))
+	inset = max(inset, dragHeight)
 	ui.Overlay(c, func() {
 		back := ui.Column(c).Absolute().Left(0).Top(0).Right(0).Bottom(0).
 			AlignItems(ui.Center).Padding(inset).
@@ -60,6 +73,11 @@ func Dialog(c *ui.Context, open *bool, options DialogOptions, build func(panel u
 				}
 			})
 			ui.Box(c).Grow(2).MinHeight(0)
+			if dragHeight > 0 {
+				// A dedicated hit target, not a clickable backdrop or a forwarded
+				// event: MyGo starts the native drag without dismissing this layer.
+				ui.Box(c).Absolute().Left(0).Top(0).Right(0).Height(dragHeight).DragWindow()
+			}
 		})
 	})
 	return panel

@@ -52,9 +52,10 @@ func (g *Gallery) Settings(c *ui.Context) {
 	g.settings.initialize()
 	s, t := &g.settings, c.Theme()
 	w, h := c.Size()
-	width := min(t.Space(200), w*.88)
+	inset := shell.HeaderHeight(c)
+	width := min(t.Space(200), w*.88, max(0, w-2*inset))
 	narrow := width < t.Space(170)
-	components.Dialog(c, &s.open, components.DialogOptions{Label: "Settings"}, func(panel ui.Element) {
+	components.Dialog(c, &s.open, components.DialogOptions{Label: "Settings", Inset: inset, WindowDragHeight: inset}, func(panel ui.Element) {
 		panel.Width(width).Height(min(t.Space(180), h*.85)).Padding(0).Gap(0).Clip()
 		ui.Row(c).Fill().Gap(0).Children(func() {
 			if !narrow {

@@ -28,7 +28,7 @@ MyGo's animation values drive the sidebar reveal, without a separate timer or an
 
 ## Dialog composition
 
-Dialog composes MyGo overlay, modal focus scope and transition primitives rather than a separate modal manager. Applications own open state and build layers in back-to-front order; nested dialogs retain the underlying page. Each layer controls backdrop and Escape dismissal independently. AlertDialog composes the same surface and Onevra buttons, emitting a frame-local result instead of blocking the UI thread. Applications own localized labels, retain results when needed and provide scrolling for long dialog pages. MyGo owns focus trapping, restoration and reduced-motion behavior.
+Dialog composes MyGo overlay, modal focus scope and transition primitives rather than a separate modal manager. Applications own open state and build layers in back-to-front order; nested dialogs retain the underlying page. Each layer controls backdrop and Escape dismissal independently. AlertDialog composes the same surface and Onevra buttons, emitting a frame-local result instead of blocking the UI thread. Applications own localized labels, retain results when needed and provide scrolling for long dialog pages. MyGo owns focus trapping, restoration and reduced-motion behavior. Hosts with custom titlebars can reserve viewport clearance and opt into a native window-drag strip inside each modal layer. This keeps underlying header actions blocked rather than forwarding pointer events through the modal; the strip does not dismiss the backdrop. Dragging uses MyGo's focus behavior, which may reset the focused input within the modal.
 
 ## Native appearance
 

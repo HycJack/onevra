@@ -56,7 +56,7 @@ func TestSettingsDialog(t *testing.T) {
 			t.Fatal(err)
 		}
 		if close == "backdrop" {
-			tt.ClickAt(1, 1)
+			tt.ClickAt(1, 100)
 		} else if err := tt.Click(close); err != nil {
 			t.Fatal(err)
 		}
@@ -76,13 +76,13 @@ func TestSettingsWindowSizes(t *testing.T) {
 		tt.Frame()
 		panel, ok := tt.Find("Settings")
 		w, h := float32(size[0]), float32(size[1])
-		if !ok || panel.X < 19.5 || panel.Y < 19.5 || panel.X+panel.W > w-19.5 || panel.Y+panel.H > h-19.5 {
+		if !ok || panel.X < 47.5 || panel.Y < 47.5 || panel.X+panel.W > w-47.5 || panel.Y+panel.H > h-47.5 {
 			t.Fatalf("%v: settings escaped viewport clearance: %+v", size, panel)
 		}
 		if panel.W > min(800, w*.88)+1 {
 			t.Fatalf("%v: settings width exceeded compact limit: %+v", size, panel)
 		}
-		if panel.H < min(720, h*.8) || panel.Y+panel.H/2 >= h/2 {
+		if panel.H < min(720, h*.8, h-96)-1 || panel.Y+panel.H/2 > h/2+.5 {
 			t.Fatalf("%v: settings too short or not biased upward: %+v", size, panel)
 		}
 		close, ok := tt.Find("Close settings")
