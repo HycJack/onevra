@@ -24,6 +24,7 @@ type controlState struct {
 	toggles [2]bool
 	value   float64
 	high    float64
+	split   float32
 }
 
 var textBoxControlCatalog = []controlExample{
@@ -48,6 +49,7 @@ var controlCatalog = []controlExample{
 	{"List", "List", []string{"Default"}, controlList},
 	{"Tree", "Tree", []string{"Tree", "TreeVirtualized"}, controlTree},
 	{"Sidebar", "Sidebar", []string{"Default"}, controlSidebar},
+	{"Split", "Split panes", []string{"Horizontal", "Vertical"}, controlSplit},
 	{"ScrollView", "Scroll views", []string{"Vertical", "Horizontal", "Both", "Insets"}, controlScrollView},
 }
 
@@ -69,7 +71,7 @@ func (g *Gallery) controlState(name, variant string) *controlState {
 	if s := g.controlStates[key]; s != nil {
 		return s
 	}
-	s := &controlState{on: variant == "On", choice: "Small", value: 40, high: 80, toggles: [2]bool{false, true}}
+	s := &controlState{on: variant == "On", choice: "Small", value: 40, high: 80, split: 100, toggles: [2]bool{false, true}}
 	if variant == "Selected" {
 		s.choice, s.index = "Large", 1
 	}
@@ -138,7 +140,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 				switch example.name {
 				case "Text":
 					cell.FillWidth()
-				case "TextBox", "TextBox (multiline)", "Slider", "Sidebar", "List", "ScrollView", "Progress", "Accordion", "Collapsible":
+				case "TextBox", "TextBox (multiline)", "Slider", "Sidebar", "List", "Split", "ScrollView", "Progress", "Accordion", "Collapsible":
 					cell.Width(240)
 				}
 				cell.Children(func() {

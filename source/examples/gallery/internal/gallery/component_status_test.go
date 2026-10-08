@@ -54,7 +54,7 @@ func TestComponentStatuses(t *testing.T) {
 func TestComponentStatusCards(t *testing.T) {
 	entries := mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled)
 	cards := componentStatusCards(entries, mygoReplaced)
-	if len(cards) != 22 {
+	if len(cards) != 23 {
 		t.Fatalf("got %d replacement cards", len(cards))
 	}
 	for _, card := range cards {
@@ -67,6 +67,18 @@ func TestComponentStatusCards(t *testing.T) {
 		if card.Name == "Select" && !reflect.DeepEqual(card.Replaces, []string{"Autocomplete", "Combobox", "Select"}) {
 			t.Fatalf("Select replacements not grouped: %+v", card)
 		}
+	}
+	foundSplit := false
+	for _, card := range cards {
+		if card.Name == "Split" {
+			foundSplit = true
+			if !reflect.DeepEqual(card.Replaces, []string{"Split", "SplitVertical"}) {
+				t.Fatalf("split orientations not grouped: %+v", card)
+			}
+		}
+	}
+	if !foundSplit {
+		t.Fatal("missing Split replacement")
 	}
 	foundScrollView := false
 	for _, card := range cards {
