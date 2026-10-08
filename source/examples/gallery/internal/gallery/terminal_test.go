@@ -26,7 +26,7 @@ func waitTerminal(t *testing.T, d *terminalDemo) (*terminal.Terminal, error) {
 	return nil, nil
 }
 
-func TestTerminalStartsOnlyOnRequest(t *testing.T) {
+func TestTerminalHeadlessDoesNotStartShell(t *testing.T) {
 	g := &Gallery{}
 	defer g.Close()
 	for i, entry := range mygoCatalog {
@@ -35,11 +35,8 @@ func TestTerminalStartsOnlyOnRequest(t *testing.T) {
 		}
 	}
 	tt := ui.NewTester(g.View, 540, 850)
-	if _, ok := tt.Find("Start terminal"); !ok {
-		t.Fatal("missing start action")
-	}
-	if _, ok := tt.Find("Stopped"); !ok {
-		t.Fatal("terminal should start stopped")
+	if _, ok := tt.Find("Start terminal"); ok {
+		t.Fatal("unexpected demo controls")
 	}
 	term, loading, err := g.mygoStates["Terminal"].terminal.snapshot()
 	if term != nil || loading || err != nil {
@@ -95,7 +92,7 @@ func TestTerminalEchoConnection(t *testing.T) {
 	}
 }
 
-func TestNativeTerminal(t *testing.T) {
+func TestNativeTerminalEcho(t *testing.T) {
 	if os.Getenv("ONEVRA_NATIVE_SMOKE") != "1" {
 		t.Skip("requires opt-in native library loading")
 	}

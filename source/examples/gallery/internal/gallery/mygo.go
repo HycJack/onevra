@@ -100,6 +100,17 @@ func (g *Gallery) mygoState(name, variant string, first bool) *demoState {
 }
 
 func (g *Gallery) MyGo(c *ui.Context, example mygoExample) {
+	if example.name == "Terminal" {
+		_, exists := g.mygoStates["Terminal"]
+		s := g.mygoState("Terminal", "Default", true)
+		if !exists && g.createTerminal != nil {
+			s.terminal.start(g.createTerminal)
+		}
+		ui.Column(c).Key("mygo-Terminal").Fill().Children(func() {
+			example.build(c, s)
+		})
+		return
+	}
 	t := c.Theme()
 	variants := mygoVariants(example.name)
 	components.ScrollView(c, components.ScrollViewOptions{}).Key("mygo-" + example.name).Fill().Children(func() {

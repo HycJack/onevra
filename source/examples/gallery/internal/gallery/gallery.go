@@ -4,6 +4,7 @@ package gallery
 import (
 	"fmt"
 
+	"github.com/egoist/mygo/plugins/terminal"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/components"
 	"github.com/oneo-me/onevra/icons/lucide"
@@ -20,10 +21,13 @@ type Gallery struct {
 	grid          ui.GridState
 	mygoStates    map[string]*demoState
 	controlStates map[string]*controlState
+	// Native startup supplies the factory; headless views never load libraries.
+	createTerminal func() (*terminal.Terminal, error)
 }
 
 // New creates the standalone shell demonstration.
 func (g *Gallery) New() *shell.Shell {
+	g.createTerminal = newShellTerminal
 	g.Shell = shell.NewShell(shell.ShellOptions{
 		Title:     "Onevra Gallery",
 		LeftWidth: 220, LeftMinWidth: 220, LeftMaxWidth: 520,

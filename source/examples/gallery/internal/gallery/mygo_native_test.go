@@ -61,7 +61,6 @@ func captureCatalog(t *testing.T, controls bool) {
 			if example.name == "Terminal" {
 				var state *demoState
 				mygo.RunOnMain(func() { state = g.mygoState("Terminal", "Default", true) })
-				state.terminal.start(newPreviewTerminal)
 				if _, err := waitTerminal(t, &state.terminal); err != nil {
 					t.Fatal(err)
 				}
