@@ -36,6 +36,7 @@ var controlCatalog = []controlExample{
 	{"Slider", "Sliders", []string{"Default"}, controlSlider},
 	{"Tabs", "Tab rows", []string{"Default", "Selected"}, controlTabs},
 	{"Icon", "Icons", []string{"Default"}, controlIcon},
+	{"Image", "Images", []string{"Contain", "Cover", "Stretch", "Rounded", "Grayscale"}, controlImage},
 	{"Sidebar", "Sidebar", []string{"Default"}, controlSidebar},
 	{"ScrollView", "Scroll views", []string{"Vertical", "Horizontal", "Both", "Insets"}, controlScrollView},
 }

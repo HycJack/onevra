@@ -8,7 +8,7 @@ import (
 )
 
 func TestControlPages(t *testing.T) {
-	if len(controlCatalog) != 9 {
+	if len(controlCatalog) != 10 {
 		t.Fatal("missing control examples")
 	}
 	for i, example := range controlCatalog {
@@ -123,8 +123,8 @@ func TestControlExampleInteractions(t *testing.T) {
 				}
 				changed := false
 				switch example.name {
-				case "Icon":
-					return // Icons have no interaction state.
+				case "Icon", "Image":
+					return // Media components have no interaction state.
 				case "ScrollView":
 					return // ScrollView interactions are covered in the component tests.
 				case "Text":

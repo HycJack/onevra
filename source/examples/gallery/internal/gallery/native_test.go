@@ -15,6 +15,13 @@ import (
 
 // Ordinary tests never open windows.
 func TestMain(m *testing.M) {
+	// Go tests run from this package, not the module resource directory.
+	resources, err := filepath.Abs("../../../../resources")
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
+		os.Exit(1)
+	}
+	mygo.App.SetPath(mygo.PathResources, resources)
 	if os.Getenv("ONEVRA_NATIVE_SMOKE") != "1" {
 		os.Exit(m.Run())
 	}
