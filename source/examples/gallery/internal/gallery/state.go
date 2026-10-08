@@ -76,6 +76,9 @@ func saveYAML(path string, value any) error {
 }
 
 func pageKey(page galleryPage) string {
+	if page == welcomePage {
+		return "welcome"
+	}
 	if page == componentStatusPage {
 		return "component-status"
 	}
@@ -98,6 +101,9 @@ func pageFromKey(key string) galleryPage {
 		key = "controls/TextBox"
 	case "controls/Checkbox", "controls/Switch", "controls/Radio":
 		key = "controls/Selection"
+	}
+	if key == "welcome" {
+		return welcomePage
 	}
 	if key == "component-status" {
 		return componentStatusPage

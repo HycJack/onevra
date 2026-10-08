@@ -111,7 +111,7 @@ func TestNativeGallery(t *testing.T) {
 		time.Sleep(400 * time.Millisecond)
 		var before mygo.Rectangle
 		mygo.RunOnMain(func() {
-			g.page = shellPage
+			g.page = welcomePage
 			if mode.icons {
 				g.page = lucidePage
 			}

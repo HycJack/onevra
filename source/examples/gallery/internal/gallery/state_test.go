@@ -56,14 +56,14 @@ sidebar_width: 300`), 0600); err != nil {
 
 func TestStateRoutes(t *testing.T) {
 	keys := map[string]bool{}
-	for page := lucidePage; page < controlPageStart()+galleryPage(len(controlCatalog)); page++ {
+	for page := welcomePage; page < controlPageStart()+galleryPage(len(controlCatalog)); page++ {
 		key := pageKey(page)
 		if keys[key] || pageFromKey(key) != page {
 			t.Fatalf("invalid route %d: %s", page, key)
 		}
 		keys[key] = true
 	}
-	if pageFromKey("removed/item") != lucidePage {
+	if pageFromKey("removed/item") != lucidePage || pageFromKey("") != lucidePage {
 		t.Fatal("unknown route did not fall back")
 	}
 }

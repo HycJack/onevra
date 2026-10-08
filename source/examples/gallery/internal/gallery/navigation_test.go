@@ -26,7 +26,7 @@ func TestNavigationGroupOrder(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.Left, 220, 6000)
 	var bottom float32
-	for _, label := range []string{"Overview", "Component status", "Icon library", "Lucide", "Plugins", "Terminal", "Actions", "Buttons", "Selection & values", "Text input", "Overlays"} {
+	for _, label := range []string{"Overview", "Welcome", "Component status", "Icon library", "Lucide", "Plugins", "Terminal", "Actions", "Buttons", "Selection & values", "Text input", "Overlays"} {
 		r, ok := tt.Find(label)
 		if !ok || r.Y < bottom {
 			t.Fatalf("%s missing or out of order: %v (previous bottom %v)", label, r, bottom)
@@ -79,7 +79,7 @@ func TestNavigationSelectionAndHover(t *testing.T) {
 	for _, dark := range []bool{false, true} {
 		t.Run(map[bool]string{false: "light", true: "dark"}[dark], func(t *testing.T) {
 			g := &Gallery{}
-			tt := ui.NewTester(g.Left, 220, 480)
+			tt := ui.NewTester(g.Left, 220, 600)
 			tt.SetDark(dark)
 			for _, label := range []string{"Lucide", "Buttons"} {
 				tt.Move(219, 479)

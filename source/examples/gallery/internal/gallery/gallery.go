@@ -14,6 +14,7 @@ import (
 // Gallery owns demonstration state and application preferences.
 type Gallery struct {
 	settings      settingsState
+	welcome       welcomeState
 	config        Config
 	configPath    string
 	Clicks        int
@@ -41,6 +42,9 @@ func (g *Gallery) New() *shell.Shell {
 
 func (g *Gallery) Titlebar(c *ui.Context) {
 	title := "Shell"
+	if g.page == welcomePage {
+		title = "Welcome"
+	}
 	if g.page == lucidePage {
 		title = "Icon library / Lucide"
 	}
@@ -64,6 +68,7 @@ func (g *Gallery) navigation(c *ui.Context) {
 	components.ScrollView(c, components.ScrollViewOptions{}).Fill().Children(func() {
 		components.Sidebar(c).Children(func() {
 			components.SidebarSection(c, "Overview", func() {
+				g.navigationItem(c, "Welcome", lucide.House(), welcomePage)
 				g.navigationItem(c, "Component status", lucide.Component(), componentStatusPage)
 			})
 			components.SidebarSection(c, "Icon library", func() {
@@ -127,11 +132,19 @@ func iconSamples(c *ui.Context) {
 
 // View builds the default page's main content.
 func (g *Gallery) View(c *ui.Context) {
-	ui.Column(c).Fill().Padding(shell.HeaderHeight(c), 0, 0, 0).Children(func() { g.body(c) })
+	content := ui.Column(c).Fill().Padding(shell.HeaderHeight(c), 0, 0, 0)
+	if g.page == welcomePage {
+		welcomeBackground(c, content)
+	}
+	content.Children(func() { g.body(c) })
 	g.Settings(c)
 }
 
 func (g *Gallery) body(c *ui.Context) {
+	if g.page == welcomePage {
+		g.Welcome(c)
+		return
+	}
 	if g.page == componentStatusPage {
 		g.ComponentStatus(c)
 		return

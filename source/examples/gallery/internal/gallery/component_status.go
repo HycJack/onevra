@@ -8,7 +8,7 @@ import (
 	"github.com/oneo-me/onevra/components"
 )
 
-const componentStatusPage galleryPage = 2
+const componentStatusPage galleryPage = shellPage + 1
 
 type componentStatusCard struct {
 	Name     string

@@ -7,6 +7,8 @@ import (
 
 type galleryPage int
 
+const welcomePage galleryPage = -1
+
 const (
 	lucidePage galleryPage = iota
 	shellPage
