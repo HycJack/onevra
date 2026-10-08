@@ -23,7 +23,7 @@ The top-level `platforms` array in [packer.yaml](../source/packer.yaml) selects 
 
 `run` always uses the host and ignores the release target list. It compiles once with ordinary Go optimizations and caching, attaches terminal I/O and waits for exit. On macOS it retains `dist/Onevra Gallery Dev.app` with a separate `.dev` bundle identifier; Windows and Linux retain a `dist/Onevra Gallery Dev/` directory. The next run replaces the development output. There is no file watcher or hot reload.
 
-`build` uses `-trimpath` and linker `-s -w` flags to omit symbol tables and debug information. Windows releases also use the GUI subsystem. Packer does not inject framework-specific variables or change application runtime modes. Outputs go into `dist/releases/<version>/`, with no platform subdirectories or retained release application directories:
+`build` uses `-trimpath` and linker `-s -w` flags to omit symbol tables and debug information. Both Windows development and release executables use the GUI subsystem so launching them does not open a console window. Packer does not inject framework-specific variables or change application runtime modes. Outputs go into `dist/releases/<version>/`, with no platform subdirectories or retained release application directories:
 
 | Target | Artifacts |
 | --- | --- |

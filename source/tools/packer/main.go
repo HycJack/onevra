@@ -262,12 +262,16 @@ func (c *config) releaseDir() string {
 
 func (c *config) buildArgs(exe string, release bool, t target) []string {
 	args := []string{"build", "-o", exe}
+	var ldflags []string
 	if release {
-		ldflags := "-s -w"
-		if t.OS == "windows" {
-			ldflags += " -H=windowsgui"
-		}
-		args = append(args, "-trimpath", "-ldflags", ldflags)
+		args = append(args, "-trimpath")
+		ldflags = append(ldflags, "-s", "-w")
+	}
+	if t.OS == "windows" {
+		ldflags = append(ldflags, "-H=windowsgui")
+	}
+	if len(ldflags) > 0 {
+		args = append(args, "-ldflags", strings.Join(ldflags, " "))
 	}
 	return append(args, c.Main)
 }

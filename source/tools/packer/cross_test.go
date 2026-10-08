@@ -110,6 +110,18 @@ platforms: ["windows/amd64","windows/arm64","linux/amd64","linux/arm64"]`)
 				if len(rs.Get(winres.RT_MANIFEST, winres.ID(1), winres.LCIDDefault)) == 0 {
 					t.Fatal("missing Windows manifest")
 				}
+				app, err := build(context.Background(), c, t.TempDir(), false, target)
+				if err != nil {
+					t.Fatal(err)
+				}
+				dev, err := pe.Open(c.executable(app, target))
+				if err != nil {
+					t.Fatal(err)
+				}
+				defer dev.Close()
+				if dev.Machine != machine || dev.OptionalHeader.(*pe.OptionalHeader64).Subsystem != pe.IMAGE_SUBSYSTEM_WINDOWS_GUI {
+					t.Fatal("Windows development executable should use the selected target and GUI subsystem")
+				}
 			} else {
 				f, err := elf.NewFile(bytes.NewReader(data))
 				if err != nil {

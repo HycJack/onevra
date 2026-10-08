@@ -74,7 +74,8 @@ func TestTargetEnvironmentAndFlags(t *testing.T) {
 	if !strings.Contains(strings.Join(c.buildArgs("app.exe", true, target), " "), "-H=windowsgui") {
 		t.Fatal("Windows release should use the GUI subsystem")
 	}
-	if strings.Contains(strings.Join(c.buildArgs("app.exe", false, target), " "), "-H=windowsgui") {
-		t.Fatal("development should keep console output")
+	want := []string{"build", "-o", "app.exe", "-ldflags", "-H=windowsgui", "."}
+	if got := c.buildArgs("app.exe", false, target); !reflect.DeepEqual(got, want) {
+		t.Fatalf("Windows development should use the GUI subsystem without stripping debug information: %v", got)
 	}
 }
