@@ -43,6 +43,7 @@ var mygoHandled = map[string]mygoDecision{
 	"ScrollHorizontal": {Replacement: "components.ScrollView", Reason: "Horizontal ScrollView axes"},
 	"ScrollBoth":       {Replacement: "components.ScrollView", Reason: "Both ScrollView axes"},
 	"List":             {Replacement: "components.List", Reason: "Onevra virtual list with neutral selection and no hover face"},
+	"GridView":         {Replacement: "components.GridView", Reason: "Onevra virtual grid with neutral selection and content-area sizing"},
 	"Sidebar":          {Replacement: "components.Sidebar", Reason: "Onevra grouped navigation with application-owned selection"},
 	"SidebarSection":   {Replacement: "components.Sidebar", Reason: "Onevra sidebar section headings"},
 	"SidebarItem":      {Replacement: "components.Sidebar", Reason: "Onevra sidebar navigation items"},

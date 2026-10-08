@@ -34,8 +34,7 @@ func (g *Gallery) Icons(c *ui.Context) {
 	t := c.Theme()
 	g.grid.Key = func(i int) any { return iconCatalog[i].name }
 	buttonSize := t.Rem(4)
-	// GridView gives each cell a stable key and a two-DIP border.
-	ui.GridView(c, &g.grid, len(iconCatalog), buttonSize+4, buttonSize+4, func(i int) {
+	components.GridView(c, &g.grid, len(iconCatalog), buttonSize, buttonSize, func(i int) {
 		icon := iconCatalog[i]
 		ui.Box(c).Fill().Center().Children(func() {
 			b := components.Button(c, "", components.ButtonOutline).Label(icon.name).Size(buttonSize, buttonSize).Padding(t.Space(2))

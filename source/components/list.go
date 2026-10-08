@@ -29,6 +29,10 @@ type ListState struct {
 	OnChange  func()
 	OnSubmit  func(int)
 
+	// Optional adapters let grid selection reuse collection behavior while
+	// MyGo's grid owns scrolling and visible cell geometry.
+	reveal    func(int)
+	visible   func() (int, int)
 	scroll    ui.ListState
 	cursor    int
 	anchor    int
@@ -42,12 +46,23 @@ type ListState struct {
 }
 
 func (s *ListState) ScrollTo(row int, align ui.Align) { s.scroll.ScrollTo(row, align) }
-func (s *ListState) ScrollIntoView(row int)           { s.scroll.ScrollIntoView(row) }
-func (s *ListState) ScrollToEnd()                     { s.scroll.ScrollToEnd() }
-func (s *ListState) Visible() (first, last int)       { return s.scroll.Visible() }
-func (s *ListState) Focus(c *ui.Context) bool         { return s.scroll.Focus(c) }
-func (s *ListState) Focused(c *ui.Context) bool       { return s.scroll.Focused(c) }
-func (s *ListState) FocusWithin(c *ui.Context) bool   { return s.scroll.FocusWithin(c) }
+func (s *ListState) ScrollIntoView(row int) {
+	if s.reveal != nil {
+		s.reveal(row)
+		return
+	}
+	s.scroll.ScrollIntoView(row)
+}
+func (s *ListState) ScrollToEnd() { s.scroll.ScrollToEnd() }
+func (s *ListState) Visible() (first, last int) {
+	if s.visible != nil {
+		return s.visible()
+	}
+	return s.scroll.Visible()
+}
+func (s *ListState) Focus(c *ui.Context) bool       { return s.scroll.Focus(c) }
+func (s *ListState) Focused(c *ui.Context) bool     { return s.scroll.Focused(c) }
+func (s *ListState) FocusWithin(c *ui.Context) bool { return s.scroll.FocusWithin(c) }
 
 // List builds neutral, hover-free rows inside MyGo's non-selecting virtual list.
 // Give it a height or fill a bounded parent. Applications own row content and
@@ -276,22 +291,38 @@ func (s *ListState) submit(i int, activate func(int)) {
 }
 
 func listKeys(e ui.Element, s *ListState, count int, activate func(int)) {
+	collectionKeys(e, s, count, activate, nil)
+}
+
+func collectionKeys(e ui.Element, s *ListState, count int, activate func(int), columns func() int) {
+	keys := []ui.Key{ui.KeyUp, ui.KeyDown, ui.KeyHome, ui.KeyEnd, ui.KeyPageUp, ui.KeyPageDown}
+	if columns != nil {
+		keys = append(keys, ui.KeyLeft, ui.KeyRight)
+	}
 	modifiers := []ui.Modifiers{0, ui.Shift}
 	if runtime.GOOS != "darwin" && s.Selection != nil {
 		modifiers = append(modifiers, ui.Ctrl, ui.Ctrl|ui.Shift)
 		e.OnShortcut(ui.Ctrl, ui.KeySpace, func() { s.choose(s.position(), count, ui.Ctrl) })
 	}
 	for _, mods := range modifiers {
-		for _, key := range []ui.Key{ui.KeyUp, ui.KeyDown, ui.KeyHome, ui.KeyEnd, ui.KeyPageUp, ui.KeyPageDown} {
+		for _, key := range keys {
 			e.OnShortcut(mods, key, func() {
 				i := s.position()
 				first, last := s.Visible()
 				page := max(1, last-first)
+				stride := 1
+				if columns != nil {
+					stride = max(1, columns())
+				}
 				switch key {
-				case ui.KeyUp:
+				case ui.KeyLeft:
 					i--
-				case ui.KeyDown:
+				case ui.KeyRight:
 					i++
+				case ui.KeyUp:
+					i -= stride
+				case ui.KeyDown:
+					i += stride
 				case ui.KeyHome:
 					i = 0
 				case ui.KeyEnd:

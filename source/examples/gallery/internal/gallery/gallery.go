@@ -18,7 +18,7 @@ type Gallery struct {
 	Clicks        int
 	Shell         *shell.Shell
 	page          galleryPage
-	grid          ui.GridState
+	grid          components.GridState
 	mygoStates    map[string]*demoState
 	controlStates map[string]*controlState
 	// Native startup supplies the factory; headless views never load libraries.

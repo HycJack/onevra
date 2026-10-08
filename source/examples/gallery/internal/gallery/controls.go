@@ -15,6 +15,7 @@ type controlExample struct {
 type controlState struct {
 	tree    components.TreeVirtualizedState[string]
 	list    components.ListState
+	grid    components.GridState
 	on      bool
 	choice  string
 	text    string
@@ -59,6 +60,7 @@ var controlCatalog = []controlExample{
 	{"Icon", "Icons", "Media & text", []string{"Default"}, controlIcon},
 	{"Image", "Images", "Media & text", []string{"Contain", "Cover", "Stretch", "Rounded", "Grayscale"}, controlImage},
 	{"List", "List", "Collections", []string{"Default"}, controlList},
+	{"GridView", "GridView", "Collections", []string{"Default"}, controlGridView},
 	{"Tree", "Tree", "Collections", []string{"Tree", "TreeVirtualized"}, controlTree},
 	{"Sidebar", "Sidebar", "Navigation", []string{"Default"}, controlSidebar},
 	{"Split", "Split panes", "Layout", []string{"Horizontal", "Vertical"}, controlSplit},
@@ -163,7 +165,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 			for _, variant := range example.variants {
 				cell := ui.Column(c).Key(variant).MinWidth(0).MaxWidthPercent(100).Gap(12)
 				switch example.name {
-				case "Text":
+				case "Text", "GridView":
 					cell.FillWidth()
 				case "TextBox", "TextBox (multiline)", "TextBoxBuffer", "TextBoxBuffer (multiline)", "NumberInput", "Slider", "Sidebar", "List", "Split", "ScrollView", "Progress", "Accordion", "Collapsible":
 					cell.Width(240)
