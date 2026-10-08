@@ -153,10 +153,10 @@ func TestMyGoGroupedNavigation(t *testing.T) {
 			}
 		}
 	}
-	if err := tt.Click("Divider"); err != nil {
+	if err := tt.Click("Tooltip"); err != nil {
 		t.Fatal(err)
 	}
-	if entry, ok := mygoExampleFor(g.page); !ok || entry.name != "Divider" {
+	if entry, ok := mygoExampleFor(g.page); !ok || entry.name != "Tooltip" {
 		t.Fatal("grouping changed route identity")
 	}
 }
