@@ -40,7 +40,6 @@ var mygoExamples = []mygoExample{
 	{"Breadcrumbs", "Navigation", exampleBreadcrumbs},
 	{"Modal", "Overlays", exampleModal},
 	{"AlertDialog", "Overlays", exampleAlertDialog},
-	{"Popover", "Overlays", examplePopover},
 	{"Tooltip", "Overlays", exampleTooltip},
 	{"Toast", "Overlays", exampleToast},
 	{"Progress", "Status", exampleProgress},

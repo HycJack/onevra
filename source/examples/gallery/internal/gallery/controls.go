@@ -41,6 +41,7 @@ var textBoxBufferControlCatalog = []controlExample{
 }
 
 var controlCatalog = []controlExample{
+	{"Popover", "Popover", "Overlays", []string{"Default"}, controlPopover},
 	{"Dialog", "Dialog", "Overlays", []string{"Default", "Protected"}, controlDialog},
 	{"AlertDialog", "AlertDialog", "Overlays", []string{"Confirmation", "Notice"}, controlAlertDialog},
 	{"Badge", "Badge", "Status", []string{"Default", "Accent"}, controlBadge},

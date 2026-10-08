@@ -79,54 +79,6 @@ func TestMyGoPages(t *testing.T) {
 	}
 }
 
-func TestMyGoInteractions(t *testing.T) {
-	for _, name := range []string{"Popover"} {
-		t.Run(name, func(t *testing.T) {
-			var entry mygoExample
-			for _, e := range mygoCatalog {
-				if e.name == name {
-					entry = e
-					break
-				}
-			}
-			s := newDemoState()
-			tt := ui.NewTester(func(c *ui.Context) { ui.Column(c).Fill().Children(func() { entry.build(c, s) }) }, 540, 600)
-			click := func(label string) {
-				t.Helper()
-				if err := tt.Click(label); err != nil {
-					t.Fatal(err)
-				}
-			}
-			switch name {
-			case "Modal":
-				click("Open dialog")
-				if !s.open {
-					t.Fatal("dialog did not open")
-				}
-				click("Done")
-				if s.open {
-					t.Fatal("dialog did not close")
-				}
-			case "AlertDialog":
-				click("Ask for confirmation")
-				click("Apply")
-				if s.count != 1 || s.open {
-					t.Fatal("confirmation did not apply")
-				}
-			case "Popover":
-				click("Show popover")
-				if !s.open {
-					t.Fatal("popover did not open")
-				}
-				click("Close")
-				if s.open {
-					t.Fatal("popover did not close")
-				}
-			}
-		})
-	}
-}
-
 func TestMyGoGroupedNavigation(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.Left, 220, 5000)
@@ -203,7 +155,7 @@ func TestMyGoNavigationAndState(t *testing.T) {
 		t.Fatal(err)
 	}
 	ui.NewTester(g.View, 540, 850)
-	if g.mygoStates["Popover"].open {
+	if g.controlState("Popover", "Default").dialogOpen {
 		t.Fatal("state leaked between pages")
 	}
 	g.page = detailsPage

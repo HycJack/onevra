@@ -60,6 +60,9 @@ func captureCatalog(t *testing.T, controls bool) {
 		for i, example := range catalog {
 			mygo.RunOnMain(func() {
 				g.page = start + galleryPage(i)
+				if controls && example.name == "Popover" {
+					g.controlState("Popover", "Default").dialogOpen = true
+				}
 				if controls && example.name == "Dialog" {
 					g.controlState("Dialog", "Default").dialogOpen = true
 				}

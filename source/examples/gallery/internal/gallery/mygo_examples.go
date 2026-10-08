@@ -284,19 +284,6 @@ func exampleAlertDialog(c *ui.Context, s *demoState) {
 	components.Textf(c, "Confirmed: %d", s.count)
 }
 
-func examplePopover(c *ui.Context, s *demoState) {
-	anchor := components.Button(c, "Show popover", components.ButtonSecondary)
-	if anchor.Clicked() {
-		s.open = !s.open
-	}
-	ui.Popover(c, anchor, &s.open, func() {
-		components.Text(c, "Popover content")
-		if components.Button(c, "Close", components.ButtonSecondary).Clicked() {
-			s.open = false
-		}
-	})
-}
-
 func exampleTooltip(c *ui.Context, s *demoState) {
 	components.Button(c, "Hover or focus me", components.ButtonSecondary).Tooltip("A helpful description of this action")
 }
