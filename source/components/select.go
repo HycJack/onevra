@@ -72,9 +72,13 @@ func (s *SelectParts[T]) SearchField(query *string) *ui.Element {
 //
 // The trigger's Changed reports a new choice.
 func Select[T comparable](c *ui.Context, selected *T) *SelectParts[T] {
-	t := c.Theme()
 	sel := ui.SelectBase(c, selected)
-	b := sel.Trigger
+	styleSelectTrigger(c, sel.Trigger)
+	return &SelectParts[T]{SelectParts: sel, c: c, selected: selected}
+}
+
+func styleSelectTrigger(c *ui.Context, b *ui.Element) {
+	t := c.Theme()
 	b.Padding(t.Space(1.5), t.Space(6), t.Space(1.5), t.Space(2.5)).Radius(t.Radius)
 	b.Justify(ui.Start)
 	bg := t.Surface
@@ -96,5 +100,4 @@ func Select[T comparable](c *ui.Context, selected *T) *SelectParts[T] {
 		p.StrokePath(&path, 1.5, t.TextMuted)
 	})
 	dimmed(b)
-	return &SelectParts[T]{SelectParts: sel, c: c, selected: selected}
 }

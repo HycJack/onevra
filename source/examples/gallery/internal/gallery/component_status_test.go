@@ -17,7 +17,7 @@ func TestComponentStatuses(t *testing.T) {
 	entries := mygoReviewEntries([]mygoComponent{
 		{Name: "Replaced"}, {Name: "Excluded"}, {Name: "Future"}, {Name: "Box"},
 	}, []mygoExample{{name: "Replaced"}, {name: "Excluded"}, {name: "Upstream"}}, decisions)
-	want := map[string]mygoStatus{"Replaced": mygoReplaced, "Excluded": mygoExcluded, "Future": mygoUnreviewed, "Box": mygoPrimitive, "Upstream": mygoUpstream}
+	want := map[string]mygoStatus{"Replaced": mygoReplaced, "Excluded": mygoExcluded, "Future": mygoUnreviewed, "Box": mygoPrimitive, "Upstream": mygoUpstream, "ContextMenu": mygoPrimitive, "Menu": mygoPrimitive}
 	for i, entry := range entries {
 		if entry.Status != want[entry.Name] {
 			t.Fatalf("wrong status: %+v", entry)
@@ -36,7 +36,7 @@ func TestComponentStatuses(t *testing.T) {
 		t.Fatalf("missing statuses: %v", want)
 	}
 	stale := mygoReviewEntries(nil, nil, decisions)
-	if len(stale) != 2 || stale[0].Source != "Not found in current inventory" {
+	if len(stale) != 4 || stale[1].Name != "Excluded" || stale[1].Source != "Not found in current inventory" {
 		t.Fatal("lost stale decisions")
 	}
 	for name, decision := range mygoHandled {

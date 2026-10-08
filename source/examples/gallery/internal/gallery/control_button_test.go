@@ -2,7 +2,6 @@ package gallery
 
 import (
 	"fmt"
-	"slices"
 	"testing"
 
 	"github.com/egoist/mygo/ui"
@@ -37,52 +36,6 @@ func TestButtonPreview(t *testing.T) {
 	}
 }
 
-func TestButtonMenu(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
-		for _, width := range []int{540, 280} {
-			g := &Gallery{}
-			tt := ui.NewTester(func(c *ui.Context) {
-				theme.Apply(c, mode)
-				g.Controls(c, controlCatalog[1])
-			}, width, 600)
-			if !tt.HasText("MenuButton") {
-				t.Fatal("missing menu button section")
-			}
-			for _, size := range []string{"Large", "Medium", "Small"} {
-				if err := tt.Click("Choose size"); err != nil {
-					t.Fatal(err)
-				}
-				if !slices.Equal(tt.Menu(), []string{"Small", "Medium", "Large"}) {
-					t.Fatalf("unexpected menu: %v", tt.Menu())
-				}
-				if err := tt.ChooseMenuItem(size); err != nil {
-					t.Fatal(err)
-				}
-				if !tt.HasText("Size: "+size) || g.controlState("Button", "MenuButton").choice != size {
-					t.Fatal("menu selection did not update button")
-				}
-				r, ok := tt.Find("Choose size")
-				if !ok || r.X < 20 || r.X+r.W > float32(width)-20 {
-					t.Fatalf("menu button overflows preview: %+v", r)
-				}
-				first, found := tt.Find("Primary")
-				if !found || r.X != first.X || r.W >= float32(width)/2 {
-					t.Fatalf("menu button must be content-sized and left-aligned with Button: menu=%+v, first=%+v", r, first)
-				}
-			}
-			if g.controlState("Button", "Button").button.clicks != [5]int{} {
-				t.Fatal("menu changed ordinary button counts")
-			}
-			// Selection leaves focus on the trigger; Down reopens its menu.
-			tt.Key(0, ui.KeyDown)
-			if len(tt.Menu()) != 3 {
-				t.Fatal("keyboard did not reopen menu")
-			}
-			tt.CloseMenu()
-		}
-	}
-}
-
 func TestButtonTogglePreview(t *testing.T) {
 	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
 		for _, width := range []int{540, 280} {
@@ -110,27 +63,13 @@ func TestButtonTogglePreview(t *testing.T) {
 			if !s.on || s.toggles[1] {
 				t.Fatal("toggle preview did not update independent values")
 			}
-			if g.controlState("Button", "Button").button.clicks != [5]int{} ||
-				g.controlState("Button", "MenuButton").choice != "Small" {
+			if g.controlState("Button", "Button").button.clicks != [5]int{} {
 				t.Fatal("toggle state leaked into other button examples")
 			}
 			if pageFromKey("controls/ToggleButton") != lucidePage {
 				t.Fatal("standalone toggle route remains")
 			}
 		}
-	}
-}
-
-func TestButtonMenuDisabled(t *testing.T) {
-	s := &controlState{choice: "Small"}
-	tt := ui.NewTester(func(c *ui.Context) {
-		ui.Column(c).Disabled(true).Children(func() { controlButton(c, s, "MenuButton") })
-	}, 280, 200)
-	if err := tt.Click("Choose size"); err != nil {
-		t.Fatal(err)
-	}
-	if len(tt.Menu()) != 0 || s.choice != "Small" {
-		t.Fatal("disabled menu button responded to input")
 	}
 }
 

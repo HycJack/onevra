@@ -8,6 +8,12 @@ import (
 )
 
 func controlSelect(c *ui.Context, s *controlState, variant string) {
+	if variant == "NativeSelect" {
+		components.NativeSelect(c, &s.choice, []components.NativeSelectOption[string]{
+			{Value: "Small", Label: "Small"}, {Value: "Medium", Label: "Medium"}, {Value: "Large", Label: "Large"},
+		}).Trigger.Label("Choose size").AlignSelf(ui.Start)
+		return
+	}
 	t := c.Theme()
 	selectParts := components.Select(c, &s.choice)
 	selectParts.Trigger.Label("Size").Children(func() { components.Text(c, s.choice).SingleLine() })

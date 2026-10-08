@@ -90,8 +90,10 @@ func TestMyGoReviewLog(t *testing.T) {
 			t.Fatalf("unexpected reminder: %s", name)
 		}
 	}
-	if !strings.Contains(output, "pending: ContextMenu (") {
-		t.Fatal(output)
+	for _, name := range []string{"ContextMenu", "Menu"} {
+		if strings.Contains(output, "pending: "+name+" (") {
+			t.Fatalf("native menu should not need review: %s", name)
+		}
 	}
 	seen := map[string]bool{}
 	for _, entry := range mygoDiscovered {

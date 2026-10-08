@@ -8,7 +8,7 @@ import (
 )
 
 func TestControlPages(t *testing.T) {
-	if len(controlCatalog) != 10 {
+	if len(controlCatalog) != 11 {
 		t.Fatal("missing control examples")
 	}
 	for i, example := range controlCatalog {
@@ -132,6 +132,14 @@ func TestControlExampleInteractions(t *testing.T) {
 						t.Fatal("missing display text")
 					}
 					return // Display text has no interaction state.
+				case "Menu":
+					click("Actions")
+					if !disabled {
+						if err := tt.ChooseMenuItem("Open"); err != nil {
+							t.Fatal(err)
+						}
+					}
+					changed = s.index == 1
 				case "Button":
 					click("Primary")
 					changed = s.button.clicks[0] == 1

@@ -54,7 +54,7 @@ var mygoHandled = map[string]mygoDecision{
 	"Image":         {Replacement: "components.Image", Reason: "Onevra image component with application-owned decoded assets"},
 
 	"Button":        {Replacement: "components.Button", Reason: "Onevra button styles"},
-	"MenuButton":    {Replacement: "components.Button / Menu", Reason: "Compose components.Button(...).Menu(...) as demonstrated under Buttons; no separate component"},
+	"MenuButton":    {Replacement: "components.Button / Menu", Reason: "Compose components.Button(...).Menu(...) as demonstrated under Menus; no separate component"},
 	"PrimaryButton": {Replacement: "components.Button / ButtonPrimary", Reason: "A button variant, not a separate component"},
 	"Link":          {Replacement: "components.Button / ButtonLink", Reason: "An inline button variant"},
 }
@@ -65,6 +65,13 @@ var mygoHandled = map[string]mygoDecision{
 var mygoPrimitives = map[string]bool{
 	"Box": true, "Column": true, "Row": true, "Spacer": true,
 	"Grid": true, "Overlay": true,
+}
+
+// Element methods are not found by the free-function scanner. These native menu
+// APIs are deliberately used directly, including by the Onevra gallery examples.
+var mygoNativeMenus = map[string]string{
+	"ContextMenu": "ui/menu.go",
+	"Menu":        "ui/menu.go",
 }
 
 type mygoComponent struct{ Name, Source string }
@@ -94,6 +101,9 @@ func mygoReviewEntries(discovered []mygoComponent, examples []mygoExample, decis
 	for _, entry := range discovered {
 		found[entry.Name] = entry
 	}
+	for name, source := range mygoNativeMenus {
+		found[name] = mygoComponent{name, source}
+	}
 	demonstrated := map[string]bool{}
 	for _, entry := range examples {
 		demonstrated[entry.name] = true
@@ -114,6 +124,10 @@ func mygoReviewEntries(discovered []mygoComponent, examples []mygoExample, decis
 		}
 		if mygoPrimitives[name] {
 			entry.Status = mygoPrimitive
+		}
+		if _, native := mygoNativeMenus[name]; native {
+			entry.Status = mygoPrimitive
+			entry.Reason = "Use MyGo native menus directly; no Onevra menu implementation"
 		}
 		if decision, handled := decisions[name]; handled {
 			entry.Status, entry.Replacement, entry.Reason, entry.HasExample = mygoExcluded, decision.Replacement, decision.Reason, false
