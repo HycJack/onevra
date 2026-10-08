@@ -43,7 +43,7 @@ func (c *config) targets(mode string) ([]target, error) {
 func checkHost(targets []target, hostOS string) error {
 	for _, t := range targets {
 		if t.OS == "darwin" && hostOS != "darwin" {
-			return fmt.Errorf("%s requires macOS for icon compilation, signing and DMG creation", t.key())
+			return fmt.Errorf("%s requires macOS for icon compilation and signing", t.key())
 		}
 	}
 	return nil
@@ -53,9 +53,12 @@ func buildEnv(t target) []string {
 	return append(os.Environ(), "CGO_ENABLED=0", "GOOS="+t.OS, "GOARCH="+t.Arch)
 }
 
-func (t target) archiveSuffixes() []string {
+func (c *config) archiveSuffixes(t target) []string {
 	switch t.OS {
 	case "darwin":
+		if c.MacOS.DisableDMG {
+			return []string{".zip"}
+		}
 		return []string{".dmg", ".zip"}
 	case "windows":
 		return []string{".zip"}

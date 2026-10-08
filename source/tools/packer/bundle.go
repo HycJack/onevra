@@ -71,10 +71,14 @@ func build(ctx context.Context, c *config, out string, production bool, t target
 			return "", err
 		}
 		base := c.archiveName(t)
-		if err := publishArchives(artifacts, out, []string{base + ".dmg", base + ".zip"}); err != nil {
+		var names []string
+		for _, suffix := range c.archiveSuffixes(t) {
+			names = append(names, base+suffix)
+		}
+		if err := publishArchives(artifacts, out, names); err != nil {
 			return "", err
 		}
-		return filepath.Join(out, base+".dmg"), nil
+		return filepath.Join(out, names[0]), nil
 	}
 	final := filepath.Join(out, filepath.Base(app))
 	if err := publish(app, final); err != nil {
@@ -130,6 +134,9 @@ func archive(ctx context.Context, c *config, stage, app string, t target) error 
 	base := filepath.Join(filepath.Dir(app), c.archiveName(t))
 	if _, err := command(ctx, "ditto", "-c", "-k", "--sequesterRsrc", "--keepParent", app, base+".zip"); err != nil {
 		return err
+	}
+	if c.MacOS.DisableDMG {
+		return nil
 	}
 	// Isolate the image input, so the ZIP and image never include one another.
 	imageRoot := filepath.Join(stage, "image")

@@ -26,7 +26,8 @@ type config struct {
 	Platforms  []string `json:"platforms"` // Release targets; omitted means host OS/architecture.
 	Generate   []string `json:"generate"`  // Optional package patterns passed to go generate once on the host.
 	MacOS      struct {
-		Icon                 string `json:"icon"` // ICNS file or an Icon Composer .icon directory.
+		DisableDMG           bool   `json:"disableDMG"` // Skip release disk images; ZIP output is always retained.
+		Icon                 string `json:"icon"`       // ICNS file or an Icon Composer .icon directory.
 		MinimumSystemVersion string `json:"minimumSystemVersion"`
 	} `json:"macos"`
 	Windows struct {
@@ -76,7 +77,7 @@ func run(ctx context.Context, args []string) error {
 			if _, err := build(ctx, c, out, true, t); err != nil {
 				return fmt.Errorf("%s: %w", t.key(), err)
 			}
-			for _, suffix := range t.archiveSuffixes() {
+			for _, suffix := range c.archiveSuffixes(t) {
 				fmt.Fprintln(os.Stderr, filepath.Join(out, c.archiveName(t)+suffix))
 			}
 		}

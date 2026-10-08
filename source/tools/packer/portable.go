@@ -59,7 +59,7 @@ func buildPortable(ctx context.Context, c *config, out, stage string, release bo
 		return "", err
 	}
 	if release {
-		name := c.archiveName(t) + t.archiveSuffixes()[0]
+		name := c.archiveName(t) + c.archiveSuffixes(t)[0]
 		if err := portableArchive(ctx, app, filepath.Join(artifacts, name), t.OS == "windows"); err != nil {
 			return "", err
 		}
