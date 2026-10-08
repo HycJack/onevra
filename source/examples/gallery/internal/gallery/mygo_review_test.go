@@ -30,9 +30,28 @@ func TestMyGoReviewDecisions(t *testing.T) {
 			t.Fatalf("handled route remains: %s", name)
 		}
 	}
-	examples := unhandledMyGoExamples([]mygoExample{{name: "Button"}, {name: "Box"}, {name: "Future"}})
-	if len(examples) != 2 || examples[0].name != "Box" || examples[1].name != "Future" {
+	examples := unhandledMyGoExamples([]mygoExample{{name: "Button"}, {name: "Box"}, {name: "Menu"}, {name: "ContextMenu"}, {name: "Future"}})
+	if len(examples) != 1 || examples[0].name != "Future" {
 		t.Fatalf("filtered = %v", examples)
+	}
+}
+
+func TestDirectUseComponentsHaveNoExamples(t *testing.T) {
+	for _, entry := range mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled) {
+		if entry.Status != mygoPrimitive {
+			continue
+		}
+		if entry.HasExample {
+			t.Fatalf("direct-use component has an example: %s", entry.Name)
+		}
+		for _, example := range mygoCatalog {
+			if example.name == entry.Name {
+				t.Fatalf("direct-use example remains: %s", entry.Name)
+			}
+		}
+		if pageFromKey("mygo/"+entry.Name) != lucidePage {
+			t.Fatalf("direct-use route remains: %s", entry.Name)
+		}
 	}
 }
 

@@ -61,7 +61,7 @@ var mygoHandled = map[string]mygoDecision{
 	"Link":          {Replacement: "components.Button / ButtonLink", Reason: "An inline button variant"},
 }
 
-// These primitives remain available as composition building blocks and examples.
+// These primitives remain composition building blocks, without standalone examples.
 // Keep this list explicit so new APIs still prompt review. Base constructors are
 // skipped by the scanner itself and are not inventoried as styled components.
 var mygoPrimitives = map[string]bool{
@@ -125,10 +125,10 @@ func mygoReviewEntries(discovered []mygoComponent, examples []mygoExample, decis
 			entry.Status = mygoUpstream
 		}
 		if mygoPrimitives[name] {
-			entry.Status = mygoPrimitive
+			entry.Status, entry.HasExample = mygoPrimitive, false
 		}
 		if _, native := mygoNativeMenus[name]; native {
-			entry.Status = mygoPrimitive
+			entry.Status, entry.HasExample = mygoPrimitive, false
 			entry.Reason = "Use MyGo native menus directly; no Onevra menu implementation"
 		}
 		if decision, handled := decisions[name]; handled {
@@ -175,7 +175,8 @@ func LogMyGoReview(printf func(string, ...any)) {
 func unhandledMyGoExamples(examples []mygoExample) []mygoExample {
 	result := make([]mygoExample, 0, len(examples))
 	for _, entry := range examples {
-		if _, handled := mygoHandled[entry.name]; !handled {
+		_, native := mygoNativeMenus[entry.name]
+		if _, handled := mygoHandled[entry.name]; !handled && !mygoPrimitives[entry.name] && !native {
 			result = append(result, entry)
 		}
 	}
