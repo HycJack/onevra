@@ -18,7 +18,7 @@ func iconButton(c *ui.Context, icon *ui.SVG, label string, iconSize float32) ui.
 	t := c.Theme()
 	size := max(32, t.Rem(2))
 	b := ui.ButtonBase(c).Size(size, size).Radius(t.Radius).
-		TextColor(t.TextMuted).Label(label).Tooltip(label)
+		TextColor(t.TextMuted).Label(label)
 	// Paint after properties such as Disabled have been applied by the caller.
 	b.Draw(func(p *ui.Painter, r ui.Rect) {
 		if b.IsDisabled() {
@@ -32,5 +32,6 @@ func iconButton(c *ui.Context, icon *ui.SVG, label string, iconSize float32) ui.
 	}).Children(func() {
 		components.Icon(c, icon).Size(iconSize, iconSize)
 	})
+	components.Tooltip(c, b, label)
 	return b
 }

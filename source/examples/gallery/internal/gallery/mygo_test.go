@@ -107,7 +107,7 @@ func TestMyGoGroupedNavigation(t *testing.T) {
 	if err := tt.Click("Tooltip"); err != nil {
 		t.Fatal(err)
 	}
-	if entry, ok := mygoExampleFor(g.page); !ok || entry.name != "Tooltip" {
+	if entry, ok := controlExampleFor(g.page); !ok || entry.name != "Tooltip" {
 		t.Fatal("grouping changed route identity")
 	}
 }

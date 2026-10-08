@@ -14,10 +14,10 @@ func TestMyGoReviewDecisions(t *testing.T) {
 	for _, entry := range pending {
 		names = append(names, entry.Name)
 	}
-	if !reflect.DeepEqual(names, []string{"ANew", "Toast", "ZNew"}) {
+	if !reflect.DeepEqual(names, []string{"ANew", "ZNew"}) {
 		t.Fatalf("pending = %v", names)
 	}
-	for _, name := range []string{"Button", "PrimaryButton", "Link", "MenuButton", "Combobox", "Autocomplete"} {
+	for _, name := range []string{"Tooltip", "Button", "PrimaryButton", "Link", "MenuButton", "Combobox", "Autocomplete"} {
 		if mygoHandled[name].Replacement == "" {
 			t.Fatalf("missing decision for %s", name)
 		}
@@ -76,7 +76,7 @@ func TestToggleDecisions(t *testing.T) {
 }
 
 func TestExcludedComponents(t *testing.T) {
-	for _, name := range []string{"Divider", "CheckboxGroup", "RadioGroup", "Segmented", "Avatar", "Meter", "BackButton", "ForwardButton", "Form", "Field", "Fieldset", "FindBar", "Toolbar", "Table", "OutlineTable", "TokenField"} {
+	for _, name := range []string{"Toast", "Divider", "CheckboxGroup", "RadioGroup", "Segmented", "Avatar", "Meter", "BackButton", "ForwardButton", "Form", "Field", "Fieldset", "FindBar", "Toolbar", "Table", "OutlineTable", "TokenField"} {
 		decision, ok := mygoHandled[name]
 		if !ok || decision.Replacement != "" || decision.Reason == "" {
 			t.Fatalf("missing exclusion for %s", name)
@@ -104,7 +104,7 @@ func TestMyGoReviewLog(t *testing.T) {
 	if !strings.Contains(output, mygoScanVersion) || !strings.Contains(output, "mygo_review.go") {
 		t.Fatal(output)
 	}
-	for _, name := range []string{"Divider", "Button", "PrimaryButton", "Link", "MenuButton", "Toggle", "ToggleGroup", "CheckboxGroup", "RadioGroup", "Segmented", "Box", "Combobox", "Autocomplete", "Avatar", "Meter", "BackButton", "ForwardButton", "Form", "Field", "Fieldset", "FindBar", "Toolbar", "Table", "OutlineTable", "TokenField"} {
+	for _, name := range []string{"Toast", "Tooltip", "Divider", "Button", "PrimaryButton", "Link", "MenuButton", "Toggle", "ToggleGroup", "CheckboxGroup", "RadioGroup", "Segmented", "Box", "Combobox", "Autocomplete", "Avatar", "Meter", "BackButton", "ForwardButton", "Form", "Field", "Fieldset", "FindBar", "Toolbar", "Table", "OutlineTable", "TokenField"} {
 		if strings.Contains(output, "pending: "+name+" (") {
 			t.Fatalf("unexpected reminder: %s", name)
 		}
@@ -120,6 +120,10 @@ func TestMyGoReviewLog(t *testing.T) {
 			t.Fatalf("invalid inventory: %+v", entry)
 		}
 		seen[entry.Name] = true
+	}
+	// Method-based components are supplemented by the catalog, not the scanner.
+	for _, example := range mygoExamples {
+		seen[example.name] = true
 	}
 	for name := range mygoHandled {
 		if !seen[name] {
