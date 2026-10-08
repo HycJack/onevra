@@ -80,7 +80,7 @@ func TestMyGoPages(t *testing.T) {
 }
 
 func TestMyGoInteractions(t *testing.T) {
-	for _, name := range []string{"Toggle", "Segmented", "Modal", "AlertDialog", "Popover"} {
+	for _, name := range []string{"Modal", "AlertDialog", "Popover"} {
 		t.Run(name, func(t *testing.T) {
 			var entry mygoExample
 			for _, e := range mygoCatalog {
@@ -98,16 +98,6 @@ func TestMyGoInteractions(t *testing.T) {
 				}
 			}
 			switch name {
-			case "Toggle":
-				click("Bold")
-				if !s.on {
-					t.Fatal("checkbox did not toggle")
-				}
-			case "Segmented":
-				click("Grid")
-				if s.index != 1 {
-					t.Fatal("tab did not change")
-				}
 			case "Modal":
 				click("Open dialog")
 				if !s.open {
@@ -196,10 +186,10 @@ func TestMyGoVariantIsolation(t *testing.T) {
 func TestMyGoNavigationAndState(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.Left, 220, 1600)
-	if err := tt.Click("Toggle"); err != nil {
+	if err := tt.Click("Toolbar"); err != nil {
 		t.Fatal(err)
 	}
-	if example, ok := mygoExampleFor(g.page); !ok || example.name != "Toggle" {
+	if example, ok := mygoExampleFor(g.page); !ok || example.name != "Toolbar" {
 		t.Fatal("toggle route not selected")
 	}
 	togglePage := g.page
@@ -207,19 +197,19 @@ func TestMyGoNavigationAndState(t *testing.T) {
 	if err := content.Click("Bold"); err != nil {
 		t.Fatal(err)
 	}
-	if !g.mygoStates["Toggle"].on {
+	if !g.mygoStates["Toolbar"].on {
 		t.Fatal("toggle did not update state")
 	}
-	if err := tt.Click("ToggleGroup"); err != nil {
+	if err := tt.Click("ContextMenu"); err != nil {
 		t.Fatal(err)
 	}
 	ui.NewTester(g.View, 540, 850)
-	if g.mygoStates["ToggleGroup"].on {
+	if g.mygoStates["ContextMenu"].on {
 		t.Fatal("state leaked between pages")
 	}
 	g.page = togglePage
 	ui.NewTester(g.View, 540, 850)
-	if !g.mygoStates["Toggle"].on {
+	if !g.mygoStates["Toolbar"].on {
 		t.Fatal("state lost on navigation")
 	}
 }

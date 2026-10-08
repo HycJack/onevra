@@ -55,28 +55,6 @@ func exampleContextMenu(c *ui.Context, s *demoState) {
 	components.Textf(c, "Count: %d", s.count)
 }
 
-func exampleToggle(c *ui.Context, s *demoState) {
-	ui.Toggle(c, &s.on, "Bold")
-	preview := components.Text(c, "Preview")
-	if s.on {
-		preview.Bold()
-	}
-}
-
-func exampleToggleGroup(c *ui.Context, s *demoState) {
-	ui.ToggleGroup(c, func() {
-		ui.Toggle(c, &s.on, "Bold")
-		ui.Toggle(c, &s.other, "Italic")
-	}).Label("Formatting")
-	preview := components.Text(c, "Preview")
-	if s.on {
-		preview.Bold()
-	}
-	if s.other {
-		preview.Italic()
-	}
-}
-
 func exampleSegmented(c *ui.Context, s *demoState) {
 	ui.Segmented(c, &s.index, "List", "Grid").Label("View mode")
 	components.Text(c, []string{"List view selected", "Grid view selected"}[s.index])
@@ -84,7 +62,7 @@ func exampleSegmented(c *ui.Context, s *demoState) {
 
 func exampleToolbar(c *ui.Context, s *demoState) {
 	ui.Toolbar(c, func() {
-		ui.Toggle(c, &s.on, "Bold")
+		components.ToggleButton(c, &s.on, "Bold")
 		ui.Spacer(c)
 		if components.Button(c, "Apply", components.ButtonSecondary).Clicked() {
 			s.count++

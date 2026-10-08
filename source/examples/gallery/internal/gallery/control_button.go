@@ -26,6 +26,10 @@ type buttonExampleState struct {
 }
 
 func controlButton(c *ui.Context, s *controlState, variant string) {
+	if variant == "ToggleButton" {
+		controlToggleButton(c, s)
+		return
+	}
 	if variant == "MenuButton" {
 		controlButtonMenu(c, s)
 		return

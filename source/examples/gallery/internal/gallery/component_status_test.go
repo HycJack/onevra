@@ -53,7 +53,7 @@ func TestComponentStatuses(t *testing.T) {
 func TestComponentStatusCards(t *testing.T) {
 	entries := mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled)
 	cards := componentStatusCards(entries, mygoReplaced)
-	if len(cards) != 11 {
+	if len(cards) != 12 {
 		t.Fatalf("got %d replacement cards", len(cards))
 	}
 	if cards[0].Name != "Button" || !reflect.DeepEqual(cards[0].Replaces, []string{"Button", "Link", "MenuButton", "PrimaryButton"}) {

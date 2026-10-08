@@ -36,6 +36,48 @@ func TestMyGoReviewDecisions(t *testing.T) {
 	}
 }
 
+func TestToggleDecisions(t *testing.T) {
+	for _, entry := range mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled) {
+		switch entry.Name {
+		case "Toggle":
+			if entry.Status != mygoReplaced || entry.Replacement != "components.ToggleButton" {
+				t.Fatalf("wrong Toggle decision: %+v", entry)
+			}
+		case "ToggleGroup":
+			if entry.Status != mygoExcluded {
+				t.Fatalf("wrong ToggleGroup decision: %+v", entry)
+			}
+		}
+	}
+	for _, name := range []string{"Toggle", "ToggleGroup"} {
+		if pageFromKey("mygo/"+name) != lucidePage {
+			t.Fatalf("handled route remains: %s", name)
+		}
+	}
+}
+
+func TestExcludedComponents(t *testing.T) {
+	for _, name := range []string{"CheckboxGroup", "RadioGroup", "Segmented"} {
+		decision, ok := mygoHandled[name]
+		if !ok || decision.Replacement != "" || decision.Reason == "" {
+			t.Fatalf("missing exclusion for %s", name)
+		}
+		for _, entry := range mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled) {
+			if entry.Name == name && (entry.Status != mygoExcluded || entry.HasExample) {
+				t.Fatalf("incorrect exclusion: %+v", entry)
+			}
+		}
+		for _, example := range mygoCatalog {
+			if example.name == name {
+				t.Fatalf("excluded example remains: %s", name)
+			}
+		}
+		if pageFromKey("mygo/"+name) != lucidePage {
+			t.Fatalf("excluded route remains: %s", name)
+		}
+	}
+}
+
 func TestMyGoReviewLog(t *testing.T) {
 	var lines []string
 	LogMyGoReview(func(format string, args ...any) { lines = append(lines, fmt.Sprintf(format, args...)) })
@@ -43,12 +85,12 @@ func TestMyGoReviewLog(t *testing.T) {
 	if !strings.Contains(output, mygoScanVersion) || !strings.Contains(output, "mygo_review.go") {
 		t.Fatal(output)
 	}
-	for _, name := range []string{"Button", "PrimaryButton", "Link", "MenuButton", "Box"} {
+	for _, name := range []string{"Button", "PrimaryButton", "Link", "MenuButton", "Toggle", "ToggleGroup", "CheckboxGroup", "RadioGroup", "Segmented", "Box"} {
 		if strings.Contains(output, "pending: "+name+" (") {
 			t.Fatalf("unexpected reminder: %s", name)
 		}
 	}
-	if !strings.Contains(output, "pending: Toggle (") {
+	if !strings.Contains(output, "pending: Toolbar (") {
 		t.Fatal(output)
 	}
 	seen := map[string]bool{}

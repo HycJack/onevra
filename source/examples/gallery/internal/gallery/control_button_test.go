@@ -83,6 +83,44 @@ func TestButtonMenu(t *testing.T) {
 	}
 }
 
+func TestButtonTogglePreview(t *testing.T) {
+	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+		for _, width := range []int{540, 280} {
+			g := &Gallery{}
+			tt := ui.NewTester(func(c *ui.Context) {
+				theme.Apply(c, mode)
+				g.Controls(c, controlCatalog[1])
+			}, width, 1000)
+			if !tt.HasText("ToggleButton") || tt.HasText("Disabled") {
+				t.Fatal("missing toggle section or unexpected disabled preview")
+			}
+			s := g.controlState("Button", "ToggleButton")
+			if s.on || !s.toggles[1] {
+				t.Fatal("preview must demonstrate off and on states")
+			}
+			for _, label := range []string{"Bold", "Italic"} {
+				r, ok := tt.Find(label)
+				if !ok || r.X < 20 || r.X+r.W > float32(width)-20 {
+					t.Fatalf("%s overflows preview: %+v", label, r)
+				}
+				if err := tt.Click(label); err != nil {
+					t.Fatal(err)
+				}
+			}
+			if !s.on || s.toggles[1] {
+				t.Fatal("toggle preview did not update independent values")
+			}
+			if g.controlState("Button", "Button").button.clicks != [5]int{} ||
+				g.controlState("Button", "MenuButton").choice != "Small" {
+				t.Fatal("toggle state leaked into other button examples")
+			}
+			if pageFromKey("controls/ToggleButton") != lucidePage {
+				t.Fatal("standalone toggle route remains")
+			}
+		}
+	}
+}
+
 func TestButtonMenuDisabled(t *testing.T) {
 	s := &controlState{choice: "Small"}
 	tt := ui.NewTester(func(c *ui.Context) {

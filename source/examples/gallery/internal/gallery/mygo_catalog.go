@@ -6,8 +6,6 @@ var mygoCatalog = unhandledMyGoExamples(mygoExamples)
 // Hand-built demonstrations are independent of the generated source inventory.
 var mygoExamples = []mygoExample{
 	{"ContextMenu", "Actions", exampleContextMenu},
-	{"Toggle", "Actions", exampleToggle},
-	{"ToggleGroup", "Actions", exampleToggleGroup},
 	{"Segmented", "Actions", exampleSegmented},
 	{"Toolbar", "Actions", exampleToolbar},
 	{"CheckboxGroup", "Selection", exampleCheckboxGroup},
