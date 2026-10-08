@@ -22,12 +22,16 @@ type controlState struct {
 	value   float64
 }
 
-var controlCatalog = []controlExample{
+var textControlCatalog = []controlExample{
 	{"Text", "Display text", []string{"Default"}, controlText},
-	{"Button", "Buttons", []string{"Button", "MenuButton"}, controlButton},
-	{"Selection", "Selection", []string{"Checkbox", "Switch", "Radio"}, controlSelection},
 	{"TextField", "Text fields", []string{"Empty", "Filled", "Read only"}, controlTextField},
 	{"TextArea", "Text areas", []string{"Empty", "Filled", "Read only"}, controlTextArea},
+}
+
+var controlCatalog = []controlExample{
+	{"Text", "Text", []string{"Text", "TextField", "TextArea"}, controlText},
+	{"Button", "Buttons", []string{"Button", "MenuButton"}, controlButton},
+	{"Selection", "Selection", []string{"Checkbox", "Switch", "Radio"}, controlSelection},
 	{"Select", "Selects", []string{"Default", "Selected"}, controlSelect},
 	{"Slider", "Sliders", []string{"Default"}, controlSlider},
 	{"Tabs", "Tab rows", []string{"Default", "Selected"}, controlTabs},
@@ -69,6 +73,12 @@ func (g *Gallery) Controls(c *ui.Context, example controlExample) {
 	t := c.Theme()
 	ui.Scroll(c).Key("controls-" + example.name).Fill().Children(func() {
 		ui.Column(c).FillWidth().MinWidth(0).Padding(t.Space(6)).Gap(t.Space(6)).Children(func() {
+			if example.name == "Text" {
+				for _, textExample := range textControlCatalog {
+					g.controlVariants(c, textExample)
+				}
+				return
+			}
 			if example.name == "Button" || example.name == "Selection" {
 				for _, variant := range example.variants {
 					g.controlSection(c, variant, func() {
@@ -77,25 +87,30 @@ func (g *Gallery) Controls(c *ui.Context, example controlExample) {
 				}
 				return
 			}
-			g.controlSection(c, example.name, func() {
-				ui.Row(c).FillWidth().MinWidth(0).Wrap().Gap(t.Space(4)).Children(func() {
-					for _, variant := range example.variants {
-						cell := ui.Column(c).Key(variant).MinWidth(0).MaxWidthPercent(100).Gap(12)
-						switch example.name {
-						case "Text":
-							cell.FillWidth()
-						case "TextField", "TextArea", "Slider":
-							cell.Width(240)
-						}
-						cell.Children(func() {
-							if len(example.variants) > 1 {
-								components.Text(c, variant).TextColor(t.TextMuted)
-							}
-							example.build(c, g.controlState(example.name, variant), variant)
-						})
+			g.controlVariants(c, example)
+		})
+	})
+}
+
+func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
+	t := c.Theme()
+	g.controlSection(c, example.name, func() {
+		ui.Row(c).FillWidth().MinWidth(0).Wrap().Gap(t.Space(4)).Children(func() {
+			for _, variant := range example.variants {
+				cell := ui.Column(c).Key(variant).MinWidth(0).MaxWidthPercent(100).Gap(12)
+				switch example.name {
+				case "Text":
+					cell.FillWidth()
+				case "TextField", "TextArea", "Slider":
+					cell.Width(240)
+				}
+				cell.Children(func() {
+					if len(example.variants) > 1 {
+						components.Text(c, variant).TextColor(t.TextMuted)
 					}
+					example.build(c, g.controlState(example.name, variant), variant)
 				})
-			})
+			}
 		})
 	})
 }

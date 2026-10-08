@@ -94,6 +94,8 @@ func pageKey(page galleryPage) string {
 func pageFromKey(key string) galleryPage {
 	// Restore the grouped page for selections saved before the merge.
 	switch key {
+	case "controls/TextField", "controls/TextArea":
+		key = "controls/Text"
 	case "controls/Checkbox", "controls/Switch", "controls/Radio":
 		key = "controls/Selection"
 	}

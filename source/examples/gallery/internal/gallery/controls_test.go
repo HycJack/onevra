@@ -8,7 +8,7 @@ import (
 )
 
 func TestControlPages(t *testing.T) {
-	if len(controlCatalog) != 8 {
+	if len(controlCatalog) != 6 {
 		t.Fatal("missing control examples")
 	}
 	for i, example := range controlCatalog {
@@ -24,7 +24,11 @@ func TestControlPages(t *testing.T) {
 				for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
 					g := &Gallery{page: page}
 					tt := ui.NewTester(func(c *ui.Context) { theme.Apply(c, mode); g.View(c) }, width, 1800)
-					if tt.Image() == nil || len(g.controlStates) != len(example.variants) {
+					wantStates := len(example.variants)
+					if example.name == "Text" {
+						wantStates = 7
+					}
+					if tt.Image() == nil || len(g.controlStates) != wantStates {
 						t.Fatal("missing page or variant")
 					}
 					if tt.HasText("Disabled") {
@@ -100,7 +104,7 @@ func TestControlNavigationAndState(t *testing.T) {
 }
 
 func TestControlExampleInteractions(t *testing.T) {
-	for _, example := range controlCatalog {
+	for _, example := range append(append([]controlExample{}, controlCatalog...), textControlCatalog[1:]...) {
 		if example.name == "Selection" {
 			continue // Grouped selection interactions are covered separately.
 		}
@@ -192,9 +196,14 @@ func TestControlVariantLayout(t *testing.T) {
 			for _, width := range []int{900, 280} {
 				g := &Gallery{page: pageFromKey("controls/" + name)}
 				example, _ := controlExampleFor(g.page)
+				for _, textExample := range textControlCatalog[1:] {
+					if textExample.name == name {
+						example = textExample
+					}
+				}
 				tt := ui.NewTester(func(c *ui.Context) {
 					theme.Apply(c, mode)
-					g.View(c)
+					ui.Column(c).Fill().Padding(24).Children(func() { g.controlVariants(c, example) })
 				}, width, 1200)
 				var first, previous ui.Rect
 				for i, variant := range example.variants {
@@ -238,7 +247,7 @@ func TestControlVariantLayout(t *testing.T) {
 }
 
 func TestControlReadOnlyExamples(t *testing.T) {
-	for _, example := range controlCatalog {
+	for _, example := range textControlCatalog {
 		if example.name != "TextField" && example.name != "TextArea" {
 			continue
 		}
