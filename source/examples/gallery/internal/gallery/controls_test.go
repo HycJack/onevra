@@ -8,7 +8,7 @@ import (
 )
 
 func TestControlPages(t *testing.T) {
-	if len(controlCatalog) != 25 {
+	if len(controlCatalog) != 27 {
 		t.Fatal("missing control examples")
 	}
 	for i, example := range controlCatalog {
@@ -140,6 +140,12 @@ func TestControlExampleInteractions(t *testing.T) {
 				}
 				changed := false
 				switch example.name {
+				case "Dialog":
+					click("Open dialog")
+					changed = s.dialogOpen
+				case "AlertDialog":
+					click("Show Default")
+					changed = s.dialogOpen
 				case "RichText":
 					click("inline action")
 					changed = s.index == 1

@@ -60,6 +60,12 @@ func captureCatalog(t *testing.T, controls bool) {
 		for i, example := range catalog {
 			mygo.RunOnMain(func() {
 				g.page = start + galleryPage(i)
+				if controls && example.name == "Dialog" {
+					g.controlState("Dialog", "Default").dialogOpen = true
+				}
+				if controls && example.name == "AlertDialog" {
+					g.controlState("AlertDialog", "Confirmation").dialogOpen = true
+				}
 				if controls && example.name == "Tree" {
 					s := g.controlState("Tree", "Tree")
 					s.on, s.choice = true, "main.go"
@@ -77,7 +83,7 @@ func captureCatalog(t *testing.T, controls bool) {
 				}
 				win.Invalidate()
 			}
-			time.Sleep(60 * time.Millisecond)
+			time.Sleep(240 * time.Millisecond)
 			data, err := win.CapturePage()
 			if err != nil {
 				t.Fatalf("%s/%s: %v", mode.name, example.name, err)

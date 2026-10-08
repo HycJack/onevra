@@ -13,20 +13,21 @@ type controlExample struct {
 
 // Control examples keep their state separate from the upstream widget catalog.
 type controlState struct {
-	tree    components.TreeVirtualizedState[string]
-	list    components.ListState
-	grid    components.GridState
-	on      bool
-	choice  string
-	text    string
-	buffer  *ui.TextBuffer
-	query   string
-	index   int
-	button  buttonExampleState
-	toggles [2]bool
-	value   float64
-	high    float64
-	split   float32
+	dialogOpen, nestedOpen bool
+	tree                   components.TreeVirtualizedState[string]
+	list                   components.ListState
+	grid                   components.GridState
+	on                     bool
+	choice                 string
+	text                   string
+	buffer                 *ui.TextBuffer
+	query                  string
+	index                  int
+	button                 buttonExampleState
+	toggles                [2]bool
+	value                  float64
+	high                   float64
+	split                  float32
 }
 
 var textBoxControlCatalog = []controlExample{
@@ -40,6 +41,8 @@ var textBoxBufferControlCatalog = []controlExample{
 }
 
 var controlCatalog = []controlExample{
+	{"Dialog", "Dialog", "Overlays", []string{"Default", "Protected"}, controlDialog},
+	{"AlertDialog", "AlertDialog", "Overlays", []string{"Confirmation", "Notice"}, controlAlertDialog},
 	{"Badge", "Badge", "Status", []string{"Default", "Accent"}, controlBadge},
 	{"RichText", "RichText", "Media & text", []string{"Default"}, controlRichText},
 	{"Breadcrumbs", "Breadcrumbs", "Navigation", []string{"Default"}, controlBreadcrumbs},

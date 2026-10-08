@@ -26,6 +26,10 @@ A replacement page occupies the full window behind the shared floating header, w
 
 MyGo's animation values drive the sidebar reveal, without a separate timer or animation loop. Reversing a toggle mid-animation continues from the current visible width; Reduced Motion skips intermediate geometry.
 
+## Dialog composition
+
+Dialog composes MyGo overlay, modal focus scope and transition primitives rather than a separate modal manager. Applications own open state and build layers in back-to-front order; nested dialogs retain the underlying page. Each layer controls backdrop and Escape dismissal independently. AlertDialog composes the same surface and Onevra buttons, emitting a frame-local result instead of blocking the UI thread. Applications own localized labels, retain results when needed and provide scrolling for long dialog pages. MyGo owns focus trapping, restoration and reduced-motion behavior.
+
 ## Native appearance
 
 MyGo and the operating system provide native window interaction semantics. On Windows, Shell uses MyGo's frameless window and composes rounded toolbar-style minimize, maximize/restore and close buttons in the shared header, including replacement pages. Labels are application-localizable; close requests retain MyGo's cancellable application lifecycle. Maximize/restore follows the actual window state. Shell applies Onevra's built-in light and dark themes (see the [theme package](../../source/theme/doc.go)) through MyGo's own theme mechanism, so every MyGo widget keeps working; there is no separate theme manager or custom window chrome. `ShellOptions.Appearance` selects `theme.Auto` (the default, follows the system appearance), `theme.Light` or `theme.Dark`. A pinned theme ignores later appearance changes, while window chrome still follows the operating system. These UI buttons do not implement Windows' native maximize-hover Snap Layouts flyout.

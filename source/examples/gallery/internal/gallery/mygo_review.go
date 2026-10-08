@@ -15,6 +15,8 @@ type mygoDecision struct {
 // exclusion decisions hide upstream examples and suppress pending reminders.
 // To exclude a component, add {Reason: "why this component is not needed"}.
 var mygoHandled = map[string]mygoDecision{
+	"Modal":            {Replacement: "components.Dialog", Reason: "Onevra composable modal layers"},
+	"AlertDialog":      {Replacement: "components.AlertDialog", Reason: "Onevra result-bearing dialog preset"},
 	"Divider":          {Reason: "A plain theme-colored separator; compose a Box or container borders instead of a dedicated Onevra component"},
 	"Badge":            {Replacement: "components.Badge", Reason: "Onevra compact status label"},
 	"RichText":         {Replacement: "components.RichText", Reason: "Onevra inline text composition on the MyGo text primitive"},

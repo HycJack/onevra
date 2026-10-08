@@ -80,7 +80,7 @@ func TestMyGoPages(t *testing.T) {
 }
 
 func TestMyGoInteractions(t *testing.T) {
-	for _, name := range []string{"Modal", "AlertDialog", "Popover"} {
+	for _, name := range []string{"Popover"} {
 		t.Run(name, func(t *testing.T) {
 			var entry mygoExample
 			for _, e := range mygoCatalog {
