@@ -200,11 +200,11 @@ func TestMyGoNavigationAndState(t *testing.T) {
 	if !g.mygoStates["Collapsible"].open {
 		t.Fatal("collapsible did not update state")
 	}
-	if err := tt.Click("ContextMenu"); err != nil {
+	if err := tt.Click("Popover"); err != nil {
 		t.Fatal(err)
 	}
 	ui.NewTester(g.View, 540, 850)
-	if g.mygoStates["ContextMenu"].open {
+	if g.mygoStates["Popover"].open {
 		t.Fatal("state leaked between pages")
 	}
 	g.page = detailsPage

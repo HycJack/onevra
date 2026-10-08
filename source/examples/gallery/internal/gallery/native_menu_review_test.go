@@ -16,13 +16,9 @@ func TestNativeMenuReview(t *testing.T) {
 	if len(seen) != 2 {
 		t.Fatalf("missing native menu decisions: %v", seen)
 	}
-	found := false
 	for _, example := range mygoCatalog {
 		if example.name == "ContextMenu" {
-			found = true
+			t.Fatal("context menu is already demonstrated under Menus")
 		}
-	}
-	if !found {
-		t.Fatal("native context menu example was removed")
 	}
 }

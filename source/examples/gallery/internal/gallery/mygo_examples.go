@@ -43,17 +43,6 @@ func exampleTextAreaBuffer(c *ui.Context, s *demoState) {
 	ui.TextAreaBuffer(c, s.buffer).Label("Notes").Placeholder("Write some notes").ReadOnly(s.readOnly).Height(140).FillWidth()
 }
 
-func exampleContextMenu(c *ui.Context, s *demoState) {
-	components.Button(c, "Right-click or Shift+F10", components.ButtonSecondary).ContextMenu(func(m *ui.Menu) {
-		if m.Item("Increment").Chosen() {
-			s.count++
-		}
-		m.Separator()
-		m.Item("Unavailable").Disabled(true)
-	})
-	components.Textf(c, "Count: %d", s.count)
-}
-
 func exampleSegmented(c *ui.Context, s *demoState) {
 	ui.Segmented(c, &s.index, "List", "Grid").Label("View mode")
 	components.Text(c, []string{"List view selected", "Grid view selected"}[s.index])

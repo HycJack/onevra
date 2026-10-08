@@ -13,7 +13,7 @@ type mygoExample struct {
 }
 
 var mygoGroups = []string{
-	"Actions", "Selection", "Text input", "Date & color", "Collections",
+	"Selection", "Text input", "Date & color", "Collections",
 	"Layout", "Containers", "Navigation", "Overlays", "Status", "Media & text",
 }
 
@@ -44,7 +44,7 @@ func mygoVariants(name string) []string {
 		return []string{"Unrated", "Rated", "Disabled"}
 	case "Radio", "RadioGroup", "Select", "Segmented", "Tabs", "Sidebar":
 		return []string{"Default", "Selected", "Disabled"}
-	case "Button", "PrimaryButton", "Link", "ContextMenu",
+	case "Button", "PrimaryButton", "Link",
 		"Slider", "StepSlider", "RangeSlider", "Stepper", "NumberInput", "EditableText",
 		"Calendar", "DateInput", "TimeInput", "ColorWell", "ColorPicker":
 		return []string{"Default", "Disabled"}
