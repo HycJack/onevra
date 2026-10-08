@@ -27,13 +27,12 @@ type demoState struct {
 	list            ui.ListState
 	grid            ui.GridState
 	outline         ui.OutlineState[string]
-	router          *ui.Router
 }
 
 func newDemoState() *demoState {
 	return &demoState{text: "Hello MyGo", choice: "Small", value: 40, high: 80,
 		size: 140, day: time.Date(2026, 6, 15, 9, 30, 0, 0, time.Local),
-		color: ui.RGB(80, 120, 220), tags: []string{"Go"}, router: ui.NewRouter("/home")}
+		color: ui.RGB(80, 120, 220), tags: []string{"Go"}}
 }
 
 func exampleTextInputBuffer(c *ui.Context, s *demoState) {
@@ -58,17 +57,6 @@ func exampleContextMenu(c *ui.Context, s *demoState) {
 func exampleSegmented(c *ui.Context, s *demoState) {
 	ui.Segmented(c, &s.index, "List", "Grid").Label("View mode")
 	components.Text(c, []string{"List view selected", "Grid view selected"}[s.index])
-}
-
-func exampleToolbar(c *ui.Context, s *demoState) {
-	ui.Toolbar(c, func() {
-		components.ToggleButton(c, &s.on, "Bold")
-		ui.Spacer(c)
-		if components.Button(c, "Apply", components.ButtonSecondary).Clicked() {
-			s.count++
-		}
-	}).Label("Formatting").FillWidth()
-	components.Textf(c, "Applied %d times", s.count)
 }
 
 func exampleCheckboxGroup(c *ui.Context, s *demoState) {
@@ -129,24 +117,6 @@ func exampleTokenField(c *ui.Context, s *demoState) {
 
 func exampleEditableText(c *ui.Context, s *demoState) {
 	ui.EditableText(c, &s.text).Label("Editable name")
-}
-
-func exampleFindBar(c *ui.Context, s *demoState) {
-	if components.Button(c, "Find", components.ButtonSecondary).Clicked() {
-		s.open = true
-	}
-	lines := []string{"Hello MyGo", "Hello Go", "Native UI"}
-	var matches []string
-	for _, line := range lines {
-		if s.text != "" && strings.Contains(strings.ToLower(line), strings.ToLower(s.text)) {
-			matches = append(matches, line)
-		}
-	}
-	ui.FindBar(c, &s.open, &s.text, len(matches), &s.index)
-	components.Text(c, strings.Join(lines, "\n")).Wrap()
-	if len(matches) > 0 {
-		components.Text(c, "Match: "+matches[min(max(s.index, 0), len(matches)-1)]).Wrap()
-	}
 }
 
 func exampleCalendar(c *ui.Context, s *demoState) {
@@ -297,30 +267,6 @@ func exampleAccordion(c *ui.Context, s *demoState) {
 	}).FillWidth()
 }
 
-func exampleForm(c *ui.Context, s *demoState) {
-	ui.Form(c, func() {
-		ui.Field(c, "Name", func() { components.TextField(c, &s.text) })
-		ui.Field(c, "Sound", func() { components.Switch(c, &s.on, "Sound") })
-	}).FillWidth()
-}
-
-func exampleField(c *ui.Context, s *demoState) {
-	message := ""
-	if s.text != "" && !strings.Contains(s.text, "@") {
-		message = "Enter an email address."
-	}
-	ui.Field(c, "Email", func() { components.TextField(c, &s.text).FillWidth() }).Description("Email address").Error(message)
-}
-
-func exampleFieldset(c *ui.Context, s *demoState) {
-	ui.Form(c, func() {
-		ui.Fieldset(c, "Notifications", func() {
-			ui.Field(c, "Email", func() { components.Checkbox(c, &s.on, "Weekly summary") })
-			ui.Field(c, "Sound", func() { components.Switch(c, &s.other, "Sound") })
-		})
-	})
-}
-
 func exampleSidebar(c *ui.Context, s *demoState) {
 	ui.Sidebar(c, &s.choice, func() {
 		ui.SidebarSection(c, "Locations", nil, func() {
@@ -335,31 +281,6 @@ func exampleBreadcrumbs(c *ui.Context, s *demoState) {
 	path := []string{"Home", "Documents", "Project"}
 	ui.Breadcrumbs(c, path, &s.index).Label("Path")
 	components.Text(c, "Chosen: "+path[s.index])
-}
-
-func exampleBackButton(c *ui.Context, s *demoState) {
-	ui.Toolbar(c, func() {
-		ui.BackButton(c, s.router)
-		ui.ForwardButton(c, s.router)
-	}).Label("History")
-	if components.Button(c, "Visit next page", components.ButtonSecondary).Clicked() {
-		s.count++
-		s.router.Push(fmt.Sprintf("/page/%d", s.count))
-	}
-	s.router.View(c, func(r *ui.Route) { r.Title(r.Path()); components.Text(c, r.Path()) }).Height(60).FillWidth()
-}
-
-func exampleForwardButton(c *ui.Context, s *demoState) {
-	if components.Button(c, "Prepare forward history", components.ButtonSecondary).Clicked() {
-		s.count++
-		s.router.Push(fmt.Sprintf("/page/%d", s.count))
-		s.router.Back()
-	}
-	ui.ForwardButton(c, s.router)
-	s.router.View(c, func(r *ui.Route) {
-		r.Title(r.Path())
-		components.Text(c, r.Path())
-	}).Height(60).FillWidth()
 }
 
 func exampleRadioGroup(c *ui.Context, s *demoState) {
@@ -435,11 +356,6 @@ func exampleSpinner(c *ui.Context, s *demoState) {
 	})
 }
 
-func exampleMeter(c *ui.Context, s *demoState) {
-	components.Slider(c, &s.value, 0, 100).Label("Usage value")
-	ui.Meter(c, s.value, 0, 100, &ui.MeterLevels{Warning: 70, Critical: 90}).Label("Usage")
-}
-
 func exampleBadge(c *ui.Context, s *demoState) {
 	ui.Badge(c, "New")
 	ui.Badge(c, "12").Background(c.Theme().Accent).TextColor(c.Theme().AccentText)
@@ -449,13 +365,6 @@ func exampleImage(c *ui.Context, s *demoState) {
 	ui.Image(c, demoImage).Size(180, 100).Fit(ui.Contain).Label("Contain")
 	ui.Image(c, demoImage).Size(120, 120).Fit(ui.Cover).Radius(12).Label("Cover")
 	ui.Image(c, demoImage).Size(180, 100).Grayscale().Label("Grayscale")
-}
-
-func exampleAvatar(c *ui.Context, s *demoState) {
-	ui.Row(c).Gap(12).Children(func() {
-		ui.Avatar(c, "Ada Lovelace", nil)
-		ui.Avatar(c, "Grace Hopper", nil)
-	})
 }
 
 func exampleRichText(c *ui.Context, s *demoState) {

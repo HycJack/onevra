@@ -185,31 +185,31 @@ func TestMyGoVariantIsolation(t *testing.T) {
 
 func TestMyGoNavigationAndState(t *testing.T) {
 	g := &Gallery{}
-	tt := ui.NewTester(g.Left, 220, 1600)
-	if err := tt.Click("Toolbar"); err != nil {
+	tt := ui.NewTester(g.Left, 220, 5000)
+	if err := tt.Click("Collapsible"); err != nil {
 		t.Fatal(err)
 	}
-	if example, ok := mygoExampleFor(g.page); !ok || example.name != "Toolbar" {
-		t.Fatal("toggle route not selected")
+	if example, ok := mygoExampleFor(g.page); !ok || example.name != "Collapsible" {
+		t.Fatal("collapsible route not selected")
 	}
-	togglePage := g.page
+	detailsPage := g.page
 	content := ui.NewTester(g.View, 540, 850)
-	if err := content.Click("Bold"); err != nil {
+	if err := content.Click("Details"); err != nil {
 		t.Fatal(err)
 	}
-	if !g.mygoStates["Toolbar"].on {
-		t.Fatal("toggle did not update state")
+	if !g.mygoStates["Collapsible"].open {
+		t.Fatal("collapsible did not update state")
 	}
 	if err := tt.Click("ContextMenu"); err != nil {
 		t.Fatal(err)
 	}
 	ui.NewTester(g.View, 540, 850)
-	if g.mygoStates["ContextMenu"].on {
+	if g.mygoStates["ContextMenu"].open {
 		t.Fatal("state leaked between pages")
 	}
-	g.page = togglePage
+	g.page = detailsPage
 	ui.NewTester(g.View, 540, 850)
-	if !g.mygoStates["Toolbar"].on {
+	if !g.mygoStates["Collapsible"].open {
 		t.Fatal("state lost on navigation")
 	}
 }

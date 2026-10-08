@@ -57,7 +57,7 @@ func TestToggleDecisions(t *testing.T) {
 }
 
 func TestExcludedComponents(t *testing.T) {
-	for _, name := range []string{"CheckboxGroup", "RadioGroup", "Segmented"} {
+	for _, name := range []string{"CheckboxGroup", "RadioGroup", "Segmented", "Avatar", "Meter", "BackButton", "ForwardButton", "Form", "Field", "Fieldset", "FindBar", "Toolbar"} {
 		decision, ok := mygoHandled[name]
 		if !ok || decision.Replacement != "" || decision.Reason == "" {
 			t.Fatalf("missing exclusion for %s", name)
@@ -85,12 +85,12 @@ func TestMyGoReviewLog(t *testing.T) {
 	if !strings.Contains(output, mygoScanVersion) || !strings.Contains(output, "mygo_review.go") {
 		t.Fatal(output)
 	}
-	for _, name := range []string{"Button", "PrimaryButton", "Link", "MenuButton", "Toggle", "ToggleGroup", "CheckboxGroup", "RadioGroup", "Segmented", "Box"} {
+	for _, name := range []string{"Button", "PrimaryButton", "Link", "MenuButton", "Toggle", "ToggleGroup", "CheckboxGroup", "RadioGroup", "Segmented", "Box", "Avatar", "Meter", "BackButton", "ForwardButton", "Form", "Field", "Fieldset", "FindBar", "Toolbar"} {
 		if strings.Contains(output, "pending: "+name+" (") {
 			t.Fatalf("unexpected reminder: %s", name)
 		}
 	}
-	if !strings.Contains(output, "pending: Toolbar (") {
+	if !strings.Contains(output, "pending: ContextMenu (") {
 		t.Fatal(output)
 	}
 	seen := map[string]bool{}

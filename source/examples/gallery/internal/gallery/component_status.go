@@ -46,7 +46,7 @@ func (g *Gallery) ComponentStatus(c *ui.Context) {
 	t := c.Theme()
 	components.ScrollView(c, components.ScrollViewOptions{}).Key("component-status").Fill().Children(func() {
 		ui.Column(c).FillWidth().MinWidth(0).Padding(t.Space(6)).Gap(t.Space(6)).Children(func() {
-			for _, status := range []mygoStatus{mygoExcluded, mygoReplaced, mygoUpstream, mygoUnreviewed, mygoPrimitive} {
+			for _, status := range []mygoStatus{mygoReplaced, mygoUpstream, mygoUnreviewed, mygoPrimitive, mygoExcluded} {
 				cards := componentStatusCards(entries, status)
 				if len(cards) == 0 {
 					continue

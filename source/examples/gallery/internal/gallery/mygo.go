@@ -38,17 +38,15 @@ func mygoVariants(name string) []string {
 		return []string{"Empty", "Filled", "Read only", "Disabled"}
 	case "SearchField", "Autocomplete", "TokenField":
 		return []string{"Empty", "Filled", "Disabled"}
-	case "Field":
-		return []string{"Valid", "Invalid", "Disabled"}
 	case "Tree", "Collapsible", "Accordion":
 		return []string{"Collapsed", "Expanded"}
 	case "Rating":
 		return []string{"Unrated", "Rated", "Disabled"}
 	case "Radio", "RadioGroup", "Select", "Combobox", "Segmented", "Tabs", "Sidebar":
 		return []string{"Default", "Selected", "Disabled"}
-	case "Button", "PrimaryButton", "Link", "ContextMenu", "Toolbar",
+	case "Button", "PrimaryButton", "Link", "ContextMenu",
 		"Slider", "StepSlider", "RangeSlider", "Stepper", "NumberInput", "EditableText",
-		"Calendar", "DateInput", "TimeInput", "ColorWell", "ColorPicker", "Form", "Fieldset":
+		"Calendar", "DateInput", "TimeInput", "ColorWell", "ColorPicker":
 		return []string{"Default", "Disabled"}
 	default:
 		return []string{"Default"}
@@ -82,10 +80,6 @@ func (g *Gallery) mygoState(name, variant string, first bool) *demoState {
 		s.index = 4
 	case "Expanded":
 		s.open, s.other = true, true
-	case "Valid":
-		s.text = "ada@example.com"
-	case "Invalid":
-		s.text = "ada"
 	}
 	if name == "Sidebar" {
 		s.choice = "Home"

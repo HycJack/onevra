@@ -2,6 +2,7 @@ package gallery
 
 import (
 	"reflect"
+	"slices"
 	"strings"
 	"testing"
 
@@ -86,6 +87,16 @@ func TestComponentStatusPage(t *testing.T) {
 			g := &Gallery{page: componentStatusPage}
 			tt := ui.NewTester(g.View, width, 900)
 			tt.SetDark(dark)
+			texts := tt.Texts()
+			excluded := slices.Index(texts, string(mygoExcluded))
+			if excluded < 0 {
+				t.Fatal("missing Not needed group")
+			}
+			for _, status := range []mygoStatus{mygoReplaced, mygoUpstream, mygoUnreviewed, mygoPrimitive} {
+				if index := slices.Index(texts, string(status)); index >= excluded {
+					t.Fatalf("%s appears after Not needed", status)
+				}
+			}
 			for _, label := range []string{"Replaced by Onevra", "Button", "Button, Link, MenuButton, PrimaryButton", "Use MyGo directly", "Box", "Row", "Column", "Spacer", "Grid", "Overlay"} {
 				if !tt.HasText(label) {
 					t.Fatalf("width=%d dark=%t missing %q", width, dark, label)

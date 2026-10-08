@@ -15,6 +15,15 @@ type mygoDecision struct {
 // exclusion decisions hide upstream examples and suppress pending reminders.
 // To exclude a component, add {Reason: "why this component is not needed"}.
 var mygoHandled = map[string]mygoDecision{
+	"Avatar":           {Reason: "No Onevra Avatar component is needed"},
+	"Meter":            {Reason: "No Onevra Meter component is needed"},
+	"BackButton":       {Reason: "No Onevra BackButton component is needed"},
+	"ForwardButton":    {Reason: "No Onevra ForwardButton component is needed"},
+	"Form":             {Reason: "No Onevra Form component is needed"},
+	"Field":            {Reason: "No Onevra Field component is needed"},
+	"Fieldset":         {Reason: "No Onevra Fieldset component is needed"},
+	"FindBar":          {Reason: "No Onevra FindBar component is needed"},
+	"Toolbar":          {Reason: "No Onevra Toolbar component is needed"},
 	"Scroll":           {Replacement: "components.ScrollView", Reason: "Unified scroll container with vertical scrolling by default"},
 	"ScrollHorizontal": {Replacement: "components.ScrollView", Reason: "Horizontal ScrollView axes"},
 	"ScrollBoth":       {Replacement: "components.ScrollView", Reason: "Both ScrollView axes"},
