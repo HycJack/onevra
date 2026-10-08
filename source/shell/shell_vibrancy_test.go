@@ -1,6 +1,7 @@
 package shell
 
 import (
+	"runtime"
 	"testing"
 
 	"github.com/egoist/mygo/ui"
@@ -26,7 +27,7 @@ func TestShellEffectiveVibrancy(t *testing.T) {
 				wantAlpha := uint8(255)
 				if vibrant {
 					wantAlpha = 0
-					if mode == theme.Dark {
+					if mode == theme.Dark && runtime.GOOS != "windows" {
 						wantAlpha = palette.Surface.Alpha(0.65).A
 					}
 				}

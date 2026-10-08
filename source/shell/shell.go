@@ -257,8 +257,8 @@ func (s *Shell) view(c *ui.Context) {
 					// Only the visible slice changes width. Sidebar content stays put
 					// while the opaque main region covers or uncovers it.
 					sidebar := ui.Column(c).Key("left").Width(leftWidth * leftProgress).Shrink(0).FillHeight().Clip()
-					if c.Theme().Dark && vibrant {
-						// Tint the native material without hiding its backdrop blur.
+					if c.Theme().Dark && vibrant && runtime.GOOS != "windows" {
+						// Windows materials supply their own tint; preserve it unchanged.
 						sidebar.Background(c.Theme().Surface.Alpha(0.65))
 					} else if !vibrant {
 						sidebar.Background(c.Theme().Surface.Alpha(1))
