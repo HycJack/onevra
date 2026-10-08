@@ -24,14 +24,14 @@ type controlState struct {
 	high    float64
 }
 
-var textControlCatalog = []controlExample{
-	{"Text", "Display text", []string{"Default"}, controlText},
-	{"TextField", "Text fields", []string{"Empty", "Filled", "Read only"}, controlTextField},
-	{"TextArea", "Text areas", []string{"Empty", "Filled", "Read only"}, controlTextArea},
+var textBoxControlCatalog = []controlExample{
+	{"TextBox", "Text boxes", []string{"Empty", "Filled", "Read only", "Search"}, controlTextBox},
+	{"TextBox (multiline)", "Text areas", []string{"Empty", "Filled", "Read only"}, controlTextBoxMultiline},
 }
 
 var controlCatalog = []controlExample{
-	{"Text", "Text", []string{"Text", "TextField", "TextArea"}, controlText},
+	{"Text", "Text", []string{"Default"}, controlText},
+	{"TextBox", "TextBox", []string{"TextBox", "TextBox (multiline)"}, controlTextBox},
 	{"Button", "Buttons", []string{"Button", "ToggleButton"}, controlButton},
 	{"Selection", "Selection", []string{"Checkbox", "Switch", "Radio"}, controlSelection},
 	{"Select", "Selects", []string{"Default", "Selected", "Searchable", "NativeSelect"}, controlSelect},
@@ -66,10 +66,10 @@ func (g *Gallery) controlState(name, variant string) *controlState {
 	if variant == "Selected" {
 		s.choice, s.index = "Large", 1
 	}
-	if variant != "Empty" {
+	if variant != "Empty" && variant != "Search" {
 		s.text = "Hello Onevra"
 	}
-	if name == "TextArea" && variant != "Empty" {
+	if name == "TextBox (multiline)" && variant != "Empty" {
 		s.text += "\nA multiline note."
 	}
 	g.controlStates[key] = s
@@ -80,8 +80,8 @@ func (g *Gallery) Controls(c *ui.Context, example controlExample) {
 	t := c.Theme()
 	components.ScrollView(c, components.ScrollViewOptions{}).Key("controls-" + example.name).Fill().Children(func() {
 		ui.Column(c).FillWidth().MinWidth(0).Padding(t.Space(6)).Gap(t.Space(6)).Children(func() {
-			if example.name == "Text" {
-				for _, textExample := range textControlCatalog {
+			if example.name == "TextBox" {
+				for _, textExample := range textBoxControlCatalog {
 					g.controlVariants(c, textExample)
 				}
 				return
@@ -108,7 +108,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 				switch example.name {
 				case "Text":
 					cell.FillWidth()
-				case "TextField", "TextArea", "Slider", "Sidebar", "ScrollView":
+				case "TextBox", "TextBox (multiline)", "Slider", "Sidebar", "ScrollView":
 					cell.Width(240)
 				}
 				cell.Children(func() {

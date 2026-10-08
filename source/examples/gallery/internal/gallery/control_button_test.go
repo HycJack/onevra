@@ -12,7 +12,7 @@ func TestButtonPreview(t *testing.T) {
 	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
 		for _, width := range []int{540, 280} {
 			g := &Gallery{}
-			example := controlCatalog[1]
+			example, _ := controlExampleFor(pageFromKey("controls/Button"))
 			tt := ui.NewTester(func(c *ui.Context) {
 				theme.Apply(c, mode)
 				g.Controls(c, example)
@@ -42,7 +42,8 @@ func TestButtonTogglePreview(t *testing.T) {
 			g := &Gallery{}
 			tt := ui.NewTester(func(c *ui.Context) {
 				theme.Apply(c, mode)
-				g.Controls(c, controlCatalog[1])
+				example, _ := controlExampleFor(pageFromKey("controls/Button"))
+				g.Controls(c, example)
 			}, width, 1000)
 			if !tt.HasText("ToggleButton") || tt.HasText("Disabled") {
 				t.Fatal("missing toggle section or unexpected disabled preview")

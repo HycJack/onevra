@@ -91,15 +91,6 @@ func exampleNumberInput(c *ui.Context, s *demoState) {
 	components.Textf(c, "Quantity: %.0f", s.value)
 }
 
-func exampleSearchField(c *ui.Context, s *demoState) {
-	ui.SearchField(c, &s.text).Label("Search samples").FillWidth()
-	for _, name := range []string{"Hello MyGo", "Hello Go", "Native UI"} {
-		if strings.Contains(strings.ToLower(name), strings.ToLower(s.text)) {
-			components.Text(c, name)
-		}
-	}
-}
-
 func exampleTokenField(c *ui.Context, s *demoState) {
 	ui.TokenField(c, &s.tags, []string{"Go", "UI", "Native", "Desktop"}).Label("Tags").FillWidth()
 	components.Text(c, strings.Join(s.tags, ", ")).Wrap()
@@ -287,7 +278,7 @@ func exampleModal(c *ui.Context, s *demoState) {
 	}
 	ui.Modal(c, &s.open, func() {
 		components.Text(c, "Edit name").Bold()
-		components.TextField(c, &s.text).Label("Name")
+		components.TextBox(c, &s.text, components.TextBoxOptions{}).Label("Name")
 		if components.Button(c, "Done", components.ButtonSecondary).Clicked() {
 			s.open = false
 		}

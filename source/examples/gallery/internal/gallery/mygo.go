@@ -113,9 +113,9 @@ func (g *Gallery) MyGo(c *ui.Context, example mygoExample) {
 					ui.Column(c).FillWidth().MinWidth(0).Gap(12).Disabled(variant == "Disabled").Children(func() {
 						if variant == "Read only" && s.buffer == nil {
 							if example.name == "TextInput" {
-								components.TextField(c, &s.text).Label("Name").ReadOnly(true).FillWidth()
+								components.TextBox(c, &s.text, components.TextBoxOptions{ReadOnly: true}).Label("Name").FillWidth()
 							} else {
-								components.TextArea(c, &s.text).Label("Notes").ReadOnly(true).Height(140).FillWidth()
+								components.TextBox(c, &s.text, components.TextBoxOptions{Multiline: true, ReadOnly: true}).Label("Notes").Height(140).FillWidth()
 							}
 						} else {
 							example.build(c, s)

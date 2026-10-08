@@ -6,25 +6,36 @@ import (
 	"github.com/egoist/mygo/ui"
 )
 
-func TestTextPageGrouping(t *testing.T) {
-	page := pageFromKey("controls/Text")
+func TestTextBoxPageGrouping(t *testing.T) {
+	page := pageFromKey("controls/TextBox")
+	textPage := pageFromKey("controls/Text")
+	if page == textPage || pageKey(page) != "controls/TextBox" {
+		t.Fatal("TextBox must have its own persistent route")
+	}
+	display := ui.NewTester((&Gallery{page: textPage}).View, 900, 1800)
+	if !display.HasText("Count: 42") || display.HasText("TextBox") {
+		t.Fatal("Text page must contain only display text examples")
+	}
 	for _, key := range []string{"controls/TextField", "controls/TextArea"} {
 		if pageFromKey(key) != page {
-			t.Fatalf("saved route %s did not migrate to Text", key)
+			t.Fatalf("saved route %s did not migrate to TextBox", key)
 		}
 	}
 	g := &Gallery{page: page}
 	nav := ui.NewTester(g.Left, 220, 1800)
-	if !nav.HasText("Text") || nav.HasText("Text fields") || nav.HasText("Text areas") || nav.HasText("Display text") {
-		t.Fatal("text examples must share one sidebar entry")
+	if !nav.HasText("Text") || !nav.HasText("TextBox") || nav.HasText("Text fields") || nav.HasText("Text areas") || nav.HasText("Display text") {
+		t.Fatal("Text and TextBox must have separate sidebar entries")
 	}
 	tt := ui.NewTester(g.View, 900, 1800)
-	for _, label := range []string{"Text", "TextField", "TextArea", "Count: 42", "Name", "Notes"} {
+	if tt.HasText("Count: 42") {
+		t.Fatal("display text example remains on TextBox page")
+	}
+	for _, label := range []string{"TextBox", "TextBox (multiline)", "Name", "Notes", "Search"} {
 		if !tt.HasText(label) {
 			t.Fatalf("missing grouped text example %s", label)
 		}
 	}
-	for _, example := range []struct{ name, label string }{{"TextField", "Name"}, {"TextArea", "Notes"}} {
+	for _, example := range []struct{ name, label string }{{"TextBox", "Name"}, {"TextBox (multiline)", "Notes"}} {
 		if err := tt.Click(example.label); err != nil {
 			t.Fatal(err)
 		}
@@ -38,7 +49,7 @@ func TestTextPageGrouping(t *testing.T) {
 			}
 		}
 	}
-	if g.controlState("TextField", "Empty").text != "TextField" {
-		t.Fatal("editing TextArea changed TextField")
+	if g.controlState("TextBox", "Empty").text != "TextBox" {
+		t.Fatal("editing multiline TextBox changed single-line TextBox")
 	}
 }

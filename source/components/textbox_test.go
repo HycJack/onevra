@@ -1,0 +1,188 @@
+package components
+
+import (
+	"bytes"
+	"image/color"
+	"testing"
+
+	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/icons/lucide"
+	"github.com/oneo-me/onevra/theme"
+)
+
+func TestTextBoxLeadingIcon(t *testing.T) {
+	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+		for _, multiline := range []bool{false, true} {
+			value := ""
+			options := TextBoxOptions{Multiline: multiline}
+			tt := ui.NewTester(func(c *ui.Context) {
+				theme.Apply(c, mode)
+				TextBox(c, &value, options).Label("Search").Width(240).Height(100)
+			}, 300, 120)
+			plain := append([]byte(nil), tt.Image().Pix...)
+			options.LeadingIcon = lucide.Search()
+			tt.Frame()
+			img := tt.Image()
+			changed := 0
+			for y := 0; y < 120; y++ {
+				for x := 0; x < 300; x++ {
+					i := img.PixOffset(x, y)
+					if !bytes.Equal(plain[i:i+4], img.Pix[i:i+4]) {
+						changed++
+						if x < 10 || x >= 26 || (multiline && y >= 24) || (!multiline && (y < 42 || y >= 58)) {
+							t.Fatalf("icon outside leading inset: %d,%d", x, y)
+						}
+					}
+				}
+			}
+			if changed == 0 {
+				t.Fatal("leading icon not rendered")
+			}
+			options.LeadingIcon = nil
+			tt.Frame()
+			if !bytes.Equal(plain, tt.Image().Pix) {
+				t.Fatal("nil icon did not restore plain input")
+			}
+			options.LeadingIcon = lucide.Search()
+			tt.Frame()
+			tt.ClickAt(18, 15)
+			tt.Type("query")
+			if value != "query" {
+				t.Fatalf("leading inset did not focus input: %q", value)
+			}
+		}
+	}
+}
+
+func TestTextBoxType(t *testing.T) {
+	for _, dark := range []bool{false, true} {
+		mode := theme.Light
+		if dark {
+			mode = theme.Dark
+		}
+		value := ""
+		tt := ui.NewTester(func(c *ui.Context) {
+			theme.Apply(c, mode)
+			TextBox(c, &value, TextBoxOptions{}).Label("Name").Placeholder("Ada").AutoFocus()
+		}, 300, 100)
+		tt.Type("Ada")
+		if value != "Ada" {
+			t.Errorf("dark=%v: typed %q", dark, value)
+		}
+	}
+}
+
+func TestTextBoxReadOnly(t *testing.T) {
+	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+		for _, multiline := range []bool{false, true} {
+			value := "Selectable text"
+			readOnly := true
+			var focused, selectText bool
+			var start, end int
+			tt := ui.NewTester(func(c *ui.Context) {
+				theme.Apply(c, mode)
+				input := TextBox(c, &value, TextBoxOptions{Multiline: multiline, ReadOnly: readOnly}).
+					Label("Input").Width(240).Height(100)
+				focused = input.Focused()
+				if selectText {
+					input.SetTextSelection(0, 10)
+					start, end = input.TextSelection()
+				}
+			}, 300, 120)
+			if err := tt.Click("Input"); err != nil {
+				t.Fatal(err)
+			}
+			if !focused {
+				t.Fatal("read-only input cannot be focused")
+			}
+			tt.Type("Changed")
+			tt.Key(0, ui.KeyEnter)
+			tt.Key(0, ui.KeyBackspace)
+			if value != "Selectable text" {
+				t.Fatalf("read-only input changed: %q", value)
+			}
+			selectText = true
+			tt.Frame()
+			if start != 0 || end != 10 {
+				t.Fatalf("read-only selection: %d:%d", start, end)
+			}
+			selectText = false
+			readOnly = false
+			tt.Frame() // Rebuild with editable options before the next event.
+			tt.Type("Updated")
+			if value == "Selectable text" {
+				t.Fatal("input did not become editable")
+			}
+		}
+	}
+}
+
+func TestTextBoxReadOnlyAppearance(t *testing.T) {
+	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+		for _, multiline := range []bool{false, true} {
+			var backgrounds, borders [2]color.RGBA
+			var neutral ui.Color
+			for i, readOnly := range []bool{false, true} {
+				value := ""
+				tt := ui.NewTester(func(c *ui.Context) {
+					theme.Apply(c, mode)
+					neutral = c.Theme().Border.Mix(c.Theme().Text, 0.25)
+					TextBox(c, &value, TextBoxOptions{Multiline: multiline, ReadOnly: readOnly}).
+						Label("Input").Width(240).Height(100)
+				}, 300, 120)
+				if err := tt.Click("Input"); err != nil {
+					t.Fatal(err)
+				}
+				img := tt.Image()
+				backgrounds[i], borders[i] = img.RGBAAt(120, 50), img.RGBAAt(120, 0)
+			}
+			if backgrounds[0] == backgrounds[1] || borders[0] == borders[1] {
+				t.Fatalf("mode=%v multiline=%v: read-only appearance is not distinct", mode, multiline)
+			}
+			b := borders[1]
+			if b != (color.RGBA{R: neutral.R, G: neutral.G, B: neutral.B, A: neutral.A}) {
+				t.Fatalf("read-only focus border is not neutral: %v", b)
+			}
+		}
+	}
+}
+
+func TestTextBoxModeSwitch(t *testing.T) {
+	value := ""
+	multiline := false
+	tt := ui.NewTester(func(c *ui.Context) {
+		TextBox(c, &value, TextBoxOptions{Multiline: multiline}).AutoFocus()
+	}, 300, 120)
+	tt.Type("one")
+	tt.Key(0, ui.KeyEnter)
+	if value != "one" {
+		t.Fatalf("single-line accepted newline: %q", value)
+	}
+	multiline = true
+	tt.Frame()
+	tt.Key(0, ui.KeyEnter)
+	tt.Type("two")
+	if value != "one\ntwo" {
+		t.Fatalf("switch to multiline lost content or newline: %q", value)
+	}
+	multiline = false
+	tt.Frame()
+	tt.Key(0, ui.KeyEnter)
+	if value != "one\ntwo" {
+		t.Fatalf("switch to single-line accepted newline: %q", value)
+	}
+}
+
+func TestTextBoxMultilineType(t *testing.T) {
+	value := ""
+	tt := ui.NewTester(func(c *ui.Context) {
+		theme.Apply(c, theme.Dark)
+		TextBox(c, &value, TextBoxOptions{Multiline: true}).Label("Notes").AutoFocus()
+	}, 300, 120)
+	tt.Type("line one")
+	tt.Key(0, ui.KeyEnter)
+	tt.Type("line two")
+	if value != "line one\nline two" {
+		t.Errorf("typed %q", value)
+	}
+}

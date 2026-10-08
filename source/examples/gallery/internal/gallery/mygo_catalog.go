@@ -16,7 +16,6 @@ var mygoExamples = []mygoExample{
 	{"TextInputBuffer", "Text input", exampleTextInputBuffer},
 	{"TextAreaBuffer", "Text input", exampleTextAreaBuffer},
 	{"NumberInput", "Text input", exampleNumberInput},
-	{"SearchField", "Text input", exampleSearchField},
 	{"TokenField", "Text input", exampleTokenField},
 	{"EditableText", "Text input", exampleEditableText},
 	{"Calendar", "Date & color", exampleCalendar},

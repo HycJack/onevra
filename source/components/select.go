@@ -46,12 +46,8 @@ func (s *SelectParts[T]) Item(value T) ui.Element {
 // focus to the trigger, where MyGo handles option navigation and selection.
 func (s *SelectParts[T]) SearchField(query *string) ui.Element {
 	t := s.c.Theme()
-	input := TextField(s.c, query).FillWidth().AutoFocus().Radius(t.Radius/2).
-		Padding(t.Space(1.5), t.Space(2.5), t.Space(1.5), t.Space(8)).Margin(0, 0, t.Space(1.5), 0)
-	input.DrawOver(func(p *ui.Painter, r ui.Rect) {
-		size := t.Space(4)
-		p.Icon(lucide.Search(), ui.Rect{X: r.X + t.Space(2.5), Y: r.Y + (r.H-size)/2, W: size, H: size}, t.TextMuted)
-	})
+	input := TextBox(s.c, query, TextBoxOptions{LeadingIcon: lucide.Search()}).
+		FillWidth().AutoFocus().Radius(t.Radius/2).Margin(0, 0, t.Space(1.5), 0)
 	if input.Shortcut(0, ui.KeyDown) || input.Shortcut(0, ui.KeyUp) {
 		s.Trigger.Focus()
 	}

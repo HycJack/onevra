@@ -1,0 +1,59 @@
+package components
+
+import "github.com/egoist/mygo/ui"
+
+// TextBoxOptions configures editing behavior and its matching appearance.
+type TextBoxOptions struct {
+	// Multiline accepts line breaks; the default is a single-line input.
+	Multiline bool
+	// ReadOnly allows focus, selection and copying, but not editing. It uses
+	// a muted background and neutral border even when focused.
+	ReadOnly bool
+	// LeadingIcon is an optional decorative SVG, for example lucide.Search().
+	// It reserves space on the left and aligns with the first line in multiline
+	// mode. Supply the accessible name with Label. Nil leaves no icon or gap.
+	LeadingIcon *ui.SVG
+}
+
+// TextBox creates a text input editing *value. Configure mode and read-only
+// state through options, not the returned Element's ReadOnly method, so styling
+// matches behavior. Other MyGo input properties can be chained normally, such as
+// Label, Placeholder, Password (single-line only) and Lines (multiline only).
+// For stable identity, key a parent container rather than this element:
+// interaction styling is resolved during construction.
+func TextBox(c *ui.Context, value *string, options TextBoxOptions) ui.Element {
+	t := c.Theme()
+	var e ui.Element
+	if options.Multiline {
+		e = ui.TextAreaBase(c, value)
+		e.MinHeight(t.Space(20))
+	} else {
+		e = ui.TextInputBase(c, value)
+	}
+	e.ReadOnly(options.ReadOnly)
+	background, border := t.Surface, t.Border
+	if options.ReadOnly {
+		background = background.Mix(t.Text, 0.04)
+	}
+	if !e.IsDisabled() {
+		switch {
+		case e.Focused() && !options.ReadOnly:
+			border = t.Accent
+		case e.Focused() || e.Hovered():
+			border = t.Border.Mix(t.Text, 0.25)
+		}
+	}
+	e.Padding(t.Space(1.5), t.Space(2.5)).Radius(t.Radius).Background(background).Border(1, border)
+	if icon := options.LeadingIcon; icon != nil {
+		e.Padding(t.Space(1.5), t.Space(2.5), t.Space(1.5), t.Space(8))
+		e.DrawOver(func(p *ui.Painter, r ui.Rect) {
+			size := t.Space(4)
+			y := r.Y + (r.H-size)/2
+			if options.Multiline {
+				y = r.Y + 1 + t.Space(1.5)
+			}
+			p.Icon(icon, ui.Rect{X: r.X + t.Space(2.5), Y: y, W: size, H: size}, t.TextMuted)
+		})
+	}
+	return dimmed(e)
+}

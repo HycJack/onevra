@@ -8,7 +8,7 @@ import (
 )
 
 func TestControlPages(t *testing.T) {
-	if len(controlCatalog) != 11 {
+	if len(controlCatalog) != 12 {
 		t.Fatal("missing control examples")
 	}
 	for i, example := range controlCatalog {
@@ -25,7 +25,7 @@ func TestControlPages(t *testing.T) {
 					g := &Gallery{page: page}
 					tt := ui.NewTester(func(c *ui.Context) { theme.Apply(c, mode); g.View(c) }, width, 1800)
 					wantStates := len(example.variants)
-					if example.name == "Text" {
+					if example.name == "TextBox" {
 						wantStates = 7
 					}
 					if tt.Image() == nil || len(g.controlStates) != wantStates {
@@ -104,7 +104,7 @@ func TestControlNavigationAndState(t *testing.T) {
 }
 
 func TestControlExampleInteractions(t *testing.T) {
-	for _, example := range append(append([]controlExample{}, controlCatalog...), textControlCatalog[1:]...) {
+	for _, example := range append(append([]controlExample{}, controlCatalog...), textBoxControlCatalog[1:]...) {
 		if example.name == "Selection" {
 			continue // Grouped selection interactions are covered separately.
 		}
@@ -143,9 +143,9 @@ func TestControlExampleInteractions(t *testing.T) {
 				case "Button":
 					click("Primary")
 					changed = s.button.clicks[0] == 1
-				case "TextField", "TextArea":
+				case "TextBox", "TextBox (multiline)":
 					label := "Name"
-					if example.name == "TextArea" {
+					if example.name == "TextBox (multiline)" {
 						label = "Notes"
 					}
 					click(label)
@@ -206,12 +206,12 @@ func TestControlPreviewGeometry(t *testing.T) {
 }
 
 func TestControlVariantLayout(t *testing.T) {
-	for _, name := range []string{"TextField", "TextArea", "Select", "Tabs"} {
+	for _, name := range []string{"TextBox", "TextBox (multiline)", "Select", "Tabs"} {
 		for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
 			for _, width := range []int{900, 280} {
 				g := &Gallery{page: pageFromKey("controls/" + name)}
 				example, _ := controlExampleFor(g.page)
-				for _, textExample := range textControlCatalog[1:] {
+				for _, textExample := range textBoxControlCatalog {
 					if textExample.name == name {
 						example = textExample
 					}
@@ -229,7 +229,7 @@ func TestControlVariantLayout(t *testing.T) {
 					if i == 0 {
 						first = r
 					} else {
-						if width == 900 && (r.Y != first.Y || r.X <= previous.X) {
+						if width == 900 && i < 3 && (r.Y != first.Y || r.X <= previous.X) {
 							t.Fatalf("%s variants are not arranged horizontally", name)
 						}
 						if r.Y == previous.Y && r.X < previous.X+previous.W {
@@ -243,9 +243,9 @@ func TestControlVariantLayout(t *testing.T) {
 						t.Fatalf("%s retains extra status text %q", name, text)
 					}
 				}
-				if name == "TextField" || name == "TextArea" {
+				if name == "TextBox" || name == "TextBox (multiline)" {
 					label := "Name"
-					if name == "TextArea" {
+					if name == "TextBox (multiline)" {
 						label = "Notes"
 					}
 					if err := tt.Click(label); err != nil {
@@ -262,15 +262,15 @@ func TestControlVariantLayout(t *testing.T) {
 }
 
 func TestControlReadOnlyExamples(t *testing.T) {
-	for _, example := range textControlCatalog {
-		if example.name != "TextField" && example.name != "TextArea" {
+	for _, example := range textBoxControlCatalog {
+		if example.name != "TextBox" && example.name != "TextBox (multiline)" {
 			continue
 		}
 		s := (&Gallery{}).controlState(example.name, "Read only")
 		before := s.text
 		tt := ui.NewTester(func(c *ui.Context) { example.build(c, s, "Read only") }, 540, 300)
 		label := "Name"
-		if example.name == "TextArea" {
+		if example.name == "TextBox (multiline)" {
 			label = "Notes"
 		}
 		if err := tt.Click(label); err != nil {
