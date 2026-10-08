@@ -17,7 +17,7 @@ func controlText(c *ui.Context, s *controlState, variant string) {
 		components.Text(c, "Long text wraps within the available width, including in narrow windows.").FillWidth()
 		components.Text(c, "A single-line label").SingleLine()
 		components.Textf(c, "%s: %d", "Count", 42)
-		ui.RichText(c).Children(func() {
+		components.RichText(c).Children(func() {
 			components.Text(c, "Inline ")
 			components.Text(c, "bold text").Bold()
 		})

@@ -21,7 +21,7 @@ func TestTextMatchesPrimitive(t *testing.T) {
 							text(c, "A long single-line label with inherited styles").SingleLine().Label("single")
 							text(c, "Heading").Bold().FontSize(c.Theme().Rem(1.5)).TextColor(c.Theme().Text)
 							text(c, "")
-							ui.RichText(c).Children(func() {
+							RichText(c).Children(func() {
 								text(c, "Inline ")
 								text(c, "bold").Bold()
 							})

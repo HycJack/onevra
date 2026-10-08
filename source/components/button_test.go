@@ -82,7 +82,7 @@ func TestButtonLinkInline(t *testing.T) {
 				theme.Apply(c, mode)
 				ui.Column(c).Fill().AlignItems(ui.Start).Disabled(disabled).Children(func() {
 					ui.Text(c, "Details").Label("plain")
-					ui.RichText(c).Children(func() {
+					RichText(c).Children(func() {
 						ui.Text(c, "Read ")
 						if Button(c, "Details", ButtonLink).Clicked() {
 							clicks++

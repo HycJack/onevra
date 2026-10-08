@@ -54,7 +54,7 @@ func TestComponentStatuses(t *testing.T) {
 func TestComponentStatusCards(t *testing.T) {
 	entries := mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled)
 	cards := componentStatusCards(entries, mygoReplaced)
-	if len(cards) != 23 {
+	if len(cards) != 27 {
 		t.Fatalf("got %d replacement cards", len(cards))
 	}
 	for _, card := range cards {
@@ -127,8 +127,8 @@ func TestComponentStatusPage(t *testing.T) {
 					t.Fatalf("unexpected metadata: %s", label)
 				}
 			}
-			button, _ := tt.Find("Button")
-			checkbox, _ := tt.Find("Checkbox")
+			button, _ := tt.Find("Badge")
+			checkbox, _ := tt.Find("Breadcrumbs")
 			// Wrapped replacement names can shift the headings within a row.
 			if width == 820 && (checkbox.X <= button.X || checkbox.Y >= button.Y+button.H || button.Y >= checkbox.Y+checkbox.H) {
 				t.Fatalf("wide layout is not a grid: button=%+v checkbox=%+v", button, checkbox)

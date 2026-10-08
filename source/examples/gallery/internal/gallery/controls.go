@@ -33,6 +33,10 @@ var textBoxControlCatalog = []controlExample{
 }
 
 var controlCatalog = []controlExample{
+	{"Badge", "Badge", []string{"Default", "Accent"}, controlBadge},
+	{"RichText", "RichText", []string{"Default"}, controlRichText},
+	{"Breadcrumbs", "Breadcrumbs", []string{"Default"}, controlBreadcrumbs},
+	{"Rating", "Rating", []string{"Default"}, controlRating},
 	{"Text", "Text", []string{"Default", "Editable"}, controlText},
 	{"TextBox", "TextBox", []string{"TextBox", "TextBox (multiline)"}, controlTextBox},
 	{"Button", "Buttons", []string{"Button", "ToggleButton"}, controlButton},
@@ -80,6 +84,12 @@ func (g *Gallery) controlState(name, variant string) *controlState {
 	}
 	if name == "TextBox (multiline)" && variant != "Empty" {
 		s.text += "\nA multiline note."
+	}
+	if name == "Rating" && variant != "Empty" {
+		s.index = 3
+	}
+	if name == "Breadcrumbs" {
+		s.text = "Choose an ancestor"
 	}
 	g.controlStates[key] = s
 	return s

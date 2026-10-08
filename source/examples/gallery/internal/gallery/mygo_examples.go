@@ -354,7 +354,7 @@ func exampleBox(c *ui.Context, s *demoState) {
 }
 
 func exampleRow(c *ui.Context, s *demoState) {
-	ui.Row(c).Gap(8).Children(func() { ui.Badge(c, "First"); ui.Badge(c, "Second") })
+	ui.Row(c).Gap(8).Children(func() { components.Badge(c, "First"); components.Badge(c, "Second") })
 }
 
 func exampleColumn(c *ui.Context, s *demoState) {
