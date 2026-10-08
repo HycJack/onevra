@@ -239,7 +239,14 @@ func TestControlVariantLayout(t *testing.T) {
 				}, width, 1200)
 				var first, previous ui.Rect
 				for i, variant := range example.variants {
-					r, ok := tt.Find(variant)
+					label := variant
+					if name == "Tabs" {
+						label = "General"
+						if example.label != "Tabs" || len(example.variants) != 1 || tt.HasText("Default") || tt.HasText("Selected") {
+							t.Fatal("Tabs should have one named demonstration without redundant state groups")
+						}
+					}
+					r, ok := tt.Find(label)
 					if !ok || r.X < 20 || r.X+r.W > float32(width)-20 {
 						t.Fatalf("%s/%s outside preview: %+v", name, variant, r)
 					}

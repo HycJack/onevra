@@ -37,7 +37,7 @@ var controlCatalog = []controlExample{
 	{"Select", "Selects", []string{"Default", "Selected", "Searchable", "NativeSelect"}, controlSelect},
 	{"Menu", "Menus", []string{"Left-click", "Right-click"}, controlMenu},
 	{"Slider", "Sliders", []string{"Default", "Step", "Range", "Stepped range"}, controlSlider},
-	{"Tabs", "Tab rows", []string{"Default", "Selected"}, controlTabs},
+	{"Tabs", "Tabs", []string{"Default"}, controlTabs},
 	{"Icon", "Icons", []string{"Default"}, controlIcon},
 	{"Image", "Images", []string{"Contain", "Cover", "Stretch", "Rounded", "Grayscale"}, controlImage},
 	{"Sidebar", "Sidebar", []string{"Default"}, controlSidebar},
