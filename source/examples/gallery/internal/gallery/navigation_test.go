@@ -48,6 +48,12 @@ func TestNavigationMyGoMarkers(t *testing.T) {
 	tt := ui.NewTester(g.Left, 220, 6000)
 	texts := tt.Texts()
 	markers := 0
+	want := 0
+	for _, example := range mygoCatalog {
+		if example.group != "Plugins" {
+			want++
+		}
+	}
 	for i, text := range texts {
 		if text != "•" {
 			continue
@@ -58,14 +64,14 @@ func TestNavigationMyGoMarkers(t *testing.T) {
 		}
 		found := false
 		for _, example := range mygoCatalog {
-			found = found || texts[i-1] == example.name
+			found = found || (example.group != "Plugins" && texts[i-1] == example.name)
 		}
 		if !found {
 			t.Fatalf("marker follows non-MyGo item: %q", texts[i-1])
 		}
 	}
-	if markers != len(mygoCatalog) {
-		t.Fatalf("got %d MyGo markers, want %d", markers, len(mygoCatalog))
+	if markers != want {
+		t.Fatalf("got %d MyGo markers, want %d", markers, want)
 	}
 }
 

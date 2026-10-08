@@ -19,7 +19,7 @@ type iconEntry struct {
 
 func (g *Gallery) navigationItem(c *ui.Context, label string, icon *ui.SVG, page galleryPage) {
 	item := components.SidebarItem(c, label, icon, g.page == page)
-	if _, upstream := mygoExampleFor(page); upstream {
+	if example, upstream := mygoExampleFor(page); upstream && example.group != "Plugins" {
 		item.Children(func() {
 			ui.Spacer(c)
 			components.Text(c, "•").FontSize(c.Theme().Rem(1.4)).TextColor(c.Theme().TextMuted).SingleLine()
