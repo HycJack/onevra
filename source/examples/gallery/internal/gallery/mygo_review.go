@@ -50,6 +50,7 @@ var mygoHandled = map[string]mygoDecision{
 	"RangeSlider":   {Replacement: "components.Slider", Reason: "Slider Range property enables two independently focusable thumbs"},
 	"Tabs":          {Replacement: "components.Tabs", Reason: "Onevra tab styling"},
 	"Text":          {Replacement: "components.Text", Reason: "Onevra text defaults"},
+	"EditableText":  {Replacement: "components.Text", Reason: "Text with an Editable binding; undecorated inline editing"},
 	"Textf":         {Replacement: "components.Textf", Reason: "Formatted Onevra text"},
 	"Icon":          {Replacement: "components.Icon", Reason: "Onevra icon component with named asset accessors"},
 	"Image":         {Replacement: "components.Image", Reason: "Onevra image component with application-owned decoded assets"},

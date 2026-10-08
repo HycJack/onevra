@@ -103,6 +103,23 @@ func TestControlNavigationAndState(t *testing.T) {
 	}
 }
 
+func TestEditableTextExample(t *testing.T) {
+	g := &Gallery{}
+	s := g.controlState("Text", "Editable")
+	tt := ui.NewTester(func(c *ui.Context) { controlText(c, s, "Editable") }, 540, 100)
+	tt.Key(0, ui.KeyTab)
+	tt.Type("Edited name")
+	if s.text != "Edited name" {
+		t.Fatalf("text binding not updated: %q", s.text)
+	}
+	if g.controlState("Text", "Default").text != "Hello Onevra" {
+		t.Fatal("text variants share state")
+	}
+	if mygoHandled["EditableText"].Replacement != "components.Text" {
+		t.Fatal("EditableText is not merged into Text")
+	}
+}
+
 func TestControlExampleInteractions(t *testing.T) {
 	for _, example := range append(append([]controlExample{}, controlCatalog...), textBoxControlCatalog[1:]...) {
 		if example.name == "Selection" {

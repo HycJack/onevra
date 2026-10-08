@@ -30,7 +30,7 @@ var textBoxControlCatalog = []controlExample{
 }
 
 var controlCatalog = []controlExample{
-	{"Text", "Text", []string{"Default"}, controlText},
+	{"Text", "Text", []string{"Default", "Editable"}, controlText},
 	{"TextBox", "TextBox", []string{"TextBox", "TextBox (multiline)"}, controlTextBox},
 	{"Button", "Buttons", []string{"Button", "ToggleButton"}, controlButton},
 	{"Selection", "Selection", []string{"Checkbox", "Switch", "Radio"}, controlSelection},
