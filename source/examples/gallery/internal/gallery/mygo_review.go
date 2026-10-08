@@ -63,7 +63,7 @@ const (
 	mygoExcluded   mygoStatus = "Not needed"
 	mygoUpstream   mygoStatus = "Still using MyGo"
 	mygoUnreviewed mygoStatus = "Awaiting review"
-	mygoPrimitive  mygoStatus = "MyGo building blocks"
+	mygoPrimitive  mygoStatus = "Use MyGo directly"
 )
 
 type mygoReviewEntry struct {

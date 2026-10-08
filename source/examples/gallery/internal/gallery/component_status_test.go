@@ -86,7 +86,7 @@ func TestComponentStatusPage(t *testing.T) {
 			g := &Gallery{page: componentStatusPage}
 			tt := ui.NewTester(g.View, width, 900)
 			tt.SetDark(dark)
-			for _, label := range []string{"Replaced by Onevra", "Button", "Button, Link, MenuButton, PrimaryButton"} {
+			for _, label := range []string{"Replaced by Onevra", "Button", "Button, Link, MenuButton, PrimaryButton", "Use MyGo directly", "Box", "Row", "Column", "Spacer", "Grid", "Overlay"} {
 				if !tt.HasText(label) {
 					t.Fatalf("width=%d dark=%t missing %q", width, dark, label)
 				}
