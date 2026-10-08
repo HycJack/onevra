@@ -13,7 +13,8 @@ type controlExample struct {
 
 // Control examples keep their state separate from the upstream widget catalog.
 type controlState struct {
-	list    ui.ListState
+	tree    components.TreeVirtualizedState[string]
+	list    components.ListState
 	on      bool
 	choice  string
 	text    string
@@ -45,6 +46,7 @@ var controlCatalog = []controlExample{
 	{"Icon", "Icons", []string{"Default"}, controlIcon},
 	{"Image", "Images", []string{"Contain", "Cover", "Stretch", "Rounded", "Grayscale"}, controlImage},
 	{"List", "List", []string{"Default"}, controlList},
+	{"Tree", "Tree", []string{"Tree", "TreeVirtualized"}, controlTree},
 	{"Sidebar", "Sidebar", []string{"Default"}, controlSidebar},
 	{"ScrollView", "Scroll views", []string{"Vertical", "Horizontal", "Both", "Insets"}, controlScrollView},
 }
@@ -100,7 +102,7 @@ func (g *Gallery) Controls(c *ui.Context, example controlExample) {
 				})
 				return
 			}
-			if example.name == "Button" || example.name == "Selection" || example.name == "Progress" {
+			if example.name == "Button" || example.name == "Selection" || example.name == "Progress" || example.name == "Tree" {
 				for _, variant := range example.variants {
 					g.controlSection(c, variant, func() {
 						example.build(c, g.controlState(example.name, variant), variant)

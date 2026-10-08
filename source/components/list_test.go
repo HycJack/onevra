@@ -11,7 +11,7 @@ import (
 func TestListAppearanceAndSelection(t *testing.T) {
 	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
 		selected := 0
-		state := ui.ListState{Selected: &selected}
+		state := ListState{Selected: &selected}
 		tt := ui.NewTester(func(c *ui.Context) {
 			theme.Apply(c, mode)
 			original := c.Theme()
@@ -64,7 +64,7 @@ func TestListAppearanceAndSelection(t *testing.T) {
 func TestListVirtualizationAndDisabled(t *testing.T) {
 	for _, disabled := range []bool{false, true} {
 		selected, built := 0, 0
-		state := ui.ListState{Selected: &selected}
+		state := ListState{Selected: &selected}
 		tt := ui.NewTester(func(c *ui.Context) {
 			theme.Apply(c, theme.Light)
 			ui.Column(c).Disabled(disabled).Children(func() {

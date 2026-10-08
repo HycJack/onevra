@@ -5,6 +5,7 @@ import (
 	"image/png"
 	"os"
 	"path/filepath"
+	"runtime"
 	"testing"
 	"time"
 
@@ -57,7 +58,17 @@ func captureCatalog(t *testing.T, controls bool) {
 		mygo.RunOnMain(func() { win.SetSize(mode.width, 900); appShell.SetLeftExpanded(mode.width > 360) })
 		time.Sleep(400 * time.Millisecond)
 		for i, example := range catalog {
-			mygo.RunOnMain(func() { g.page = start + galleryPage(i); win.Invalidate() })
+			mygo.RunOnMain(func() {
+				g.page = start + galleryPage(i)
+				if controls && example.name == "Tree" {
+					s := g.controlState("Tree", "Tree")
+					s.on, s.choice = true, "main.go"
+					s = g.controlState("Tree", "TreeVirtualized")
+					s.tree.Open.Add("source")
+					s.index = 1
+				}
+				win.Invalidate()
+			})
 			if example.name == "Terminal" {
 				var state *demoState
 				mygo.RunOnMain(func() { state = g.mygoState("Terminal", "Default", true) })
@@ -74,6 +85,14 @@ func captureCatalog(t *testing.T, controls bool) {
 			img, err := png.Decode(bytes.NewReader(data))
 			if err != nil || img.Bounds().Dx() < mode.width {
 				t.Fatalf("invalid capture for %s/%s: %v", mode.name, example.name, err)
+			}
+			if controls && runtime.GOOS == "darwin" && mode.name != "narrow" && (example.name == "List" || example.name == "Tree") {
+				// Content captures omit the native material, but their alpha
+				// must still expose it below an otherwise empty sidebar pixel.
+				_, _, _, alpha := img.At(4, img.Bounds().Dy()/2).RGBA()
+				if alpha == 0xffff {
+					t.Fatalf("%s/%s made the sidebar opaque", mode.name, example.name)
+				}
 			}
 			path := filepath.Join(dir, prefix+mode.name+"-"+example.name+".png")
 			if err := os.WriteFile(path, data, 0600); err != nil {
