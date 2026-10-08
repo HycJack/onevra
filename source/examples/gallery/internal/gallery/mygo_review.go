@@ -55,6 +55,8 @@ var mygoHandled = map[string]mygoDecision{
 	"Checkbox":      {Replacement: "components.Checkbox", Reason: "Onevra checkbox styling"},
 	"Switch":        {Replacement: "components.Switch", Reason: "Onevra switch styling"},
 	"Radio":         {Replacement: "components.Radio", Reason: "Onevra radio styling"},
+	"NumberInput":   {Replacement: "components.NumberInput", Reason: "Onevra numeric text field with integrated vertical step buttons"},
+	"Stepper":       {Reason: "Step buttons are integrated into NumberInput; no standalone Stepper is needed"},
 	"TextInput":     {Replacement: "components.TextBox", Reason: "Onevra single-line text input"},
 	"TextArea":      {Replacement: "components.TextBox", Reason: "Onevra multiline text input"},
 	"SearchField":   {Replacement: "components.TextBox", Reason: "TextBox with a leading search icon; applications own search and clearing behavior"},

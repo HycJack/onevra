@@ -43,6 +43,7 @@ var controlCatalog = []controlExample{
 	{"Selection", "Selection", "Selection & values", []string{"Checkbox", "Switch", "Radio"}, controlSelection},
 	{"Select", "Selects", "Selection & values", []string{"Default", "Selected", "Searchable", "NativeSelect"}, controlSelect},
 	{"Menu", "Menus", "Overlays", []string{"Left-click", "Right-click"}, controlMenu},
+	{"NumberInput", "NumberInput", "Text input", []string{"Integer", "Decimal"}, controlNumberInput},
 	{"Slider", "Sliders", "Selection & values", []string{"Default", "Step", "Range", "Stepped range"}, controlSlider},
 	{"Progress", "Progress", "Status", []string{"Progress", "ProgressRing"}, controlProgress},
 	{"Tabs", "Tabs", "Navigation", []string{"Default"}, controlTabs},
@@ -150,7 +151,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 				switch example.name {
 				case "Text":
 					cell.FillWidth()
-				case "TextBox", "TextBox (multiline)", "Slider", "Sidebar", "List", "Split", "ScrollView", "Progress", "Accordion", "Collapsible":
+				case "TextBox", "TextBox (multiline)", "NumberInput", "Slider", "Sidebar", "List", "Split", "ScrollView", "Progress", "Accordion", "Collapsible":
 					cell.Width(240)
 				}
 				cell.Children(func() {
