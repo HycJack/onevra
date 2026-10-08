@@ -31,6 +31,7 @@ var controlCatalog = []controlExample{
 	{"Select", "Selects", []string{"Default", "Selected"}, controlSelect},
 	{"Slider", "Sliders", []string{"Default"}, controlSlider},
 	{"Tabs", "Tab rows", []string{"Default", "Selected"}, controlTabs},
+	{"PixelGrid", "Pixel grid", []string{"Default", "Offset"}, controlPixelGrid},
 }
 
 func controlPageStart() galleryPage { return mygoPageStart + galleryPage(len(mygoCatalog)) }
@@ -161,6 +162,18 @@ func controlSelect(c *ui.Context, s *controlState, _ string) {
 func controlSlider(c *ui.Context, s *controlState, _ string) {
 	components.Slider(c, &s.value, 0, 100).Label("Volume").FillWidth().MinWidth(0)
 	components.Textf(c, "Volume: %.0f", s.value)
+}
+
+func controlPixelGrid(c *ui.Context, s *controlState, variant string) {
+	components.Textf(c, "Grid spacing: %.0f", s.value)
+	components.Slider(c, &s.value, 4, 64).Label("Grid spacing").FillWidth().MinWidth(0)
+	options := components.PixelGridOptions{Spacing: float32(s.value)}
+	if variant == "Offset" {
+		options.OffsetX, options.OffsetY = -13, 9
+	}
+	components.PixelGrid(c, options).FillWidth().MinWidth(0).Height(220).Padding(24).Children(func() {
+		components.Button(c, "Canvas content", components.ButtonSecondary)
+	})
 }
 
 func controlTabs(c *ui.Context, s *controlState, _ string) {
