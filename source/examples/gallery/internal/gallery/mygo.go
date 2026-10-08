@@ -34,7 +34,7 @@ func mygoVariants(name string) []string {
 		return []string{"Off", "On", "Disabled"}
 	case "CheckboxGroup":
 		return []string{"Unchecked", "Mixed", "Checked", "Disabled"}
-	case "TextInput", "TextArea":
+	case "TextInput", "TextArea", "TextInputBuffer", "TextAreaBuffer":
 		return []string{"Empty", "Filled", "Read only", "Disabled"}
 	case "SearchField", "Autocomplete", "TokenField":
 		return []string{"Empty", "Filled", "Disabled"}
@@ -93,6 +93,14 @@ func (g *Gallery) mygoState(name, variant string, first bool) *demoState {
 			s.choice = "Files"
 		}
 	}
+	if name == "TextInputBuffer" || name == "TextAreaBuffer" {
+		text := s.text
+		if name == "TextAreaBuffer" && variant != "Empty" {
+			text = "Hello MyGo\nEdit this document with indexed text storage.\n你好，世界 🌍"
+		}
+		s.buffer = ui.NewTextBuffer(text)
+		s.readOnly = variant == "Read only"
+	}
 	g.mygoStates[key] = s
 	return s
 }
@@ -109,7 +117,7 @@ func (g *Gallery) MyGo(c *ui.Context, example mygoExample) {
 						components.Text(c, variant).Bold().TextColor(t.TextMuted)
 					}
 					ui.Column(c).FillWidth().MinWidth(0).Gap(12).Disabled(variant == "Disabled").Children(func() {
-						if variant == "Read only" {
+						if variant == "Read only" && s.buffer == nil {
 							if example.name == "TextInput" {
 								components.TextField(c, &s.text).Label("Name").ReadOnly(true).FillWidth()
 							} else {

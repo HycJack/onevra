@@ -17,6 +17,8 @@ var mygoExamples = []mygoExample{
 	{"RangeSlider", "Selection", exampleRangeSlider},
 	{"Stepper", "Selection", exampleStepper},
 	{"Rating", "Selection", exampleRating},
+	{"TextInputBuffer", "Text input", exampleTextInputBuffer},
+	{"TextAreaBuffer", "Text input", exampleTextAreaBuffer},
 	{"NumberInput", "Text input", exampleNumberInput},
 	{"SearchField", "Text input", exampleSearchField},
 	{"Combobox", "Text input", exampleCombobox},

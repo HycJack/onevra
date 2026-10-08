@@ -2,7 +2,7 @@
 
 package gallery
 
-const mygoScanVersion = "v0.2.16"
+const mygoScanVersion = "v0.2.18"
 
 var mygoDiscovered = []mygoComponent{
 	{Name: "Accordion", Source: "ui/collapsible.go"},
@@ -73,8 +73,10 @@ var mygoDiscovered = []mygoComponent{
 	{Name: "Table", Source: "ui/table.go"},
 	{Name: "Tabs", Source: "ui/tabs.go"},
 	{Name: "Text", Source: "ui/widgets.go"},
-	{Name: "TextArea", Source: "ui/editor.go"},
-	{Name: "TextInput", Source: "ui/editor.go"},
+	{Name: "TextArea", Source: "ui/textinput.go"},
+	{Name: "TextAreaBuffer", Source: "ui/textbuffer_input.go"},
+	{Name: "TextInput", Source: "ui/textinput.go"},
+	{Name: "TextInputBuffer", Source: "ui/textbuffer_input.go"},
 	{Name: "Textf", Source: "ui/widgets.go"},
 	{Name: "TimeInput", Source: "ui/timeinput.go"},
 	{Name: "Toggle", Source: "ui/toggle.go"},

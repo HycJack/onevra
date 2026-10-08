@@ -14,6 +14,8 @@ import (
 type demoState struct {
 	terminal        terminalDemo
 	text            string
+	buffer          *ui.TextBuffer
+	readOnly        bool
 	choice          string
 	on, other, open bool
 	index, count    int
@@ -32,6 +34,14 @@ func newDemoState() *demoState {
 	return &demoState{text: "Hello MyGo", choice: "Small", value: 40, high: 80,
 		size: 140, day: time.Date(2026, 6, 15, 9, 30, 0, 0, time.Local),
 		color: ui.RGB(80, 120, 220), tags: []string{"Go"}, router: ui.NewRouter("/home")}
+}
+
+func exampleTextInputBuffer(c *ui.Context, s *demoState) {
+	ui.TextInputBuffer(c, s.buffer).Label("Name").Placeholder("Enter a name").ReadOnly(s.readOnly).FillWidth()
+}
+
+func exampleTextAreaBuffer(c *ui.Context, s *demoState) {
+	ui.TextAreaBuffer(c, s.buffer).Label("Notes").Placeholder("Write some notes").ReadOnly(s.readOnly).Height(140).FillWidth()
 }
 
 func exampleMenuButton(c *ui.Context, s *demoState) {
