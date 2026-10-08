@@ -73,9 +73,9 @@ type shellWindow interface {
 }
 
 // NewShell creates a native window and installs the page container.
-// It configures system controls and behind-window blur on macOS, and custom
-// caption buttons on Windows. Other platforms retain their native controls.
-// Windows and Linux use an opaque background. It does not persist state.
+// It requests a titlebar material on macOS and Mica with custom caption buttons
+// on Windows. If no material is effective, it draws an opaque theme background.
+// Other platforms retain their native controls. It does not persist state.
 func NewShell(options ShellOptions) *Shell {
 	s := newShell(options)
 	s.window = mygo.NewWindow(s.nativeOptions())
@@ -142,10 +142,14 @@ func (s *Shell) nativeOptions() mygo.WindowOptions {
 }
 
 func shellVibrancy() mygo.Vibrancy {
-	if runtime.GOOS == "darwin" {
+	switch runtime.GOOS {
+	case "darwin":
 		return mygo.VibrancyTitlebar
+	case "windows":
+		return mygo.VibrancyMica
+	default:
+		return mygo.VibrancyNone
 	}
-	return mygo.VibrancyNone
 }
 
 // Window exposes the original MyGo handle for events and lifecycle operations.
@@ -216,12 +220,13 @@ func openFraction(open bool) float32 {
 func (s *Shell) view(c *ui.Context) {
 	// The theme must be installed before any widget is created.
 	theme.Apply(c, s.options.Appearance)
-	if runtime.GOOS == "darwin" {
+	vibrant := c.Vibrancy()
+	if vibrant {
 		c.Root().Background(ui.Transparent)
 	}
 	background := c.Theme().Background.Alpha(1)
 	root := ui.Column(c).Fill().Clip()
-	if runtime.GOOS != "darwin" {
+	if !vibrant {
 		root.Background(background)
 	}
 	// Snapshot the page for this frame; callbacks can change it for the next.
@@ -252,10 +257,10 @@ func (s *Shell) view(c *ui.Context) {
 					// Only the visible slice changes width. Sidebar content stays put
 					// while the opaque main region covers or uncovers it.
 					sidebar := ui.Column(c).Key("left").Width(leftWidth * leftProgress).Shrink(0).FillHeight().Clip()
-					if c.Theme().Dark && runtime.GOOS == "darwin" {
+					if c.Theme().Dark && vibrant {
 						// Tint the native material without hiding its backdrop blur.
 						sidebar.Background(c.Theme().Surface.Alpha(0.65))
-					} else if c.Theme().Dark || runtime.GOOS == "windows" {
+					} else if !vibrant {
 						sidebar.Background(c.Theme().Surface.Alpha(1))
 					}
 					sidebar.Children(func() {

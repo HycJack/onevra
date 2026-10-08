@@ -39,6 +39,8 @@ func TestShellNativeOptions(t *testing.T) {
 	material := mygo.VibrancyNone
 	if runtime.GOOS == "darwin" {
 		material = mygo.VibrancyTitlebar
+	} else if runtime.GOOS == "windows" {
+		material = mygo.VibrancyMica
 	}
 	if o.Transparent != (runtime.GOOS == "darwin") || o.Vibrancy != material || o.Frameless != (runtime.GOOS == "windows") || o.DisableResize || o.StateKey != "" {
 		t.Fatal(o)
@@ -324,9 +326,6 @@ func TestShellHasOnlyLeftSidebarControl(t *testing.T) {
 
 func TestShellSidebarBackground(t *testing.T) {
 	for _, dark := range []bool{false, true} {
-		if !dark && runtime.GOOS != "windows" {
-			continue
-		}
 		s, _ := fixture()
 		s.options.Left = nil
 		s.options.Content = nil
@@ -337,9 +336,6 @@ func TestShellSidebarBackground(t *testing.T) {
 		img := tt.Image()
 		sidebar, main := img.RGBAAt(100, 400), img.RGBAAt(400, 400)
 		wantAlpha := uint8(255)
-		if runtime.GOOS == "darwin" {
-			wantAlpha = theme.DarkPalette().Surface.Alpha(0.65).A
-		}
 		if sidebar == main || sidebar.A != wantAlpha || (dark && !(sidebar.B > sidebar.R)) {
 			t.Fatalf("dark=%v: sidebar=%v main=%v", dark, sidebar, main)
 		}
@@ -367,20 +363,12 @@ func TestShellBackgroundsAndScaling(t *testing.T) {
 		s, _ := fixture()
 		tt := ui.NewTester(s.view, 1100, 600)
 		tt.SetDark(dark)
-		for _, p := range []struct {
-			x     int
-			alpha uint32
-		}{{100, 0}, {400, 65535}, {1000, 65535}} {
+		// Headless windows have no effective material by default.
+		for _, x := range []int{100, 400, 1000} {
 			for _, y := range []int{2, 400, 599} {
-				_, _, _, a := tt.Image().At(p.x, y).RGBA()
-				want := p.alpha
-				if runtime.GOOS != "darwin" {
-					want = 65535
-				} else if dark && p.x == 100 {
-					want = uint32(theme.DarkPalette().Surface.Alpha(0.65).A) * 257
-				}
-				if a != want {
-					t.Fatalf("dark=%v x=%d y=%d alpha=%d want=%d", dark, p.x, y, a, want)
+				_, _, _, a := tt.Image().At(x, y).RGBA()
+				if a != 65535 {
+					t.Fatalf("dark=%v x=%d y=%d alpha=%d want=65535", dark, x, y, a)
 				}
 			}
 		}
