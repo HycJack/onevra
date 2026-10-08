@@ -130,13 +130,7 @@ func TestMyGoInteractions(t *testing.T) {
 func TestMyGoGroupedNavigation(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.Left, 220, 5000)
-	// Scope heading lookup to MyGo: Onevra also has a Selection entry.
 	texts := tt.Texts()
-	start := slices.Index(texts, "MyGo components")
-	if start < 0 {
-		t.Fatal("missing MyGo navigation")
-	}
-	texts = texts[start+1:]
 	consume := func(label string) {
 		t.Helper()
 		i := slices.Index(texts, label)
@@ -145,8 +139,13 @@ func TestMyGoGroupedNavigation(t *testing.T) {
 		}
 		texts = texts[i+1:]
 	}
-	for _, group := range mygoGroups {
+	for _, group := range navigationGroups {
 		consume(group)
+		for _, entry := range controlCatalog {
+			if entry.group == group {
+				consume(entry.label)
+			}
+		}
 		for _, entry := range mygoCatalog {
 			if entry.group == group {
 				consume(entry.name)

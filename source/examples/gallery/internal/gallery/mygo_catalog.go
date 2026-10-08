@@ -6,12 +6,12 @@ var mygoCatalog = unhandledMyGoExamples(mygoExamples)
 // Hand-built demonstrations are independent of the generated source inventory.
 var mygoExamples = []mygoExample{
 	{"Segmented", "Actions", exampleSegmented},
-	{"CheckboxGroup", "Selection", exampleCheckboxGroup},
-	{"RadioGroup", "Selection", exampleRadioGroup},
-	{"StepSlider", "Selection", exampleStepSlider},
-	{"RangeSlider", "Selection", exampleRangeSlider},
-	{"Stepper", "Selection", exampleStepper},
-	{"Rating", "Selection", exampleRating},
+	{"CheckboxGroup", "Selection & values", exampleCheckboxGroup},
+	{"RadioGroup", "Selection & values", exampleRadioGroup},
+	{"StepSlider", "Selection & values", exampleStepSlider},
+	{"RangeSlider", "Selection & values", exampleRangeSlider},
+	{"Stepper", "Selection & values", exampleStepper},
+	{"Rating", "Selection & values", exampleRating},
 	{"TextInputBuffer", "Text input", exampleTextInputBuffer},
 	{"TextAreaBuffer", "Text input", exampleTextAreaBuffer},
 	{"NumberInput", "Text input", exampleNumberInput},

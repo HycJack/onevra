@@ -6,9 +6,9 @@ import (
 )
 
 type controlExample struct {
-	name, label string
-	variants    []string
-	build       func(*ui.Context, *controlState, string)
+	name, label, group string
+	variants           []string
+	build              func(*ui.Context, *controlState, string)
 }
 
 // Control examples keep their state separate from the upstream widget catalog.
@@ -28,33 +28,33 @@ type controlState struct {
 }
 
 var textBoxControlCatalog = []controlExample{
-	{"TextBox", "Text boxes", []string{"Empty", "Filled", "Read only", "Search"}, controlTextBox},
-	{"TextBox (multiline)", "Text areas", []string{"Empty", "Filled", "Read only"}, controlTextBoxMultiline},
+	{"TextBox", "Text boxes", "Text input", []string{"Empty", "Filled", "Read only", "Search"}, controlTextBox},
+	{"TextBox (multiline)", "Text areas", "Text input", []string{"Empty", "Filled", "Read only"}, controlTextBoxMultiline},
 }
 
 var controlCatalog = []controlExample{
-	{"Badge", "Badge", []string{"Default", "Accent"}, controlBadge},
-	{"RichText", "RichText", []string{"Default"}, controlRichText},
-	{"Breadcrumbs", "Breadcrumbs", []string{"Default"}, controlBreadcrumbs},
-	{"Rating", "Rating", []string{"Default"}, controlRating},
-	{"Text", "Text", []string{"Default", "Editable"}, controlText},
-	{"TextBox", "TextBox", []string{"TextBox", "TextBox (multiline)"}, controlTextBox},
-	{"Button", "Buttons", []string{"Button", "ToggleButton"}, controlButton},
-	{"Selection", "Selection", []string{"Checkbox", "Switch", "Radio"}, controlSelection},
-	{"Select", "Selects", []string{"Default", "Selected", "Searchable", "NativeSelect"}, controlSelect},
-	{"Menu", "Menus", []string{"Left-click", "Right-click"}, controlMenu},
-	{"Slider", "Sliders", []string{"Default", "Step", "Range", "Stepped range"}, controlSlider},
-	{"Progress", "Progress", []string{"Progress", "ProgressRing"}, controlProgress},
-	{"Tabs", "Tabs", []string{"Default"}, controlTabs},
-	{"Accordion", "Accordion", []string{"Default"}, controlAccordion},
-	{"Collapsible", "Collapsible", []string{"Right arrow", "Left arrow"}, controlCollapsible},
-	{"Icon", "Icons", []string{"Default"}, controlIcon},
-	{"Image", "Images", []string{"Contain", "Cover", "Stretch", "Rounded", "Grayscale"}, controlImage},
-	{"List", "List", []string{"Default"}, controlList},
-	{"Tree", "Tree", []string{"Tree", "TreeVirtualized"}, controlTree},
-	{"Sidebar", "Sidebar", []string{"Default"}, controlSidebar},
-	{"Split", "Split panes", []string{"Horizontal", "Vertical"}, controlSplit},
-	{"ScrollView", "Scroll views", []string{"Vertical", "Horizontal", "Both", "Insets"}, controlScrollView},
+	{"Badge", "Badge", "Status", []string{"Default", "Accent"}, controlBadge},
+	{"RichText", "RichText", "Media & text", []string{"Default"}, controlRichText},
+	{"Breadcrumbs", "Breadcrumbs", "Navigation", []string{"Default"}, controlBreadcrumbs},
+	{"Rating", "Rating", "Selection & values", []string{"Default"}, controlRating},
+	{"Text", "Text", "Media & text", []string{"Default", "Editable"}, controlText},
+	{"TextBox", "TextBox", "Text input", []string{"TextBox", "TextBox (multiline)"}, controlTextBox},
+	{"Button", "Buttons", "Actions", []string{"Button", "ToggleButton"}, controlButton},
+	{"Selection", "Selection", "Selection & values", []string{"Checkbox", "Switch", "Radio"}, controlSelection},
+	{"Select", "Selects", "Selection & values", []string{"Default", "Selected", "Searchable", "NativeSelect"}, controlSelect},
+	{"Menu", "Menus", "Overlays", []string{"Left-click", "Right-click"}, controlMenu},
+	{"Slider", "Sliders", "Selection & values", []string{"Default", "Step", "Range", "Stepped range"}, controlSlider},
+	{"Progress", "Progress", "Status", []string{"Progress", "ProgressRing"}, controlProgress},
+	{"Tabs", "Tabs", "Navigation", []string{"Default"}, controlTabs},
+	{"Accordion", "Accordion", "Containers", []string{"Default"}, controlAccordion},
+	{"Collapsible", "Collapsible", "Containers", []string{"Right arrow", "Left arrow"}, controlCollapsible},
+	{"Icon", "Icons", "Media & text", []string{"Default"}, controlIcon},
+	{"Image", "Images", "Media & text", []string{"Contain", "Cover", "Stretch", "Rounded", "Grayscale"}, controlImage},
+	{"List", "List", "Collections", []string{"Default"}, controlList},
+	{"Tree", "Tree", "Collections", []string{"Tree", "TreeVirtualized"}, controlTree},
+	{"Sidebar", "Sidebar", "Navigation", []string{"Default"}, controlSidebar},
+	{"Split", "Split panes", "Layout", []string{"Horizontal", "Vertical"}, controlSplit},
+	{"ScrollView", "Scroll views", "Layout", []string{"Vertical", "Horizontal", "Both", "Insets"}, controlScrollView},
 }
 
 func controlPageStart() galleryPage { return mygoPageStart + galleryPage(len(mygoCatalog)) }

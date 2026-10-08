@@ -50,7 +50,7 @@ func (g *Gallery) Titlebar(c *ui.Context) {
 		title = example.group + " / " + example.name
 	}
 	if example, ok := controlExampleFor(g.page); ok {
-		title = "Components / " + example.name
+		title = example.group + " / " + example.name
 	}
 	components.Text(c, title).Bold().SingleLine()
 }
@@ -68,21 +68,13 @@ func (g *Gallery) navigation(c *ui.Context) {
 			components.SidebarSection(c, "Icon library", func() {
 				g.navigationItem(c, "Lucide", lucide.Shapes(), lucidePage)
 			})
-			components.SidebarSection(c, "Components", func() {
-				for i, example := range controlCatalog {
-					g.navigationItem(c, example.label, lucide.Component(), controlPageStart()+galleryPage(i))
-				}
-			})
-			components.SidebarSection(c, "Plugins", func() {
-				for i, example := range mygoCatalog {
-					if example.group == "Plugins" {
-						g.navigationItem(c, example.name, lucide.Component(), mygoPageStart+galleryPage(i))
-					}
-				}
-			})
-			components.SidebarSection(c, "MyGo components", nil)
-			for _, group := range mygoGroups {
+			for _, group := range navigationGroups {
 				components.SidebarSection(c, group, func() {
+					for i, example := range controlCatalog {
+						if example.group == group {
+							g.navigationItem(c, example.label, lucide.Component(), controlPageStart()+galleryPage(i))
+						}
+					}
 					for i, example := range mygoCatalog {
 						if example.group == group {
 							g.navigationItem(c, example.name, lucide.Component(), mygoPageStart+galleryPage(i))

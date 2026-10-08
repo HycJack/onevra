@@ -18,7 +18,14 @@ type iconEntry struct {
 }
 
 func (g *Gallery) navigationItem(c *ui.Context, label string, icon *ui.SVG, page galleryPage) {
-	if components.SidebarItem(c, label, icon, g.page == page).Clicked() {
+	item := components.SidebarItem(c, label, icon, g.page == page)
+	if _, upstream := mygoExampleFor(page); upstream {
+		item.Children(func() {
+			ui.Spacer(c)
+			components.Text(c, "•").FontSize(c.Theme().Rem(1.4)).TextColor(c.Theme().TextMuted).SingleLine()
+		})
+	}
+	if item.Clicked() {
 		g.page = page
 	}
 }

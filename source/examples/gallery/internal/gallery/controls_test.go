@@ -73,7 +73,7 @@ func TestPixelGridHasNoStandaloneExample(t *testing.T) {
 
 func TestControlNavigationAndState(t *testing.T) {
 	g := &Gallery{}
-	tt := ui.NewTester(g.Left, 220, 1600)
+	tt := ui.NewTester(g.Left, 220, 6000)
 	for i, example := range controlCatalog {
 		if err := tt.Click(example.label); err != nil {
 			t.Fatal(err)
@@ -82,7 +82,7 @@ func TestControlNavigationAndState(t *testing.T) {
 			t.Fatal("incorrect navigation")
 		}
 		title := ui.NewTester(g.Titlebar, 540, 60)
-		if !title.HasText("Components / " + example.name) {
+		if !title.HasText(example.group + " / " + example.name) {
 			t.Fatal("incorrect title")
 		}
 	}

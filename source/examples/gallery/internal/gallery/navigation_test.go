@@ -26,20 +26,46 @@ func TestNavigationGroupOrder(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.Left, 220, 6000)
 	var bottom float32
-	for _, label := range []string{"Overview", "Component status", "Icon library", "Lucide", "Components", "Plugins", "Terminal", "MyGo components", "Text input", "Overlays"} {
+	for _, label := range []string{"Overview", "Component status", "Icon library", "Lucide", "Plugins", "Terminal", "Actions", "Buttons", "Selection & values", "Text input", "Overlays"} {
 		r, ok := tt.Find(label)
 		if !ok || r.Y < bottom {
 			t.Fatalf("%s missing or out of order: %v (previous bottom %v)", label, r, bottom)
 		}
 		bottom = r.Y + r.H
 	}
-	if tt.HasText("Onevra controls") {
+	if tt.HasText("Onevra controls") || tt.HasText("Components") || tt.HasText("MyGo components") {
 		t.Fatal("obsolete component group is still visible")
 	}
 	for _, group := range mygoGroups {
 		if group == "Plugins" {
 			t.Fatal("plugins must not also appear among built-in MyGo groups")
 		}
+	}
+}
+
+func TestNavigationMyGoMarkers(t *testing.T) {
+	g := &Gallery{}
+	tt := ui.NewTester(g.Left, 220, 6000)
+	texts := tt.Texts()
+	markers := 0
+	for i, text := range texts {
+		if text != "•" {
+			continue
+		}
+		markers++
+		if i == 0 {
+			t.Fatal("marker has no preceding item")
+		}
+		found := false
+		for _, example := range mygoCatalog {
+			found = found || texts[i-1] == example.name
+		}
+		if !found {
+			t.Fatalf("marker follows non-MyGo item: %q", texts[i-1])
+		}
+	}
+	if markers != len(mygoCatalog) {
+		t.Fatalf("got %d MyGo markers, want %d", markers, len(mygoCatalog))
 	}
 }
 
