@@ -36,7 +36,7 @@ func TestIconCatalogCoverage(t *testing.T) {
 		}
 	}
 	if !reflect.DeepEqual(names, catalogNames) {
-		t.Fatal("catalog is stale: run go generate ./examples/gallery/internal/gallery")
+		t.Fatal("catalog is stale: rerun tools/lucidegen with the pinned upstream checkout")
 	}
 }
 

@@ -5,8 +5,6 @@ import (
 	"github.com/oneo-me/onevra/components"
 )
 
-//go:generate go run ../cmd/galleryicons
-
 type galleryPage int
 
 const (
