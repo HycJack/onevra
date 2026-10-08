@@ -53,4 +53,5 @@ var mygoExamples = []mygoExample{
 	{"Spacer", "Layout", exampleSpacer},
 	{"Divider", "Layout", exampleDivider},
 	{"Terminal", "Plugins", exampleTerminal},
+	{"Glass", "Plugins", exampleGlass},
 }
