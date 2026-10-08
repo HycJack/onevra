@@ -14,9 +14,10 @@ import (
 
 // State contains only presentation state, never interactive demo values.
 type State struct {
-	Window       *WindowState `json:"window,omitempty"`
-	SidebarWidth float32      `json:"sidebar_width,omitempty"`
-	SelectedItem string       `json:"selected_item,omitempty"`
+	Window           *WindowState `json:"window,omitempty"`
+	SidebarWidth     float32      `json:"sidebar_width,omitempty"`
+	SidebarCollapsed bool         `json:"sidebar_collapsed"`
+	SelectedItem     string       `json:"selected_item,omitempty"`
 }
 
 type WindowState struct {
@@ -121,6 +122,7 @@ func (g *Gallery) NewPersistent(path string) *shell.Shell {
 	}
 	g.page = pageFromKey(state.SelectedItem)
 	s := g.New()
+	s.SetLeftExpanded(!state.SidebarCollapsed)
 	w := s.Window()
 	if state.SidebarWidth > 0 {
 		s.SetLeftWidth(state.SidebarWidth)
@@ -165,6 +167,7 @@ func (g *Gallery) NewPersistent(path string) *shell.Shell {
 	w.OnClose(func(*mygo.CloseEvent) {
 		capture()
 		state.SidebarWidth = s.LeftWidth()
+		state.SidebarCollapsed = !s.LeftExpanded()
 		state.SelectedItem = pageKey(g.page)
 		if err := SaveState(path, state); err != nil {
 			log.Printf("Save gallery state: %v", err)
