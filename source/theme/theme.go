@@ -69,7 +69,7 @@ func DarkPalette() *ui.Theme {
 	t.Surface = ui.Hex("#243247")
 	t.SurfaceHover = ui.Hex("#30435e")
 	t.SurfacePressed = ui.Hex("#2b3c54")
-	t.Border = ui.Hex("#3b506c")
+	t.Border = ui.Hex("#2e3e55")
 	t.Text = ui.Hex("#e7edf8")
 	t.TextMuted = ui.Hex("#a4b4cc")
 	t.Accent = accent
