@@ -16,6 +16,7 @@ type controlState struct {
 	on      bool
 	choice  string
 	text    string
+	query   string
 	index   int
 	button  buttonExampleState
 	toggles [2]bool
@@ -32,7 +33,7 @@ var controlCatalog = []controlExample{
 	{"Text", "Text", []string{"Text", "TextField", "TextArea"}, controlText},
 	{"Button", "Buttons", []string{"Button", "MenuButton", "ToggleButton"}, controlButton},
 	{"Selection", "Selection", []string{"Checkbox", "Switch", "Radio"}, controlSelection},
-	{"Select", "Selects", []string{"Default", "Selected"}, controlSelect},
+	{"Select", "Selects", []string{"Default", "Selected", "Searchable"}, controlSelect},
 	{"Slider", "Sliders", []string{"Default"}, controlSlider},
 	{"Tabs", "Tab rows", []string{"Default", "Selected"}, controlTabs},
 	{"Icon", "Icons", []string{"Default"}, controlIcon},

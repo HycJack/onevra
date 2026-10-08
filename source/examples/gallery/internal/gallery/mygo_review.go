@@ -42,6 +42,8 @@ var mygoHandled = map[string]mygoDecision{
 	"TextInput":     {Replacement: "components.TextField", Reason: "Onevra single-line text input"},
 	"TextArea":      {Replacement: "components.TextArea", Reason: "Onevra multiline text input"},
 	"Select":        {Replacement: "components.Select", Reason: "Onevra select parts with application-owned options"},
+	"Combobox":      {Replacement: "components.Select", Reason: "Searchable Select with application-owned filtering"},
+	"Autocomplete":  {Replacement: "components.Select", Reason: "Searchable Select with application-owned suggestions"},
 	"Slider":        {Replacement: "components.Slider", Reason: "Onevra continuous slider"},
 	"Tabs":          {Replacement: "components.Tabs", Reason: "Onevra tab styling"},
 	"Text":          {Replacement: "components.Text", Reason: "Onevra text defaults"},

@@ -100,16 +100,6 @@ func exampleSearchField(c *ui.Context, s *demoState) {
 	}
 }
 
-func exampleCombobox(c *ui.Context, s *demoState) {
-	ui.Combobox(c, &s.choice, []string{"Small", "Medium", "Large"}).Label("Size")
-	components.Text(c, s.choice)
-}
-
-func exampleAutocomplete(c *ui.Context, s *demoState) {
-	ui.Autocomplete(c, &s.text, []string{"Hello MyGo", "Hello Go", "Hello world"}).Label("Greeting")
-	components.Text(c, s.text).Wrap()
-}
-
 func exampleTokenField(c *ui.Context, s *demoState) {
 	ui.TokenField(c, &s.tags, []string{"Go", "UI", "Native", "Desktop"}).Label("Tags").FillWidth()
 	components.Text(c, strings.Join(s.tags, ", ")).Wrap()

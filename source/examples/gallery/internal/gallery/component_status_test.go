@@ -60,6 +60,11 @@ func TestComponentStatusCards(t *testing.T) {
 	if cards[0].Name != "Button" || !reflect.DeepEqual(cards[0].Replaces, []string{"Button", "Link", "MenuButton", "PrimaryButton"}) {
 		t.Fatalf("button variants not grouped: %+v", cards[0])
 	}
+	for _, card := range cards {
+		if card.Name == "Select" && !reflect.DeepEqual(card.Replaces, []string{"Autocomplete", "Combobox", "Select"}) {
+			t.Fatalf("Select replacements not grouped: %+v", card)
+		}
+	}
 	foundScrollView := false
 	for _, card := range cards {
 		if card.Name == "ScrollView" {

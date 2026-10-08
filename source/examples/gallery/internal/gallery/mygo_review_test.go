@@ -17,7 +17,7 @@ func TestMyGoReviewDecisions(t *testing.T) {
 	if !reflect.DeepEqual(names, []string{"ANew", "Toast", "ZNew"}) {
 		t.Fatalf("pending = %v", names)
 	}
-	for _, name := range []string{"Button", "PrimaryButton", "Link", "MenuButton"} {
+	for _, name := range []string{"Button", "PrimaryButton", "Link", "MenuButton", "Combobox", "Autocomplete"} {
 		if mygoHandled[name].Replacement == "" {
 			t.Fatalf("missing decision for %s", name)
 		}
@@ -85,7 +85,7 @@ func TestMyGoReviewLog(t *testing.T) {
 	if !strings.Contains(output, mygoScanVersion) || !strings.Contains(output, "mygo_review.go") {
 		t.Fatal(output)
 	}
-	for _, name := range []string{"Button", "PrimaryButton", "Link", "MenuButton", "Toggle", "ToggleGroup", "CheckboxGroup", "RadioGroup", "Segmented", "Box", "Avatar", "Meter", "BackButton", "ForwardButton", "Form", "Field", "Fieldset", "FindBar", "Toolbar"} {
+	for _, name := range []string{"Button", "PrimaryButton", "Link", "MenuButton", "Toggle", "ToggleGroup", "CheckboxGroup", "RadioGroup", "Segmented", "Box", "Combobox", "Autocomplete", "Avatar", "Meter", "BackButton", "ForwardButton", "Form", "Field", "Fieldset", "FindBar", "Toolbar"} {
 		if strings.Contains(output, "pending: "+name+" (") {
 			t.Fatalf("unexpected reminder: %s", name)
 		}

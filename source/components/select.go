@@ -1,28 +1,77 @@
 package components
 
-import "github.com/egoist/mygo/ui"
+import (
+	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/icons/lucide"
+)
+
+// SelectParts composes MyGo's select behavior with a themed popup and an
+// optional search field. Applications own the query, filtering and option text.
+// Embedded MyGo parts retain trigger, item and open-state behavior.
+type SelectParts[T comparable] struct {
+	*ui.SelectParts[T]
+	c        *ui.Context
+	selected *T
+}
+
+// Popup shows a themed, shadowed panel while the select is open. The callback
+// can override its appearance and build a SearchField followed by filtered Items.
+// It returns nil when closed.
+func (s *SelectParts[T]) Popup(build func(panel *ui.Element)) *ui.Element {
+	t := s.c.Theme()
+	return s.SelectParts.Popup(func(panel *ui.Element) {
+		panel.Padding(t.Space(1)).Radius(t.Radius).Background(t.Background).Border(1, t.Border).
+			Shadow(0, t.Space(1), t.Space(4), 0, ui.RGBA(0, 0, 0, 0.22))
+		build(panel)
+	})
+}
+
+// Item creates a themed option. The selected value keeps the accent background,
+// including while hovered; other pointed or keyboard-highlighted options use a
+// neutral background. The caller supplies its label and children.
+func (s *SelectParts[T]) Item(value T) *ui.Element {
+	t := s.c.Theme()
+	item := s.SelectParts.Item(value).Padding(t.Space(1.5), t.Space(2.5)).Radius(t.Radius / 2)
+	if value == *s.selected {
+		item.Background(t.Accent).TextColor(t.AccentText)
+	} else if item.Hovered() || item.Highlighted() {
+		item.Background(t.SurfaceHover).TextColor(t.Text)
+	}
+	return item
+}
+
+// SearchField adds an optional search input inside Popup. Give it an accessible
+// Label and localized Placeholder. Build only matching Items after it; an empty
+// result message and query reset policy belong to the caller. Down or Up returns
+// focus to the trigger, where MyGo handles option navigation and selection.
+func (s *SelectParts[T]) SearchField(query *string) *ui.Element {
+	t := s.c.Theme()
+	input := TextField(s.c, query).FillWidth().AutoFocus().Radius(t.Radius/2).
+		Padding(t.Space(1.5), t.Space(2.5), t.Space(1.5), t.Space(8)).Margin(0, 0, t.Space(1.5), 0)
+	input.DrawOver(func(p *ui.Painter, r ui.Rect) {
+		size := t.Space(4)
+		p.Icon(lucide.Search(), ui.Rect{X: r.X + t.Space(2.5), Y: r.Y + (r.H-size)/2, W: size, H: size}, t.TextMuted)
+	})
+	if input.Shortcut(0, ui.KeyDown) || input.Shortcut(0, ui.KeyUp) {
+		s.Trigger.Focus()
+	}
+	return input
+}
 
 // Select creates a drop-down choosing *selected from options the caller
-// builds in Popup with Item. The trigger has the Onevra button look; build
-// the popup and the items with the theme, highlighting the pointed option
-// with the accent color:
+// builds in Popup with Item. The trigger, popup and items have Onevra styling:
 //
 //	sel := components.Select(c, &choice)
 //	sel.Trigger.Children(func() { components.Text(c, string(choice)).SingleLine() })
 //	sel.Popup(func(panel *ui.Element) {
-//		t := c.Theme()
-//		panel.Padding(t.Space(1)).Radius(t.Radius).Background(t.Background).Border(1, t.Border)
 //		for _, opt := range options {
-//			item := sel.Item(opt).Padding(t.Space(1.5), t.Space(2.5)).Radius(t.Radius)
-//			if item.Highlighted() {
-//				item.Background(t.Accent).TextColor(t.AccentText)
-//			}
+//			item := sel.Item(opt)
 //			item.Children(func() { components.Text(c, string(opt)).SingleLine() })
 //		}
 //	})
 //
 // The trigger's Changed reports a new choice.
-func Select[T comparable](c *ui.Context, selected *T) *ui.SelectParts[T] {
+func Select[T comparable](c *ui.Context, selected *T) *SelectParts[T] {
 	t := c.Theme()
 	sel := ui.SelectBase(c, selected)
 	b := sel.Trigger
@@ -47,5 +96,5 @@ func Select[T comparable](c *ui.Context, selected *T) *ui.SelectParts[T] {
 		p.StrokePath(&path, 1.5, t.TextMuted)
 	})
 	dimmed(b)
-	return sel
+	return &SelectParts[T]{SelectParts: sel, c: c, selected: selected}
 }
