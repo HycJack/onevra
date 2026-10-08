@@ -13,6 +13,7 @@ type controlExample struct {
 
 // Control examples keep their state separate from the upstream widget catalog.
 type controlState struct {
+	list    ui.ListState
 	on      bool
 	choice  string
 	text    string
@@ -43,6 +44,7 @@ var controlCatalog = []controlExample{
 	{"Collapsible", "Collapsible", []string{"Right arrow", "Left arrow"}, controlCollapsible},
 	{"Icon", "Icons", []string{"Default"}, controlIcon},
 	{"Image", "Images", []string{"Contain", "Cover", "Stretch", "Rounded", "Grayscale"}, controlImage},
+	{"List", "List", []string{"Default"}, controlList},
 	{"Sidebar", "Sidebar", []string{"Default"}, controlSidebar},
 	{"ScrollView", "Scroll views", []string{"Vertical", "Horizontal", "Both", "Insets"}, controlScrollView},
 }
@@ -125,7 +127,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 				switch example.name {
 				case "Text":
 					cell.FillWidth()
-				case "TextBox", "TextBox (multiline)", "Slider", "Sidebar", "ScrollView", "Progress", "Accordion", "Collapsible":
+				case "TextBox", "TextBox (multiline)", "Slider", "Sidebar", "List", "ScrollView", "Progress", "Accordion", "Collapsible":
 					cell.Width(240)
 				}
 				cell.Children(func() {
