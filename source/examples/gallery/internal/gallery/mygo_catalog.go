@@ -59,7 +59,6 @@ var mygoExamples = []mygoExample{
 	{"Meter", "Status", exampleMeter},
 	{"Badge", "Status", exampleBadge},
 	{"Image", "Media & text", exampleImage},
-	{"Icon", "Media & text", exampleIcon},
 	{"Avatar", "Media & text", exampleAvatar},
 	{"RichText", "Media & text", exampleRichText},
 	{"Box", "Layout", exampleBox},

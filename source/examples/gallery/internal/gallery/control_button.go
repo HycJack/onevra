@@ -11,7 +11,7 @@ func controlButtonMenu(c *ui.Context, s *controlState) {
 	components.Button(c, "", components.ButtonSecondary).Label("Choose size").AlignSelf(ui.Start).Gap(c.Theme().Space(2)).
 		Children(func() {
 			components.Text(c, "Size: "+s.choice).SingleLine()
-			ui.Icon(c, lucide.ChevronDown()).Size(16, 16)
+			components.Icon(c, lucide.ChevronDown).Size(16, 16)
 		}).Menu(func(m *ui.Menu) {
 		for _, size := range []string{"Small", "Medium", "Large"} {
 			if m.Item(size).Checked(s.choice == size).Chosen() {

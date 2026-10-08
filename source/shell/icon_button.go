@@ -1,6 +1,9 @@
 package shell
 
-import "github.com/egoist/mygo/ui"
+import (
+	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/components"
+)
 
 // IconButton creates an icon-only button with a tooltip and accessible
 // label. It uses MyGo's pointer, keyboard and focus behavior and can be placed
@@ -27,7 +30,7 @@ func iconButton(c *ui.Context, icon *ui.SVG, label string, iconSize float32) *ui
 			p.Fill(r, t.Text.Alpha(0.08), t.Radius)
 		}
 	}).Children(func() {
-		ui.Icon(c, icon).Size(iconSize, iconSize)
+		components.Icon(c, icon).Size(iconSize, iconSize)
 	})
 	return b
 }

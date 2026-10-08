@@ -104,14 +104,14 @@ components.Switch(c, &wifi, "Wi-Fi")
 
 ## Lucide 图标
 
-导入 `github.com/oneo-me/onevra/icons/lucide`，直接将具名访问函数用于 MyGo：
+导入 `github.com/oneo-me/onevra/components` 和 `github.com/oneo-me/onevra/icons/lucide`，将具名访问函数传给 Onevra 的 Icon 组件：
 
 ```go
-ui.Icon(c, lucide.Search()).Size(20, 20)
+components.Icon(c, lucide.Search).Size(20, 20)
 ui.SidebarItem(c, "settings", lucide.Settings(), "Settings")
 ```
 
-图标首次使用时解析，之后复用。尺寸、文本颜色继承和无障碍语义由 MyGo 管理，无需额外的组件封装。图标包包含固定上游版本的正式图标，不包含 lab 图标或别名。参见[包契约](source/icons/lucide/doc.go)和[更新流程](docs/build.md#updating-lucide-icons)。
+图标首次使用时解析，之后复用。Icon 也接受其他图标包提供的已解析 `*ui.SVG` 资源。尺寸、文本颜色继承和无障碍语义由 MyGo 管理。图标包包含固定上游版本的正式图标，不包含 lab 图标或别名。参见[包契约](source/icons/lucide/doc.go)和[更新流程](docs/build.md#updating-lucide-icons)。
 
 ## 参与开发
 

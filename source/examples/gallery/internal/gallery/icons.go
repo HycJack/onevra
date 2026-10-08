@@ -28,7 +28,7 @@ func (g *Gallery) navigationItem(c *ui.Context, label string, icon *ui.SVG, page
 		b.Background(t.Text.Alpha(.1))
 	}
 	b.Children(func() {
-		ui.Icon(c, icon).Size(18, 18).TextColor(t.Accent)
+		components.Icon(c, icon).Size(18, 18).TextColor(t.Accent)
 		components.Text(c, label).SingleLine()
 	})
 	if b.Clicked() {
@@ -46,7 +46,7 @@ func (g *Gallery) Icons(c *ui.Context) {
 		ui.Box(c).Fill().Center().Children(func() {
 			b := components.Button(c, "", components.ButtonOutline).Label(icon.name).Size(buttonSize, buttonSize).Padding(t.Space(2))
 			b.Children(func() {
-				ui.Icon(c, icon.get()).Size(20, 20)
+				components.Icon(c, icon.get).Size(20, 20)
 			})
 			if b.Clicked() {
 				c.WriteClipboard(icon.name)

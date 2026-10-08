@@ -35,6 +35,7 @@ var controlCatalog = []controlExample{
 	{"Select", "Selects", []string{"Default", "Selected"}, controlSelect},
 	{"Slider", "Sliders", []string{"Default"}, controlSlider},
 	{"Tabs", "Tab rows", []string{"Default", "Selected"}, controlTabs},
+	{"Icon", "Icons", []string{"Default"}, controlIcon},
 }
 
 func controlPageStart() galleryPage { return mygoPageStart + galleryPage(len(mygoCatalog)) }

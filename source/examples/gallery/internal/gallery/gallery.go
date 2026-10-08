@@ -126,14 +126,14 @@ func iconSamples(c *ui.Context) {
 			components.Text(c, sample.name)
 			ui.Row(c).Gap(12).Children(func() {
 				for _, size := range []float32{16, 24, 32} {
-					ui.Icon(c, sample.get()).Size(size, size)
+					components.Icon(c, sample.get).Size(size, size)
 				}
 			})
 		})
 	}
 	ui.Row(c).Gap(12).TextColor(c.Theme().TextMuted).Children(func() {
-		ui.Icon(c, lucide.Sun())
-		ui.Icon(c, lucide.Moon())
+		components.Icon(c, lucide.Sun)
+		components.Icon(c, lucide.Moon)
 		components.Text(c, "Inherited muted color")
 	})
 }

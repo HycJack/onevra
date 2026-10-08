@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/components"
 	"github.com/oneo-me/onevra/icons/lucide"
 )
 
@@ -15,7 +16,7 @@ func TestMyGoIconIntegration(t *testing.T) {
 				t.Run(fmt.Sprintf("dark=%t/scale=%g/size=%g", dark, scale, size), func(t *testing.T) {
 					tt := ui.NewTester(func(c *ui.Context) {
 						ui.Row(c).TextColor(ui.RGB(240, 20, 80)).FontSize(size).Children(func() {
-							ui.Icon(c, lucide.Search()).Label("Search")
+							components.Icon(c, lucide.Search).Label("Search")
 						})
 					}, 100, 100)
 					tt.SetDark(dark)

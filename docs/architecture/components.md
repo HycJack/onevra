@@ -1,6 +1,6 @@
 # Component design
 
-The public [shell package](../../source/shell/doc.go) owns native window presentation and a replaceable page container, not an application framework. The [components package](../../source/components/doc.go) provides common controls independently of Shell. Shell also provides icon buttons for titlebar and toolbar actions. Both packages compose MyGo directly and neither depends on the other.
+The public [shell package](../../source/shell/doc.go) owns native window presentation and a replaceable page container, not an application framework. The [components package](../../source/components/doc.go) provides common controls independently of Shell. Shell also provides icon buttons for titlebar and toolbar actions. Both packages compose MyGo directly. Shell reuses the common Icon component; components remain independent of Shell.
 
 Common controls expose at most one visual variant axis, such as button style. Each control has one theme-scaled standard size rather than a separate size enumeration. Interaction and value states are not visual variants.
 

@@ -30,6 +30,7 @@ var mygoHandled = map[string]mygoDecision{
 	"Tabs":          {Replacement: "components.Tabs", Reason: "Onevra tab styling"},
 	"Text":          {Replacement: "components.Text", Reason: "Onevra text defaults"},
 	"Textf":         {Replacement: "components.Textf", Reason: "Formatted Onevra text"},
+	"Icon":          {Replacement: "components.Icon", Reason: "Onevra icon component with named asset accessors"},
 
 	"Button":        {Replacement: "components.Button", Reason: "Onevra button styles"},
 	"MenuButton":    {Replacement: "components.Button / Menu", Reason: "Compose components.Button(...).Menu(...) as demonstrated under Buttons; no separate component"},
@@ -44,7 +45,7 @@ var mygoPrimitives = map[string]bool{
 	"Box": true, "Column": true, "Row": true, "Spacer": true,
 	"Grid": true, "Overlay": true,
 	"Scroll": true, "ScrollHorizontal": true, "ScrollBoth": true,
-	"Image": true, "Icon": true,
+	"Image": true,
 }
 
 type mygoComponent struct{ Name, Source string }

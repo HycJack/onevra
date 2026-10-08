@@ -451,14 +451,6 @@ func exampleImage(c *ui.Context, s *demoState) {
 	ui.Image(c, demoImage).Size(180, 100).Grayscale().Label("Grayscale")
 }
 
-func exampleIcon(c *ui.Context, s *demoState) {
-	ui.Row(c).Gap(16).Children(func() {
-		for _, size := range []float32{16, 24, 32} {
-			ui.Icon(c, lucide.Sun()).Size(size, size).TextColor(c.Theme().Accent)
-		}
-	})
-}
-
 func exampleAvatar(c *ui.Context, s *demoState) {
 	ui.Row(c).Gap(12).Children(func() {
 		ui.Avatar(c, "Ada Lovelace", nil)

@@ -1,6 +1,6 @@
 // Package lucide provides Lucide icons for MyGo without a separate widget layer.
 //
-// Use ui.Icon(c, lucide.Search()) or pass an icon to ui.SidebarItem. MyGo owns
+// Use components.Icon(c, lucide.Search) or pass an icon to ui.SidebarItem. MyGo owns
 // sizing, text-color inheritance, rendering and accessibility. Icons retain
 // Lucide's original strokes and scale with the element; variable stroke width
 // and absolute stroke width are not provided.

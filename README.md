@@ -104,14 +104,14 @@ Keyboard, pointer and accessibility behavior come from MyGo's bases. See the [pa
 
 ## Lucide icons
 
-Import `github.com/oneo-me/onevra/icons/lucide` and use named accessors directly with MyGo:
+Import `github.com/oneo-me/onevra/components` and `github.com/oneo-me/onevra/icons/lucide` to use named accessors with Onevra's Icon component:
 
 ```go
-ui.Icon(c, lucide.Search()).Size(20, 20)
+components.Icon(c, lucide.Search).Size(20, 20)
 ui.SidebarItem(c, "settings", lucide.Settings(), "Settings")
 ```
 
-Icons are parsed on first use and reused. MyGo controls sizing, text-color inheritance and accessibility; no component wrapper is required. The package includes the pinned upstream's regular icons, not lab icons or aliases. See the [package contract](source/icons/lucide/doc.go) and [update workflow](docs/build.md#updating-lucide-icons).
+Icons are parsed on first use and reused. Icon also accepts parsed `*ui.SVG` assets from other packs. MyGo controls sizing, text-color inheritance and accessibility. The package includes the pinned upstream's regular icons, not lab icons or aliases. See the [package contract](source/icons/lucide/doc.go) and [update workflow](docs/build.md#updating-lucide-icons).
 
 ## Contributing
 
