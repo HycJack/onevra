@@ -68,6 +68,13 @@ func TestNativeSelectPreview(t *testing.T) {
 			if !tt.HasText("NativeSelect") {
 				t.Fatal("missing native select")
 			}
+			nativeHeading, _ := tt.Find("NativeSelect")
+			for _, label := range []string{"Default", "Selected", "Searchable"} {
+				variant, ok := tt.Find(label)
+				if !ok || variant.Y+variant.H >= nativeHeading.Y {
+					t.Fatalf("%s is not above the separate NativeSelect section", label)
+				}
+			}
 			if err := tt.Click("Choose size"); err != nil {
 				t.Fatal(err)
 			}

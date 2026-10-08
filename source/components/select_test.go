@@ -22,10 +22,23 @@ func buildSelect(c *ui.Context, selected *string, options []string) {
 func TestSelectItemBackgrounds(t *testing.T) {
 	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
 		selected := "M"
-		var accent, hover ui.Color
+		reference := ui.NewTester(func(c *ui.Context) {
+			theme.Apply(c, mode)
+			ui.Column(c).Fill().Background(c.Theme().Background).Children(func() {
+				SidebarItem(c, "Selected", nil, true)
+				ui.Row(c).Label("Hover reference").Size(100, 32).Background(c.Theme().Text.Alpha(.04))
+			})
+		}, 320, 320)
+		r, _ := reference.Find("Selected")
+		pixel := reference.Image().RGBAAt(int(r.X+4), int(r.Y+r.H/2))
+		selectedFill := ui.RGB(pixel.R, pixel.G, pixel.B)
+		r, _ = reference.Find("Hover reference")
+		pixel = reference.Image().RGBAAt(int(r.X+4), int(r.Y+r.H/2))
+		hoverFill := ui.RGB(pixel.R, pixel.G, pixel.B)
+		var background ui.Color
 		tt := ui.NewTester(func(c *ui.Context) {
 			theme.Apply(c, mode)
-			accent, hover = c.Theme().Accent, c.Theme().SurfaceHover
+			background = c.Theme().Background
 			buildSelect(c, &selected, []string{"S", "M", "L"})
 		}, 320, 320)
 		tt.Click("size")
@@ -45,23 +58,24 @@ func TestSelectItemBackgrounds(t *testing.T) {
 			r, _ := tt.Find(label)
 			tt.Move(r.X+r.W/2, r.Y+r.H/2)
 		}
-		assertFill("item M", accent)
+		assertFill("item M", selectedFill)
 		moveTo("item M")
-		assertFill("item M", accent)
+		assertFill("item M", selectedFill)
 		moveTo("item S")
-		assertFill("item S", hover)
-		assertFill("item M", accent)
+		assertFill("item S", hoverFill)
+		assertFill("item M", selectedFill)
 		tt.Move(310, 310)
+		assertFill("item S", background)
 		tt.Key(0, ui.KeyDown)
 		tt.Key(0, ui.KeyDown)
-		assertFill("item L", hover)
-		assertFill("item M", accent)
+		assertFill("item L", background)
+		assertFill("item M", selectedFill)
 		tt.Click("item L")
 		tt.Click("size")
-		assertFill("item L", accent)
+		assertFill("item L", selectedFill)
 		moveTo("item M")
-		assertFill("item M", hover)
-		assertFill("item L", accent)
+		assertFill("item M", hoverFill)
+		assertFill("item L", selectedFill)
 	}
 }
 

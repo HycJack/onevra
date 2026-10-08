@@ -91,6 +91,15 @@ func (g *Gallery) Controls(c *ui.Context, example controlExample) {
 				}
 				return
 			}
+			if example.name == "Select" {
+				selectExample := example
+				selectExample.variants = example.variants[:len(example.variants)-1]
+				g.controlVariants(c, selectExample)
+				g.controlSection(c, "NativeSelect", func() {
+					controlSelect(c, g.controlState("Select", "NativeSelect"), "NativeSelect")
+				})
+				return
+			}
 			if example.name == "Button" || example.name == "Selection" || example.name == "Progress" {
 				for _, variant := range example.variants {
 					g.controlSection(c, variant, func() {

@@ -20,22 +20,23 @@ type SelectParts[T comparable] struct {
 func (s *SelectParts[T]) Popup(build func(panel ui.Element)) ui.Element {
 	t := s.c.Theme()
 	return s.SelectParts.Popup(func(panel ui.Element) {
-		panel.Padding(t.Space(1)).Radius(t.Radius).Background(t.Background).Border(1, t.Border).
-			Shadow(0, t.Space(1), t.Space(4), 0, ui.RGBA(0, 0, 0, 0.22))
+		panel.Padding(t.Space(1)).Radius(t.Radius*1.5).Background(t.Background).Border(1, t.Border).
+			Shadow(0, t.Space(1), t.Space(4), 0, ui.RGBA(0, 0, 0, 0.14))
 		build(panel)
 	})
 }
 
-// Item creates a themed option. The selected value keeps the accent background,
-// including while hovered; other pointed or keyboard-highlighted options use a
-// neutral background. The caller supplies its label and children.
+// Item creates a themed option with the same neutral selected face as SidebarItem.
+// Unselected options use a weaker neutral face while hovered. The caller
+// supplies its label and children.
 func (s *SelectParts[T]) Item(value T) ui.Element {
 	t := s.c.Theme()
-	item := s.SelectParts.Item(value).Padding(t.Space(1.5), t.Space(2.5)).Radius(t.Radius / 2)
+	item := s.SelectParts.Item(value).Padding(t.Space(1.5), t.Space(2.5)).Radius(t.Radius).
+		Background(ui.Color{}).TextColor(t.Text)
 	if value == *s.selected {
-		item.Background(t.Accent).TextColor(t.AccentText)
-	} else if item.Hovered() || item.Highlighted() {
-		item.Background(t.SurfaceHover).TextColor(t.Text)
+		item.Background(t.Text.Alpha(.1))
+	} else if item.Hovered() {
+		item.Background(t.Text.Alpha(.04))
 	}
 	return item
 }
@@ -47,7 +48,7 @@ func (s *SelectParts[T]) Item(value T) ui.Element {
 func (s *SelectParts[T]) SearchField(query *string) ui.Element {
 	t := s.c.Theme()
 	input := TextBox(s.c, query, TextBoxOptions{LeadingIcon: lucide.Search()}).
-		FillWidth().AutoFocus().Radius(t.Radius/2).Margin(0, 0, t.Space(1.5), 0)
+		FillWidth().AutoFocus().Border(1, t.Border).Radius(t.Radius).Margin(0, 0, t.Space(1.5), 0)
 	if input.Shortcut(0, ui.KeyDown) || input.Shortcut(0, ui.KeyUp) {
 		s.Trigger.Focus()
 	}
