@@ -46,7 +46,7 @@ func mygoVariants(name string) []string {
 		return []string{"Unrated", "Rated", "Disabled"}
 	case "Radio", "RadioGroup", "Select", "Combobox", "Segmented", "Tabs", "Sidebar":
 		return []string{"Default", "Selected", "Disabled"}
-	case "Button", "PrimaryButton", "Link", "MenuButton", "ContextMenu", "Toolbar",
+	case "Button", "PrimaryButton", "Link", "ContextMenu", "Toolbar",
 		"Slider", "StepSlider", "RangeSlider", "Stepper", "NumberInput", "EditableText",
 		"Calendar", "DateInput", "TimeInput", "ColorWell", "ColorPicker", "Form", "Fieldset":
 		return []string{"Default", "Disabled"}

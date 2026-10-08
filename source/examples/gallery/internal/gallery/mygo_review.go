@@ -27,6 +27,7 @@ var mygoHandled = map[string]mygoDecision{
 	"Textf":     {Replacement: "components.Textf", Reason: "Formatted Onevra text"},
 
 	"Button":        {Replacement: "components.Button", Reason: "Onevra button styles"},
+	"MenuButton":    {Replacement: "components.Button / Menu", Reason: "Compose components.Button(...).Menu(...) as demonstrated under Buttons; no separate component"},
 	"PrimaryButton": {Replacement: "components.Button / ButtonPrimary", Reason: "A button variant, not a separate component"},
 	"Link":          {Replacement: "components.Button / ButtonLink", Reason: "An inline button variant"},
 }

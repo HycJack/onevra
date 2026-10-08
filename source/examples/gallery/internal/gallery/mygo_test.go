@@ -1,6 +1,7 @@
 package gallery
 
 import (
+	"slices"
 	"testing"
 
 	"github.com/egoist/mygo/ui"
@@ -139,22 +140,27 @@ func TestMyGoInteractions(t *testing.T) {
 func TestMyGoGroupedNavigation(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.Left, 220, 5000)
-	lastY := float32(0)
-	for _, group := range mygoGroups {
-		heading, ok := tt.Find(group)
-		if !ok || heading.Y <= lastY {
-			t.Fatalf("missing or unordered group: %s", group)
+	// Scope heading lookup to MyGo: Onevra also has a Selection entry.
+	texts := tt.Texts()
+	start := slices.Index(texts, "MyGo components")
+	if start < 0 {
+		t.Fatal("missing MyGo navigation")
+	}
+	texts = texts[start+1:]
+	consume := func(label string) {
+		t.Helper()
+		i := slices.Index(texts, label)
+		if i < 0 {
+			t.Fatalf("missing or unordered entry: %s", label)
 		}
-		lastY = heading.Y
+		texts = texts[i+1:]
+	}
+	for _, group := range mygoGroups {
+		consume(group)
 		for _, entry := range mygoCatalog {
-			if entry.group != group {
-				continue
+			if entry.group == group {
+				consume(entry.name)
 			}
-			item, ok := tt.Find(entry.name)
-			if !ok || item.Y <= lastY {
-				t.Fatalf("misplaced entry: %s", entry.name)
-			}
-			lastY = item.Y
 		}
 	}
 	if err := tt.Click("Divider"); err != nil {

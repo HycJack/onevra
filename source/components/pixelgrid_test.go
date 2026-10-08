@@ -11,25 +11,23 @@ import (
 
 func TestGridPositions(t *testing.T) {
 	for _, tc := range []struct {
-		name           string
-		length, offset float32
-		step           float64
-		want           []float32
+		name   string
+		length float32
+		step   float64
+		want   []float32
 	}{
-		{"origin", 40, 0, 16, []float32{16, 32}},
-		{"positive", 40, 5, 16, []float32{5, 21, 37}},
-		{"negative", 40, -5, 16, []float32{11, 27}},
-		{"whole period", 40, -32, 16, []float32{16, 32}},
-		{"major phase", 80, -17, 64, []float32{47}},
-		{"large pan", 40, 16000005, 16, []float32{5, 21, 37}},
-		{"fractional", 12, 0.5, 4.5, []float32{0.5, 5, 9.5}},
-		{"invalid offset", 40, float32(math.NaN()), 16, []float32{16, 32}},
-		{"empty", 0, 0, 16, nil},
-		{"invalid length", float32(math.Inf(1)), 0, 16, nil},
+		{"origin", 40, 16, []float32{16, 32}},
+		{"trailing edge", 32, 16, []float32{16}},
+		{"major lines", 160, 64, []float32{64, 128}},
+		{"fractional", 12, 4.5, []float32{4.5, 9}},
+		{"smaller than cell", 3, 16, nil},
+		{"empty", 0, 16, nil},
+		{"negative length", -1, 16, nil},
+		{"invalid length", float32(math.Inf(1)), 16, nil},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
 			var got []float32
-			gridPositions(tc.length, tc.step, tc.offset, func(x float32) { got = append(got, x) })
+			gridPositions(tc.length, tc.step, func(x float32) { got = append(got, x) })
 			if !reflect.DeepEqual(got, tc.want) {
 				t.Fatalf("got %v, want %v", got, tc.want)
 			}
@@ -62,7 +60,7 @@ func TestPixelGridClippingAndChildren(t *testing.T) {
 	clicked := false
 	tt := ui.NewTester(func(c *ui.Context) {
 		ui.Column(c).Fill().Background(ui.RGB(255, 0, 0)).Padding(10).Children(func() {
-			PixelGrid(c, PixelGridOptions{Spacing: 0.1, MajorEvery: -1, OffsetX: -1}).Width(80).Height(80).Children(func() {
+			PixelGrid(c, PixelGridOptions{Spacing: 0.1, MajorEvery: -1}).Width(80).Height(80).Children(func() {
 				if Button(c, "Content", ButtonPrimary).Clicked() {
 					clicked = true
 				}
@@ -74,9 +72,9 @@ func TestPixelGridClippingAndChildren(t *testing.T) {
 		t.Fatal("grid paints outside its bounds")
 	}
 	if img.RGBAAt(13, 70) == img.RGBAAt(14, 70) {
-		t.Fatal("minimum spacing or negative offset not applied")
+		t.Fatal("minimum spacing not applied")
 	}
-	if img.RGBAAt(13, 70) != img.RGBAAt(17, 70) {
+	if img.RGBAAt(14, 70) != img.RGBAAt(42, 70) {
 		t.Fatal("major emphasis was not disabled")
 	}
 	if err := tt.Click("Content"); err != nil {

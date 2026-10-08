@@ -44,17 +44,6 @@ func exampleTextAreaBuffer(c *ui.Context, s *demoState) {
 	ui.TextAreaBuffer(c, s.buffer).Label("Notes").Placeholder("Write some notes").ReadOnly(s.readOnly).Height(140).FillWidth()
 }
 
-func exampleMenuButton(c *ui.Context, s *demoState) {
-	ui.MenuButton(c, "Choose size", func(m *ui.Menu) {
-		for _, name := range []string{"Small", "Medium", "Large"} {
-			if m.Item(name).Checked(s.choice == name).Chosen() {
-				s.choice = name
-			}
-		}
-	})
-	components.Text(c, s.choice)
-}
-
 func exampleContextMenu(c *ui.Context, s *demoState) {
 	components.Button(c, "Right-click or Shift+F10", components.ButtonSecondary).ContextMenu(func(m *ui.Menu) {
 		if m.Item("Increment").Chosen() {

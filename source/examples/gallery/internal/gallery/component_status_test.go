@@ -56,7 +56,7 @@ func TestComponentStatusCards(t *testing.T) {
 	if len(cards) != 11 {
 		t.Fatalf("got %d replacement cards", len(cards))
 	}
-	if cards[0].Name != "Button" || !reflect.DeepEqual(cards[0].Replaces, []string{"Button", "Link", "PrimaryButton"}) {
+	if cards[0].Name != "Button" || !reflect.DeepEqual(cards[0].Replaces, []string{"Button", "Link", "MenuButton", "PrimaryButton"}) {
 		t.Fatalf("button variants not grouped: %+v", cards[0])
 	}
 	for _, status := range []mygoStatus{mygoExcluded, mygoUpstream, mygoUnreviewed, mygoPrimitive} {
@@ -74,7 +74,7 @@ func TestComponentStatusPage(t *testing.T) {
 			g := &Gallery{page: componentStatusPage}
 			tt := ui.NewTester(g.View, width, 900)
 			tt.SetDark(dark)
-			for _, label := range []string{"Replaced by Onevra", "Button", "Button, Link, PrimaryButton"} {
+			for _, label := range []string{"Replaced by Onevra", "Button", "Button, Link, MenuButton, PrimaryButton"} {
 				if !tt.HasText(label) {
 					t.Fatalf("width=%d dark=%t missing %q", width, dark, label)
 				}
@@ -86,8 +86,9 @@ func TestComponentStatusPage(t *testing.T) {
 			}
 			button, _ := tt.Find("Button")
 			checkbox, _ := tt.Find("Checkbox")
-			if width == 820 && button.Y != checkbox.Y {
-				t.Fatal("wide layout is not a grid")
+			// Wrapped replacement names can shift the headings within a row.
+			if width == 820 && (checkbox.X <= button.X || checkbox.Y >= button.Y+button.H || button.Y >= checkbox.Y+checkbox.H) {
+				t.Fatalf("wide layout is not a grid: button=%+v checkbox=%+v", button, checkbox)
 			}
 			if width == 360 && checkbox.Y <= button.Y {
 				t.Fatal("narrow layout did not wrap")
