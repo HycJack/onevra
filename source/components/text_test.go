@@ -13,7 +13,7 @@ func TestTextMatchesPrimitive(t *testing.T) {
 	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
 		for _, width := range []int{140, 480} {
 			t.Run(fmt.Sprintf("%v/%d", mode, width), func(t *testing.T) {
-				build := func(text func(*ui.Context, string) *ui.Element) *ui.Tester {
+				build := func(text func(*ui.Context, string) ui.Element) *ui.Tester {
 					return ui.NewTester(func(c *ui.Context) {
 						theme.Apply(c, mode)
 						ui.Column(c).Fill().TextColor(c.Theme().TextMuted).FontSize(c.Theme().Rem(1.2)).Children(func() {

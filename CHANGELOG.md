@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers. No version has been published 
 
 ## [Unreleased]
 
+- Support MyGo 0.3 value-based Element handles for common controls, selection popups and Shell icon buttons; persistent identity uses MyGo Handle bindings.
+
 - Add themed common UI controls with native-menu selection, continuous, stepped and range sliders, grouped sidebar navigation, composable display text and images, unified scroll views with configurable track insets and fixed-origin pixel-grid backgrounds that can be used alongside MyGo widgets, independently of Shell.
 - Add a native application Shell with a collapsible, resizable sidebar, customizable titlebar and toolbar actions, and replaceable page content.
 - Add built-in light and dark themes that support system appearance or an application-selected mode and work with MyGo widgets.

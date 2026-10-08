@@ -130,7 +130,7 @@ func (g *Gallery) controlSection(c *ui.Context, name string, build func()) {
 }
 
 // controlPreview provides a shared canvas for component demonstrations.
-func controlPreview(c *ui.Context) *ui.Element {
+func controlPreview(c *ui.Context) ui.Element {
 	t := c.Theme()
 	return components.PixelGrid(c, components.PixelGridOptions{Spacing: 22}).
 		Key("control-preview").Column().FillWidth().MinWidth(0).

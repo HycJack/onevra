@@ -7,7 +7,7 @@ import "github.com/egoist/mygo/ui"
 // custom content, pass an empty label and use Label and Children.
 // It uses one standard size, a quiet off face and an accent-filled on face.
 // Key a parent container for stable identity, as styling is resolved here.
-func ToggleButton(c *ui.Context, on *bool, label string) *ui.Element {
+func ToggleButton(c *ui.Context, on *bool, label string) ui.Element {
 	t := c.Theme()
 	b := ui.ToggleBase(c, on).Padding(t.Space(1.5), t.Space(3.5))
 	bg, hover, pressed, fg, border := ui.Color{}, t.SurfaceHover, t.SurfacePressed, t.Text, t.Border

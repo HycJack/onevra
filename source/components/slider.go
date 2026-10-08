@@ -20,10 +20,10 @@ type SliderOptions struct {
 }
 
 // SliderControl exposes the underlying layout element. Keep this handle to
-// query Changed after applying Element layout methods, which return *ui.Element.
+// query Changed after applying Element layout methods, which return ui.Element.
 type SliderControl struct {
-	*ui.Element
-	thumbs  []*ui.Element
+	ui.Element
+	thumbs  []ui.Element
 	labels  [2]string
 	changed bool
 	held    [2]bool
@@ -79,7 +79,7 @@ func Slider(c *ui.Context, value *float64, lo, hi float64, options ...SliderOpti
 	}
 	t := c.Theme()
 	thumb := t.Space(5)
-	var e *ui.Element
+	var e ui.Element
 	s := &SliderControl{labels: [2]string{o.MinimumLabel, o.MaximumLabel}}
 	if s.labels[0] == "" {
 		s.labels[0] = "minimum"

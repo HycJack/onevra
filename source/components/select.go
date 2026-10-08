@@ -9,17 +9,17 @@ import (
 // optional search field. Applications own the query, filtering and option text.
 // Embedded MyGo parts retain trigger, item and open-state behavior.
 type SelectParts[T comparable] struct {
-	*ui.SelectParts[T]
+	ui.SelectParts[T]
 	c        *ui.Context
 	selected *T
 }
 
 // Popup shows a themed, shadowed panel while the select is open. The callback
 // can override its appearance and build a SearchField followed by filtered Items.
-// It returns nil when closed.
-func (s *SelectParts[T]) Popup(build func(panel *ui.Element)) *ui.Element {
+// It returns an absent Element when closed.
+func (s *SelectParts[T]) Popup(build func(panel ui.Element)) ui.Element {
 	t := s.c.Theme()
-	return s.SelectParts.Popup(func(panel *ui.Element) {
+	return s.SelectParts.Popup(func(panel ui.Element) {
 		panel.Padding(t.Space(1)).Radius(t.Radius).Background(t.Background).Border(1, t.Border).
 			Shadow(0, t.Space(1), t.Space(4), 0, ui.RGBA(0, 0, 0, 0.22))
 		build(panel)
@@ -29,7 +29,7 @@ func (s *SelectParts[T]) Popup(build func(panel *ui.Element)) *ui.Element {
 // Item creates a themed option. The selected value keeps the accent background,
 // including while hovered; other pointed or keyboard-highlighted options use a
 // neutral background. The caller supplies its label and children.
-func (s *SelectParts[T]) Item(value T) *ui.Element {
+func (s *SelectParts[T]) Item(value T) ui.Element {
 	t := s.c.Theme()
 	item := s.SelectParts.Item(value).Padding(t.Space(1.5), t.Space(2.5)).Radius(t.Radius / 2)
 	if value == *s.selected {
@@ -44,7 +44,7 @@ func (s *SelectParts[T]) Item(value T) *ui.Element {
 // Label and localized Placeholder. Build only matching Items after it; an empty
 // result message and query reset policy belong to the caller. Down or Up returns
 // focus to the trigger, where MyGo handles option navigation and selection.
-func (s *SelectParts[T]) SearchField(query *string) *ui.Element {
+func (s *SelectParts[T]) SearchField(query *string) ui.Element {
 	t := s.c.Theme()
 	input := TextField(s.c, query).FillWidth().AutoFocus().Radius(t.Radius/2).
 		Padding(t.Space(1.5), t.Space(2.5), t.Space(1.5), t.Space(8)).Margin(0, 0, t.Space(1.5), 0)
@@ -63,7 +63,7 @@ func (s *SelectParts[T]) SearchField(query *string) *ui.Element {
 //
 //	sel := components.Select(c, &choice)
 //	sel.Trigger.Children(func() { components.Text(c, string(choice)).SingleLine() })
-//	sel.Popup(func(panel *ui.Element) {
+//	sel.Popup(func(panel ui.Element) {
 //		for _, opt := range options {
 //			item := sel.Item(opt)
 //			item.Children(func() { components.Text(c, string(opt)).SingleLine() })
@@ -77,7 +77,7 @@ func Select[T comparable](c *ui.Context, selected *T) *SelectParts[T] {
 	return &SelectParts[T]{SelectParts: sel, c: c, selected: selected}
 }
 
-func styleSelectTrigger(c *ui.Context, b *ui.Element) {
+func styleSelectTrigger(c *ui.Context, b ui.Element) {
 	t := c.Theme()
 	b.Padding(t.Space(1.5), t.Space(6), t.Space(1.5), t.Space(2.5)).Radius(t.Radius)
 	b.Justify(ui.Start)

@@ -6,7 +6,7 @@ Experimental, product-neutral Go components built on [MyGo](https://github.com/e
 
 The library is not yet published as a downloadable module, and its API is not stable.
 
-`main` uses upstream MyGo without custom patches. The WebView composition experiment is preserved on `feature/webview` because it requires a customized MyGo dependency; it is not part of the mainline components.
+`main` uses upstream MyGo without custom patches. The WebView composition experiment is preserved on `experiment/webview` because it requires a customized MyGo dependency; it is not part of the mainline components.
 
 ## Name
 

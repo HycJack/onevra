@@ -32,7 +32,7 @@ type ScrollViewOptions struct {
 // appearance and visibility: overflowing axes show bars on hover or while
 // dragging, with color and width from the frame theme. Independent visibility
 // and per-view color/width overrides are not supported by the upstream API.
-func ScrollView(c *ui.Context, options ScrollViewOptions) *ui.Element {
+func ScrollView(c *ui.Context, options ScrollViewOptions) ui.Element {
 	switch options.Axes {
 	case ScrollHorizontal:
 		return ui.ScrollHorizontal(c)

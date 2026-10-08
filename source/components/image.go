@@ -10,6 +10,6 @@ import "github.com/egoist/mygo/ui"
 // Use Size, Fit, Radius and Grayscale on the returned element to customize its
 // presentation, and Label for application-owned accessible text. A nil source
 // produces an empty element. MyGo owns rendering, layout and image semantics.
-func Image(c *ui.Context, source ui.ImageSource) *ui.Element {
+func Image(c *ui.Context, source ui.ImageSource) ui.Element {
 	return ui.Image(c, source)
 }

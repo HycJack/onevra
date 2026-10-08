@@ -17,7 +17,7 @@ func TestIconSources(t *testing.T) {
 		for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
 			for _, scale := range []float32{1, 2} {
 				t.Run(fmt.Sprintf("%p/%v/%g", svg, mode, scale), func(t *testing.T) {
-					build := func(icon func(*ui.Context) *ui.Element) *ui.Tester {
+					build := func(icon func(*ui.Context) ui.Element) *ui.Tester {
 						tt := ui.NewTester(func(c *ui.Context) {
 							theme.Apply(c, mode)
 							ui.Row(c).FontSize(24).TextColor(c.Theme().Accent).Children(func() {
@@ -28,10 +28,10 @@ func TestIconSources(t *testing.T) {
 						tt.SetScale(scale)
 						return tt
 					}
-					want := build(func(c *ui.Context) *ui.Element { return ui.Icon(c, svg) })
-					for _, create := range []func(*ui.Context) *ui.Element{
-						func(c *ui.Context) *ui.Element { return components.Icon(c, svg) },
-						func(c *ui.Context) *ui.Element { return components.Icon(c, func() *ui.SVG { return svg }) },
+					want := build(func(c *ui.Context) ui.Element { return ui.Icon(c, svg) })
+					for _, create := range []func(*ui.Context) ui.Element{
+						func(c *ui.Context) ui.Element { return components.Icon(c, svg) },
+						func(c *ui.Context) ui.Element { return components.Icon(c, func() *ui.SVG { return svg }) },
 					} {
 						got := build(create)
 						if !bytes.Equal(got.Image().Pix, want.Image().Pix) {

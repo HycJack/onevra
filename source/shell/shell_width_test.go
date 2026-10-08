@@ -39,10 +39,10 @@ func TestShellWidthOptions(t *testing.T) {
 func TestShellResizeBeyondFortyPercent(t *testing.T) {
 	for _, maximum := range []int{0, 700} {
 		t.Run(map[int]string{0: "unbounded", 700: "configured maximum"}[maximum], func(t *testing.T) {
-			var content *ui.Element
+			var content ui.Rect
 			s := newShell(ShellOptions{
 				LeftMaxWidth: maximum,
-				Content:      func(c *ui.Context) { content = ui.Box(c).Fill() },
+				Content:      func(c *ui.Context) { ui.Box(c).Fill().DrawOver(func(_ *ui.Painter, r ui.Rect) { content = r }) },
 			})
 			tt := ui.NewTester(s.view, 1000, 600)
 			r, ok := tt.Find("Resize sidebar")
@@ -53,12 +53,12 @@ func TestShellResizeBeyondFortyPercent(t *testing.T) {
 			tt.Press(x, y)
 			tt.Move(600, y)
 			tt.Release(600, y)
-			if s.leftWidth != 600 || content.Bounds().X != 600 || content.Bounds().W != 400 {
-				t.Fatalf("drag stopped early: width=%v, content=%+v", s.leftWidth, content.Bounds())
+			if s.leftWidth != 600 || content.X != 600 || content.W != 400 {
+				t.Fatalf("drag stopped early: width=%v, content=%+v", s.leftWidth, content)
 			}
 			tt.Key(0, ui.KeyRight)
-			if s.leftWidth != 610 || content.Bounds().W != 390 {
-				t.Fatalf("keyboard stopped early: width=%v, content=%+v", s.leftWidth, content.Bounds())
+			if s.leftWidth != 610 || content.W != 390 {
+				t.Fatalf("keyboard stopped early: width=%v, content=%+v", s.leftWidth, content)
 			}
 		})
 	}

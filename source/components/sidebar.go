@@ -5,7 +5,7 @@ import "github.com/egoist/mygo/ui"
 // Sidebar creates a transparent column of SidebarSections. Place it inside a
 // ui.Scroll when scrolling is needed. Applications own its width, titlebar
 // inset and selection; it can be used independently of Shell.
-func Sidebar(c *ui.Context) *ui.Element {
+func Sidebar(c *ui.Context) ui.Element {
 	t := c.Theme()
 	return ui.Column(c).FillWidth().MinWidth(0).
 		Padding(0, t.Space(3), t.Space(3), t.Space(3)).Gap(t.Space(3))
@@ -13,7 +13,7 @@ func Sidebar(c *ui.Context) *ui.Element {
 
 // SidebarSection builds a muted heading followed by application-owned items.
 // Sections are always expanded; fn may be nil for a heading alone.
-func SidebarSection(c *ui.Context, label string, fn func()) *ui.Element {
+func SidebarSection(c *ui.Context, label string, fn func()) ui.Element {
 	t := c.Theme()
 	section := ui.Column(c).FillWidth().MinWidth(0).Gap(t.Space(1))
 	section.Children(func() {
@@ -31,7 +31,7 @@ func SidebarSection(c *ui.Context, label string, fn func()) *ui.Element {
 // supplies selection and handles Clicked; MyGo provides Tab focus and activation
 // with Enter or Space, not tree-style arrow navigation. Key can distinguish
 // items with identical labels. A nil icon leaves no icon space.
-func SidebarItem(c *ui.Context, label string, icon *ui.SVG, selected bool) *ui.Element {
+func SidebarItem(c *ui.Context, label string, icon *ui.SVG, selected bool) ui.Element {
 	t := c.Theme()
 	b := ui.ButtonBase(c).Key(label).Label(label).FillWidth().Justify(ui.Start).
 		Padding(t.Space(1.75), t.Space(2)).Gap(t.Space(2)).Radius(t.Radius).

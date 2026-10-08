@@ -4,19 +4,19 @@ import "github.com/egoist/mygo/ui"
 
 // TextField creates a single-line text input editing *value. It returns the
 // element for chaining, as .Label("Name").Placeholder("Ada").
-func TextField(c *ui.Context, value *string) *ui.Element {
+func TextField(c *ui.Context, value *string) ui.Element {
 	return textField(c, value, false)
 }
 
 // TextArea creates a multi-line text input editing *value. It returns the
 // element for chaining, as .Label("Notes").Placeholder("…").
-func TextArea(c *ui.Context, value *string) *ui.Element {
+func TextArea(c *ui.Context, value *string) ui.Element {
 	return textField(c, value, true)
 }
 
-func textField(c *ui.Context, value *string, multiline bool) *ui.Element {
+func textField(c *ui.Context, value *string, multiline bool) ui.Element {
 	t := c.Theme()
-	var e *ui.Element
+	var e ui.Element
 	if multiline {
 		e = ui.TextAreaBase(c, value)
 		e.MinHeight(t.Space(20))

@@ -4,7 +4,7 @@ import "github.com/egoist/mygo/ui"
 
 // Radio creates a radio button that selects value into *selected, with a
 // label. The label is also the accessible name.
-func Radio[T comparable](c *ui.Context, selected *T, value T, label string) *ui.Element {
+func Radio[T comparable](c *ui.Context, selected *T, value T, label string) ui.Element {
 	t := c.Theme()
 	row := ui.RadioBase(c, selected, value).Gap(t.Space(2)).FocusRing(false)
 	on := *selected == value

@@ -2,6 +2,9 @@
 // Callers own business state, localized text and actions. Native window and
 // page composition belong to the separate shell package.
 //
+// Element handles are MyGo values valid only during the current build pass.
+// Do not retain them across frames; bind a ui.Handle for persistent identity.
+//
 // Common controls use MyGo's unstyled bases, which own pointer, keyboard, focus
 // and accessibility semantics. Colors and sizes come from the frame theme (see
 // the theme package); interaction states are read from the base every frame,

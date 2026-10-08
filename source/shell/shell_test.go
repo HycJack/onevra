@@ -169,25 +169,27 @@ func TestShellSidebarAnimations(t *testing.T) {
 }
 
 func TestShellSidebarRevealsWithoutReflow(t *testing.T) {
-	var left, main *ui.Element
+	var left, main ui.Rect
 	s, _ := fixture()
-	s.options.Left = func(c *ui.Context) { left = ui.Box(c).FillWidth().Height(32) }
-	s.options.Content = func(c *ui.Context) { main = ui.Box(c).Fill() }
+	s.options.Left = func(c *ui.Context) {
+		ui.Box(c).FillWidth().Height(32).DrawOver(func(_ *ui.Painter, r ui.Rect) { left = r })
+	}
+	s.options.Content = func(c *ui.Context) { ui.Box(c).Fill().DrawOver(func(_ *ui.Painter, r ui.Rect) { main = r }) }
 	tt := ui.NewTester(s.view, 820, 600)
-	leftBefore := left.Bounds()
+	leftBefore := left
 	s.SetLeftExpanded(false)
 	tt.Frame()
 	time.Sleep(55 * time.Millisecond)
 	tt.Frame()
-	if got := left.Bounds(); got != leftBefore {
+	if got := left; got != leftBefore {
 		t.Fatalf("left content reflowed instead of being covered: %+v -> %+v", leftBefore, got)
 	}
-	if x := main.Bounds().X; x <= 0 || x >= leftBefore.W {
+	if x := main.X; x <= 0 || x >= leftBefore.W {
 		t.Fatalf("main surface did not move over sidebar: %v", x)
 	}
 	time.Sleep(sidebarDuration + 30*time.Millisecond)
 	tt.Frame()
-	if r := main.Bounds(); r.X != 0 || r.W != 820 {
+	if r := main; r.X != 0 || r.W != 820 {
 		t.Fatal("collapsed sidebar reserved space", r)
 	}
 }
@@ -271,12 +273,12 @@ func TestShellSidebarResizeFullHeight(t *testing.T) {
 }
 
 func TestShellSeparatorsDoNotReserveSpace(t *testing.T) {
-	var main *ui.Element
+	var main ui.Rect
 	s, _ := fixture()
 	// Shell owns the frame theme; distinguishable pixels come from its own
 	// palette rather than an injected theme.
 	s.options.Appearance = theme.Dark
-	s.options.Content = func(c *ui.Context) { main = ui.Box(c).Fill() }
+	s.options.Content = func(c *ui.Context) { ui.Box(c).Fill().DrawOver(func(_ *ui.Painter, r ui.Rect) { main = r }) }
 	tt := ui.NewTester(s.view, 820, 600)
 	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
 	palette := theme.DarkPalette()
@@ -291,7 +293,7 @@ func TestShellSeparatorsDoNotReserveSpace(t *testing.T) {
 			t.Fatalf("pixel (%d,%d) = %+v, separator=%v", x, y, p, separator)
 		}
 	}
-	if r := main.Bounds(); r.X != 220 || r.W != 600 {
+	if r := main; r.X != 220 || r.W != 600 {
 		t.Fatal("separator reserved main layout space", r)
 	}
 	for _, y := range []int{2, 400, 599} {
@@ -300,7 +302,7 @@ func TestShellSeparatorsDoNotReserveSpace(t *testing.T) {
 	}
 	s.SetLeftExpanded(false)
 	tt.Frame()
-	if r := main.Bounds(); r.X != 0 || r.W != 820 {
+	if r := main; r.X != 0 || r.W != 820 {
 		t.Fatal("closed left separator reserved space", r)
 	}
 	assertPixel(0, 400, false)

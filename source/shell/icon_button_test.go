@@ -11,13 +11,14 @@ func TestIconButton(t *testing.T) {
 	for _, dark := range []bool{false, true} {
 		clicks := 0
 		disabled := false
-		var button *ui.Element
+		var buttonBounds ui.Rect
 		var size float32
 		tt := ui.NewTester(func(c *ui.Context) {
 			c.Root().Background(ui.Transparent)
 			size = max(32, c.Theme().Rem(2))
 			ui.Row(c).Fill().DragWindow().Children(func() {
-				button = IconButton(c, lucide.Settings(), "Settings").Disabled(disabled)
+				button := IconButton(c, lucide.Settings(), "Settings").Disabled(disabled).
+					DrawOver(func(_ *ui.Painter, r ui.Rect) { buttonBounds = r })
 				if button.Clicked() {
 					clicks++
 				}
@@ -61,7 +62,7 @@ func TestIconButton(t *testing.T) {
 			t.Fatal("disabled button still reacts", clicks, alpha())
 		}
 		tt.SetPreferences(ui.Preferences{TextScale: 1.5})
-		if r := button.Bounds(); r.W != size || r.H != size {
+		if r := buttonBounds; r.W != size || r.H != size {
 			t.Fatal("button does not scale", r)
 		}
 	}

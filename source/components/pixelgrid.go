@@ -23,7 +23,7 @@ type PixelGridOptions struct {
 // the grid and are clipped to its bounds. Background can override the canvas
 // color; grid lines use the frame theme and are one DIP wide. Lines coinciding
 // with the top or left edge are omitted so the grid has no leading border.
-func PixelGrid(c *ui.Context, options PixelGridOptions) *ui.Element {
+func PixelGrid(c *ui.Context, options PixelGridOptions) ui.Element {
 	t := c.Theme()
 	spacing := options.Spacing
 	if !finiteGridValue(spacing) || spacing <= 0 {

@@ -6,7 +6,7 @@
 
 尚未发布为可下载的 module，API 暂不稳定。
 
-`main` 使用未经定制补丁修改的上游 MyGo。WebView 合成实验因依赖定制版 MyGo，保留在 `feature/webview` 分支，不属于主线组件。
+`main` 使用未经定制补丁修改的上游 MyGo。WebView 合成实验因依赖定制版 MyGo，保留在 `experiment/webview` 分支，不属于主线组件。
 
 ## 名字由来
 

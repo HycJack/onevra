@@ -10,9 +10,9 @@ import (
 
 func TestShellToolbarPlacement(t *testing.T) {
 	s, _ := fixture()
-	var body *ui.Element
+	var body ui.Rect
 	clicks := 0
-	s.options.Left = func(c *ui.Context) { body = ui.Box(c).Fill() }
+	s.options.Left = func(c *ui.Context) { ui.Box(c).Fill().DrawOver(func(_ *ui.Painter, r ui.Rect) { body = r }) }
 	s.options.LeftToolbar = func(c *ui.Context) {
 		ui.Spacer(c)
 		if IconButton(c, lucide.Settings(), "Settings").Clicked() {
@@ -27,8 +27,8 @@ func TestShellToolbarPlacement(t *testing.T) {
 		t.Fatal("sidebar toggle too close to traffic lights", left)
 	}
 	bottom, ok := tt.Find("Settings")
-	if !ok || bottom.Y+bottom.H != 592 || bottom.X+bottom.W != 212 || body.Bounds().Y+body.Bounds().H > bottom.Y {
-		t.Fatal("toolbar not pinned below sidebar content", bottom, body.Bounds())
+	if !ok || bottom.Y+bottom.H != 592 || bottom.X+bottom.W != 212 || body.Y+body.H > bottom.Y {
+		t.Fatal("toolbar not pinned below sidebar content", bottom, body)
 	}
 	if err := tt.Click("Settings"); err != nil || clicks != 1 {
 		t.Fatal("bottom toolbar action failed", err, clicks)

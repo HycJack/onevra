@@ -8,7 +8,7 @@ import (
 
 // Switch creates a switch toggling *on, with a label. The label is also
 // the accessible name.
-func Switch(c *ui.Context, on *bool, label string) *ui.Element {
+func Switch(c *ui.Context, on *bool, label string) ui.Element {
 	t := c.Theme()
 	row := ui.Row(c).Gap(t.Space(2))
 	row.Children(func() {

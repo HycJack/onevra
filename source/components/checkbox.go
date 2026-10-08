@@ -4,7 +4,7 @@ import "github.com/egoist/mygo/ui"
 
 // Checkbox creates a check box toggling *checked, with a label. The label
 // is also the accessible name.
-func Checkbox(c *ui.Context, checked *bool, label string) *ui.Element {
+func Checkbox(c *ui.Context, checked *bool, label string) ui.Element {
 	t := c.Theme()
 	row := ui.CheckboxBase(c, checked).Gap(t.Space(2)).FocusRing(false)
 	on := *checked

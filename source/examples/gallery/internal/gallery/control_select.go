@@ -17,7 +17,7 @@ func controlSelect(c *ui.Context, s *controlState, variant string) {
 	t := c.Theme()
 	selectParts := components.Select(c, &s.choice)
 	selectParts.Trigger.Label("Size").Children(func() { components.Text(c, s.choice).SingleLine() })
-	selectParts.Popup(func(panel *ui.Element) {
+	selectParts.Popup(func(panel ui.Element) {
 		searchable := variant == "Searchable"
 		if searchable {
 			panel.MinWidth(t.Rem(14))

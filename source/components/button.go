@@ -25,7 +25,7 @@ const (
 // text height without padding or a background and supports RichText composition;
 // its children must be text. For stable identity, key a parent container rather
 // than this element: interaction styling is resolved during construction.
-func Button(c *ui.Context, label string, variant ButtonVariant) *ui.Element {
+func Button(c *ui.Context, label string, variant ButtonVariant) ui.Element {
 	if variant == ButtonLink {
 		return dimmed(ui.Link(c, label, ""))
 	}

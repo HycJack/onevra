@@ -9,7 +9,7 @@ import (
 func TestShellFloatingHeader(t *testing.T) {
 	for _, inset := range []bool{false, true} {
 		for _, replacement := range []bool{false, true} {
-			var surfaces, bodies []*ui.Element
+			var surfaces, bodies []ui.Rect
 			var height float32
 			build := func(c *ui.Context) {
 				height = HeaderHeight(c)
@@ -18,8 +18,10 @@ func TestShellFloatingHeader(t *testing.T) {
 					padding = height
 				}
 				surface := ui.Column(c).Fill().Background(ui.RGB(30, 90, 150)).Padding(padding, 0, 0, 0)
-				surfaces = append(surfaces, surface)
-				surface.Children(func() { bodies = append(bodies, ui.Box(c).Fill()) })
+				surface.DrawOver(func(_ *ui.Painter, r ui.Rect) { surfaces = append(surfaces, r) })
+				surface.Children(func() {
+					ui.Box(c).Fill().DrawOver(func(_ *ui.Painter, r ui.Rect) { bodies = append(bodies, r) })
+				})
 			}
 			s := newShell(ShellOptions{Left: build, Content: build})
 			if replacement {
@@ -34,14 +36,14 @@ func TestShellFloatingHeader(t *testing.T) {
 					t.Fatalf("header height = %v, want %v", height, config.want)
 				}
 				for i, surface := range surfaces {
-					if r := surface.Bounds(); r.Y != 0 || r.H != 600 {
+					if r := surface; r.Y != 0 || r.H != 600 {
 						t.Fatalf("surface not full height: %+v", r)
 					}
 					want := float32(0)
 					if inset {
 						want = height
 					}
-					if r := bodies[i].Bounds(); r.Y != want || r.H != 600-want {
+					if r := bodies[i]; r.Y != want || r.H != 600-want {
 						t.Fatalf("inset=%v: body %+v", inset, r)
 					}
 				}

@@ -11,7 +11,7 @@ import (
 func buildSelect(c *ui.Context, selected *string, options []string) {
 	sel := Select(c, selected)
 	sel.Trigger.Label("size").Children(func() { ui.Text(c, *selected).SingleLine() })
-	sel.Popup(func(panel *ui.Element) {
+	sel.Popup(func(panel ui.Element) {
 		for _, opt := range options {
 			item := sel.Item(opt).Label("item " + opt)
 			item.Children(func() { ui.Text(c, opt).SingleLine() })
@@ -73,7 +73,7 @@ func TestSelectPopupShadow(t *testing.T) {
 			ui.Column(c).Fill().Padding(40).Background(c.Theme().Background).Children(func() {
 				sel := Select(c, &selected)
 				sel.Trigger.Label("size").Children(func() { Text(c, selected) })
-				sel.Popup(func(panel *ui.Element) {
+				sel.Popup(func(panel ui.Element) {
 					panel.Label("options").Width(180)
 					sel.Item("L").Padding(10).Children(func() { Text(c, "Large") })
 				})
@@ -133,7 +133,7 @@ func TestSelectSearch(t *testing.T) {
 			theme.Apply(c, mode)
 			sel := Select(c, &selected)
 			sel.Trigger.Label("size").Children(func() { Text(c, selected) })
-			sel.Popup(func(panel *ui.Element) {
+			sel.Popup(func(panel ui.Element) {
 				panel.MinWidth(200)
 				sel.SearchField(&query).Label("Search sizes").Placeholder("Search…")
 				matches := 0
@@ -192,7 +192,7 @@ func TestSelectSearchKeyboard(t *testing.T) {
 	tt := ui.NewTester(func(c *ui.Context) {
 		sel := Select(c, &selected)
 		sel.Trigger.Label("size").Children(func() { Text(c, selected) })
-		sel.Popup(func(panel *ui.Element) {
+		sel.Popup(func(panel ui.Element) {
 			panel.MinWidth(200)
 			sel.SearchField(&query).Label("Search sizes")
 			for _, option := range []string{"S", "M", "L"} {

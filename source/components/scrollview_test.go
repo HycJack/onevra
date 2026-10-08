@@ -11,11 +11,11 @@ func TestScrollViewAxes(t *testing.T) {
 	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
 		for _, axes := range []ScrollAxes{ScrollVertical, ScrollHorizontal, ScrollBoth, ScrollAxes(255)} {
 			var state ui.ScrollState
-			var content *ui.Element
+			var content ui.Rect
 			tt := ui.NewTester(func(c *ui.Context) {
 				theme.Apply(c, mode)
 				ScrollView(c, ScrollViewOptions{Axes: axes}).Fill().TrackScroll(&state).Children(func() {
-					content = ui.Box(c).Size(600, 800).Shrink(0).Label("content")
+					ui.Box(c).Size(600, 800).Shrink(0).Label("content").DrawOver(func(_ *ui.Painter, r ui.Rect) { content = r })
 				})
 			}, 200, 200)
 			x, y := float32(0), float32(600)
@@ -28,7 +28,7 @@ func TestScrollViewAxes(t *testing.T) {
 			if state.MaxX != x || state.MaxY != y {
 				t.Fatalf("mode=%v axes=%v: bounds %+v, want %v,%v", mode, axes, state, x, y)
 			}
-			initial := content.Bounds()
+			initial := content
 			tt.Scroll(100, 100, 50, 70)
 			if state.X != min(x, 50) || state.Y != min(y, 70) {
 				t.Fatalf("axes=%v: wheel %+v", axes, state)
@@ -38,7 +38,7 @@ func TestScrollViewAxes(t *testing.T) {
 			if state.X != x || state.Y != y {
 				t.Fatalf("axes=%v: programmatic clamping %+v", axes, state)
 			}
-			r := content.Bounds()
+			r := content
 			if r.X != initial.X-x || r.Y != initial.Y-y {
 				t.Fatalf("axes=%v: content %+v", axes, r)
 			}

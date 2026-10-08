@@ -13,7 +13,7 @@ type NativeSelectOption[T comparable] struct {
 // NativeSelectParts exposes the styled trigger and the current build's change.
 // Trigger.Changed is not used: native menu choices are reported by Changed.
 type NativeSelectParts struct {
-	Trigger *ui.Element
+	Trigger ui.Element
 	changed bool
 }
 

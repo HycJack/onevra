@@ -11,7 +11,7 @@ import "github.com/egoist/mygo/ui"
 // explicit dimensions and Label to supply application-owned accessible text.
 // MyGo owns rendering, aspect ratio and element semantics. No icon registry or
 // dependency on a particular icon pack is introduced.
-func Icon[T *ui.SVG | func() *ui.SVG](c *ui.Context, source T) *ui.Element {
+func Icon[T *ui.SVG | func() *ui.SVG](c *ui.Context, source T) ui.Element {
 	var svg *ui.SVG
 	switch value := any(source).(type) {
 	case *ui.SVG:
