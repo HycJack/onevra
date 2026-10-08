@@ -57,34 +57,34 @@ func (g *Gallery) Left(c *ui.Context) {
 
 func (g *Gallery) navigation(c *ui.Context) {
 	ui.Scroll(c).Fill().Children(func() {
-		ui.Column(c).FillWidth().Padding(0, 12, 12, 12).Gap(4).Children(func() {
-			g.navigationGroup(c, "Overview")
-			g.navigationItem(c, "Component status", lucide.Component(), componentStatusPage)
-			ui.Box(c).Height(4)
-			g.navigationGroup(c, "Icon library")
-			g.navigationItem(c, "Lucide", lucide.Shapes(), lucidePage)
-			ui.Box(c).Height(4)
-			g.navigationGroup(c, "Components")
-			for i, example := range controlCatalog {
-				g.navigationItem(c, example.label, lucide.Component(), controlPageStart()+galleryPage(i))
-			}
-			ui.Box(c).Height(4)
-			g.navigationGroup(c, "Plugins")
-			for i, example := range mygoCatalog {
-				if example.group == "Plugins" {
-					g.navigationItem(c, example.name, lucide.Component(), mygoPageStart+galleryPage(i))
+		components.Sidebar(c).Children(func() {
+			components.SidebarSection(c, "Overview", func() {
+				g.navigationItem(c, "Component status", lucide.Component(), componentStatusPage)
+			})
+			components.SidebarSection(c, "Icon library", func() {
+				g.navigationItem(c, "Lucide", lucide.Shapes(), lucidePage)
+			})
+			components.SidebarSection(c, "Components", func() {
+				for i, example := range controlCatalog {
+					g.navigationItem(c, example.label, lucide.Component(), controlPageStart()+galleryPage(i))
 				}
-			}
-			ui.Box(c).Height(4)
-			g.navigationGroup(c, "MyGo components")
-			for _, group := range mygoGroups {
-				ui.Box(c).Height(4)
-				g.navigationGroup(c, group)
+			})
+			components.SidebarSection(c, "Plugins", func() {
 				for i, example := range mygoCatalog {
-					if example.group == group {
+					if example.group == "Plugins" {
 						g.navigationItem(c, example.name, lucide.Component(), mygoPageStart+galleryPage(i))
 					}
 				}
+			})
+			components.SidebarSection(c, "MyGo components", nil)
+			for _, group := range mygoGroups {
+				components.SidebarSection(c, group, func() {
+					for i, example := range mygoCatalog {
+						if example.group == group {
+							g.navigationItem(c, example.name, lucide.Component(), mygoPageStart+galleryPage(i))
+						}
+					}
+				})
 			}
 		})
 	})

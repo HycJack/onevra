@@ -36,6 +36,7 @@ var controlCatalog = []controlExample{
 	{"Slider", "Sliders", []string{"Default"}, controlSlider},
 	{"Tabs", "Tab rows", []string{"Default", "Selected"}, controlTabs},
 	{"Icon", "Icons", []string{"Default"}, controlIcon},
+	{"Sidebar", "Sidebar", []string{"Default"}, controlSidebar},
 }
 
 func controlPageStart() galleryPage { return mygoPageStart + galleryPage(len(mygoCatalog)) }
@@ -102,7 +103,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 				switch example.name {
 				case "Text":
 					cell.FillWidth()
-				case "TextField", "TextArea", "Slider":
+				case "TextField", "TextArea", "Slider", "Sidebar":
 					cell.Width(240)
 				}
 				cell.Children(func() {

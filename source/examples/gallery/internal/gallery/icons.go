@@ -17,21 +17,8 @@ type iconEntry struct {
 	get  func() *ui.SVG
 }
 
-func (g *Gallery) navigationGroup(c *ui.Context, label string) {
-	components.Text(c, label).FontSize(c.Theme().Rem(.8)).Bold().TextColor(c.Theme().TextMuted).Padding(4, 8, 4, 8)
-}
-
 func (g *Gallery) navigationItem(c *ui.Context, label string, icon *ui.SVG, page galleryPage) {
-	t := c.Theme()
-	b := ui.ButtonBase(c).Key(label).Label(label).FillWidth().Justify(ui.Start).Padding(7, 8).Gap(8).Radius(t.Radius)
-	if g.page == page {
-		b.Background(t.Text.Alpha(.1))
-	}
-	b.Children(func() {
-		components.Icon(c, icon).Size(18, 18).TextColor(t.Accent)
-		components.Text(c, label).SingleLine()
-	})
-	if b.Clicked() {
+	if components.SidebarItem(c, label, icon, g.page == page).Clicked() {
 		g.page = page
 	}
 }
