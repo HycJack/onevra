@@ -190,7 +190,7 @@ func (c *config) generate(ctx context.Context) error {
 	return nil
 }
 
-// Default icon sources live beside packer.yaml, never in resources.
+// Default icon sources live at the root of resources, separate from payloads.
 func (c *config) resolveIcons() error {
 	for _, platform := range []struct {
 		icon  *string
@@ -204,6 +204,7 @@ func (c *config) resolveIcons() error {
 			continue
 		}
 		for _, name := range platform.names {
+			name = filepath.Join("resources", name)
 			info, err := os.Stat(c.path(name))
 			if errors.Is(err, os.ErrNotExist) {
 				continue

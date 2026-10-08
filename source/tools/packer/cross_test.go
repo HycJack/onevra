@@ -62,8 +62,8 @@ func TestCrossPackaging(t *testing.T) {
 	if err := icon.SaveICO(&ico); err != nil {
 		t.Fatal(err)
 	}
-	put(t, filepath.Join(root, "icon.ico"), ico.String())
-	put(t, filepath.Join(root, "icon.svg"), `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"/>`)
+	put(t, filepath.Join(root, "resources", "icon.ico"), ico.String())
+	put(t, filepath.Join(root, "resources", "icon.svg"), `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"/>`)
 	file := filepath.Join(root, "packer.yaml")
 	put(t, file, `name: "Cross App"
 identifier: "me.oneo.crossfixture"

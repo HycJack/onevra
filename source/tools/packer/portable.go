@@ -55,7 +55,7 @@ func buildPortable(ctx context.Context, c *config, out, stage string, release bo
 	if err := bundleNatives(ctx, c, app, t); err != nil {
 		return "", err
 	}
-	if err := copyResources(c.path("resources"), app); err != nil {
+	if err := copyResources(c.path("resources"), app, c.iconSources()...); err != nil {
 		return "", err
 	}
 	if release {

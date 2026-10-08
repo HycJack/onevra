@@ -34,7 +34,8 @@ func main() {
  if err := f.Close(); err != nil { panic(err) }
  if os.Getenv("PACKER_GENERATE_FAIL") == "1" { os.Exit(1) }
  if err := os.WriteFile("../main.go", []byte("package main\nfunc main() {}\n"), 0600); err != nil { panic(err) }
- if err := os.WriteFile("../icon.svg", []byte("<svg xmlns=\"http://www.w3.org/2000/svg\"/>"), 0600); err != nil { panic(err) }
+ if err := os.MkdirAll("../resources", 0755); err != nil { panic(err) }
+ if err := os.WriteFile("../resources/icon.svg", []byte("<svg xmlns=\"http://www.w3.org/2000/svg\"/>"), 0600); err != nil { panic(err) }
 }
 `)
 	// Unselected packages must not run, even though they belong to the same module.

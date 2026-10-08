@@ -21,7 +21,7 @@ var galleryImage = sync.OnceValues(func() (*ui.Bitmap, error) {
 })
 
 func loadGalleryImage(dir string) (*ui.Bitmap, error) {
-	data, err := os.ReadFile(filepath.Join(dir, "images", "icon.png"))
+	data, err := os.ReadFile(filepath.Join(dir, "images", "avatar.jpeg"))
 	if err != nil {
 		return nil, err
 	}
@@ -31,10 +31,10 @@ func loadGalleryImage(dir string) (*ui.Bitmap, error) {
 func controlImage(c *ui.Context, _ *controlState, variant string) {
 	bitmap, err := galleryImage()
 	if err != nil {
-		components.Text(c, "Unable to load icon.png").TextColor(c.Theme().TextMuted)
+		components.Text(c, "Unable to load avatar.jpeg").TextColor(c.Theme().TextMuted)
 		return
 	}
-	image := components.Image(c, bitmap).Size(180, 120).Label("Onevra icon — " + variant)
+	image := components.Image(c, bitmap).Size(180, 120).Label("Author avatar — " + variant)
 	switch variant {
 	case "Cover":
 		image.Fit(ui.Cover)

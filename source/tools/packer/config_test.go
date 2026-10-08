@@ -66,9 +66,14 @@ func TestIconDefaults(t *testing.T) {
 	file := filepath.Join(root, "packer.yaml")
 	put(t, file, `name: "App"
 identifier: "me.app"`)
-	put(t, filepath.Join(root, "resources", "icon.png"), "payload, not the app icon")
+	put(t, filepath.Join(root, "resources", "images", "icon.png"), "payload, not the app icon")
 	check := func(macos, windows, linux string) {
 		t.Helper()
+		for _, icon := range []*string{&macos, &windows, &linux} {
+			if *icon != "" && *icon != "alternate.icns" {
+				*icon = filepath.Join("resources", *icon)
+			}
+		}
 		c, err := loadConfig(file)
 		if err != nil {
 			t.Fatal(err)
@@ -81,14 +86,14 @@ identifier: "me.app"`)
 		}
 	}
 	check("", "", "")
-	put(t, filepath.Join(root, "icon.svg"), "SVG source")
+	put(t, filepath.Join(root, "resources", "icon.svg"), "SVG source")
 	check("", "", "icon.svg")
-	put(t, filepath.Join(root, "icon.png"), "PNG source")
-	put(t, filepath.Join(root, "icon.ico"), "ICO source")
+	put(t, filepath.Join(root, "resources", "icon.png"), "PNG source")
+	put(t, filepath.Join(root, "resources", "icon.ico"), "ICO source")
 	check("", "icon.ico", "icon.png")
-	put(t, filepath.Join(root, "icon.icns"), "ICNS source")
+	put(t, filepath.Join(root, "resources", "icon.icns"), "ICNS source")
 	check("icon.icns", "icon.ico", "icon.png")
-	if err := os.Mkdir(filepath.Join(root, "icon.icon"), 0o755); err != nil {
+	if err := os.Mkdir(filepath.Join(root, "resources", "icon.icon"), 0o755); err != nil {
 		t.Fatal(err)
 	}
 	check("icon.icon", "icon.ico", "icon.png")
@@ -97,10 +102,10 @@ identifier: "me.app"
 macos:
   icon: "alternate.icns"`)
 	check("alternate.icns", "icon.ico", "icon.png")
-	if err := os.Remove(filepath.Join(root, "icon.icon")); err != nil {
+	if err := os.Remove(filepath.Join(root, "resources", "icon.icon")); err != nil {
 		t.Fatal(err)
 	}
-	put(t, filepath.Join(root, "icon.icon"), "not a directory")
+	put(t, filepath.Join(root, "resources", "icon.icon"), "not a directory")
 	put(t, file, `name: "App"
 identifier: "me.app"`)
 	c, err := loadConfig(file)

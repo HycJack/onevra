@@ -1,7 +1,6 @@
 package gallery
 
 import (
-	"bytes"
 	"os"
 	"path/filepath"
 	"testing"
@@ -15,7 +14,7 @@ func TestGalleryImageErrors(t *testing.T) {
 	if err := os.Mkdir(filepath.Join(dir, "images"), 0700); err != nil {
 		t.Fatal(err)
 	}
-	if err := os.WriteFile(filepath.Join(dir, "images", "icon.png"), []byte("invalid PNG"), 0600); err != nil {
+	if err := os.WriteFile(filepath.Join(dir, "images", "avatar.jpeg"), []byte("invalid JPEG"), 0600); err != nil {
 		t.Fatal(err)
 	}
 	if _, err := loadGalleryImage(dir); err == nil {
@@ -24,26 +23,15 @@ func TestGalleryImageErrors(t *testing.T) {
 }
 
 func TestGalleryImageAsset(t *testing.T) {
-	original, err := os.ReadFile("../../../../icon.png")
-	if err != nil {
-		t.Fatal(err)
-	}
-	payload, err := os.ReadFile("../../../../resources/images/icon.png")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !bytes.Equal(original, payload) {
-		t.Fatal("refresh resources/images/icon.png from source/icon.png")
-	}
 	bitmap, err := galleryImage()
 	if err != nil {
 		t.Fatal(err)
 	}
-	if w, h := bitmap.Size(); w != 1024 || h != 1024 {
-		t.Fatalf("unexpected icon dimensions: %dx%d", w, h)
+	if w, h := bitmap.Size(); w != 1254 || h != 1254 {
+		t.Fatalf("unexpected avatar dimensions: %dx%d", w, h)
 	}
 	again, err := galleryImage()
 	if err != nil || again != bitmap {
-		t.Fatal("decoded icon is not cached")
+		t.Fatal("decoded avatar is not cached")
 	}
 }

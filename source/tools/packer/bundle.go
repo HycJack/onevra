@@ -41,7 +41,7 @@ func build(ctx context.Context, c *config, out string, production bool, t target
 	if err != nil {
 		return "", err
 	}
-	if err := copyResources(c.path("resources"), resources); err != nil {
+	if err := copyResources(c.path("resources"), resources, c.iconSources()...); err != nil {
 		return "", err
 	}
 	for k, v := range c.bundleInfo() {
