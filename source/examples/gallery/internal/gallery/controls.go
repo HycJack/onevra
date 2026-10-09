@@ -1,6 +1,8 @@
 package gallery
 
 import (
+	"time"
+
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/components"
 )
@@ -29,6 +31,7 @@ type controlState struct {
 	high                   float64
 	split                  float32
 	color                  ui.Color
+	day                    time.Time
 }
 
 var textBoxControlCatalog = []controlExample{
@@ -42,6 +45,8 @@ var textBoxBufferControlCatalog = []controlExample{
 }
 
 var controlCatalog = []controlExample{
+	{"Calendar", "Calendar", "Selection & values", []string{"Default"}, controlCalendar},
+	{"CalendarPicker", "CalendarPicker", "Selection & values", []string{"Default"}, controlCalendarPicker},
 	{"ColorView", "ColorView", "Selection & values", []string{"Default"}, controlColorView},
 	{"ColorPicker", "ColorPicker", "Selection & values", []string{"Default", "Outlined", "Rounded"}, controlColorPicker},
 	{"Tooltip", "Tooltip", "Overlays", []string{"Default"}, controlTooltip},
@@ -95,7 +100,7 @@ func (g *Gallery) controlState(name, variant string) *controlState {
 	if s := g.controlStates[key]; s != nil {
 		return s
 	}
-	s := &controlState{color: ui.RGB(110, 90, 230), on: variant == "On", choice: "Small", value: 40, high: 80, split: 100, toggles: [2]bool{false, true}}
+	s := &controlState{day: time.Now(), color: ui.RGB(110, 90, 230), on: variant == "On", choice: "Small", value: 40, high: 80, split: 100, toggles: [2]bool{false, true}}
 	if variant == "Selected" {
 		s.choice, s.index = "Large", 1
 	}

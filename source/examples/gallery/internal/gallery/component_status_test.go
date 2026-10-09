@@ -54,7 +54,7 @@ func TestComponentStatuses(t *testing.T) {
 func TestComponentStatusCards(t *testing.T) {
 	entries := mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled)
 	cards := componentStatusCards(entries, mygoReplaced)
-	if len(cards) != 36 {
+	if len(cards) != 38 {
 		t.Fatalf("got %d replacement cards", len(cards))
 	}
 	for _, card := range cards {
