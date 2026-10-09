@@ -43,7 +43,7 @@ func (g *Gallery) Commands(c *ui.Context) {
 		for _, entry := range group.entries {
 			items = append(items, command.Item{
 				ID: pageKey(entry.page), Title: tr(c, entry.label), Group: tr(c, group.label),
-				Icon: lucide.Component(), Keywords: []string{entry.label, group.label},
+				Icon: entry.icon(), Keywords: []string{entry.label, group.label},
 			})
 		}
 	}

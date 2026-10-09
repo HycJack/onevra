@@ -120,14 +120,7 @@ func (g *Gallery) navigation(c *ui.Context) {
 			for _, group := range groups {
 				components.SidebarSection(c, tr(c, group.label), func() {
 					for _, entry := range group.entries {
-						icon := lucide.Component()
-						switch entry.page {
-						case welcomePage:
-							icon = lucide.House()
-						case lucidePage:
-							icon = lucide.Shapes()
-						}
-						g.navigationItem(c, entry.label, icon, entry.page)
+						g.navigationItem(c, entry.label, entry.icon(), entry.page)
 					}
 				})
 			}

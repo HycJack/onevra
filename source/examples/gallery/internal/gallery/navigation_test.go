@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/icons/lucide"
 )
 
 func TestNavigationSpacing(t *testing.T) {
@@ -108,6 +109,25 @@ func TestNavigationSelectionAndHover(t *testing.T) {
 
 func absDiff(a, b uint8) int {
 	return max(int(a)-int(b), int(b)-int(a))
+}
+
+func TestNavigationIcons(t *testing.T) {
+	for _, group := range navigationCatalog() {
+		for _, entry := range group.entries {
+			icon := entry.icon()
+			if icon == nil || icon == lucide.Component() {
+				t.Errorf("%s has no specific navigation icon", entry.label)
+			}
+			translated := entry
+			translated.label = "本地化名称"
+			if translated.icon() != icon {
+				t.Errorf("%s icon depends on its display label", entry.label)
+			}
+		}
+	}
+	if icon := (navigationEntry{page: -999}).icon(); icon != lucide.Component() {
+		t.Fatal("unknown destination must retain the generic fallback")
+	}
 }
 
 func TestNavigationCatalog(t *testing.T) {

@@ -1,0 +1,105 @@
+package gallery
+
+import (
+	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/icons/lucide"
+)
+
+// Keys are stable example names, not translated navigation labels. Keep SVGs lazy.
+var navigationIcons = map[string]func() *ui.SVG{
+	"TimePicker":       lucide.Clock,
+	"Calendar":         lucide.CalendarDays,
+	"CalendarPicker":   lucide.CalendarCheck,
+	"ColorView":        lucide.SwatchBook,
+	"ColorPicker":      lucide.Palette,
+	"Tooltip":          lucide.MessageCircle,
+	"Popover":          lucide.PanelTopDashed,
+	"Dialog":           lucide.AppWindow,
+	"AlertDialog":      lucide.TriangleAlert,
+	"Badge":            lucide.Badge,
+	"Code":             lucide.Code,
+	"Markdown":         lucide.FileText,
+	"RichText":         lucide.Bold,
+	"Breadcrumbs":      lucide.ChevronsRight,
+	"Rating":           lucide.Star,
+	"Text":             lucide.Type,
+	"TextBox":          lucide.TextCursorInput,
+	"TextBoxBuffer":    lucide.TextCursor,
+	"Button":           lucide.MousePointerClick,
+	"Selection":        lucide.SquareCheck,
+	"Select":           lucide.ListFilter,
+	"Menu":             lucide.Menu,
+	"NumberInput":      lucide.Hash,
+	"Slider":           lucide.SlidersHorizontal,
+	"Progress":         lucide.RectangleEllipsis,
+	"Spinner":          lucide.LoaderCircle,
+	"Tabs":             lucide.PanelsTopLeft,
+	"Accordion":        lucide.ListChevronsDownUp,
+	"Collapsible":      lucide.ChevronsUpDown,
+	"Icon":             lucide.Shapes,
+	"Image":            lucide.Image,
+	"List":             lucide.List,
+	"GridView":         lucide.LayoutGrid,
+	"Tree":             lucide.ListTree,
+	"Sidebar":          lucide.PanelLeft,
+	"PixelGrid":        lucide.Grid3x3,
+	"Split":            lucide.Columns2,
+	"ScrollView":       lucide.ArrowDownUp,
+	"Segmented":        lucide.Columns3,
+	"CheckboxGroup":    lucide.ListChecks,
+	"RadioGroup":       lucide.CircleDot,
+	"StepSlider":       lucide.SlidersHorizontal,
+	"RangeSlider":      lucide.SlidersHorizontal,
+	"Stepper":          lucide.ListOrdered,
+	"TextInputBuffer":  lucide.TextCursorInput,
+	"TextAreaBuffer":   lucide.NotepadText,
+	"TokenField":       lucide.Tags,
+	"EditableText":     lucide.PencilLine,
+	"DateInput":        lucide.CalendarClock,
+	"TimeInput":        lucide.Clock,
+	"ColorWell":        lucide.Pipette,
+	"Table":            lucide.Table2,
+	"Outline":          lucide.ListTree,
+	"OutlineTable":     lucide.TableProperties,
+	"Scroll":           lucide.ArrowDownUp,
+	"ScrollHorizontal": lucide.ArrowLeftRight,
+	"ScrollBoth":       lucide.Move,
+	"Grid":             lucide.Grid2x2,
+	"SplitVertical":    lucide.Rows2,
+	"Modal":            lucide.AppWindow,
+	"Toast":            lucide.MessageSquare,
+	"Box":              lucide.Square,
+	"Row":              lucide.Columns3,
+	"Column":           lucide.Rows3,
+	"Spacer":           lucide.AlignHorizontalSpaceAround,
+	"Divider":          lucide.SeparatorHorizontal,
+	"Terminal":         lucide.Terminal,
+	"Glass":            lucide.GlassWater,
+}
+
+func (entry navigationEntry) icon() *ui.SVG {
+	switch entry.page {
+	case welcomePage:
+		return lucide.House()
+	case componentStatusPage:
+		return lucide.ClipboardCheck()
+	case lucidePage:
+		return lucide.Shapes()
+	case trayPage:
+		return lucide.Inbox()
+	case dockPage:
+		return lucide.PanelBottom()
+	case notificationsPage:
+		return lucide.Bell()
+	}
+	name := ""
+	if example, ok := controlExampleFor(entry.page); ok {
+		name = example.name
+	} else if example, ok := mygoExampleFor(entry.page); ok {
+		name = example.name
+	}
+	if icon := navigationIcons[name]; icon != nil {
+		return icon()
+	}
+	return lucide.Component()
+}
