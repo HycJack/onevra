@@ -8,7 +8,7 @@ import (
 )
 
 func TestControlPages(t *testing.T) {
-	if len(controlCatalog) != 35 {
+	if len(controlCatalog) != 36 {
 		t.Fatal("missing control examples")
 	}
 	for i, example := range controlCatalog {
@@ -151,6 +151,9 @@ func TestControlExampleInteractions(t *testing.T) {
 					tt.Key(0, ui.KeyRight)
 					tt.Key(0, ui.KeyEnter)
 					changed = s.day != before
+				case "TimePicker":
+					click("Time")
+					_, changed = tt.Find("Hours")
 				case "CalendarPicker":
 					click("Date")
 					_, changed = tt.Find("Next month")

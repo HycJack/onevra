@@ -279,25 +279,7 @@ func CalendarPicker(c *ui.Context, value *time.Time) *CalendarControl {
 		panic("components.CalendarPicker: nil date")
 	}
 	t := c.Theme()
-	out := &CalendarControl{Element: ui.ButtonBase(c).MinWidth(t.Space(36)).Justify(ui.Start).Role(ui.RolePopUpButton)}
-	border := t.Border
-	if !out.IsDisabled() {
-		switch {
-		case out.Focused():
-			border = t.Accent
-		case out.Hovered():
-			border = t.Border.Mix(t.Text, .25)
-		}
-	}
-	out.Padding(t.Space(1.5), t.Space(2.5), t.Space(1.5), t.Space(8)).
-		Radius(t.Radius).Background(t.Surface).Border(1, border).TextColor(t.Text)
-	out.DrawOver(func(p *ui.Painter, r ui.Rect) {
-		size := t.Space(4)
-		p.Icon(lucide.CalendarDays(), ui.Rect{
-			X: r.X + t.Space(2.5), Y: r.Y + (r.H-size)/2, W: size, H: size,
-		}, t.TextMuted)
-	})
-	dimmed(out.Element)
+	out := &CalendarControl{Element: pickerTrigger(c, lucide.CalendarDays())}
 	open := ui.Local(out.Element, "calendar-open", func() bool { return false })
 	if out.IsDisabled() {
 		*open = false

@@ -45,6 +45,7 @@ var textBoxBufferControlCatalog = []controlExample{
 }
 
 var controlCatalog = []controlExample{
+	{"TimePicker", "TimePicker", "Selection & values", []string{"Default"}, controlTimePicker},
 	{"Calendar", "Calendar", "Selection & values", []string{"Default"}, controlCalendar},
 	{"CalendarPicker", "CalendarPicker", "Selection & values", []string{"Default"}, controlCalendarPicker},
 	{"ColorView", "ColorView", "Selection & values", []string{"Default"}, controlColorView},

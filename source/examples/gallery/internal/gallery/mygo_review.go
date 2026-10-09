@@ -15,6 +15,7 @@ type mygoDecision struct {
 // exclusion decisions hide upstream examples and suppress pending reminders.
 // To exclude a component, add {Reason: "why this component is not needed"}.
 var mygoHandled = map[string]mygoDecision{
+	"TimeInput":        {Replacement: "components.TimePicker", Reason: "Clock-icon trigger with hour and minute popup columns"},
 	"Calendar":         {Replacement: "components.Calendar", Reason: "Fixed-size calendar view, also used inside CalendarPicker"},
 	"DateInput":        {Replacement: "components.CalendarPicker", Reason: "Leading-icon date trigger opening Onevra Calendar"},
 	"ColorPicker":      {Replacement: "components.ColorView", Reason: "Onevra RGBA color editing view"},
