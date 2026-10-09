@@ -55,6 +55,12 @@ Linux needs `libayatana-appindicator3` and a desktop supporting AppIndicator. Ap
 
 From `source/`, run `ONEVRA_NATIVE_SMOKE=1 GOWORK=off go test ./examples/gallery/internal/gallery -run '^TestNativeTray$' -count=1 -timeout 30s` in a desktop session for the lifecycle smoke check. It checks enable/disable, show/hide, close-to-hide and cleanup, not pointer interaction or appearance. Manually verify repeated left-click toggling, right-click menu dismissal followed by another left-click, menu actions, Escape, click-away dismissal, retained text, keyboard focus, both system themes, display edges and multiple displays. Windows and Linux require separate native review.
 
+## Dock menu example
+
+On macOS, select **Desktop / Dock menu** in Gallery and click **Enable Dock menu**. Right-click the application's Dock icon to find Show Gallery, Open Welcome and Open Settings above the standard macOS items. Disable Dock menu removes the demo shortcuts; closing Gallery also restores the previous menu. Windows and Linux show a platform explanation rather than an enable action.
+
+From `source/`, run `ONEVRA_NATIVE_SMOKE=1 GOWORK=off go test ./examples/gallery/internal/gallery -run '^TestNativeDockMenu$' -count=1 -timeout 30s` in a macOS desktop session. This checks menu installation, callback behavior and cleanup, not Dock pointer interaction. Manually verify the actual Dock menu, all three shortcuts with Gallery visible, hidden or minimized, the Settings dialog, and removal of the custom items without changing standard macOS actions. A packaged Gallery run is recommended to review the Dock icon's application identity.
+
 ## Development checks
 
 ```sh

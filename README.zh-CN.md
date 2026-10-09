@@ -29,7 +29,7 @@ go run ./examples/gallery
 
 要预览指定外观，可追加 `-theme light` 或 `-theme dark`。`go run ./tools/packer run` 编译并启动打包后的开发版应用，不进行热重载；`go run ./tools/packer build` 根据 `source/packer.yaml` 中选择的目标平台生成发布归档。详见[打包与图标要求](docs/build.md#app-bundles)。
 
-在 **Desktop / Tray** 页面启用托盘图标后，macOS 和 Windows 上可左键切换便笺小窗口、右键打开原生菜单。Linux 改为通过菜单项打开窗口，需要 AppIndicator。参见[托盘示例依赖与检查](docs/build.md#tray-example)。
+在 **Desktop / Tray** 页面启用托盘图标后，macOS 和 Windows 上可左键切换便笺小窗口、右键打开原生菜单。Linux 改为通过菜单项打开窗口，需要 AppIndicator。参见[托盘示例依赖与检查](docs/build.md#tray-example)。macOS 上还可在 **Desktop / Dock menu** 中为 Dock 图标的右键菜单添加 Gallery 快捷操作，参见[Dock 菜单检查](docs/build.md#dock-menu-example)。
 
 ## 基本使用
 

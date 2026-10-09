@@ -29,7 +29,7 @@ The sidebar includes Shell, the Lucide icon library, Onevra controls and MyGo co
 
 To preview a specific appearance, append `-theme light` or `-theme dark`. `go run ./tools/packer run` compiles and starts a packaged development app without hot reload; `go run ./tools/packer build` produces release archives for the targets selected in `source/packer.yaml`. See [packaging and icon requirements](docs/build.md#app-bundles).
 
-The **Desktop / Tray** page enables a tray icon: left-click toggles a small notes window and right-click opens a native menu on macOS and Windows. Linux uses a menu action instead and requires AppIndicator. See [tray review and requirements](docs/build.md#tray-example).
+The **Desktop / Tray** page enables a tray icon: left-click toggles a small notes window and right-click opens a native menu on macOS and Windows. Linux uses a menu action instead and requires AppIndicator. See [tray review and requirements](docs/build.md#tray-example). On macOS, **Desktop / Dock menu** adds Gallery shortcuts to the Dock icon's right-click menu; see [Dock menu review](docs/build.md#dock-menu-example).
 
 ## Basic usage
 

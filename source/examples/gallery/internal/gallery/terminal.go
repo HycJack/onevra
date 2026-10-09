@@ -82,6 +82,7 @@ func exampleTerminal(c *ui.Context, s *demoState) {
 // Close releases gallery-owned native resources. Call on the UI thread when
 // its window closes, or after a headless view is no longer used.
 func (g *Gallery) Close() {
+	g.dock.close()
 	g.tray.close()
 	for _, s := range g.mygoStates {
 		s.terminal.close()

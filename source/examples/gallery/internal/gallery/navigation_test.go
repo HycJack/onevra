@@ -28,7 +28,7 @@ func TestNavigationGroupOrder(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.Left, 220, 6000)
 	var bottom float32
-	for _, label := range []string{"Overview", "Welcome", "Component status", "Icon library", "Lucide", "Desktop", "Tray", "Plugins", "Terminal", "Actions", "Buttons", "Selection & values", "Text input", "Overlays"} {
+	for _, label := range []string{"Overview", "Welcome", "Component status", "Icon library", "Lucide", "Desktop", "Tray", "Dock menu", "Plugins", "Terminal", "Actions", "Buttons", "Selection & values", "Text input", "Overlays"} {
 		r, ok := tt.Find(label)
 		if !ok || r.Y < bottom {
 			t.Fatalf("%s missing or out of order: %v (previous bottom %v)", label, r, bottom)
@@ -120,7 +120,7 @@ func TestFilteredNavigation(t *testing.T) {
 	for _, group := range all {
 		count += len(group.entries)
 	}
-	if count != 4+len(controlCatalog)+len(mygoCatalog) {
+	if count != 5+len(controlCatalog)+len(mygoCatalog) {
 		t.Fatalf("missing catalog entries: %d", count)
 	}
 	for _, group := range all {
