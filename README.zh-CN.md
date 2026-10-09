@@ -117,6 +117,8 @@ ui.SidebarItem(c, "settings", lucide.Settings(), "Settings")
 
 ## 参与开发
 
+需要小型应用模板时，可参考支持多语言的[普通、菜单栏和混合应用示例](docs/build.md#starter-applications)，每个示例都有自己的启动行为、偏好设置与打包配置。
+
 修改代码前请阅读[架构概览](ARCHITECTURE.md)。在 `source/` 目录运行基本检查：
 
 ```sh

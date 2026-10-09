@@ -117,6 +117,8 @@ Icons are parsed on first use and reused. Icon also accepts parsed `*ui.SVG` ass
 
 ## Contributing
 
+For small application templates, see the multilingual [desktop, menu bar and hybrid examples](docs/build.md#starter-applications), each with its own startup behavior, preferences and packaging configuration.
+
 Read the [architecture overview](ARCHITECTURE.md) before changing code. Run the basic checks from `source/`:
 
 ```sh

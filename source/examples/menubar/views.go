@@ -1,0 +1,168 @@
+package main
+
+import (
+	"github.com/egoist/mygo"
+	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/components"
+	"github.com/oneo-me/onevra/shells/plain"
+	"github.com/oneo-me/onevra/theme"
+	"runtime"
+)
+
+func (a *application) appearance() theme.Mode {
+	if a.config.Appearance == "light" {
+		return theme.Light
+	}
+	if a.config.Appearance == "dark" {
+		return theme.Dark
+	}
+	return theme.Auto
+}
+
+func (a *application) scope(c *ui.Context, build func()) {
+	c.OnShortcut(ui.Cmd, ui.KeyQ, mygo.App.Quit)
+	c.OnShortcut(ui.Cmd, ui.KeyComma, a.openSettings)
+	components.WithLocalization(c, components.Localization{
+		Settings: a.text("settings"), SearchSettings: a.text("search"), SearchSettingsPlaceholder: a.text("search"),
+		SettingsCategory: a.text("category"), SearchResults: a.text("results"), NoSettings: a.text("no_results"),
+	}, build)
+}
+
+func (a *application) feedback(c *ui.Context) {
+	if a.errorKey != "" {
+		components.Text(c, a.text(a.errorKey)).Wrap().TextColor(c.Theme().Danger)
+		components.Text(c, a.errorDetail).Wrap().FontSize(11).TextColor(c.Theme().TextMuted)
+	}
+}
+
+func (a *application) mainView(c *ui.Context) {
+	a.scope(c, func() {
+		c.OnShortcut(ui.Cmd, ui.KeyW, a.main.Close)
+		ui.Column(c).Fill().Padding(24).Gap(16).Children(func() {
+			components.Text(c, a.text("title")).FontSize(26).Bold()
+			components.Text(c, a.text("description")).Wrap().TextColor(c.Theme().TextMuted)
+			components.TextBox(c, &a.note, components.TextBoxOptions{Multiline: true}).Grow(1).Label(a.text("note")).Placeholder(a.text("placeholder"))
+			components.Text(c, a.text("session_note")).Wrap().FontSize(12).TextColor(c.Theme().TextMuted)
+			a.feedback(c)
+			ui.Row(c).Gap(12).Children(func() {
+				components.Button(c, a.text("settings"), components.ButtonPrimary).OnClick(a.openSettings)
+				components.Button(c, a.text("quit"), components.ButtonGhost).OnClick(mygo.App.Quit)
+			})
+		})
+		components.Dialog(c, &a.settingsOpen, components.DialogOptions{Label: a.text("settings")}, func(panel ui.Element) {
+			w, h := c.Size()
+			inset := plain.HeaderHeight(c)
+			width := min(float32(680), w-2*inset)
+			panel.Width(width).Height(min(float32(480), h-2*inset)).Padding(0).Gap(0)
+			a.settingsView(c, width)
+		})
+	})
+}
+
+func (a *application) panelView(c *ui.Context) {
+	theme.Apply(c, a.appearance())
+	a.scope(c, func() {
+		if c.Shortcut(0, ui.KeyEscape) || c.Shortcut(ui.Cmd, ui.KeyW) {
+			a.hidePanel()
+		}
+		ui.Column(c).Fill().Padding(20).Gap(12).Children(func() {
+			components.Text(c, a.text("panel_title")).FontSize(20).Bold()
+			components.TextBox(c, &a.note, components.TextBoxOptions{Multiline: true}).Grow(1).Label(a.text("note")).Placeholder(a.text("placeholder")).AutoFocus()
+			components.Text(c, a.text("session_note")).Wrap().FontSize(11)
+			ui.Row(c).Gap(8).Children(func() {
+				if appKind == "hybrid" {
+					components.Button(c, a.text("open"), components.ButtonPrimary).OnClick(func() { a.hidePanel(); a.showMain() })
+				}
+				components.Button(c, a.text("settings"), components.ButtonSecondary).OnClick(a.openSettings)
+				components.Button(c, a.text("hide"), components.ButtonGhost).OnClick(a.hidePanel)
+			})
+		})
+	})
+}
+
+func (a *application) welcomeView(c *ui.Context) {
+	a.scope(c, func() {
+		components.ScrollView(c, components.ScrollViewOptions{}).Fill().Children(func() {
+			ui.Column(c).FillWidth().Padding(24).Gap(16).Children(func() {
+				components.Text(c, a.text("welcome")).FontSize(24).Bold()
+				key := "welcome_body"
+				if runtime.GOOS == "linux" {
+					key = "welcome_linux"
+				}
+				components.Text(c, a.text(key)).Wrap()
+				a.feedback(c)
+				components.Button(c, a.text("continue"), components.ButtonPrimary).OnClick(a.finishWelcome)
+				components.Button(c, a.text("settings"), components.ButtonSecondary).OnClick(a.openSettings)
+				components.Button(c, a.text("quit"), components.ButtonGhost).OnClick(mygo.App.Quit)
+			})
+		})
+	})
+}
+
+func (a *application) selectSetting(c *ui.Context, value *string, label string, choices []string) {
+	before := *value
+	selectBox := components.Select(c, value)
+	selectBox.Trigger.Label(a.text(label)).MinWidth(160).Children(func() { components.Text(c, a.text(*value)).SingleLine() })
+	selectBox.Popup(func(ui.Element) {
+		for _, choice := range choices {
+			selectBox.Item(choice).Label(a.text(choice)).Children(func() { components.Text(c, a.text(choice)) })
+		}
+	})
+	if before != *value {
+		a.changed()
+	}
+}
+
+func (a *application) settingsView(c *ui.Context, width float32) {
+	items := []components.SettingsItem{
+		{ID: "language", Title: a.text("language"), Keywords: []string{"English", "中文"}, Build: func(c *ui.Context) {
+			a.selectSetting(c, &a.config.Language, "language", []string{"system", "en", "zh-Hans"})
+		}},
+		{ID: "appearance", Title: a.text("appearance"), Build: func(c *ui.Context) {
+			a.selectSetting(c, &a.config.Appearance, "appearance", []string{"system", "light", "dark"})
+		}},
+	}
+	if appKind != "menubar" {
+		choices := []string{"quit"}
+		if appKind == "hybrid" {
+			choices = []string{"tray", "quit"}
+			if runtime.GOOS == "darwin" {
+				choices = []string{"tray", "both", "quit"}
+			}
+		} else if runtime.GOOS == "darwin" {
+			choices = []string{"dock", "quit"}
+		}
+		if len(choices) > 1 {
+			items = append(items, components.SettingsItem{ID: "close", Title: a.text("close_action"), Build: func(c *ui.Context) { a.selectSetting(c, &a.config.CloseAction, "close_action", choices) }})
+		}
+	}
+	if appKind == "hybrid" {
+		items = append(items, components.SettingsItem{ID: "silent", Title: a.text("silent"), Description: a.text("silent_hint"), Build: func(c *ui.Context) {
+			if components.Switch(c, &a.config.Silent, a.text("silent"), components.SwitchOptions{HideLabel: true}).Changed() {
+				a.changed()
+			}
+		}})
+	}
+	if appKind != "desktop" {
+		items = append(items, components.SettingsItem{ID: "panel", Title: a.text("panel"), Description: a.text("panel_hint"), Build: func(c *ui.Context) {
+			if components.Switch(c, &a.config.Panel, a.text("panel"), components.SwitchOptions{HideLabel: true}).Changed() {
+				a.changed()
+			}
+		}})
+	}
+	ui.Column(c).Fill().Children(func() {
+		components.Settings(c, &a.settingsState, []components.SettingsCategory{{ID: "general", Title: a.text("general"), Groups: []components.SettingsGroup{{ID: "preferences", Items: items}}}}, components.SettingsOptions{
+			Narrow: width < 620,
+			HeaderActions: func(c *ui.Context) {
+				components.Button(c, a.text("done"), components.ButtonGhost).OnClick(func() {
+					if appKind == "menubar" {
+						a.settings.Close()
+					} else {
+						a.settingsOpen = false
+					}
+				})
+			},
+		})
+		a.feedback(c)
+	})
+}

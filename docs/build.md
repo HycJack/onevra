@@ -47,6 +47,53 @@ On macOS, the gallery's Terminal page requires macOS 13 or later. Packer verifie
 
 For an unpackaged run on any supported desktop, use `go run ./examples/gallery -theme dark`.
 
+## Starter applications
+
+Three independent applications provide small starting points alongside Gallery. From `source/`, run one of:
+
+```sh
+GOWORK=off go run ./examples/desktop
+GOWORK=off go run ./examples/menubar
+GOWORK=off go run ./examples/hybrid
+```
+
+| Example | Startup and close behavior | Settings host |
+| --- | --- | --- |
+| [Desktop](../source/examples/desktop/main.go) | Shows the main window. On macOS, closing it keeps the app in the Dock by default; Settings can change this to quit. Other platforms quit on close. | Dialog inside the main window |
+| [Menu bar](../source/examples/menubar/main.go) | Shows a first-launch introduction, then runs from its tray icon without a main window. The quick-note panel is optional. | Independent window |
+| [Hybrid](../source/examples/hybrid/main.go) | Shows the main window and tray icon. Optional silent startup leaves the window uncreated until needed. Closing can retain the tray, retain both tray and macOS Dock, or quit. | Dialog inside the main window |
+
+The main, settings and introduction windows use `shells/plain`, with native window controls over an integrated draggable header instead of a default title bar. Tray panels remain frameless.
+
+Opening an already running application activates its existing instance. Desktop and hybrid restore and focus the main window even after silent startup or minimization. Menu bar shows its introduction until acknowledged, then its panel or settings. Explicit Quit always exits, regardless of window-close preferences. The examples use MyGo's single-instance lock and native activation events; they do not implement their own IPC or native runtime.
+
+On macOS and Windows, left-click toggles the quick-note panel and right-click opens settings and quit actions; hybrid also offers Open main window. Disabling the panel makes left-click open settings, an application-owned action that can be replaced when adapting the template. Escape, close and loss of focus hide the panel. Linux uses AppIndicator menu actions instead of direct clicks and requires the desktop support described in [Tray example](#tray-example). If icon creation fails, an accessible window displays the error; closing it exits rather than leaving an inaccessible background process.
+
+English, Simplified Chinese and Follow system apply to application content, settings, window titles and application-owned menus. System language is resolved at startup, with unsupported languages falling back to English. Preferences and the menu bar introduction acknowledgement are saved in `config.yaml` under `os.UserConfigDir()/onevra-examples/<example>/`; each example has its own directory. Writes replace the file atomically. Read failures use defaults and save failures leave changes active for the current session, with feedback in the interface. Note text is intentionally session-only. OS-provided menu items keep their system language.
+
+Each example has a local `packer.yaml`. From `source/`, build Packer once and invoke it beside each configuration:
+
+```sh
+GOWORK=off go build -o ../dist/packer ./tools/packer
+(cd examples/desktop && ../../../dist/packer build)
+(cd examples/menubar && ../../../dist/packer build)
+(cd examples/hybrid && ../../../dist/packer build)
+```
+
+Replace `build` with `run` for a retained development bundle. Configurations select macOS arm64 ZIPs and write to separate `dist/<example>/` directories; edit their target lists for other platforms. They need no Gallery resources or custom app icon. See [App bundles](#app-bundles) for packaging requirements.
+
+To start a project, copy one complete example directory, including `locales/` and `packer.yaml`, into the application's Go module. Change the application name, package identifier, preference directory and output path; provide module dependencies using this repository's [module guidance](../ARCHITECTURE.md#repository-landmarks). The examples have no imports from Gallery or sibling examples. Translation IDs and stored option values remain stable across language changes; extend both catalogs together.
+
+For native lifecycle checks and settings captures, run from `source/` in a desktop session:
+
+```sh
+ONEVRA_NATIVE_SMOKE=1 ONEVRA_SCREENSHOTS="$PWD/../dist/template-preview" \
+  GOWORK=off go test -p 1 ./examples/desktop ./examples/menubar ./examples/hybrid \
+  -run '^TestNative' -count=1 -timeout 45s
+```
+
+The tests exercise startup, close-to-hide, restoration, settings hosting, language updates, panel-free and silent startup, and quit cleanup. In a packaged app, also review actual Dock and tray clicks, opening the application again, right-click dismissal followed by left-click, keyboard shortcuts, focus, accessibility, both languages and themes, and panel placement across displays. Programmatic callbacks and content captures do not establish those native interactions. Windows and Linux require their own desktop review.
+
 ## Tray example
 
 Run Gallery normally and select **Desktop / Tray**, then **Enable tray**. On macOS and Windows, left-click toggles the notes window and right-click opens a native menu with Open notes, Show Gallery and Quit actions. Escape, window close and loss of focus hide the panel. Disable tray removes the icon and panel; closing Gallery also releases both. Notes remain in memory until Gallery exits.

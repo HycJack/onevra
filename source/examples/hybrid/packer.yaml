@@ -1,0 +1,9 @@
+name: Onevra Hybrid
+identifier: me.oneo.onevra.examples.hybrid
+version: "0.1.0"
+main: .
+out: ../../../dist/hybrid
+platforms:
+  - darwin/arm64/zip
+macos:
+  minimumSystemVersion: "13.0"

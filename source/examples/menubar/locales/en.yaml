@@ -1,0 +1,100 @@
+title:
+  other: "Onevra Menu Bar"
+description:
+  other: "A small space for your ideas. Open Settings to choose how the app starts and closes."
+settings:
+  other: "Settings…"
+quit:
+  other: "Quit"
+open:
+  other: "Open main window"
+panel_title:
+  other: "Quick note"
+open_panel:
+  other: "Open quick note"
+note:
+  other: "Note"
+placeholder:
+  other: "Write something…"
+session_note:
+  other: "Notes stay in memory until you quit."
+hide:
+  other: "Hide"
+done:
+  other: "Done"
+welcome:
+  other: "Find me in the menu bar"
+welcome_body:
+  other: "The note icon lives in your menu bar. Left-click to open a quick note; right-click for Settings and Quit. You can disable the panel in Settings."
+welcome_linux:
+  other: "Open the note icon’s menu to access quick notes, Settings and Quit. You can disable the panel in Settings."
+continue:
+  other: "Got it"
+language:
+  other: "Language"
+appearance:
+  other: "Appearance"
+system:
+  other: "Follow system"
+en:
+  other: "English"
+zh-Hans:
+  other: "简体中文"
+light:
+  other: "Light"
+dark:
+  other: "Dark"
+close_action:
+  other: "When the main window closes"
+dock:
+  other: "Keep in Dock"
+tray:
+  other: "Keep menu bar icon"
+both:
+  other: "Keep menu bar and Dock"
+silent:
+  other: "Start silently"
+silent_hint:
+  other: "Hide the main window on startup. Opening the app again always shows it."
+panel:
+  other: "Enable quick note panel"
+panel_hint:
+  other: "When disabled, left-click opens Settings."
+general:
+  other: "General"
+search:
+  other: "Search settings"
+category:
+  other: "Settings category"
+results:
+  other: "Search results"
+no_results:
+  other: "No matching settings"
+load_error:
+  other: "Could not read preferences. Using defaults."
+save_error:
+  other: "Could not save preferences. Changes apply for this session."
+tray_error:
+  other: "The menu bar icon is unavailable. Keep this window open or quit the app."
+edit:
+  other: "Edit"
+undo:
+  other: "Undo"
+redo:
+  other: "Redo"
+cut:
+  other: "Cut"
+copy:
+  other: "Copy"
+paste:
+  other: "Paste"
+select_all:
+  other: "Select All"
+minimize_window:
+  other: "Minimize window"
+maximize_window:
+  other: "Maximize window"
+restore_window:
+  other: "Restore window"
+close_window:
+  other: "Close window"
