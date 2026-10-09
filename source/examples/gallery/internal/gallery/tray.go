@@ -20,13 +20,15 @@ const trayPage galleryPage = componentStatusPage + 1
 // The application owns the panel, in-memory note and lifetime. All callbacks
 // run on MyGo's UI thread; hiding the panel does not discard the note.
 type trayDemo struct {
-	localize func(*ui.Context, func())
-	tray     *mygo.Tray
-	win      *mygo.Window
-	note     string
-	owner    *mygo.Window
-	offQuit  func()
-	err      error
+	localize  func(*ui.Context, func())
+	translate func(string) string
+	menu      *mygo.Menu
+	tray      *mygo.Tray
+	win       *mygo.Window
+	note      string
+	owner     *mygo.Window
+	offQuit   func()
+	err       error
 }
 
 func (a *trayDemo) view(c *ui.Context) {
@@ -105,14 +107,14 @@ func (a *trayDemo) start(owner *mygo.Window) error {
 	a.err = nil
 	var err error
 	a.tray, err = mygo.NewTray(mygo.TrayOptions{
-		Icon: trayIcon(), IconIsTemplate: true, ToolTip: "Onevra Gallery — Tray demo",
+		Icon: trayIcon(), IconIsTemplate: true, ToolTip: a.text("gallery.tray_tooltip"),
 	})
 	if err != nil {
 		a.err = err
 		return err
 	}
 	a.win = mygo.NewWindow(mygo.WindowOptions{
-		Title: "Gallery Tray notes", Width: 380, Height: 320,
+		Title: a.text("gallery.gallery_tray_notes"), Width: 380, Height: 320,
 		Hidden: true, Frameless: true, AlwaysOnTop: true, SkipTaskbar: true,
 		DisableResize: true, DisableMinimize: true,
 		DisableMaximize: true, DisableFullScreen: true,
@@ -124,24 +126,16 @@ func (a *trayDemo) start(owner *mygo.Window) error {
 		e.PreventDefault()
 		a.win.Hide()
 	})
-	menu := mygo.NewMenu([]*mygo.MenuItem{
-		{Label: "Open notes", Click: func(*mygo.MenuItem, *mygo.Window) { a.show() }},
-		{Label: "Show Gallery", Click: func(*mygo.MenuItem, *mygo.Window) {
-			a.win.Hide()
-			a.owner.Show()
-		}},
-		mygo.Separator(),
-		{Role: mygo.RoleQuit},
-	})
+	a.menu = a.buildMenu()
 	if runtime.GOOS == "linux" {
 		// AppIndicator reports no click events; a menu action opens the panel.
-		a.tray.SetMenu(menu)
+		a.tray.SetMenu(a.menu)
 	} else {
 		a.tray.OnClick(a.toggle)
 		a.tray.OnRightClick(func() {
 			a.win.Hide()
 			// A permanent menu would consume primary clicks on macOS.
-			a.tray.SetMenu(menu)
+			a.tray.SetMenu(a.menu)
 			defer a.tray.SetMenu(nil)
 			a.tray.PopUpMenu()
 		})
@@ -186,6 +180,7 @@ func (a *trayDemo) close() {
 		a.win = nil
 	}
 	a.owner = nil
+	a.menu = nil
 }
 
 // Tray creates native resources only in response to an explicit action. Merely
@@ -220,5 +215,24 @@ func (g *Gallery) trayLocalized(c *ui.Context) {
 				components.Text(c, fmt.Sprintf(tr(c, "gallery.tray_unavailable_s"), d.err.Error())).Wrap().TextColor(c.Theme().Danger)
 			}
 		})
+	})
+}
+
+func (a *trayDemo) text(key string) string {
+	if a.translate != nil {
+		return a.translate(key)
+	}
+	return (*translator)(nil).text(key)
+}
+
+func (a *trayDemo) buildMenu() *mygo.Menu {
+	return mygo.NewMenu([]*mygo.MenuItem{
+		{ID: "notes", Label: a.text("gallery.open_notes"), Click: func(*mygo.MenuItem, *mygo.Window) { a.show() }},
+		{ID: "gallery", Label: a.text("gallery.show_gallery"), Click: func(*mygo.MenuItem, *mygo.Window) {
+			a.win.Hide()
+			a.owner.Show()
+		}},
+		mygo.Separator(),
+		{ID: "quit", Role: mygo.RoleQuit, Label: a.text("gallery.quit")},
 	})
 }

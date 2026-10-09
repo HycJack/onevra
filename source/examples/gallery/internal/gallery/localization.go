@@ -4,9 +4,11 @@ import (
 	"embed"
 	"fmt"
 	"log"
+	"runtime"
 	"strings"
 	"time"
 
+	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"github.com/oneo-me/onevra/components"
@@ -147,6 +149,28 @@ func (g *Gallery) updateLanguageWindows() {
 		}
 	}
 	g.tray.localize = g.withLanguage
+	g.tray.translate = g.text
+	if g.tray.tray != nil {
+		g.tray.tray.SetToolTip(g.text("gallery.tray_tooltip"))
+	}
+	if g.tray.menu != nil {
+		g.tray.menu.ItemByID("notes").SetLabel(g.text("gallery.open_notes"))
+		g.tray.menu.ItemByID("gallery").SetLabel(g.text("gallery.show_gallery"))
+		g.tray.menu.ItemByID("quit").SetLabel(g.text("gallery.quit"))
+		// AppIndicator retains a native snapshot rather than reading the menu on click.
+		if runtime.GOOS == "linux" && g.tray.tray != nil {
+			g.tray.tray.SetMenu(g.tray.menu)
+		}
+	}
+	if g.dock.menu != nil {
+		g.dock.menu.ItemByID("show-gallery").SetLabel(g.text("gallery.show_gallery"))
+		g.dock.menu.ItemByID("welcome").SetLabel(g.text("gallery.open_welcome"))
+		g.dock.menu.ItemByID("settings").SetLabel(g.text("gallery.open_settings"))
+		// Refresh the native snapshot only while Gallery still owns the Dock menu.
+		if mygo.App.Dock.Menu() == g.dock.menu {
+			mygo.App.Dock.SetMenu(g.dock.menu)
+		}
+	}
 	if g.tray.win != nil {
 		g.tray.win.SetTitle(g.text("gallery.gallery_tray_notes"))
 		g.tray.win.Invalidate()

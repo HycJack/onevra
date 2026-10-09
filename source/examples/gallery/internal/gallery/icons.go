@@ -21,12 +21,6 @@ type iconEntry struct {
 
 func (g *Gallery) navigationItem(c *ui.Context, label string, icon *ui.SVG, page galleryPage) {
 	display := tr(c, label)
-	if example, ok := controlExampleFor(page); ok && example.label == example.name {
-		display = label
-	}
-	if _, ok := mygoExampleFor(page); ok {
-		display = label
-	}
 	item := components.SidebarItem(c, display, icon, g.page == page).Key(page)
 	if example, upstream := mygoExampleFor(page); upstream && example.group != "Plugins" {
 		item.Children(func() {

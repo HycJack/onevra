@@ -192,3 +192,37 @@ func TestNavigationSearch(t *testing.T) {
 		}
 	}
 }
+
+func TestChineseNavigationNames(t *testing.T) {
+	g := &Gallery{}
+	g.chooseLanguage("zh-Hans")
+	for _, group := range filteredNavigation("") {
+		for _, entry := range group.entries {
+			if entry.label == "Lucide" || entry.label == "Markdown" {
+				continue
+			}
+			if g.text(entry.label) == entry.label {
+				t.Errorf("untranslated navigation label: %s", entry.label)
+			}
+		}
+	}
+	for _, query := range []string{"TimePicker", "时间选择器"} {
+		groups := filteredNavigation(query, g.text)
+		if len(groups) != 1 || len(groups[0].entries) != 1 || groups[0].entries[0].label != "TimePicker" {
+			t.Fatalf("search %q did not preserve component identity: %v", query, groups)
+		}
+	}
+	g.navigationQuery = "时间选择器"
+	tt := ui.NewTester(g.Left, 240, 600)
+	if err := tt.Click("时间选择器"); err != nil {
+		t.Fatal(err)
+	}
+	example, ok := controlExampleFor(g.page)
+	if !ok || example.name != "TimePicker" {
+		t.Fatal("translated navigation selected wrong page")
+	}
+	g.chooseLanguage("en")
+	if example, ok := controlExampleFor(g.page); !ok || example.name != "TimePicker" {
+		t.Fatal("language switch changed route")
+	}
+}

@@ -33,21 +33,22 @@ func loadGalleryMarkdown(dir string) (*markdown.MarkdownDocument, error) {
 func controlMarkdown(c *ui.Context, s *controlState, _ string) {
 	document, err := galleryMarkdown()
 	if err != nil {
-		components.Text(c, "Unable to load markdown.md").TextColor(c.Theme().TextMuted)
+		components.Text(c, tr(c, "gallery.markdown_load_error")).TextColor(c.Theme().TextMuted)
 		return
 	}
 	bitmap, _ := galleryImage() // Missing images use Markdown's alt-text fallback.
 	document.Render(c, markdown.MarkdownOptions{
-		Images: map[string]*ui.Bitmap{"images/avatar.jpeg": bitmap},
-		OnLink: func(string) { s.index++ },
+		CopyCodeLabel: tr(c, "gallery.copy_code"),
+		Images:        map[string]*ui.Bitmap{"images/avatar.jpeg": bitmap},
+		OnLink:        func(string) { s.index++ },
 		CodeBlocks: map[string]func(*ui.Context, markdown.MarkdownCodeBlock){
 			"counter": func(c *ui.Context, block markdown.MarkdownCodeBlock) {
 				ui.Column(c).Gap(c.Theme().Space(2)).Children(func() {
 					components.Text(c, strings.TrimSuffix(block.Code, "\n")).Bold()
-					if components.Button(c, "Increment", components.ButtonSecondary).Clicked() {
+					if components.Button(c, tr(c, "gallery.increment"), components.ButtonSecondary).Clicked() {
 						s.index++
 					}
-					components.Text(c, fmt.Sprintf("Count: %d", s.index))
+					components.Text(c, fmt.Sprintf(tr(c, "gallery.count_d"), s.index))
 				})
 			},
 		},

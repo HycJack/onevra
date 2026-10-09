@@ -173,7 +173,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 	t := c.Theme()
 	if example.name == "Text" || example.name == "Collapsible" {
 		ui.Column(c).Key(example.name).FillWidth().MinWidth(0).Gap(t.Space(4)).Children(func() {
-			components.Text(c, example.name).Bold().TextColor(t.Text)
+			components.Text(c, tr(c, example.name)).Bold().TextColor(t.Text)
 			for _, variant := range example.variants {
 				ui.Column(c).Key(variant).FillWidth().MinWidth(0).Gap(12).Children(func() {
 					components.Text(c, tr(c, variant)).TextColor(t.TextMuted)

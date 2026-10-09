@@ -37,17 +37,17 @@ func (g *Gallery) showFromDock() {
 
 func (g *Gallery) dockMenu() *mygo.Menu {
 	return mygo.NewMenu([]*mygo.MenuItem{
-		{ID: "show-gallery", Label: "Show Gallery", Click: func(*mygo.MenuItem, *mygo.Window) {
+		{ID: "show-gallery", Label: g.text("gallery.show_gallery"), Click: func(*mygo.MenuItem, *mygo.Window) {
 			g.showFromDock()
 		}},
 		mygo.Separator(),
-		{ID: "welcome", Label: "Open Welcome", Click: func(*mygo.MenuItem, *mygo.Window) {
+		{ID: "welcome", Label: g.text("gallery.open_welcome"), Click: func(*mygo.MenuItem, *mygo.Window) {
 			g.page = welcomePage
 			g.enterGallery()
 			g.settings.open = false
 			g.showFromDock()
 		}},
-		{ID: "settings", Label: "Open Settings", Click: func(*mygo.MenuItem, *mygo.Window) {
+		{ID: "settings", Label: g.text("gallery.open_settings"), Click: func(*mygo.MenuItem, *mygo.Window) {
 			g.openSettingsFromMenu()
 		}},
 	})

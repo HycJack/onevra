@@ -51,13 +51,13 @@ gallery.another_layer:
 gallery.appearance:
   other: 外观
 gallery.appindicator_supports_menus_only_choose_open_notes_from_the_tray_menu:
-  other: AppIndicator 仅支持菜单，请在托盘菜单中选择 Open notes。
+  other: AppIndicator 仅支持菜单，请在托盘菜单中选择打开笔记。
 gallery.application:
   other: 应用
 gallery.applies_immediately_and_follows_the_toolbar_theme_menu:
   other: 立即生效，与工具栏主题菜单同步。
 gallery.applies_immediately_system_menus_keep_their_current_language:
-  other: 立即生效。系统菜单保留当前语言。
+  other: 立即应用于界面和应用自有菜单。
 gallery.apply:
   other: 应用
 gallery.apply_change:
@@ -87,7 +87,7 @@ gallery.both:
 gallery.bottom_pane:
   other: 下方区域
 gallery.box:
-  other: 容器
+  other: "容器"
 gallery.brightness_percent:
   other: 明度百分比
 gallery.buffer_text_areas:
@@ -154,8 +154,132 @@ gallery.column_d:
   other: 第 %d 列
 gallery.combine:
   other: 组合
+gallery.component_accordion:
+  other: "手风琴"
+gallery.component_alertdialog:
+  other: "警告对话框"
+gallery.component_badge:
+  other: "徽标"
+gallery.component_breadcrumbs:
+  other: "面包屑导航"
+gallery.component_button:
+  other: "按钮"
+gallery.component_calendar:
+  other: "日历"
+gallery.component_calendarpicker:
+  other: "日期选择器"
+gallery.component_checkbox:
+  other: "复选框"
+gallery.component_checkboxgroup:
+  other: "复选框组"
+gallery.component_collapsible:
+  other: "折叠面板"
+gallery.component_colorpicker:
+  other: "颜色选择器"
+gallery.component_colorview:
+  other: "颜色面板"
+gallery.component_colorwell:
+  other: "色块"
+gallery.component_column:
+  other: "列"
+gallery.component_dateinput:
+  other: "日期输入框"
+gallery.component_editabletext:
+  other: "可编辑文本"
+gallery.component_glass:
+  other: "玻璃效果"
+gallery.component_gridview:
+  other: "网格视图"
+gallery.component_image:
+  other: "图像"
+gallery.component_modal:
+  other: "模态窗口"
+gallery.component_nativeselect:
+  other: "原生选择器"
+gallery.component_numberinput:
+  other: "数字输入框"
+gallery.component_outlinetable:
+  other: "大纲表格"
+gallery.component_pixelgrid:
+  other: "像素网格"
+gallery.component_popover:
+  other: "弹出面板"
+gallery.component_progressring:
+  other: "环形进度条"
+gallery.component_radio:
+  other: "单选框"
+gallery.component_radiogroup:
+  other: "单选框组"
+gallery.component_rangeslider:
+  other: "范围滑块"
+gallery.component_richtext:
+  other: "富文本"
+gallery.component_row:
+  other: "行"
+gallery.component_scroll:
+  other: "滚动视图"
+gallery.component_scrollboth:
+  other: "双向滚动"
+gallery.component_scrollhorizontal:
+  other: "水平滚动"
+gallery.component_segmented:
+  other: "分段控件"
+gallery.component_selection:
+  other: "选择控件"
+gallery.component_sidebar:
+  other: "侧边栏"
+gallery.component_spacer:
+  other: "占位空间"
+gallery.component_spinner:
+  other: "加载指示器"
+gallery.component_split:
+  other: "分栏"
+gallery.component_splitvertical:
+  other: "垂直分栏"
 gallery.component_status:
   other: 组件状态
+gallery.component_stepper:
+  other: "步进器"
+gallery.component_stepslider:
+  other: "步进滑块"
+gallery.component_switch:
+  other: "开关"
+gallery.component_table:
+  other: "表格"
+gallery.component_tabs:
+  other: "标签页"
+gallery.component_terminal:
+  other: "终端"
+gallery.component_text:
+  other: "文本"
+gallery.component_textareabuffer:
+  other: "缓冲多行文本输入"
+gallery.component_textbox:
+  other: "文本框"
+gallery.component_textbox_multiline:
+  other: "多行文本框"
+gallery.component_textboxbuffer:
+  other: "缓冲文本框"
+gallery.component_textboxbuffer_multiline:
+  other: "缓冲多行文本框"
+gallery.component_textinputbuffer:
+  other: "缓冲文本输入"
+gallery.component_timeinput:
+  other: "时间输入框"
+gallery.component_timepicker:
+  other: "时间选择器"
+gallery.component_toast:
+  other: "轻提示"
+gallery.component_togglebutton:
+  other: "切换按钮"
+gallery.component_tokenfield:
+  other: "标签输入框"
+gallery.component_tooltip:
+  other: "工具提示"
+gallery.component_tree:
+  other: "树形视图"
+gallery.component_treevirtualized:
+  other: "虚拟树形视图"
 gallery.components:
   other: 组件
 gallery.confirmation:
@@ -172,6 +296,8 @@ gallery.copies:
   other: 份数
 gallery.copies_0f:
   other: 份数：%.0f
+gallery.copy_code:
+  other: "复制代码"
 gallery.copy_color:
   other: 复制颜色
 gallery.count:
@@ -200,6 +326,8 @@ gallery.decimal:
   other: 小数
 gallery.default:
   other: 默认
+gallery.delete:
+  other: "删除"
 gallery.desktop:
   other: 桌面
 gallery.desktop_dock_menu:
@@ -209,7 +337,7 @@ gallery.desktop_tray:
 gallery.details:
   other: 详情
 gallery.dialog:
-  other: 对话框
+  other: "对话框"
 gallery.disable_dock_menu:
   other: 停用 Dock 菜单
 gallery.disable_tray:
@@ -217,7 +345,7 @@ gallery.disable_tray:
 gallery.disabled:
   other: 已禁用
 gallery.divider:
-  other: 分隔线
+  other: "分隔线"
 gallery.dock_menu:
   other: Dock 菜单
 gallery.dock_menus_are_available_only_on_macos_use_desktop_tray_for_a_tray_men:
@@ -230,6 +358,8 @@ gallery.drag_the_glass_over_the_avatar:
   other: 将玻璃拖到头像上方
 gallery.draggable_glass:
   other: 可拖动玻璃
+gallery.duplicate:
+  other: "创建副本"
 gallery.edit_name:
   other: 编辑名称
 gallery.editable:
@@ -247,7 +377,7 @@ gallery.enable_dock_menu:
 gallery.enable_notifications:
   other: 启用通知
 gallery.enable_the_menu_then_right_click_gallery_s_dock_icon_show_gallery_open:
-  other: 启用后右键点击 Gallery 的 Dock 图标，可在 macOS 标准操作上方找到 Show Gallery、Open Welcome 和 Open Settings。
+  other: 启用后右键点击组件库的 Dock 图标，可在 macOS 标准操作上方找到显示组件库、打开欢迎页和打开设置。
 gallery.enable_tray:
   other: 启用托盘
 gallery.enabled:
@@ -299,7 +429,7 @@ gallery.grayscale:
 gallery.green:
   other: 绿色
 gallery.grid:
-  other: 网格
+  other: "网格"
 gallery.grid_items:
   other: 网格项目
 gallery.grid_view_selected:
@@ -340,6 +470,8 @@ gallery.in_the_zone:
   other: 进入状态
 gallery.include_a_little_inspiration:
   other: 加入一点灵感
+gallery.increment:
+  other: "增加"
 gallery.indeterminate:
   other: 不确定进度
 gallery.indeterminate_progress:
@@ -399,7 +531,7 @@ gallery.link:
 gallery.liquid_glass:
   other: 液态玻璃
 gallery.list:
-  other: 列表
+  other: "列表"
 gallery.list_view_selected:
   other: 已选择列表视图
 gallery.loading:
@@ -416,6 +548,8 @@ gallery.major_lines:
   other: 主网格线
 gallery.make_space_for:
   other: 选择用途
+gallery.markdown_load_error:
+  other: "无法加载 markdown.md"
 gallery.maximize_window:
   other: 最大化窗口
 gallery.maximum:
@@ -492,6 +626,8 @@ gallery.opacity:
   other: 不透明度
 gallery.opacity_percent:
   other: 不透明度百分比
+gallery.open:
+  other: "打开"
 gallery.open_another_layer:
   other: 打开另一层
 gallery.open_another_layer_or_click_the_backdrop_to_go_back_one_layer:
@@ -500,10 +636,14 @@ gallery.open_dialog:
   other: 打开对话框
 gallery.open_notes:
   other: 打开笔记
+gallery.open_settings:
+  other: "打开设置"
+gallery.open_welcome:
+  other: "打开欢迎页"
 gallery.original_strokes_at_16_24_and_32_dip_colors_inherit_from_mygo:
   other: 以 16、24 和 32 DIP 显示原始线条，颜色继承自 MyGo。
 gallery.outline:
-  other: 描边
+  other: "大纲"
 gallery.outlined:
   other: 描边
 gallery.overlays:
@@ -543,7 +683,7 @@ gallery.previous_years:
 gallery.primary:
   other: 主要
 gallery.progress:
-  other: 进度
+  other: "进度条"
 gallery.progress_value:
   other: 进度值
 gallery.project:
@@ -571,7 +711,7 @@ gallery.range:
 gallery.rated:
   other: 已评分
 gallery.rating:
-  other: 评分
+  other: "评分"
 gallery.read_only:
   other: 只读
 gallery.ready_to_explore_s:
@@ -686,6 +826,8 @@ gallery.settings_category:
   other: 设置类别
 gallery.shared_notes:
   other: 共享笔记
+gallery.show_gallery:
+  other: "显示组件库"
 gallery.show_popover:
   other: 显示弹出层
 gallery.show_s:
@@ -780,6 +922,8 @@ gallery.tray:
   other: 托盘
 gallery.tray_notes:
   other: 托盘笔记
+gallery.tray_tooltip:
+  other: "Onevra 组件库 — 托盘示例"
 gallery.tray_unavailable_s:
   other: 托盘不可用：%s
 gallery.unable_to_load_avatar_jpeg:
@@ -838,3 +982,5 @@ gallery.your_next_idea:
   other: 你的下一个想法
 gallery.your_password_is_updated:
   other: 你的密码已更新。
+gallery.toggle_smart_notifications:
+  other: 切换智能通知

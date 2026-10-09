@@ -78,6 +78,14 @@ func TestNativeDockMenu(t *testing.T) {
 		if g.dock.menu != installed {
 			t.Error("enabling twice should preserve menu ownership")
 		}
+		g.chooseLanguage("zh-Hans")
+		if mygo.App.Dock.Menu() != installed || installed.ItemByID("settings").Label != "打开设置" {
+			t.Error("language switch must update the installed menu in place")
+		}
+		g.chooseLanguage("en")
+		if installed.ItemByID("settings").Label != "Open Settings" {
+			t.Error("English menu was not restored")
+		}
 		g.Shell.Window().Hide()
 		item := installed.ItemByID("show-gallery")
 		item.Click(item, nil)
@@ -97,6 +105,10 @@ func TestNativeDockMenu(t *testing.T) {
 		g.enableDockMenu()
 		other := mygo.NewMenu([]*mygo.MenuItem{{Label: "Another owner"}})
 		mygo.App.Dock.SetMenu(other)
+		g.chooseLanguage("zh-Hans")
+		if mygo.App.Dock.Menu() != other {
+			t.Error("language switch replaced another owner's menu")
+		}
 		g.Close()
 		if mygo.App.Dock.Menu() != other {
 			t.Error("cleanup replaced another owner's menu")

@@ -91,3 +91,37 @@ func TestNativeSelectPreview(t *testing.T) {
 		}
 	}
 }
+
+func TestMenuLanguageSwitch(t *testing.T) {
+	for _, variant := range []string{"Left-click", "Right-click"} {
+		g := &Gallery{}
+		g.chooseLanguage("zh-Hans")
+		state := &controlState{}
+		tt := ui.NewTester(func(c *ui.Context) {
+			g.withLanguage(c, func() { ui.Column(c).Children(func() { controlMenu(c, state, variant) }) })
+		}, 320, 240)
+		var err error
+		if variant == "Right-click" {
+			err = tt.RightClick(g.text("gallery.right_click_here"))
+		} else {
+			err = tt.Click(g.text("gallery.actions"))
+		}
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err := tt.ChooseMenuItem("创建副本"); err != nil {
+			t.Fatal(err)
+		}
+		if state.text != "Duplicate" || state.index != 1 {
+			t.Fatal("translated menu changed action identity")
+		}
+		if !tt.HasText("创建副本: 1") {
+			t.Fatal(tt.Texts())
+		}
+		g.chooseLanguage("en")
+		tt.Frame()
+		if !tt.HasText("Duplicate: 1") {
+			t.Fatal(tt.Texts())
+		}
+	}
+}

@@ -86,6 +86,15 @@ func TestNativeTray(t *testing.T) {
 		if a.win.IsVisible() {
 			t.Error("panel should start hidden")
 		}
+		menu, panel := a.menu, a.win
+		g.chooseLanguage("zh-Hans")
+		if a.menu != menu || a.win != panel || menu.ItemByID("notes").Label != g.text("gallery.open_notes") || menu.ItemByID("quit").Label != "退出" {
+			t.Error("language switch must update tray menu without recreating its resources")
+		}
+		g.chooseLanguage("en")
+		if menu.ItemByID("notes").Label != "Open notes" {
+			t.Error("English tray menu was not restored")
+		}
 		a.note = "Preserved while hidden"
 		a.toggle()
 		if !a.win.IsVisible() {

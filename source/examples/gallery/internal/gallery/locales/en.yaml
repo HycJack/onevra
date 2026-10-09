@@ -57,7 +57,7 @@ gallery.application:
 gallery.applies_immediately_and_follows_the_toolbar_theme_menu:
   other: Applies immediately and follows the toolbar theme menu.
 gallery.applies_immediately_system_menus_keep_their_current_language:
-  other: Applies immediately. System menus keep their current language.
+  other: Applies immediately to the interface and application-owned menus.
 gallery.apply:
   other: Apply
 gallery.apply_change:
@@ -154,8 +154,132 @@ gallery.column_d:
   other: Column %d
 gallery.combine:
   other: 'Combine '
+gallery.component_accordion:
+  other: "Accordion"
+gallery.component_alertdialog:
+  other: "AlertDialog"
+gallery.component_badge:
+  other: "Badge"
+gallery.component_breadcrumbs:
+  other: "Breadcrumbs"
+gallery.component_button:
+  other: "Button"
+gallery.component_calendar:
+  other: "Calendar"
+gallery.component_calendarpicker:
+  other: "CalendarPicker"
+gallery.component_checkbox:
+  other: "Checkbox"
+gallery.component_checkboxgroup:
+  other: "CheckboxGroup"
+gallery.component_collapsible:
+  other: "Collapsible"
+gallery.component_colorpicker:
+  other: "ColorPicker"
+gallery.component_colorview:
+  other: "ColorView"
+gallery.component_colorwell:
+  other: "ColorWell"
+gallery.component_column:
+  other: "Column"
+gallery.component_dateinput:
+  other: "DateInput"
+gallery.component_editabletext:
+  other: "EditableText"
+gallery.component_glass:
+  other: "Glass"
+gallery.component_gridview:
+  other: "GridView"
+gallery.component_image:
+  other: "Image"
+gallery.component_modal:
+  other: "Modal"
+gallery.component_nativeselect:
+  other: "NativeSelect"
+gallery.component_numberinput:
+  other: "NumberInput"
+gallery.component_outlinetable:
+  other: "OutlineTable"
+gallery.component_pixelgrid:
+  other: "PixelGrid"
+gallery.component_popover:
+  other: "Popover"
+gallery.component_progressring:
+  other: "ProgressRing"
+gallery.component_radio:
+  other: "Radio"
+gallery.component_radiogroup:
+  other: "RadioGroup"
+gallery.component_rangeslider:
+  other: "RangeSlider"
+gallery.component_richtext:
+  other: "RichText"
+gallery.component_row:
+  other: "Row"
+gallery.component_scroll:
+  other: "Scroll"
+gallery.component_scrollboth:
+  other: "ScrollBoth"
+gallery.component_scrollhorizontal:
+  other: "ScrollHorizontal"
+gallery.component_segmented:
+  other: "Segmented"
+gallery.component_selection:
+  other: "Selection"
+gallery.component_sidebar:
+  other: "Sidebar"
+gallery.component_spacer:
+  other: "Spacer"
+gallery.component_spinner:
+  other: "Spinner"
+gallery.component_split:
+  other: "Split"
+gallery.component_splitvertical:
+  other: "SplitVertical"
 gallery.component_status:
   other: Component status
+gallery.component_stepper:
+  other: "Stepper"
+gallery.component_stepslider:
+  other: "StepSlider"
+gallery.component_switch:
+  other: "Switch"
+gallery.component_table:
+  other: "Table"
+gallery.component_tabs:
+  other: "Tabs"
+gallery.component_terminal:
+  other: "Terminal"
+gallery.component_text:
+  other: "Text"
+gallery.component_textareabuffer:
+  other: "TextAreaBuffer"
+gallery.component_textbox:
+  other: "TextBox"
+gallery.component_textbox_multiline:
+  other: "TextBox (multiline)"
+gallery.component_textboxbuffer:
+  other: "TextBoxBuffer"
+gallery.component_textboxbuffer_multiline:
+  other: "TextBoxBuffer (multiline)"
+gallery.component_textinputbuffer:
+  other: "TextInputBuffer"
+gallery.component_timeinput:
+  other: "TimeInput"
+gallery.component_timepicker:
+  other: "TimePicker"
+gallery.component_toast:
+  other: "Toast"
+gallery.component_togglebutton:
+  other: "ToggleButton"
+gallery.component_tokenfield:
+  other: "TokenField"
+gallery.component_tooltip:
+  other: "Tooltip"
+gallery.component_tree:
+  other: "Tree"
+gallery.component_treevirtualized:
+  other: "TreeVirtualized"
 gallery.components:
   other: Components
 gallery.confirmation:
@@ -172,6 +296,8 @@ gallery.copies:
   other: Copies
 gallery.copies_0f:
   other: 'Copies: %.0f'
+gallery.copy_code:
+  other: "Copy code"
 gallery.copy_color:
   other: Copy color
 gallery.count:
@@ -200,6 +326,8 @@ gallery.decimal:
   other: Decimal
 gallery.default:
   other: Default
+gallery.delete:
+  other: "Delete"
 gallery.desktop:
   other: Desktop
 gallery.desktop_dock_menu:
@@ -230,6 +358,8 @@ gallery.drag_the_glass_over_the_avatar:
   other: Drag the glass over the avatar
 gallery.draggable_glass:
   other: Draggable glass
+gallery.duplicate:
+  other: "Duplicate"
 gallery.edit_name:
   other: Edit name
 gallery.editable:
@@ -340,6 +470,8 @@ gallery.in_the_zone:
   other: In the zone
 gallery.include_a_little_inspiration:
   other: Include a little inspiration
+gallery.increment:
+  other: "Increment"
 gallery.indeterminate:
   other: Indeterminate
 gallery.indeterminate_progress:
@@ -416,6 +548,8 @@ gallery.major_lines:
   other: Major lines
 gallery.make_space_for:
   other: Make space for
+gallery.markdown_load_error:
+  other: "Unable to load markdown.md"
 gallery.maximize_window:
   other: Maximize window
 gallery.maximum:
@@ -492,6 +626,8 @@ gallery.opacity:
   other: Opacity
 gallery.opacity_percent:
   other: Opacity percent
+gallery.open:
+  other: "Open"
 gallery.open_another_layer:
   other: Open another layer
 gallery.open_another_layer_or_click_the_backdrop_to_go_back_one_layer:
@@ -500,6 +636,10 @@ gallery.open_dialog:
   other: Open dialog
 gallery.open_notes:
   other: Open notes
+gallery.open_settings:
+  other: "Open Settings"
+gallery.open_welcome:
+  other: "Open Welcome"
 gallery.original_strokes_at_16_24_and_32_dip_colors_inherit_from_mygo:
   other: Original strokes at 16, 24 and 32 DIP; colors inherit from MyGo.
 gallery.outline:
@@ -686,6 +826,8 @@ gallery.settings_category:
   other: Settings category
 gallery.shared_notes:
   other: Shared notes
+gallery.show_gallery:
+  other: "Show Gallery"
 gallery.show_popover:
   other: Show popover
 gallery.show_s:
@@ -780,6 +922,8 @@ gallery.tray:
   other: Tray
 gallery.tray_notes:
   other: Tray notes
+gallery.tray_tooltip:
+  other: "Onevra Gallery — Tray demo"
 gallery.tray_unavailable_s:
   other: 'Tray unavailable: %s'
 gallery.unable_to_load_avatar_jpeg:
@@ -838,3 +982,5 @@ gallery.your_next_idea:
   other: Your next idea
 gallery.your_password_is_updated:
   other: Your password is updated.
+gallery.toggle_smart_notifications:
+  other: Toggle smart notifications

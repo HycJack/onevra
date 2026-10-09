@@ -69,10 +69,10 @@ func (g *Gallery) titlebarLocalized(c *ui.Context) {
 		title = "Desktop / Dock menu"
 	}
 	if example, ok := mygoExampleFor(g.page); ok {
-		title = tr(c, example.group) + " / " + example.name
+		title = tr(c, example.group) + " / " + tr(c, example.name)
 	}
 	if example, ok := controlExampleFor(g.page); ok {
-		title = tr(c, example.group) + " / " + example.name
+		title = tr(c, example.group) + " / " + tr(c, example.name)
 	}
 	components.Text(c, tr(c, title)).Bold().SingleLine()
 }

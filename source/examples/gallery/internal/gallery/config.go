@@ -104,7 +104,7 @@ func (g *Gallery) themeMenu(m *ui.Menu) {
 		{"Light", mygo.ThemeLight},
 		{"Dark", mygo.ThemeDark},
 	} {
-		if m.Item(option.label).Checked(mygo.Theme.Source() == option.source).Chosen() {
+		if m.Item(g.text(option.label)).Checked(mygo.Theme.Source() == option.source).Chosen() {
 			g.chooseTheme(option.source)
 		}
 	}
