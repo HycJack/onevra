@@ -7,14 +7,15 @@ package chat
 import (
 	"math"
 	"strings"
+	"time"
 
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/components"
 	"github.com/oneo-me/onevra/icons/lucide"
 )
 
-// Status describes a turn or block's application-reported lifecycle. A tool
-// finishing does not finish its turn. Only Completed permits automatic folding.
+// Status describes a turn or activity's application-reported lifecycle. A
+// tool finishing does not finish its turn. Only Completed permits folding.
 type Status uint8
 
 const (
@@ -29,27 +30,61 @@ const (
 // attachments, confirmation controls or bounded tool-output previews.
 type View func(*ui.Context)
 
-// Block is one execution step. ID is nonempty and unique within the turn;
-// update a tool's existing block by its call ID, even if results arrive out of
-// order. Slice order is presentation order, not result-arrival order. Kind is
-// application-defined metadata; it does not constrain the content builder.
-type Block struct {
-	ID, Kind, Title, StatusLabel string
-	Status                       Status
-	Content                      View
-	// Preview is a short, single-line description shown beside the title.
-	Preview string
-	// State enables an independent lazy disclosure. Nil keeps content visible.
-	State *BlockState
-	// DetailHeight bounds an expanded output viewport in DIPs. Zero lets the
-	// content determine height. The application still bounds retained output.
-	DetailHeight float32
+// Activity is one execution step inside an activity group, such as reading
+// a file, running a command or thinking. ID is stable within its turn; update
+// a tool's existing activity by its call ID, even if results arrive out of
+// order. Action is a short verb ("Read") and Detail its target.
+type Activity struct {
+	ID, Action, Detail string
+	Icon               func() *ui.SVG
+	Status             Status
+	// Content is the expanded detail. Nil keeps the activity a single row.
+	Content View
+	// Mono presents Content as monospace output rather than prose.
+	Mono bool
+	// State retains expansion and must be non-nil when Content is set.
+	State *ActivityState
+	// MaxHeight bounds the expanded detail in DIPs; zero uses 400.
+	MaxHeight float32
 }
 
-// BlockState belongs to one stable call ID and survives outer-turn folding.
-type BlockState struct {
+// ActivityState belongs to one stable activity ID.
+type ActivityState struct {
 	Expanded bool
 	Scroll   ui.ScrollState
+}
+
+// GroupState retains an activity group's explicit expansion. Its zero value
+// opens the group while it is live and closes it afterwards.
+type GroupState struct{ choice uint8 }
+
+func (g *GroupState) expanded(live bool) bool {
+	if g == nil || g.choice == 0 {
+		return live
+	}
+	return g.choice == 1
+}
+
+// SetExpanded records an explicit choice that survives the group settling.
+func (g *GroupState) SetExpanded(open bool) { g.set(open) }
+
+func (g *GroupState) set(open bool) {
+	if g != nil {
+		g.choice = 2
+		if open {
+			g.choice = 1
+		}
+	}
+}
+
+// Step is either intermediate prose (Message) or a group of activities with
+// an application-summarized Title such as "Ran 2 commands".
+type Step struct {
+	ID         string
+	Message    View
+	Title      string
+	Activities []Activity
+	Group      *GroupState
 }
 
 // TurnState retains only presentation state. Do not share it between turns or
@@ -88,67 +123,60 @@ func (s *TurnState) Expanded(status Status, hasFinal, holdOpen bool) bool {
 	return !s.folded
 }
 
-// TurnOptions describes one request and its response. Supply a stable, nonempty
-// ID and localized Summary (also the disclosure's accessible name). Final is
-// explicit: the last tool or assistant block is never inferred to be final.
+// TurnOptions describes one request and its response. Supply a stable,
+// nonempty ID. Summary labels the completed turn's fold row ("Worked for 2m")
+// and Working the live indicator ("Working for 12s"). Final is explicit: the
+// last step is never inferred to be the answer.
 type TurnOptions struct {
-	ID, Summary   string
-	Status        Status
-	Prompt, Final View
-	Blocks        []Block
-	// Footer holds artifacts or result summaries, even without a final answer.
-	// Actions holds response actions such as copy. Neither folds with execution.
+	ID               string
+	Status           Status
+	Summary, Working string
+	Prompt, Final    View
+	Steps            []Step
+	// Footer holds results or errors and Actions response actions such as
+	// copy. Neither folds with the steps.
 	Footer, Actions View
 	// HoldOpen delays automatic folding while the user reads older content.
 	// ConversationState.AtLatest is useful for this policy. Focus inside the
-	// execution body also protects it automatically, including selectable text.
+	// steps also protects them automatically, including selectable text.
 	HoldOpen bool
 }
 
-// Turn displays a user prompt, lazy execution disclosure and independent final
-// response. A collapsed disclosure invokes no block builders, including during
-// closing; folding is immediate to avoid relaying out large hidden documents.
+// Turn displays the prompt, its steps and the final response. A completed
+// turn folds its steps behind a centered summary row, building nothing hidden.
 func Turn(c *ui.Context, state *TurnState, options TurnOptions) ui.Element {
-	return ui.Column(c).Key(options.ID).FillWidth().MinWidth(0).Shrink(0).Gap(c.Theme().Space(4)).Children(func() {
+	t := c.Theme()
+	return ui.Column(c).Key(options.ID).FillWidth().MinWidth(0).Shrink(0).Gap(t.Space(4)).Children(func() {
 		if options.Prompt != nil {
 			Message(c, true, func(c *ui.Context) { Bubble(c, options.Prompt) })
 		}
-		if len(options.Blocks) != 0 {
-			ui.Column(c).Key("execution").FillWidth().MinWidth(0).Gap(c.Theme().Space(2)).Children(func() {
-				scope := *conversationSlot(c)
-				open := state.Expanded(options.Status, options.Final != nil, options.HoldOpen || scope.reading || state.body.FocusWithin(c))
-				// The unstyled disclosure supplies native keyboard and expanded
-				// semantics; content is built separately so hidden work is zero.
-				var p ui.CollapsibleParts
-				ui.Row(c).FillWidth().AlignItems(ui.Center).Gap(c.Theme().Space(3)).Children(func() {
-					divider(c)
-					p = ui.CollapsibleBase(c, &open)
-					p.Trigger.MaxWidthPercent(80).AlignItems(ui.Center).Gap(c.Theme().Space(1)).Padding(c.Theme().Space(1)).Radius(c.Theme().Radius).
-						Label(options.Summary).Children(func() {
-						components.Text(c, options.Summary).MinWidth(0).TextColor(c.Theme().TextMuted)
-						arrow := lucide.ChevronRight
-						if open {
-							arrow = lucide.ChevronDown
+		scope := *conversationSlot(c)
+		open := state.Expanded(options.Status, options.Final != nil, options.HoldOpen || scope.reading || state.body.FocusWithin(c))
+		foldable := options.Status == Completed && options.Final != nil && len(options.Steps) > 0
+		if foldable {
+			if foldRow(c, options.Summary, open) {
+				state.SetExpanded(!open)
+				open = !open
+				pauseConversation(c)
+			}
+		}
+		if open && len(options.Steps) > 0 {
+			ui.Column(c).Key("steps").Bind(&state.body).FillWidth().MinWidth(0).Gap(t.Space(4)).Children(func() {
+				for i, step := range options.Steps {
+					live := options.Status == Running && i == len(options.Steps)-1
+					ui.Column(c).Key(step.ID).FillWidth().MinWidth(0).Children(func() {
+						if step.Message != nil {
+							step.Message(c)
 						}
-						components.Icon(c, arrow).Size(c.Theme().Space(4), c.Theme().Space(4)).Shrink(0).TextColor(c.Theme().TextMuted)
-					})
-					divider(c)
-				})
-				if p.Trigger.Changed() {
-					state.SetExpanded(open)
-					if scope.state != nil {
-						scope.state.Scroll.Y = scope.previousY
-						scope.state.paused, scope.state.pauseY = true, scope.previousY
-					}
-				}
-				if open {
-					ui.Column(c).Key("steps").Bind(&state.body).FillWidth().MinWidth(0).Gap(c.Theme().Space(3)).Children(func() {
-						for _, block := range options.Blocks {
-							ExecutionBlock(c, block)
+						if len(step.Activities) > 0 {
+							activityGroup(c, step, live)
 						}
 					})
 				}
 			})
+		}
+		if options.Status == Running {
+			workingRow(c, options.Working)
 		}
 		if options.Final != nil {
 			ui.Column(c).Key("final").FillWidth().MinWidth(0).Children(func() { Message(c, false, options.Final) })
@@ -157,71 +185,194 @@ func Turn(c *ui.Context, state *TurnState, options TurnOptions) ui.Element {
 			ui.Column(c).Key("footer").FillWidth().MinWidth(0).Children(func() { options.Footer(c) })
 		}
 		if options.Actions != nil {
-			ui.Row(c).Key("actions").FillWidth().Wrap().Gap(c.Theme().Space(2)).Children(func() { options.Actions(c) })
+			ui.Row(c).Key("actions").FillWidth().Wrap().Gap(t.Space(1)).Children(func() { options.Actions(c) })
 		}
 	})
 }
 
-// ExecutionBlock renders an extensible execution step. Content costs and
-// truncation are application-owned; do not build unbounded logs in a preview.
-func ExecutionBlock(c *ui.Context, block Block) ui.Element {
+// foldRow is the divider-centered summary of a completed turn.
+func foldRow(c *ui.Context, label string, open bool) bool {
 	t := c.Theme()
-	return ui.Column(c).Key(block.ID).FillWidth().MinWidth(0).Shrink(0).
-		Radius(t.Radius).Border(1, t.Border).Background(t.Text.Alpha(.025)).Children(func() {
-		header := func() {
-			icon := lucide.LoaderCircle
-			switch block.Status {
-			case Completed:
-				icon = lucide.Check
-			case Failed:
-				icon = lucide.CircleAlert
-			case Waiting, Cancelled:
-				icon = lucide.CirclePause
+	var clicked bool
+	ui.Row(c).Key("fold").FillWidth().Height(24).AlignItems(ui.Center).Gap(10).Children(func() {
+		divider(c)
+		b := ui.ButtonBase(c).Label(label).Expanded(open).Height(24).Padding(0, 2).AlignItems(ui.Center).Gap(5).
+			Background(ui.Color{}).TextColor(tertiary(t)).Radius(t.Radius)
+		b.Children(func() {
+			components.Text(c, label).FontSize(13.5).FontWeight(500).TextColor(tertiary(t))
+			icon := lucide.ChevronRight
+			if open {
+				icon = lucide.ChevronDown
 			}
-			components.Icon(c, icon).Size(t.Space(4), t.Space(4)).Shrink(0).TextColor(t.TextMuted)
-			components.Text(c, block.Title).Bold().Grow(2).MinWidth(0).SingleLine().Ellipsis("…")
-			if block.Preview != "" {
-				components.Text(c, block.Preview).Grow(1).MinWidth(0).SingleLine().Ellipsis("…").TextColor(t.TextMuted)
-			}
-			if block.StatusLabel != "" {
-				components.Text(c, block.StatusLabel).TextColor(t.TextMuted)
-			}
-			if block.State != nil && block.Content != nil {
-				icon := lucide.ChevronRight
-				if block.State.Expanded {
-					icon = lucide.ChevronDown
-				}
-				components.Icon(c, icon).Size(t.Space(3), t.Space(3)).Shrink(0)
-			}
+			components.Icon(c, icon).Size(11.5, 11.5).TextColor(tertiary(t))
+		})
+		clicked = b.Clicked()
+		divider(c)
+	})
+	return clicked
+}
+
+// workingRow shows pulsing dots and the live elapsed label.
+func workingRow(c *ui.Context, label string) {
+	t := c.Theme()
+	ui.Row(c).Key("working").Height(22).AlignItems(ui.Center).Gap(8).Children(func() {
+		waveDots(c, tertiary(t))
+		if label != "" {
+			components.Text(c, label).FontSize(13.5).FontWeight(500).TextColor(tertiary(t))
 		}
-		if block.State != nil && block.Content != nil {
-			p := ui.CollapsibleBase(c, &block.State.Expanded)
-			p.Trigger.FillWidth().MinWidth(0).AlignItems(ui.Center).Gap(t.Space(2)).Padding(t.Space(2)).Label(block.Title).Children(header)
-			if p.Trigger.Changed() {
+	})
+}
+
+func waveDots(c *ui.Context, color ui.Color) {
+	reduced := c.Preferences().ReduceMotion
+	ui.Box(c).Size(18, 6).Shrink(0).Draw(func(p *ui.Painter, r ui.Rect) {
+		phase := 0.0
+		if !reduced {
+			p.After(50 * time.Millisecond)
+			phase = float64(p.Now().UnixMilli()%1200) / 1200
+		}
+		for i := range 3 {
+			alpha := float32(.35)
+			if !reduced {
+				wave := math.Sin((phase - float64(i)*.15) * 2 * math.Pi)
+				alpha = float32(.35 + .65*math.Max(0, wave))
+			}
+			x := r.X + float32(i)*6
+			p.Fill(ui.Rect{X: x, Y: r.Y + (r.H-4)/2, W: 4, H: 4}, color.Alpha(alpha), 2)
+		}
+	})
+}
+
+// activityGroup is a disclosure header with a guide-lined list of rows.
+func activityGroup(c *ui.Context, step Step, live bool) {
+	t := c.Theme()
+	open := step.Group.expanded(live)
+	ui.Column(c).Key("activities").FillWidth().MinWidth(0).Gap(4).Children(func() {
+		b := ui.ButtonBase(c).Label(step.Title).Expanded(open).FillWidth().MinWidth(0).Height(26).Justify(ui.Start).
+			AlignItems(ui.Center).Gap(6).Background(ui.Color{}).TextColor(secondary(t))
+		hover := b.Hovered() || b.Focused()
+		b.Children(func() {
+			color := secondary(t)
+			if hover {
+				color = t.Text
+			}
+			components.Text(c, step.Title).MinWidth(0).SingleLine().Ellipsis("…").FontSize(12.5).FontWeight(500).TextColor(color)
+			icon := lucide.ChevronRight
+			if open {
+				icon = lucide.ChevronDown
+			}
+			components.Icon(c, icon).Size(10, 10).Shrink(0).TextColor(tertiary(t))
+		})
+		if b.Clicked() {
+			step.Group.set(!open)
+			open = !open
+			pauseConversation(c)
+		}
+		if !open {
+			return
+		}
+		ui.Column(c).FillWidth().MinWidth(0).Margin(0, 0, 0, 6).Padding(0, 0, 2, 12).BorderWidth(0, 0, 0, 1).BorderColor(t.Border).Gap(8).Children(func() {
+			for _, a := range step.Activities {
+				ActivityRow(c, a)
+			}
+		})
+	})
+}
+
+// ActivityRow renders one activity as a compact card that can expand to its
+// bounded detail. Content costs and truncation are application-owned.
+func ActivityRow(c *ui.Context, a Activity) ui.Element {
+	t := c.Theme()
+	surface := t.Background.Mix(t.Text, .035)
+	detail := a.Content != nil && a.State != nil
+	open := detail && a.State.Expanded
+	return ui.Column(c).Key(a.ID).FillWidth().MinWidth(0).Radius(9).Border(1, strongBorder(t)).Background(surface).Clip().Children(func() {
+		header := func(e ui.Element) {
+			e.FillWidth().MinWidth(0).Height(28).Padding(0, 8).AlignItems(ui.Center).Gap(8)
+			e.Children(func() {
+				icon := a.Icon
+				if icon == nil {
+					icon = lucide.Wrench
+				}
+				components.Icon(c, icon).Size(12, 12).Shrink(0).TextColor(tertiary(t))
+				components.Text(c, a.Action).Shrink(0).FontSize(12.5).FontWeight(600).TextColor(secondary(t))
+				if a.Detail != "" {
+					components.Text(c, a.Detail).Grow(1).MinWidth(0).SingleLine().Ellipsis("…").FontSize(12.5).TextColor(secondary(t))
+				} else {
+					ui.Box(c).Grow(1)
+				}
+				switch {
+				case a.Status == Failed:
+					components.Icon(c, lucide.X).Size(10, 10).Shrink(0).TextColor(t.Danger)
+				case a.Status == Running && !detail:
+					pulseDot(c, t.Accent)
+				}
+				if detail {
+					icon := lucide.ChevronRight
+					if open {
+						icon = lucide.ChevronDown
+					}
+					components.Icon(c, icon).Size(10, 10).Shrink(0).TextColor(tertiary(t))
+				}
+			})
+		}
+		if detail {
+			b := ui.ButtonBase(c).Label(a.Action + " " + a.Detail).Expanded(open).Justify(ui.Start).Background(ui.Color{}).TextColor(t.Text)
+			if b.Hovered() || b.Focused() {
+				b.Background(t.Text.Alpha(.03))
+			}
+			header(b)
+			if b.Clicked() {
+				a.State.Expanded = !a.State.Expanded
+				open = a.State.Expanded
 				pauseConversation(c)
 			}
 		} else {
-			ui.Row(c).FillWidth().MinWidth(0).Gap(t.Space(2)).AlignItems(ui.Center).Padding(t.Space(2)).Children(header)
+			header(ui.Row(c))
 		}
-		if block.Content != nil && (block.State == nil || block.State.Expanded) {
-			body := func() { ui.Column(c).FillWidth().MinWidth(0).Padding(t.Space(3)).Children(func() { block.Content(c) }) }
-			if block.DetailHeight > 0 {
-				viewport := components.ScrollView(c, components.ScrollViewOptions{}).FillWidth().Height(block.DetailHeight)
-				if block.State != nil {
-					if block.Status == Running && block.State.Scroll.Y >= block.State.Scroll.MaxY-2 {
-						block.State.Scroll.Y = math.MaxFloat32
-					}
-					viewport.TrackScroll(&block.State.Scroll)
-				}
-				viewport.Children(body)
-			} else {
-				body()
+		if !open {
+			return
+		}
+		height := a.MaxHeight
+		if height <= 0 {
+			height = 400
+		}
+		if a.Status == Running && a.State.Scroll.Y >= a.State.Scroll.MaxY-2 {
+			a.State.Scroll.Y = math.MaxFloat32
+		}
+		components.ScrollView(c, components.ScrollViewOptions{}).FillWidth().MaxHeight(height).BorderWidth(1, 0, 0, 0).BorderColor(strongBorder(t)).
+			TrackScroll(&a.State.Scroll).Children(func() {
+			body := ui.Column(c).FillWidth().MinWidth(0).Padding(8, 12).Gap(8).TextColor(secondary(t))
+			if a.Mono {
+				body.Font("monospace").FontSize(12)
 			}
+			body.Children(func() { a.Content(c) })
+		})
+	})
+}
+
+func pulseDot(c *ui.Context, color ui.Color) {
+	reduced := c.Preferences().ReduceMotion
+	ui.Box(c).Size(5, 5).Shrink(0).Draw(func(p *ui.Painter, r ui.Rect) {
+		alpha := float32(1)
+		if !reduced {
+			p.After(50 * time.Millisecond)
+			alpha = float32(.45 + .55*(1+math.Sin(float64(p.Now().UnixMilli()%1000)/1000*2*math.Pi))/2)
 		}
+		p.Fill(r, color.Alpha(alpha), r.W/2)
 	})
 }
 
 func divider(c *ui.Context) { ui.Box(c).Grow(1).Height(1).Background(c.Theme().Border) }
+
+// Waku-derived tones layered on the frame theme.
+func secondary(t *ui.Theme) ui.Color    { return t.Text.Mix(t.TextMuted, .45) }
+func tertiary(t *ui.Theme) ui.Color     { return t.TextMuted }
+func strongBorder(t *ui.Theme) ui.Color { return t.Border.Mix(t.Text, .08) }
+func overlay(t *ui.Theme) ui.Color      { return t.Text.Alpha(.05) }
+func overlayStrong(t *ui.Theme) ui.Color {
+	return t.Text.Alpha(.09)
+}
 
 func pauseConversation(c *ui.Context) {
 	scope := *conversationSlot(c)
@@ -245,10 +396,10 @@ func Message(c *ui.Context, outgoing bool, content View) ui.Element {
 	})
 }
 
-// Bubble supplies an optional muted message surface.
+// Bubble is the raised surface of an outgoing message.
 func Bubble(c *ui.Context, content View) ui.Element {
 	t := c.Theme()
-	return ui.Column(c).MinWidth(0).MaxWidthPercent(90).Padding(t.Space(3), t.Space(4)).Radius(t.Radius * 2).
+	return ui.Column(c).MinWidth(0).MaxWidth(540).Padding(9, 14, 8, 14).Gap(7).Radius(12).
 		Background(t.Background.Mix(t.Text, .06)).Children(func() {
 		if content != nil {
 			content(c)
@@ -286,6 +437,9 @@ func (s *ConversationState) JumpToLatest() {
 	s.Scroll.Y = math.MaxFloat32
 }
 
+// ContentWidth is the reading width of transcripts and the composer.
+const ContentWidth = 720
+
 // Conversation owns a bounded scroll viewport and a jump button. Give its
 // parent a bounded height. Supply a localized jumpLabel. Following uses MyGo's
 // scroll state and yields when the user scrolls up. The button is overlaid so
@@ -302,8 +456,8 @@ func Conversation(c *ui.Context, state *ConversationState, jumpLabel string, con
 	return ui.Column(c).FillWidth().Grow(1).MinHeight(0).MinWidth(0).Children(func() {
 		viewport := components.ScrollView(c, components.ScrollViewOptions{}).Key("viewport").FillWidth().Grow(1).MinHeight(0).TrackScroll(&state.Scroll)
 		viewport.Children(func() {
-			ui.Column(c).FillWidth().MinWidth(0).Shrink(0).AlignItems(ui.Center).Padding(c.Theme().Space(4), c.Theme().Space(4), c.Theme().Space(14)).Children(func() {
-				ui.Column(c).FillWidth().MaxWidth(c.Theme().Rem(48)).MinWidth(0).Gap(c.Theme().Space(6)).Children(func() {
+			ui.Column(c).FillWidth().MinWidth(0).Shrink(0).AlignItems(ui.Center).Padding(22, 20).Children(func() {
+				ui.Column(c).FillWidth().MaxWidth(ContentWidth).MinWidth(0).Gap(48).Children(func() {
 					slot := conversationSlot(c)
 					saved := *slot
 					*slot = conversationScope{state: state, previousY: previousY, reading: !follow}
@@ -317,7 +471,11 @@ func Conversation(c *ui.Context, state *ConversationState, jumpLabel string, con
 		// A disclosure can cancel this frame's follow without moving its header.
 		viewport.TrackScroll(&state.Scroll)
 		if !follow {
-			if components.Button(c, jumpLabel, components.ButtonSecondary).Absolute().Attach(ui.AnchorBottom, ui.AnchorBottom).Margin(c.Theme().Space(2)).Clicked() {
+			b := components.Button(c, "", components.ButtonSecondary).Label(jumpLabel).Absolute().Attach(ui.AnchorBottom, ui.AnchorBottom).
+				Margin(c.Theme().Space(2)).Size(28, 28).Padding(0).Radius(14)
+			b.Children(func() { components.Icon(c, lucide.ArrowDown).Size(14, 14) })
+			components.Tooltip(c, b, jumpLabel)
+			if b.Clicked() {
 				state.JumpToLatest()
 				c.Invalidate()
 			}
@@ -326,67 +484,124 @@ func Conversation(c *ui.Context, state *ConversationState, jumpLabel string, con
 }
 
 // ComposerOptions supplies localized labels and optional application controls.
-// Enter inserts a newline using the native multiline editor. Sending is an
-// explicit button action, so IME composition cannot accidentally submit a turn.
+// Enter sends outside input-method composition and Shift+Enter inserts a
+// newline. While Running, Stop is shown, and a nonempty draft also offers
+// Send so the application can interrupt the run with the new message.
 type ComposerOptions struct {
 	Label, Placeholder, SendLabel, StopLabel string
 	Running                                  bool
-	Accessory                                View
-	// Attachments appears above the editor; Footer appears below the surface.
+	// Accessory holds controls in the card's bottom row, such as model chips.
+	Accessory View
+	// Attachments appears above the editor; Footer below the card.
 	Attachments, Footer View
+	// AcceptFiles makes the card a drop target for files from other apps.
+	AcceptFiles bool
 }
 
+type composerEnterKey struct{}
+
 // ComposerResult contains frame-local actions. The application clears the
-// draft after accepting Send and owns request cancellation for Stop.
+// draft after accepting Send and owns request cancellation for Stop. Dropped
+// lists file paths dropped on the card since the last frame; reading or
+// attaching them remains application work.
 type ComposerResult struct {
 	Root, Input ui.Element
 	Send, Stop  bool
+	Dropped     []string
 }
 
-// Composer builds a multiline editor with send/stop and an accessory slot.
+// Composer builds a multiline editor card with send/stop and an accessory row.
 // Keep draft outside the frame; a running request never discards the next draft.
 func Composer(c *ui.Context, draft *string, options ComposerOptions) ComposerResult {
 	var result ComposerResult
 	t := c.Theme()
-	result.Root = ui.Column(c).FillWidth().MinWidth(0).Shrink(0).Gap(t.Space(2)).Children(func() {
-		surface := ui.Column(c).FillWidth().MinWidth(0).Padding(t.Space(3)).Gap(t.Space(2)).
-			Background(t.Surface).Border(1, t.Border).Radius(t.Radius * 2).Children(func() {
+	empty := strings.TrimSpace(*draft) == ""
+	result.Root = ui.Column(c).FillWidth().MinWidth(0).Shrink(0).Children(func() {
+		card := ui.Column(c).FillWidth().MinWidth(0).Padding(10, 0).Radius(13).Border(1, t.Border).Background(t.Surface).Children(func() {
 			if options.Attachments != nil {
-				ui.Row(c).Key("attachments").FillWidth().Wrap().Gap(t.Space(2)).Children(func() { options.Attachments(c) })
+				ui.Row(c).Key("attachments").FillWidth().Wrap().Gap(6).Padding(0, 10, 6, 10).Children(func() { options.Attachments(c) })
 			}
-			result.Input = components.TextBox(c, draft, components.TextBoxOptions{Multiline: true}).FillWidth().Lines(1, 6).MinHeight(t.Space(8)).
-				Label(options.Label).Placeholder(options.Placeholder).Border(0, ui.Color{}).Background(ui.Color{})
-
-			ui.Row(c).FillWidth().MinWidth(0).AlignItems(ui.Center).Gap(t.Space(2)).Children(func() {
-				ui.Row(c).Grow(1).MinWidth(0).Wrap().Gap(t.Space(1)).Children(func() {
+			result.Input = components.TextBox(c, draft, components.TextBoxOptions{Multiline: true}).FillWidth().Lines(1, 10).MinHeight(40).
+				Label(options.Label).Placeholder(options.Placeholder).Border(0, ui.Color{}).Background(ui.Color{}).Padding(2, 14, 0, 14).FontSize(13.5)
+			ui.Row(c).FillWidth().MinWidth(0).Margin(8, 0, 0, 0).Padding(0, 10).AlignItems(ui.Center).Gap(4).Children(func() {
+				ui.Row(c).Grow(1).MinWidth(0).AlignItems(ui.Center).Gap(4).Children(func() {
 					if options.Accessory != nil {
 						options.Accessory(c)
 					}
 				})
 				if options.Running {
-					result.Stop = IconAction(c, options.StopLabel, lucide.Square).Clicked()
-				} else {
-					ui.Box(c).Disabled(strings.TrimSpace(*draft) == "" || result.Input.Composing()).Children(func() {
-						result.Send = IconAction(c, options.SendLabel, lucide.ArrowUp).Background(t.Text).TextColor(t.Background).Clicked()
+					stop := roundAction(c, options.StopLabel, lucide.Square, overlayStrong(t), t.Text)
+					if stop.Hovered() {
+						stop.Background(t.Danger.Alpha(.16))
+					}
+					result.Stop = stop.Clicked()
+				}
+				if !options.Running || !empty {
+					background, foreground := t.Inverse, t.InverseText
+					if empty || result.Input.Composing() {
+						background, foreground = overlayStrong(t), tertiary(t)
+					}
+					ui.Box(c).Disabled(empty || result.Input.Composing()).Children(func() {
+						if roundAction(c, options.SendLabel, lucide.ArrowUp, background, foreground).Clicked() {
+							result.Send = true
+						}
 					})
 				}
 			})
 		})
+		// The multiline editor inserts a newline for Enter before shortcuts
+		// see it, so take plain Enter as it arrives. Composition keeps its own
+		// Enter; Shift+Enter still reaches the editor.
+		pending := ui.Local(result.Input, composerEnterKey{}, func() bool { return false })
+		composing := result.Input.Composing()
+		result.Input.HandleInput(func(ev ui.InputEvent) bool {
+			if ev.Kind != ui.InputKeyDown || ev.Key != ui.KeyEnter || ev.Mods != 0 || composing {
+				return false
+			}
+			*pending = true
+			return true
+		})
+		if *pending {
+			*pending = false
+			result.Send = result.Send || !empty && !composing
+		}
+		if options.AcceptFiles {
+			result.Dropped = card.DroppedFiles()
+			if card.FileDragOver() {
+				card.BorderColor(t.Accent.Alpha(.7)).Background(t.Surface.Mix(t.Text, .09))
+			}
+		}
 		if result.Input.Focused() {
-			surface.BorderColor(t.Accent)
+			card.BorderColor(strongBorder(t))
 		}
 		if options.Footer != nil {
-			ui.Row(c).Key("composer-footer").FillWidth().MinWidth(0).Wrap().Gap(t.Space(2)).Children(func() { options.Footer(c) })
+			ui.Row(c).Key("composer-footer").FillWidth().MinWidth(0).Height(28).Padding(4, 10, 0, 10).AlignItems(ui.Center).Gap(2).
+				Children(func() { options.Footer(c) })
 		}
 	})
 	return result
 }
 
+func roundAction(c *ui.Context, label string, icon func() *ui.SVG, background, foreground ui.Color) ui.Element {
+	b := ui.ButtonBase(c).Label(label).Size(26, 26).Shrink(0).Radius(13).Center().Background(background).TextColor(foreground)
+	if b.Pressed() {
+		b.Opacity(.8)
+	} else if b.Hovered() {
+		b.Opacity(.9)
+	}
+	b.Children(func() { components.Icon(c, icon).Size(15, 15) })
+	components.Tooltip(c, b, label)
+	return b
+}
+
 // IconAction is a keyboard-operable, named icon button with a focus tooltip.
 func IconAction(c *ui.Context, label string, icon func() *ui.SVG) ui.Element {
 	t := c.Theme()
-	b := components.Button(c, "", components.ButtonGhost).Label(label).Padding(t.Space(2)).Radius(t.Space(5)).Shrink(0)
-	b.Children(func() { components.Icon(c, icon).Size(t.Space(4), t.Space(4)) })
+	b := ui.ButtonBase(c).Label(label).Size(26, 26).Shrink(0).Radius(6).Center().Background(ui.Color{}).TextColor(tertiary(t))
+	if b.Hovered() || b.Focused() {
+		b.Background(overlay(t)).TextColor(t.Text)
+	}
+	b.Children(func() { components.Icon(c, icon).Size(14, 14) })
 	components.Tooltip(c, b, label)
 	return b
 }

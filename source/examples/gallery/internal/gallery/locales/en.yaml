@@ -1070,7 +1070,7 @@ gallery.chat_running:
 gallery.chat_latest:
   other: "Back to latest"
 gallery.chat_reasoning:
-  other: "Reasoning summary"
+  other: "Ran 2 tools"
 gallery.chat_summary:
   other: "%s · 2 tool calls"
 gallery.chat_message:
@@ -1111,3 +1111,9 @@ gallery.chat_model:
   other: "Model"
 gallery.chat_effort:
   other: "Reasoning effort"
+gallery.chat_usage:
+  other: "Usage"
+gallery.chat_context:
+  other: "Context"
+gallery.chat_think:
+  other: "Think"

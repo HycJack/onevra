@@ -1070,7 +1070,7 @@ gallery.chat_running:
 gallery.chat_latest:
   other: "回到最新"
 gallery.chat_reasoning:
-  other: "思考摘要"
+  other: "已执行 2 个工具"
 gallery.chat_summary:
   other: "%s · 2 次工具调用"
 gallery.chat_message:
@@ -1111,3 +1111,9 @@ gallery.chat_model:
   other: "模型"
 gallery.chat_effort:
   other: "思考强度"
+gallery.chat_usage:
+  other: "用量"
+gallery.chat_context:
+  other: "上下文"
+gallery.chat_think:
+  other: "思考"

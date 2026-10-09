@@ -20,7 +20,8 @@ type chatDemoTurn struct {
 	step               int
 	answer             *markdown.MarkdownDocument
 	started, ended     time.Time
-	blocks             [3]chat.BlockState
+	activities         [3]chat.ActivityState
+	group              chat.GroupState
 	summary            chat.SummaryState
 	review             *markdown.MarkdownDocument
 	showReview, copied bool
@@ -33,19 +34,22 @@ type chatDemoState struct {
 	draft         string
 	model, effort string
 	attachment    bool
+	meter         chat.MeterState
 }
 
 func newChatDemoState(now time.Time) *chatDemoState {
-	return &chatDemoState{
+	s := &chatDemoState{
 		model: "Demo model", effort: "Medium",
 		turns: []*chatDemoTurn{{
 			id: "sample", prompt: "Review this component and explain the results.",
 			step: 20, status: chat.Completed, answer: markdown.ParseMarkdown(chatDemoAnswer),
 			started: now.Add(-561 * time.Second), ended: now,
-			review: markdown.ParseMarkdown("```diff\n- renderEveryBlock()\n+ renderVisibleBlocks()\n```"),
-			blocks: [3]chat.BlockState{{Expanded: true}, {}, {}},
+			review:     markdown.ParseMarkdown("```diff\n- renderEveryBlock()\n+ renderVisibleBlocks()\n```"),
+			activities: [3]chat.ActivityState{{Expanded: true}, {}, {}},
 		}},
 	}
+	s.turns[0].group.SetExpanded(true)
+	return s
 }
 
 func chatStatusLabel(c *ui.Context, status chat.Status) string {
@@ -90,22 +94,22 @@ func controlChat(c *ui.Context, state *controlState, _ string) {
 						toolB = turn.status
 					}
 				}
-				blocks := []chat.Block{
-					{ID: "summary", State: &turn.blocks[0], Kind: "reasoning-summary", Title: tr(c, "gallery.chat_reasoning"), Status: chat.Completed,
+				steps := []chat.Step{{ID: "work", Title: tr(c, "gallery.chat_reasoning"), Group: &turn.group, Activities: []chat.Activity{
+					{ID: "summary", State: &turn.activities[0], Icon: lucide.Brain, Action: tr(c, "gallery.chat_think"), Status: chat.Completed,
 						Content: func(c *ui.Context) {
 							components.Text(c, "I will inspect the source and check the examples in parallel.").Selectable()
 						}},
-					{ID: "call-source", State: &turn.blocks[1], Preview: "component.go", DetailHeight: 120, Kind: "tool", Title: "read_source", Status: toolA, StatusLabel: chatStatusLabel(c, toolA),
+					{ID: "call-source", State: &turn.activities[1], Icon: lucide.FileText, Action: "read_source", Detail: "component.go", MaxHeight: 120, Mono: true, Status: toolA,
 						Content: func(c *ui.Context) {
 							components.Text(c, fmt.Sprintf("component.go · %d / 3 chunks", min(turn.step, 3))).Selectable()
 						}},
-					{ID: "call-examples", State: &turn.blocks[2], Preview: "examples/", DetailHeight: 100, Kind: "tool", Title: "check_examples", Status: toolB, StatusLabel: chatStatusLabel(c, toolB),
+					{ID: "call-examples", State: &turn.activities[2], Icon: lucide.Terminal, Action: "check_examples", Detail: "examples/", MaxHeight: 100, Mono: true, Status: toolB,
 						Content: func(c *ui.Context) {
 							if turn.step >= 2 {
 								components.Text(c, "3 examples checked. No errors.").Selectable()
 							}
 						}},
-				}
+				}}}
 				var final chat.View
 				if turn.answer != nil {
 					final = func(c *ui.Context) {
@@ -116,11 +120,11 @@ func controlChat(c *ui.Context, state *controlState, _ string) {
 					ID: turn.id, Summary: chatTurnSummary(c, turn), Status: turn.status,
 					Prompt: func(c *ui.Context) {
 						if turn.attached {
-							components.Text(c, "context.md").TextColor(c.Theme().TextMuted)
+							chat.Attachment(c, chat.AttachmentOptions{Label: "context.md"})
 						}
 						components.Text(c, turn.prompt).Selectable()
 					},
-					Final: final, Blocks: blocks,
+					Final: final, Steps: steps, Working: chatTurnSummary(c, turn),
 					Footer: func(c *ui.Context) { chatDemoResults(c, turn) },
 					Actions: func(c *ui.Context) {
 						if turn.answer != nil {
@@ -143,17 +147,17 @@ func controlChat(c *ui.Context, state *controlState, _ string) {
 				SendLabel: tr(c, "gallery.chat_send"), StopLabel: tr(c, "gallery.chat_stop"),
 				Accessory: func(c *ui.Context) { chatDemoToolbar(c, s) },
 				Attachments: func(c *ui.Context) {
-					if s.attachment {
-						components.Text(c, "context.md").TextColor(t.TextMuted)
-						if chat.IconAction(c, tr(c, "gallery.chat_remove_attachment"), lucide.X).Clicked() {
-							s.attachment = false
-						}
+					if s.attachment && chat.Attachment(c, chat.AttachmentOptions{Label: "context.md", Detail: "2 KB",
+						RemoveLabel: tr(c, "gallery.chat_remove_attachment")}).Remove {
+						s.attachment = false
 					}
 				},
 				Footer: func(c *ui.Context) {
-					components.Icon(c, lucide.Folder).Size(t.Space(4), t.Space(4)).TextColor(t.TextMuted)
-					components.Text(c, "onevra").TextColor(t.TextMuted)
-					components.Text(c, tr(c, "gallery.chat_demo_context")).TextColor(t.TextMuted)
+					chat.Chip(c, lucide.Folder, "onevra", false).Disabled(true)
+					components.Text(c, tr(c, "gallery.chat_demo_context")).FontSize(t.Rem(.8)).TextColor(t.TextMuted)
+					ui.Box(c).Grow(1)
+					chat.ContextMeter(c, &s.meter, chat.ContextMeterOptions{Label: tr(c, "gallery.chat_usage"), Title: tr(c, "gallery.chat_context"),
+						Value: "48k / 200k (24%)", Fraction: .24})
 				},
 			})
 		})

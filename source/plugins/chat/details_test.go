@@ -8,34 +8,37 @@ import (
 	"testing"
 )
 
-func TestIndependentLazyToolDetails(t *testing.T) {
-	var a, b BlockState
+func TestIndependentLazyActivityDetails(t *testing.T) {
+	var a, b ActivityState
 	builds := [2]int{}
 	var turn TurnState
-	opts := TurnOptions{ID: "turn", Summary: "Work", Blocks: []Block{
-		{ID: "a", Title: "Read", State: &a, Content: func(c *ui.Context) { builds[0]++; components.Text(c, "Read output") }},
-		{ID: "b", Title: "Run", State: &b, DetailHeight: 100, Content: func(c *ui.Context) { builds[1]++; ui.Box(c).Height(900).Shrink(0) }},
-	}}
+	g := &GroupState{}
+	opts := TurnOptions{ID: "turn", Status: Running, Steps: []Step{{ID: "g", Title: "Ran 2 tools", Group: g, Activities: []Activity{
+		{ID: "a", Action: "Read", Detail: "a.go", State: &a, Content: func(c *ui.Context) { builds[0]++; components.Text(c, "Read output") }},
+		{ID: "b", Action: "Run", Detail: "ls", State: &b, MaxHeight: 100, Content: func(c *ui.Context) { builds[1]++; ui.Box(c).Height(900).Shrink(0) }},
+	}}}}
 	tt := ui.NewTester(func(c *ui.Context) { Turn(c, &turn, opts) }, 400, 400)
 	if builds != [2]int{} {
-		t.Fatal("closed tool content built")
+		t.Fatal("closed activity content built")
 	}
-	if err := tt.Click("Run"); err != nil {
+	if err := tt.Click("Run ls"); err != nil {
 		t.Fatal(err)
 	}
 	if a.Expanded || !b.Expanded || builds[0] != 0 || b.Scroll.MaxY <= 0 {
-		t.Fatal("independent bounded tool view failed")
+		t.Fatal("independent bounded activity view failed")
 	}
-	turn.SetExpanded(false)
+	// A settled group closes automatically but keeps activity state.
+	opts.Status = Failed
 	builds = [2]int{}
 	tt.Frame()
-	if builds != [2]int{} {
-		t.Fatal("outer fold built tools")
+	if builds != [2]int{} || tt.HasText("a.go") {
+		t.Fatal("settled group stayed open")
 	}
-	turn.SetExpanded(true)
-	tt.Frame()
+	if err := tt.Click("Ran 2 tools"); err != nil {
+		t.Fatal(err)
+	}
 	if !b.Expanded || builds[1] == 0 {
-		t.Fatal("outer fold discarded tool state")
+		t.Fatal("group fold discarded activity state")
 	}
 }
 
@@ -75,7 +78,7 @@ func TestTurnFooterSurvivesFoldWithoutAnswer(t *testing.T) {
 	state.SetExpanded(false)
 	tt := ui.NewTester(func(c *ui.Context) {
 		Turn(c, &state, TurnOptions{ID: "turn", Summary: "Stopped", Status: Cancelled,
-			Blocks:  []Block{{ID: "tool", Content: func(*ui.Context) { t.Fatal("hidden tool built") }}},
+			Steps:   []Step{{ID: "tool", Message: func(*ui.Context) { t.Fatal("hidden tool built") }}},
 			Footer:  func(c *ui.Context) { components.Text(c, "Artifacts") },
 			Actions: func(c *ui.Context) { components.Button(c, "Retry", components.ButtonGhost) },
 		})
