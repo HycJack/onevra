@@ -47,3 +47,23 @@ func TestSwitchKeyboard(t *testing.T) {
 		t.Error("Space did not toggle the focused switch")
 	}
 }
+
+func TestSwitchHiddenLabel(t *testing.T) {
+	on := false
+	tt := ui.NewTester(func(c *ui.Context) {
+		Switch(c, &on, "Smart notifications", SwitchOptions{HideLabel: true})
+	}, 300, 100)
+	if len(tt.Texts()) != 1 {
+		t.Fatalf("expected only accessible label, got %v", tt.Texts())
+	}
+	if err := tt.Click("Smart notifications"); err != nil {
+		t.Fatal(err)
+	}
+	if !on {
+		t.Fatal("named switch did not toggle")
+	}
+	tt.Key(0, ui.KeySpace)
+	if on {
+		t.Fatal("keyboard did not toggle hidden-label switch")
+	}
+}

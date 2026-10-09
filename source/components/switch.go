@@ -6,9 +6,16 @@ import (
 	"github.com/egoist/mygo/ui"
 )
 
+// SwitchOptions controls the visible label independently of the accessible name.
+type SwitchOptions struct {
+	// HideLabel hides the adjacent text while retaining the switch's accessible name.
+	HideLabel bool
+}
+
 // Switch creates a switch toggling *on, with a label. The label is also
 // the accessible name.
-func Switch(c *ui.Context, on *bool, label string) ui.Element {
+func Switch(c *ui.Context, on *bool, label string, options ...SwitchOptions) ui.Element {
+	hideLabel := len(options) > 0 && options[0].HideLabel
 	t := c.Theme()
 	row := ui.Row(c).Gap(t.Space(2))
 	row.Children(func() {
@@ -26,7 +33,7 @@ func Switch(c *ui.Context, on *bool, label string) ui.Element {
 			p.Shadow(knob, d/2, 0, 1, 3, 0, ui.RGBA(0, 0, 0, 0.25))
 			p.Fill(knob, ui.RGB(255, 255, 255), d/2)
 		})
-		if label != "" {
+		if label != "" && !hideLabel {
 			Text(c, label)
 		}
 	})

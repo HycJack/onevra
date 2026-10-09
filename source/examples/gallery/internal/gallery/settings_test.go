@@ -21,7 +21,7 @@ func TestSettingsDialog(t *testing.T) {
 	if !g.settings.open || !tt.HasText("Smart notifications") {
 		t.Fatal("settings button did not open the dialog", tt.Texts())
 	}
-	if err := tt.Click("Enabled"); err != nil {
+	if err := tt.Click("Toggle smart notifications"); err != nil {
 		t.Fatal(err)
 	}
 	if g.settings.smart {

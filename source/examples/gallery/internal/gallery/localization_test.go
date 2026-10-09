@@ -231,6 +231,7 @@ func TestNativeLanguages(t *testing.T) {
 	}{
 		{"zh-welcome-light", "zh-Hans", mygo.ThemeLight, 820, false},
 		{"zh-settings-light", "zh-Hans", mygo.ThemeLight, 820, true},
+		{"zh-notifications-light", "zh-Hans", mygo.ThemeLight, 820, true},
 		{"zh-settings-dark", "zh-Hans", mygo.ThemeDark, 820, true},
 		{"zh-settings-narrow", "zh-Hans", mygo.ThemeLight, 360, true},
 		{"en-settings-restored", "en", mygo.ThemeLight, 820, true},
@@ -244,6 +245,9 @@ func TestNativeLanguages(t *testing.T) {
 				g.enterGallery()
 				g.settings.open = true
 				g.settings.view.Category = "general"
+				if tc.name == "zh-notifications-light" {
+					g.settings.view.Category = "notifications"
+				}
 			}
 			win.Invalidate()
 		})
