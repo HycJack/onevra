@@ -3,6 +3,7 @@ package gallery
 import (
 	"bytes"
 	"math"
+	"reflect"
 	"testing"
 
 	"github.com/egoist/mygo/ui"
@@ -12,8 +13,9 @@ func TestNavigationSpacing(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.Left, 220, 480)
 	first, ok := tt.Find("Overview")
-	if !ok || first.Y != 48 {
-		t.Fatalf("first group must start at the shell's safe content edge: %v", first)
+	search, searchOK := tt.Find("Search components")
+	if !ok || !searchOK || search.Y != 48 || first.Y != search.Y+search.H+8 {
+		t.Fatalf("first group must follow the search field at the shell's safe content edge: %v", first)
 	}
 	item, _ := tt.Find("Component status")
 	next, _ := tt.Find("Icon library")
@@ -107,4 +109,86 @@ func TestNavigationSelectionAndHover(t *testing.T) {
 
 func absDiff(a, b uint8) int {
 	return max(int(a)-int(b), int(b)-int(a))
+}
+
+func TestFilteredNavigation(t *testing.T) {
+	all := filteredNavigation("")
+	if !reflect.DeepEqual(all, filteredNavigation("  \t")) {
+		t.Fatal("whitespace should show all entries")
+	}
+	count := 0
+	for _, group := range all {
+		count += len(group.entries)
+	}
+	if count != 3+len(controlCatalog)+len(mygoCatalog) {
+		t.Fatalf("missing catalog entries: %d", count)
+	}
+	for _, group := range all {
+		for _, entry := range group.entries {
+			found := false
+			for _, match := range filteredNavigation(entry.label) {
+				if len(match.entries) == 0 {
+					t.Fatal("empty group")
+				}
+				for _, candidate := range match.entries {
+					if candidate == entry {
+						found = true
+					}
+				}
+			}
+			if !found {
+				t.Fatalf("entry lost its route: %+v", entry)
+			}
+		}
+	}
+	if !reflect.DeepEqual(filteredNavigation("  bUtToN  "), filteredNavigation("Button")) {
+		t.Fatal("case-insensitive trimmed search failed")
+	}
+	if len(filteredNavigation("no-such-component")) != 0 {
+		t.Fatal("unexpected results")
+	}
+}
+
+func TestNavigationSearch(t *testing.T) {
+	for _, width := range []int{220, 520} {
+		g := &Gallery{page: welcomePage}
+		tt := ui.NewTester(g.Left, width, 600)
+		before, ok := tt.Find("Search components")
+		if !ok || before.X < 0 || before.X+before.W > float32(width) || before.Y < 48 {
+			t.Fatalf("search bounds: %+v", before)
+		}
+		if err := tt.Click("Search components"); err != nil {
+			t.Fatal(err)
+		}
+		tt.Type("bUtToN")
+		tt.Frame()
+		if !tt.HasText("Buttons") || tt.HasText("Welcome") || tt.HasText("Overview") || tt.HasText("Icon library") {
+			t.Fatal("search did not filter navigation", tt.Texts())
+		}
+		if g.page != welcomePage {
+			t.Fatal("search changed selection")
+		}
+		if err := tt.Click("Buttons"); err != nil {
+			t.Fatal(err)
+		}
+		example, ok := controlExampleFor(g.page)
+		if !ok || example.name != "Button" {
+			t.Fatal("filtered item navigated to wrong page")
+		}
+		selected := g.page
+		g.navigationQuery = "no-such-component"
+		tt.Frame()
+		if !tt.HasText("No matching components.") {
+			t.Fatal("missing empty state")
+		}
+		g.navigationQuery = ""
+		tt.Frame()
+		if !tt.HasText("Welcome") || g.page != selected {
+			t.Fatal("clearing search lost navigation or selection")
+		}
+		after, _ := tt.Find("Search components")
+		if before != after {
+			t.Fatalf("search moved: %+v -> %+v", before, after)
+		}
+	}
 }

@@ -13,16 +13,17 @@ import (
 
 // Gallery owns demonstration state and application preferences.
 type Gallery struct {
-	settings      settingsState
-	welcome       welcomeState
-	config        Config
-	configPath    string
-	Clicks        int
-	Shell         *shell.Shell
-	page          galleryPage
-	grid          components.GridState
-	mygoStates    map[string]*demoState
-	controlStates map[string]*controlState
+	settings        settingsState
+	welcome         welcomeState
+	config          Config
+	configPath      string
+	Clicks          int
+	Shell           *shell.Shell
+	page            galleryPage
+	navigationQuery string
+	grid            components.GridState
+	mygoStates      map[string]*demoState
+	controlStates   map[string]*controlState
 	// Native startup supplies the factory; headless views never load libraries.
 	createTerminal func() (*terminal.Terminal, error)
 }
@@ -65,28 +66,30 @@ func (g *Gallery) Left(c *ui.Context) {
 }
 
 func (g *Gallery) navigation(c *ui.Context) {
+	t := c.Theme()
+	ui.Column(c).FillWidth().Shrink(0).Padding(0, t.Space(3), t.Space(2), t.Space(3)).Children(func() {
+		components.TextBox(c, &g.navigationQuery, components.TextBoxOptions{LeadingIcon: lucide.Search()}).
+			Label("Search components").Placeholder("Search components…").FillWidth().MinWidth(0)
+	})
+	groups := filteredNavigation(g.navigationQuery)
 	components.ScrollView(c, components.ScrollViewOptions{}).Fill().Children(func() {
 		components.Sidebar(c).Children(func() {
-			components.SidebarSection(c, "Overview", func() {
-				g.navigationItem(c, "Welcome", lucide.House(), welcomePage)
-				g.navigationItem(c, "Component status", lucide.Component(), componentStatusPage)
-			})
-			components.SidebarSection(c, "Icon library", func() {
-				g.navigationItem(c, "Lucide", lucide.Shapes(), lucidePage)
-			})
-			for _, group := range navigationGroups {
-				components.SidebarSection(c, group, func() {
-					for i, example := range controlCatalog {
-						if example.group == group {
-							g.navigationItem(c, example.label, lucide.Component(), controlPageStart()+galleryPage(i))
+			for _, group := range groups {
+				components.SidebarSection(c, group.label, func() {
+					for _, entry := range group.entries {
+						icon := lucide.Component()
+						switch entry.page {
+						case welcomePage:
+							icon = lucide.House()
+						case lucidePage:
+							icon = lucide.Shapes()
 						}
-					}
-					for i, example := range mygoCatalog {
-						if example.group == group {
-							g.navigationItem(c, example.name, lucide.Component(), mygoPageStart+galleryPage(i))
-						}
+						g.navigationItem(c, entry.label, icon, entry.page)
 					}
 				})
+			}
+			if len(groups) == 0 {
+				components.Text(c, "No matching components.").TextColor(t.TextMuted).Wrap()
 			}
 		})
 	})
