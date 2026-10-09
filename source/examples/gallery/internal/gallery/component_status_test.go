@@ -103,10 +103,22 @@ func TestFocusedValueUsesMyGoDirectly(t *testing.T) {
 	}
 }
 
+func TestTextfUsesMyGoDirectly(t *testing.T) {
+	for _, entry := range mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled) {
+		if entry.Name == "Textf" {
+			if entry.Status != mygoPrimitive || entry.Replacement != "" || entry.HasExample {
+				t.Fatalf("unexpected formatted text status: %+v", entry)
+			}
+			return
+		}
+	}
+	t.Fatal("Textf missing from review inventory")
+}
+
 func TestComponentStatusCards(t *testing.T) {
 	entries := mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled)
 	cards := componentStatusCards(entries, mygoReplaced)
-	if len(cards) != 39 {
+	if len(cards) != 38 {
 		t.Fatalf("got %d replacement cards", len(cards))
 	}
 	for _, card := range cards {

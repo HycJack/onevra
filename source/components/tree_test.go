@@ -161,7 +161,7 @@ func TestTreeVirtualizedBuildsOnlyVisibleRows(t *testing.T) {
 			return nil
 		}, func(item int) {
 			built++
-			Textf(c, "Item %d", item)
+			ui.Textf(c, "Item %d", item)
 		}).Size(240, 160)
 	}, 260, 200)
 	if built >= 1000 {

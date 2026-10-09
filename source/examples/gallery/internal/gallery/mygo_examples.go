@@ -58,27 +58,27 @@ func exampleCheckboxGroup(c *ui.Context, s *demoState) {
 
 func exampleStepSlider(c *ui.Context, s *demoState) {
 	ui.StepSlider(c, &s.value, 0, 100, 20).Label("Quality")
-	components.Textf(c, "Quality: %.0f", s.value)
+	ui.Textf(c, "Quality: %.0f", s.value)
 }
 
 func exampleRangeSlider(c *ui.Context, s *demoState) {
 	ui.RangeSlider(c, &s.value, &s.high, 0, 100, 5).Label("Range")
-	components.Textf(c, "%.0f – %.0f", s.value, s.high)
+	ui.Textf(c, "%.0f – %.0f", s.value, s.high)
 }
 
 func exampleStepper(c *ui.Context, s *demoState) {
 	ui.Stepper(c, &s.value, 0, 100, 1).Label("Copies")
-	components.Textf(c, "Copies: %.0f", s.value)
+	ui.Textf(c, "Copies: %.0f", s.value)
 }
 
 func exampleRating(c *ui.Context, s *demoState) {
 	ui.Rating(c, &s.index, 5).Label("Rating")
-	components.Textf(c, "%d of 5 stars", s.index)
+	ui.Textf(c, "%d of 5 stars", s.index)
 }
 
 func exampleNumberInput(c *ui.Context, s *demoState) {
 	ui.NumberInput(c, &s.value, 0, 100, 1).Label("Quantity")
-	components.Textf(c, "Quantity: %.0f", s.value)
+	ui.Textf(c, "Quantity: %.0f", s.value)
 }
 
 func exampleTokenField(c *ui.Context, s *demoState) {
@@ -118,8 +118,8 @@ func exampleColorPicker(c *ui.Context, s *demoState) {
 func exampleList(c *ui.Context, s *demoState) {
 	s.list.Selected = &s.index
 	s.list.Label = func(i int) string { return fmt.Sprintf("Item %d", i+1) }
-	ui.List(c, &s.list, 1000, func(i int) { components.Textf(c, "Item %d", i+1).Padding(8) }).Height(200).FillWidth().Label("Items")
-	components.Textf(c, "Selected item: %d", s.index+1)
+	ui.List(c, &s.list, 1000, func(i int) { ui.Textf(c, "Item %d", i+1).Padding(8) }).Height(200).FillWidth().Label("Items")
+	ui.Textf(c, "Selected item: %d", s.index+1)
 }
 
 func exampleTable(c *ui.Context, s *demoState) {
@@ -127,9 +127,9 @@ func exampleTable(c *ui.Context, s *demoState) {
 	cols := []ui.TableColumn{{Title: "Name"}, {Title: "Size", Width: 90}}
 	ui.Table(c, &s.list, cols, 100, func(row, col int) {
 		if col == 0 {
-			components.Textf(c, "File %d", row+1)
+			ui.Textf(c, "File %d", row+1)
 		} else {
-			components.Textf(c, "%d KB", row+1)
+			ui.Textf(c, "%d KB", row+1)
 		}
 	}).Height(200).FillWidth().Label("Files")
 }
@@ -178,15 +178,15 @@ func exampleGridView(c *ui.Context, s *demoState) {
 	s.grid.Selected = &s.index
 	s.grid.Label = func(i int) string { return fmt.Sprintf("Item %d", i+1) }
 	ui.GridView(c, &s.grid, 1000, 90, 70, func(i int) {
-		components.Textf(c, "Item %d", i+1).Padding(12)
+		ui.Textf(c, "Item %d", i+1).Padding(12)
 	}).Height(220).FillWidth().Label("Items")
-	components.Textf(c, "Selected item: %d", s.index+1)
+	ui.Textf(c, "Selected item: %d", s.index+1)
 }
 
 func exampleScroll(c *ui.Context, s *demoState) {
 	ui.Scroll(c).Height(180).FillWidth().Children(func() {
 		for i := range 30 {
-			components.Textf(c, "Line %d", i+1).Padding(4)
+			ui.Textf(c, "Line %d", i+1).Padding(4)
 		}
 	})
 }
@@ -195,7 +195,7 @@ func exampleScrollHorizontal(c *ui.Context, s *demoState) {
 	ui.ScrollHorizontal(c).Height(80).FillWidth().Children(func() {
 		ui.Row(c).Gap(12).Children(func() {
 			for i := range 20 {
-				components.Textf(c, "Card %d", i+1).Width(120).Padding(16).Background(c.Theme().Surface)
+				ui.Textf(c, "Card %d", i+1).Width(120).Padding(16).Background(c.Theme().Surface)
 			}
 		})
 	})
@@ -205,7 +205,7 @@ func exampleScrollBoth(c *ui.Context, s *demoState) {
 	ui.ScrollBoth(c).Height(180).FillWidth().Children(func() {
 		ui.Column(c).Width(800).Children(func() {
 			for i := range 30 {
-				components.Textf(c, "Row %d — Name                         Status                         Updated", i+1).Padding(8)
+				ui.Textf(c, "Row %d — Name                         Status                         Updated", i+1).Padding(8)
 			}
 		})
 	})
@@ -214,7 +214,7 @@ func exampleScrollBoth(c *ui.Context, s *demoState) {
 func exampleGrid(c *ui.Context, s *demoState) {
 	ui.Grid(c).Columns(2).Gap(8).FillWidth().Children(func() {
 		for i := range 6 {
-			components.Textf(c, "Cell %d", i+1).Padding(12).Background(c.Theme().Surface)
+			ui.Textf(c, "Cell %d", i+1).Padding(12).Background(c.Theme().Surface)
 		}
 	})
 }
@@ -282,7 +282,7 @@ func exampleAlertDialog(c *ui.Context, s *demoState) {
 	if ui.AlertDialog(c, &s.open, "Apply change?", "Apply these settings?", "Cancel", "Apply") == 1 {
 		s.count++
 	}
-	components.Textf(c, "Confirmed: %d", s.count)
+	ui.Textf(c, "Confirmed: %d", s.count)
 }
 
 func exampleTooltip(c *ui.Context, s *demoState) {
@@ -297,7 +297,7 @@ func exampleToast(c *ui.Context, s *demoState) {
 		s.count++
 		c.ToastAction("Count increased", "Undo", func() { s.count-- })
 	}
-	components.Textf(c, "Count: %d", s.count)
+	ui.Textf(c, "Count: %d", s.count)
 }
 
 func exampleProgress(c *ui.Context, s *demoState) {
@@ -334,7 +334,7 @@ func exampleRichText(c *ui.Context, s *demoState) {
 			s.count++
 		}
 	}).FillWidth()
-	components.Textf(c, "Clicks: %d", s.count)
+	ui.Textf(c, "Clicks: %d", s.count)
 }
 
 func exampleBox(c *ui.Context, s *demoState) {

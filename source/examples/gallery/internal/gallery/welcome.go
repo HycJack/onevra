@@ -116,7 +116,7 @@ func (g *Gallery) welcomeIdea(c *ui.Context) {
 		s.created = true
 	}
 	if s.created {
-		components.Textf(c, "Ready to explore: %s", s.name).FontSize(t.Rem(.8)).TextColor(t.Success).Wrap()
+		ui.Textf(c, "Ready to explore: %s", s.name).FontSize(t.Rem(.8)).TextColor(t.Success).Wrap()
 	} else {
 		components.Text(c, "Just a demo. Your ideas stay here.").FontSize(t.Rem(.8)).TextColor(t.TextMuted).Wrap()
 	}
@@ -131,7 +131,7 @@ func (g *Gallery) welcomeBalance(c *ui.Context) {
 		Gradient(t.Background.Mix(t.Success, .07), t.Background, 110).Children(func() {
 		components.ProgressRing(c, *value/100).Size(t.Space(16), t.Space(16)).Label("Focus intensity")
 		ui.Column(c).Gap(t.Space(1)).Children(func() {
-			components.Textf(c, "%.0f%%", *value).FontSize(t.Rem(2)).Bold()
+			ui.Textf(c, "%.0f%%", *value).FontSize(t.Rem(2)).Bold()
 			caption := "In the zone"
 			if s.mode == 1 {
 				caption = "Room to breathe"

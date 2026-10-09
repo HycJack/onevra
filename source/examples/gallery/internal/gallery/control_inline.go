@@ -18,7 +18,7 @@ func controlRichText(c *ui.Context, s *controlState, _ string) {
 		if components.Button(c, "inline action", components.ButtonLink).Clicked() {
 			s.index++
 		}
-		components.Textf(c, " wrap as one paragraph. Clicks: %d", s.index)
+		ui.Textf(c, " wrap as one paragraph. Clicks: %d", s.index)
 	}).MaxWidth(320)
 }
 
@@ -34,5 +34,5 @@ func controlBreadcrumbs(c *ui.Context, s *controlState, _ string) {
 
 func controlRating(c *ui.Context, s *controlState, _ string) {
 	components.Rating(c, &s.index, 5).Label("Rating")
-	components.Textf(c, "%d / 5", s.index).TextColor(c.Theme().TextMuted)
+	ui.Textf(c, "%d / 5", s.index).TextColor(c.Theme().TextMuted)
 }

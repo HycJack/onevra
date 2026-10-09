@@ -25,7 +25,7 @@ func controlMenu(c *ui.Context, s *controlState, variant string) {
 		components.Button(c, "Actions", components.ButtonSecondary).Menu(build)
 	}
 	if s.index > 0 {
-		components.Textf(c, "%s: %d", s.text, s.index)
+		ui.Textf(c, "%s: %d", s.text, s.index)
 	} else {
 		components.Text(c, "No action yet")
 	}

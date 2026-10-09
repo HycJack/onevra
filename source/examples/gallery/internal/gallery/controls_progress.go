@@ -15,7 +15,7 @@ func controlSpinner(c *ui.Context, _ *controlState, variant string) {
 
 func controlProgress(c *ui.Context, s *controlState, variant string) {
 	components.Slider(c, &s.value, 0, 100).Label(variant + " value").FillWidth()
-	components.Textf(c, "%.0f%%", s.value)
+	ui.Textf(c, "%.0f%%", s.value)
 	build := components.Progress
 	if variant == "ProgressRing" {
 		build = components.ProgressRing

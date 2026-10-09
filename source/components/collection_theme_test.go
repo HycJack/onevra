@@ -59,7 +59,7 @@ func TestCollectionsPreserveRootBackground(t *testing.T) {
 								if c.Theme() != original {
 									t.Error("row changed the theme")
 								}
-								Textf(c, "Item %d", i).Padding(8)
+								ui.Textf(c, "Item %d", i).Padding(8)
 							}).Size(200, 160)
 						case "Tree":
 							Tree(c, func() {
@@ -73,7 +73,7 @@ func TestCollectionsPreserveRootBackground(t *testing.T) {
 									return items
 								}
 								return nil
-							}, func(i int) { Textf(c, "Item %d", i) }).Size(200, 160)
+							}, func(i int) { ui.Textf(c, "Item %d", i) }).Size(200, 160)
 						}
 						if c.Theme() != original {
 							t.Error("component changed the theme")

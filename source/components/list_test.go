@@ -19,7 +19,7 @@ func TestListAppearanceAndSelection(t *testing.T) {
 				if c.Theme() != original {
 					t.Error("row theme leaked")
 				}
-				Textf(c, "Item %d", i+1).Padding(8)
+				ui.Textf(c, "Item %d", i+1).Padding(8)
 			}).Size(200, 150)
 			if c.Theme() != original {
 				t.Error("list theme leaked")
@@ -70,7 +70,7 @@ func TestListVirtualizationAndDisabled(t *testing.T) {
 			ui.Column(c).Disabled(disabled).Children(func() {
 				List(c, &state, 10000, func(i int) {
 					built++
-					Textf(c, "Item %d", i+1).Padding(8)
+					ui.Textf(c, "Item %d", i+1).Padding(8)
 				}).Size(200, 150)
 			})
 		}, 220, 200)

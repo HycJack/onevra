@@ -84,8 +84,8 @@ func TestIndependentAndNestedCollections(t *testing.T) {
 	first, second := ListState{Selected: &a}, ListState{Selected: &b}
 	tt := ui.NewTester(func(c *ui.Context) {
 		ui.Row(c).Children(func() {
-			List(c, &first, 3, func(i int) { Textf(c, "A%d", i).Padding(8) }).Size(160, 150)
-			List(c, &second, 3, func(i int) { Textf(c, "B%d", i).Padding(8) }).Size(160, 150)
+			List(c, &first, 3, func(i int) { ui.Textf(c, "A%d", i).Padding(8) }).Size(160, 150)
+			List(c, &second, 3, func(i int) { ui.Textf(c, "B%d", i).Padding(8) }).Size(160, 150)
 		})
 	}, 340, 180)
 	if err := tt.Click("B1"); err != nil {
@@ -98,7 +98,7 @@ func TestIndependentAndNestedCollections(t *testing.T) {
 	var nested ListState
 	tt = ui.NewTester(func(c *ui.Context) {
 		List(c, nil, 1, func(int) {
-			List(c, &nested, 1000, func(i int) { Textf(c, "Nested %d", i).Padding(8) }).Height(100).FillWidth()
+			List(c, &nested, 1000, func(i int) { ui.Textf(c, "Nested %d", i).Padding(8) }).Height(100).FillWidth()
 		}).Size(200, 140)
 	}, 220, 180)
 	nested.ScrollToEnd()

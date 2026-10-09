@@ -154,17 +154,3 @@ func TestTextEmptyAndDisabled(t *testing.T) {
 		}
 	}
 }
-
-func TestTextf(t *testing.T) {
-	tt := ui.NewTester(func(c *ui.Context) {
-		ui.Column(c).Children(func() {
-			Textf(c, "%s: %d (%.1f%%)", "进度", 3, 12.5).Bold()
-			Textf(c, "No arguments").SingleLine()
-		})
-	}, 300, 100)
-	for _, want := range []string{"进度: 3 (12.5%)", "No arguments"} {
-		if !tt.HasText(want) {
-			t.Fatalf("missing formatted text %q", want)
-		}
-	}
-}

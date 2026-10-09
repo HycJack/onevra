@@ -21,7 +21,7 @@ func controlScrollView(c *ui.Context, _ *controlState, variant string) {
 	view.Children(func() {
 		if options.Axes == components.ScrollHorizontal {
 			for i := 1; i <= 8; i++ {
-				components.Textf(c, "Column %d", i).Width(100).Shrink(0).Padding(12)
+				ui.Textf(c, "Column %d", i).Width(100).Shrink(0).Padding(12)
 			}
 			return
 		}
@@ -33,7 +33,7 @@ func controlScrollView(c *ui.Context, _ *controlState, variant string) {
 		}
 		content.Children(func() {
 			for i := 1; i <= 12; i++ {
-				components.Textf(c, "Row %d", i).Height(28).Shrink(0)
+				ui.Textf(c, "Row %d", i).Height(28).Shrink(0)
 			}
 		})
 	})

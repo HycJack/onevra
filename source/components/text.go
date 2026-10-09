@@ -1,10 +1,6 @@
 package components
 
-import (
-	"fmt"
-
-	"github.com/egoist/mygo/ui"
-)
+import "github.com/egoist/mygo/ui"
 
 // TextOptions selects editing behavior without adding input decoration.
 type TextOptions struct {
@@ -85,10 +81,4 @@ func Text(c *ui.Context, value string, options ...TextOptions) *TextControl {
 		t.input = ui.TextInputBase(c, binding).Absolute().Top(0).Bottom(0).Left(0).Right(-1).MinWidth(0).FocusRing(false)
 	})
 	return t
-}
-
-// Textf creates display text formatted with fmt.Sprintf. Callers own the format
-// string and localized content.
-func Textf(c *ui.Context, format string, args ...any) ui.Element {
-	return Text(c, fmt.Sprintf(format, args...)).Element
 }

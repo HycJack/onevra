@@ -21,7 +21,7 @@ func TestGridViewSelectionAndVirtualization(t *testing.T) {
 				ui.Column(c).Disabled(disabled).Children(func() {
 					GridView(c, &state, 10000, 80, 50, func(i int) {
 						built++
-						Textf(c, "Item %d", i).Padding(8)
+						ui.Textf(c, "Item %d", i).Padding(8)
 						if c.Theme() != original {
 							t.Error("cell theme changed")
 						}

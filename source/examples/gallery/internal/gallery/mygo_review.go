@@ -85,7 +85,6 @@ var mygoHandled = map[string]mygoDecision{
 	"Tabs":            {Replacement: "components.Tabs", Reason: "Onevra tab styling"},
 	"Text":            {Replacement: "components.Text", Reason: "Onevra text defaults"},
 	"EditableText":    {Replacement: "components.Text", Reason: "Text with an Editable binding; undecorated inline editing"},
-	"Textf":           {Replacement: "components.Textf", Reason: "Formatted Onevra text"},
 	"Icon":            {Replacement: "components.Icon", Reason: "Onevra icon component with named asset accessors"},
 	"Image":           {Replacement: "components.Image", Reason: "Onevra image component with application-owned decoded assets"},
 
@@ -101,6 +100,8 @@ var mygoHandled = map[string]mygoDecision{
 var mygoPrimitives = map[string]bool{
 	"Box": true, "Column": true, "Row": true, "Spacer": true,
 	"Grid": true, "Overlay": true,
+	// Formatted display text needs no Onevra behavior or styling.
+	"Textf": true,
 	// Focus inspection stays with MyGo alongside FocusBind; no styled wrapper.
 	"FocusedValue": true,
 }

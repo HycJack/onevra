@@ -29,7 +29,7 @@ func controlButton(c *ui.Context, s *controlState, variant string) {
 					s.button.clicks[i]++
 				}
 				button.Children(func() {
-					components.Textf(c, "%s: %d", variant.name, s.button.clicks[i]).SingleLine()
+					ui.Textf(c, "%s: %d", variant.name, s.button.clicks[i]).SingleLine()
 				})
 			})
 		}
