@@ -19,13 +19,12 @@ import (
 )
 
 type config struct {
-	Name       string          `yaml:"name"`
-	Identifier string          `yaml:"identifier"`
-	Version    string          `yaml:"version"`
-	Main       string          `yaml:"main"`
-	Out        string          `yaml:"out"`
-	Platforms  []string        `yaml:"platforms"` // Release targets; omitted means host OS/architecture.
-	Generate   packagePatterns `yaml:"generate"`  // Optional package patterns passed to go generate once on the host.
+	Name       string   `yaml:"name"`
+	Identifier string   `yaml:"identifier"`
+	Version    string   `yaml:"version"`
+	Main       string   `yaml:"main"`
+	Out        string   `yaml:"out"`
+	Platforms  []string `yaml:"platforms"` // Release targets; omitted means host OS/architecture.
 	MacOS      struct {
 		DisableDMG           bool   `yaml:"disableDMG"` // Skip release disk images; ZIP output is always retained.
 		Icon                 string `yaml:"icon"`       // ICNS file or an Icon Composer .icon directory.
@@ -38,26 +37,6 @@ type config struct {
 		Icon string `yaml:"icon"` // PNG or SVG included with the executable.
 	} `yaml:"linux"`
 	root string
-}
-
-// packagePatterns rejects YAML's implicit number-to-string coercion for Go packages.
-type packagePatterns []string
-
-func (p *packagePatterns) UnmarshalYAML(node *yaml.Node) error {
-	if node.Kind != yaml.SequenceNode {
-		return fmt.Errorf("generate must be a sequence of package patterns")
-	}
-	for _, item := range node.Content {
-		if item.Kind != yaml.ScalarNode || item.Tag != "!!str" {
-			return fmt.Errorf("generate entries must be strings")
-		}
-	}
-	var values []string
-	if err := node.Decode(&values); err != nil {
-		return err
-	}
-	*p = values
-	return nil
 }
 
 func main() {
@@ -83,9 +62,6 @@ func run(ctx context.Context, args []string) error {
 		return err
 	}
 	if err := checkHost(targets, runtime.GOOS); err != nil {
-		return err
-	}
-	if err := c.generate(ctx); err != nil {
 		return err
 	}
 	if err := c.resolveIcons(); err != nil {
@@ -160,34 +136,10 @@ func loadConfig(path string) (*config, error) {
 	if _, err := parseTargets(c.Platforms); err != nil {
 		return nil, err
 	}
-	for _, pkg := range c.Generate {
-		if strings.TrimSpace(pkg) != pkg || pkg == "" || strings.HasPrefix(pkg, "-") || strings.ContainsAny(pkg, "\x00\r\n") {
-			return nil, fmt.Errorf("generate entries must be non-empty package patterns, not flags: %q", pkg)
-		}
-	}
 	if err := c.validateIcons(); err != nil {
 		return nil, err
 	}
 	return c, nil
-}
-
-// Applications own go:generate directives; Packer only schedules their execution
-// before dependency and icon discovery, using the host rather than release target.
-func (c *config) generate(ctx context.Context) error {
-	if len(c.Generate) == 0 {
-		return nil
-	}
-	args := append([]string{"generate"}, c.Generate...)
-	cmd := exec.CommandContext(ctx, "go", args...)
-	cmd.Dir = c.root
-	cmd.Env = append(os.Environ(), "GOOS="+runtime.GOOS, "GOARCH="+runtime.GOARCH)
-	cmd.Stdin, cmd.Stdout, cmd.Stderr = os.Stdin, os.Stdout, os.Stderr
-	if err := cmd.Run(); ctx.Err() != nil {
-		return fmt.Errorf("go generate: %w", ctx.Err())
-	} else if err != nil {
-		return fmt.Errorf("go generate: %w", err)
-	}
-	return nil
 }
 
 // Default icon sources live at the root of resources, separate from payloads.

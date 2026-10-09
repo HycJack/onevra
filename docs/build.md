@@ -15,9 +15,7 @@ go run ./tools/packer build
 
 Packer accepts only the `run` and `build` commands, with no options or application-argument forwarding. It reads `packer.yaml` from the working directory; all packaging settings belong there.
 
-An optional `generate` package list selects application-owned `//go:generate` directives to run before compilation and dependency/icon discovery. The gallery uses `generate: [./examples/gallery/internal/gallery]` to refresh its [MyGo component review inventory](architecture/gallery.md#component-review); the equivalent standalone command is `go generate ./examples/gallery/internal/gallery`. Packer invokes `go generate` once for the selected package patterns for both `run` and `build`, even when building several targets. An omitted or empty list skips generation; Packer does not implicitly scan the whole module or application dependencies. Go runs directives from their package directories, and generators own any incremental-work checks.
-
-The Go command runs from the configuration directory with terminal I/O and the inherited environment, except `GOOS` and `GOARCH` select the host so generators remain runnable during cross-compilation. A failed or cancelled command stops packaging before outputs are replaced; changes made by generators themselves are not rolled back. Only run generation for trusted code and configuration.
+Packer does not run code generators. The gallery uses its checked-in [MyGo component review inventory](architecture/gallery.md#component-review).
 
 The top-level `platforms` array in [packer.yaml](../source/packer.yaml) selects release targets using Go's `GOOS/GOARCH` spelling: `darwin`, `windows` or `linux`, each with `arm64` or `amd64`. The gallery configuration lists all six targets; edit this list to choose a subset, for example `platforms: [darwin/arm64, windows/amd64]`. If omitted or empty, Packer builds the host platform. Unsupported targets fail before building, and duplicate targets are built once.
 

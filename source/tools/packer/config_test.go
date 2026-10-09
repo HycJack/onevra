@@ -6,6 +6,20 @@ import (
 	"testing"
 )
 
+func TestRejectGenerationConfig(t *testing.T) {
+	file := filepath.Join(t.TempDir(), "packer.yaml")
+	for _, setting := range []string{
+		"generate: []",
+		"generate: [./assets]",
+		"preprocess: [go, generate]",
+	} {
+		put(t, file, "name: App\nidentifier: me.app\n"+setting+"\n")
+		if _, err := loadConfig(file); err == nil {
+			t.Errorf("accepted unsupported configuration: %s", setting)
+		}
+	}
+}
+
 func TestPlatformIcons(t *testing.T) {
 	root := t.TempDir()
 	file := filepath.Join(root, "packer.yaml")
