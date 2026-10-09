@@ -30,6 +30,39 @@ func TestButtonVariantsClick(t *testing.T) {
 	}
 }
 
+func TestButtonCursorOverridesParent(t *testing.T) {
+	for _, variant := range []ButtonVariant{ButtonPrimary, ButtonSecondary, ButtonOutline, ButtonGhost, ButtonLink} {
+		tt := ui.NewTester(func(c *ui.Context) {
+			theme.Apply(c, theme.Light)
+			ui.Row(c).Fill().Cursor(ui.CursorText).Children(func() {
+				Button(c, "Default", variant)
+				Button(c, "Explicit", variant).Cursor(ui.CursorPointer)
+			})
+		}, 300, 100)
+		defaultCursor := ui.CursorDefault
+		if variant == ButtonLink {
+			defaultCursor = ui.CursorPointer
+		}
+		for _, want := range []struct {
+			label  string
+			cursor ui.Cursor
+		}{{"Default", defaultCursor}, {"Explicit", ui.CursorPointer}} {
+			r, ok := tt.Find(want.label)
+			if !ok {
+				t.Fatalf("missing %s button", want.label)
+			}
+			tt.Move(r.X+r.W/2, r.Y+r.H/2)
+			if got := tt.Cursor(); got != want.cursor {
+				t.Errorf("variant=%v %s: cursor=%v, want %v", variant, want.label, got, want.cursor)
+			}
+		}
+		tt.Move(290, 90)
+		if tt.Cursor() != ui.CursorText {
+			t.Fatal("parent cursor lost outside buttons")
+		}
+	}
+}
+
 func TestButtonKeyboard(t *testing.T) {
 	clicked := false
 	tt := ui.NewTester(func(c *ui.Context) {

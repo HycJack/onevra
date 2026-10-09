@@ -16,7 +16,7 @@ func TestIconButton(t *testing.T) {
 		tt := ui.NewTester(func(c *ui.Context) {
 			c.Root().Background(ui.Transparent)
 			size = max(32, c.Theme().Rem(2))
-			ui.Row(c).Fill().DragWindow().Children(func() {
+			ui.Row(c).Fill().DragWindow().Cursor(ui.CursorText).Children(func() {
 				button := IconButton(c, lucide.Settings(), "Settings").Disabled(disabled).
 					DrawOver(func(_ *ui.Painter, r ui.Rect) { buttonBounds = r })
 				if button.Clicked() {
@@ -35,6 +35,9 @@ func TestIconButton(t *testing.T) {
 			t.Fatal("resting button has a face")
 		}
 		tt.Move(5, 40)
+		if tt.Cursor() != ui.CursorDefault {
+			t.Fatal("icon button inherited the titlebar cursor")
+		}
 		hover := alpha()
 		if hover == 0 || hover == 255 {
 			t.Fatal("hover must be translucent", hover)
