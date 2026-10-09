@@ -29,6 +29,8 @@ go run ./examples/gallery
 
 要预览指定外观，可追加 `-theme light` 或 `-theme dark`。`go run ./tools/packer run` 编译并启动打包后的开发版应用，不进行热重载；`go run ./tools/packer build` 根据 `source/packer.yaml` 中选择的目标平台生成发布归档。详见[打包与图标要求](docs/build.md#app-bundles)。
 
+在 **Desktop / Tray** 页面启用托盘图标后，macOS 和 Windows 上可左键切换便笺小窗口、右键打开原生菜单。Linux 改为通过菜单项打开窗口，需要 AppIndicator。参见[托盘示例依赖与检查](docs/build.md#tray-example)。
+
 ## 基本使用
 
 发布前，请使用包含你的应用和本仓库 `source/` 目录的本地 Go workspace。导入 `github.com/oneo-me/onevra/shell`：

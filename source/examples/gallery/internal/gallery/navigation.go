@@ -35,6 +35,7 @@ func filteredNavigation(query string) []navigationGroup {
 	}
 	add("Overview", []navigationEntry{{"Welcome", welcomePage}, {"Component status", componentStatusPage}})
 	add("Icon library", []navigationEntry{{"Lucide", lucidePage}})
+	add("Desktop", []navigationEntry{{"Tray", trayPage}})
 	for _, group := range navigationGroups {
 		var entries []navigationEntry
 		for i, example := range controlCatalog {

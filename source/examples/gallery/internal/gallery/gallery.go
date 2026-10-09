@@ -15,6 +15,7 @@ import (
 type Gallery struct {
 	settings        settingsState
 	welcome         welcomeState
+	tray            trayDemo
 	config          Config
 	configPath      string
 	Clicks          int
@@ -51,6 +52,9 @@ func (g *Gallery) Titlebar(c *ui.Context) {
 	}
 	if g.page == componentStatusPage {
 		title = "Component status"
+	}
+	if g.page == trayPage {
+		title = "Desktop / Tray"
 	}
 	if example, ok := mygoExampleFor(g.page); ok {
 		title = example.group + " / " + example.name
@@ -152,6 +156,10 @@ func (g *Gallery) View(c *ui.Context) {
 }
 
 func (g *Gallery) body(c *ui.Context) {
+	if g.page == trayPage {
+		g.Tray(c)
+		return
+	}
 	if g.page == welcomePage {
 		g.Welcome(c)
 		return

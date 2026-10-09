@@ -47,6 +47,14 @@ On macOS, the gallery's Terminal page requires macOS 13 or later. Packer verifie
 
 For an unpackaged run on any supported desktop, use `go run ./examples/gallery -theme dark`.
 
+## Tray example
+
+Run Gallery normally and select **Desktop / Tray**, then **Enable tray**. On macOS and Windows, left-click toggles the notes window and right-click opens a native menu with Open notes, Show Gallery and Quit actions. Escape, window close and loss of focus hide the panel. Disable tray removes the icon and panel; closing Gallery also releases both. Notes remain in memory until Gallery exits.
+
+Linux needs `libayatana-appindicator3` and a desktop supporting AppIndicator. AppIndicator provides menu actions, not direct click events, so use **Open notes**. The panel centers when the platform cannot report tray bounds. The tray icon is generated in memory and needs no additional packaged resource.
+
+From `source/`, run `ONEVRA_NATIVE_SMOKE=1 GOWORK=off go test ./examples/gallery/internal/gallery -run '^TestNativeTray$' -count=1 -timeout 30s` in a desktop session for the lifecycle smoke check. It checks enable/disable, show/hide, close-to-hide and cleanup, not pointer interaction or appearance. Manually verify repeated left-click toggling, right-click menu dismissal followed by another left-click, menu actions, Escape, click-away dismissal, retained text, keyboard focus, both system themes, display edges and multiple displays. Windows and Linux require separate native review.
+
 ## Development checks
 
 ```sh

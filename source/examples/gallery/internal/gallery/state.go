@@ -76,6 +76,9 @@ func saveYAML(path string, value any) error {
 }
 
 func pageKey(page galleryPage) string {
+	if page == trayPage {
+		return "desktop/tray"
+	}
 	if page == welcomePage {
 		return "welcome"
 	}
@@ -95,6 +98,9 @@ func pageKey(page galleryPage) string {
 }
 
 func pageFromKey(key string) galleryPage {
+	if key == "desktop/tray" {
+		return trayPage
+	}
 	// Restore the grouped page for selections saved before the merge.
 	switch key {
 	case "controls/TextField", "controls/TextArea", "controls/TextBox (multiline)":
