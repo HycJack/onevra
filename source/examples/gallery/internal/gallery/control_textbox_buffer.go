@@ -13,10 +13,10 @@ func controlTextBoxBuffer(c *ui.Context, s *controlState, variant string) {
 		options.LeadingIcon = lucide.Search()
 		label, placeholder = "Search samples", "Search…"
 	}
-	components.TextBoxBuffer(c, s.buffer, options).Label(label).Placeholder(placeholder).FillWidth().MinWidth(0)
+	components.TextBoxBuffer(c, s.buffer, options).Label(tr(c, label)).Placeholder(tr(c, placeholder)).FillWidth().MinWidth(0)
 }
 
 func controlTextBoxBufferMultiline(c *ui.Context, s *controlState, variant string) {
 	components.TextBoxBuffer(c, s.buffer, components.TextBoxOptions{Multiline: true, ReadOnly: variant == "Read only"}).
-		Label("Notes").Placeholder("Write a note").Height(100).FillWidth().MinWidth(0)
+		Label(tr(c, "gallery.notes")).Placeholder(tr(c, "gallery.write_a_note")).Height(100).FillWidth().MinWidth(0)
 }

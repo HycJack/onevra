@@ -24,12 +24,12 @@ func controlButton(c *ui.Context, s *controlState, variant string) {
 		} {
 			// Key the parent so changing the count never changes button identity.
 			ui.Box(c).Key(variant.name).Children(func() {
-				button := components.Button(c, "", variant.value).Label(variant.name)
+				button := components.Button(c, "", variant.value).Label(tr(c, variant.name))
 				if button.Clicked() {
 					s.button.clicks[i]++
 				}
 				button.Children(func() {
-					ui.Textf(c, "%s: %d", variant.name, s.button.clicks[i]).SingleLine()
+					ui.Textf(c, tr(c, "gallery.s_d"), tr(c, variant.name), s.button.clicks[i]).SingleLine()
 				})
 			})
 		}

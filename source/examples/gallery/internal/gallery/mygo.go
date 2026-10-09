@@ -97,6 +97,10 @@ func (g *Gallery) mygoState(name, variant string, first bool) *demoState {
 }
 
 func (g *Gallery) MyGo(c *ui.Context, example mygoExample) {
+	g.withLanguage(c, func() { g.myGoLocalized(c, example) })
+}
+
+func (g *Gallery) myGoLocalized(c *ui.Context, example mygoExample) {
 	if example.name == "Terminal" {
 		_, exists := g.mygoStates["Terminal"]
 		s := g.mygoState("Terminal", "Default", true)
@@ -116,14 +120,14 @@ func (g *Gallery) MyGo(c *ui.Context, example mygoExample) {
 				s := g.mygoState(example.name, variant, i == 0)
 				ui.Column(c).Key(variant).FillWidth().MinWidth(0).Gap(12).Children(func() {
 					if len(variants) > 1 {
-						components.Text(c, variant).Bold().TextColor(t.TextMuted)
+						components.Text(c, tr(c, variant)).Bold().TextColor(t.TextMuted)
 					}
 					ui.Column(c).FillWidth().MinWidth(0).Gap(12).Disabled(variant == "Disabled").Children(func() {
 						if variant == "Read only" && s.buffer == nil {
 							if example.name == "TextInput" {
-								components.TextBox(c, &s.text, components.TextBoxOptions{ReadOnly: true}).Label("Name").FillWidth()
+								components.TextBox(c, &s.text, components.TextBoxOptions{ReadOnly: true}).Label(tr(c, "gallery.name")).FillWidth()
 							} else {
-								components.TextBox(c, &s.text, components.TextBoxOptions{Multiline: true, ReadOnly: true}).Label("Notes").Height(140).FillWidth()
+								components.TextBox(c, &s.text, components.TextBoxOptions{Multiline: true, ReadOnly: true}).Label(tr(c, "gallery.notes")).Height(140).FillWidth()
 							}
 						} else {
 							example.build(c, s)

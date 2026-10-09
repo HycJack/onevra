@@ -1,0 +1,840 @@
+gallery.0f:
+  other: '%.0f%%'
+gallery.0f_0f:
+  other: '%.0f – %.0f'
+gallery.12:
+  other: "12"
+gallery.a_collection_of_native_components_ready_to_explore:
+  other: 探索丰富的原生界面组件。
+gallery.a_few_familiar_pieces_brought_together_go_ahead_make_them_yours:
+  other: 将熟悉的组件组合起来，试着打造你的界面。
+gallery.a_fresh_start_in_a_few_small_steps:
+  other: 简单几步，开启新的篇章。
+gallery.a_heading:
+  other: 一个标题
+gallery.a_helpful_description_of_this_action:
+  other: 关于此操作的说明
+gallery.a_note_is_shared_with_you:
+  other: 有人与你分享笔记。
+gallery.a_page_in_a_dialog:
+  other: 对话框中的页面
+gallery.a_quieter_corner_just_for_you:
+  other: 属于你的一处安静角落。
+gallery.a_sidebar_and_content_one_native_window:
+  other: 一个原生窗口，包含侧边栏与内容区域。
+gallery.a_single_line_label:
+  other: 单行标签
+gallery.a_small_mark_a_big_personality:
+  other: 小小图标，鲜明个性。
+gallery.a_small_window_opened_from_the_tray:
+  other: 从托盘打开的小窗口。
+gallery.about:
+  other: 关于
+gallery.above:
+  other: 上方
+gallery.accent:
+  other: 强调色
+gallery.accessibility:
+  other: 无障碍
+gallery.account:
+  other: 账户
+gallery.account_security:
+  other: 账户与安全
+gallery.actions:
+  other: 操作
+gallery.adjust_s:
+  other: 调整%s
+gallery.an_inline_action:
+  other: 行内操作
+gallery.another_layer:
+  other: 另一层
+gallery.appearance:
+  other: 外观
+gallery.appindicator_supports_menus_only_choose_open_notes_from_the_tray_menu:
+  other: AppIndicator 仅支持菜单，请在托盘菜单中选择 Open notes。
+gallery.application:
+  other: 应用
+gallery.applies_immediately_and_follows_the_toolbar_theme_menu:
+  other: 立即生效，与工具栏主题菜单同步。
+gallery.applies_immediately_system_menus_keep_their_current_language:
+  other: 立即生效。系统菜单保留当前语言。
+gallery.apply:
+  other: 应用
+gallery.apply_change:
+  other: 应用更改？
+gallery.apply_these_settings:
+  other: 应用这些设置？
+gallery.ask_for_confirmation:
+  other: 请求确认
+gallery.author_avatar:
+  other: 作者头像
+gallery.author_avatar_s:
+  other: 作者头像 — %s
+gallery.awaiting_review:
+  other: 待审查
+gallery.back_in_the_mix:
+  other: 重新加入热闹。
+gallery.below:
+  other: 下方
+gallery.blue:
+  other: 蓝色
+gallery.bold:
+  other: 粗体
+gallery.bold_text:
+  other: 粗体文本
+gallery.both:
+  other: 双向
+gallery.bottom_pane:
+  other: 下方区域
+gallery.box:
+  other: 容器
+gallery.brightness_percent:
+  other: 明度百分比
+gallery.buffer_text_areas:
+  other: 缓冲多行文本框
+gallery.buffer_text_boxes:
+  other: 缓冲文本框
+gallery.built_with_mygo:
+  other: 使用 MyGo 构建
+gallery.built_with_onevra:
+  other: 使用 Onevra 构建
+gallery.built_with_onevra_powered_by_mygo_written_in_go:
+  other: 使用 Onevra 构建 · 由 MyGo 驱动 · 使用 Go 编写
+gallery.bullet:
+  other: •
+gallery.buttons:
+  other: 按钮
+gallery.cancel:
+  other: 取消
+gallery.cancelled:
+  other: 已取消
+gallery.card_d:
+  other: 卡片 %d
+gallery.cell_d:
+  other: 单元格 %d
+gallery.checked:
+  other: 已勾选
+gallery.choose_a_value:
+  other: 选择一个值
+gallery.choose_an_ancestor:
+  other: 选择上级页面
+gallery.choose_month:
+  other: 选择月份
+gallery.choose_size:
+  other: 选择尺寸
+gallery.choose_time:
+  other: 选择时间
+gallery.choose_year:
+  other: 选择年份
+gallery.chosen_s:
+  other: 已选：%s
+gallery.clear:
+  other: 清空
+gallery.clear_glass_style:
+  other: 清透
+gallery.clicks_d:
+  other: 点击次数：%d
+gallery.close:
+  other: 关闭
+gallery.close_settings:
+  other: 关闭设置
+gallery.close_window:
+  other: 关闭窗口
+gallery.cloud_rain:
+  other: 雨云
+gallery.collapsed:
+  other: 已收起
+gallery.collections:
+  other: 集合
+gallery.color:
+  other: 颜色
+gallery.color_format:
+  other: 颜色格式
+gallery.column_d:
+  other: 第 %d 列
+gallery.combine:
+  other: 组合
+gallery.component_status:
+  other: 组件状态
+gallery.components:
+  other: 组件
+gallery.confirmation:
+  other: 确认
+gallery.confirmed:
+  other: 已确认
+gallery.confirmed_d:
+  other: 确认次数：%d
+gallery.contain:
+  other: 完整显示
+gallery.containers:
+  other: 容器
+gallery.copies:
+  other: 份数
+gallery.copies_0f:
+  other: 份数：%.0f
+gallery.copy_color:
+  other: 复制颜色
+gallery.count:
+  other: 计数
+gallery.count_d:
+  other: 计数：%d
+gallery.count_increased:
+  other: 计数已增加
+gallery.cover:
+  other: 填满裁剪
+gallery.create_preview:
+  other: 创建预览
+gallery.d_5:
+  other: '%d / 5'
+gallery.d_kb:
+  other: '%d KB'
+gallery.d_of_5_stars:
+  other: '%d 颗星，共 5 颗'
+gallery.dark:
+  other: 深色
+gallery.date:
+  other: 日期
+gallery.day:
+  other: 日期
+gallery.decimal:
+  other: 小数
+gallery.default:
+  other: 默认
+gallery.desktop:
+  other: 桌面
+gallery.desktop_dock_menu:
+  other: 桌面 / Dock 菜单
+gallery.desktop_tray:
+  other: 桌面 / 托盘
+gallery.details:
+  other: 详情
+gallery.dialog:
+  other: 对话框
+gallery.disable_dock_menu:
+  other: 停用 Dock 菜单
+gallery.disable_tray:
+  other: 停用托盘
+gallery.disabled:
+  other: 已禁用
+gallery.divider:
+  other: 分隔线
+gallery.dock_menu:
+  other: Dock 菜单
+gallery.dock_menus_are_available_only_on_macos_use_desktop_tray_for_a_tray_men:
+  other: Dock 菜单仅支持 macOS。在此平台上，请使用“桌面 / 托盘”体验托盘菜单。
+gallery.documents:
+  other: 文档
+gallery.done:
+  other: 完成
+gallery.drag_the_glass_over_the_avatar:
+  other: 将玻璃拖到头像上方
+gallery.draggable_glass:
+  other: 可拖动玻璃
+gallery.edit_name:
+  other: 编辑名称
+gallery.editable:
+  other: 可编辑
+gallery.editable_name:
+  other: 可编辑名称
+gallery.editable_text:
+  other: 可编辑文本
+gallery.email:
+  other: 电子邮件
+gallery.empty:
+  other: 空白
+gallery.enable_dock_menu:
+  other: 启用 Dock 菜单
+gallery.enable_notifications:
+  other: 启用通知
+gallery.enable_the_menu_then_right_click_gallery_s_dock_icon_show_gallery_open:
+  other: 启用后右键点击 Gallery 的 Dock 图标，可在 macOS 标准操作上方找到 Show Gallery、Open Welcome 和 Open Settings。
+gallery.enable_tray:
+  other: 启用托盘
+gallery.enabled:
+  other: 已启用
+gallery.end:
+  other: 结束
+gallery.enter_a_name:
+  other: 输入名称
+gallery.enter_gallery:
+  other: 进入组件库
+gallery.escape_closing_the_notes_window_or_clicking_away_hides_it_notes_stay_i:
+  other: 按 Escape、关闭笔记窗口或点击其他位置可隐藏窗口。笔记仅保留在内存中；关闭 Gallery 会移除托盘。
+gallery.expanded:
+  other: 已展开
+gallery.explore_lucide:
+  other: 探索 Lucide
+gallery.file:
+  other: 文件
+gallery.file_d:
+  other: 文件 %d
+gallery.files:
+  other: 文件
+gallery.filled:
+  other: 已填写
+gallery.find_your_balance:
+  other: 找到你的节奏
+gallery.fingerprint:
+  other: 指纹
+gallery.first:
+  other: 第一项
+gallery.focus:
+  other: 专注
+gallery.focus_intensity:
+  other: 专注强度
+gallery.follow_system:
+  other: 跟随系统
+gallery.gallery_tray_notes:
+  other: 组件库托盘笔记
+gallery.general:
+  other: 通用
+gallery.ghost:
+  other: 透明
+gallery.give_it_a_name:
+  other: 给它起个名字
+gallery.glass_canvas:
+  other: 玻璃画布
+gallery.grayscale:
+  other: 灰度
+gallery.green:
+  other: 绿色
+gallery.grid:
+  other: 网格
+gallery.grid_items:
+  other: 网格项目
+gallery.grid_view_selected:
+  other: 已选择网格视图
+gallery.hello_world:
+  other: "Hello, world. 你好，世界。こんにちは \U0001F30D"
+gallery.hex_color:
+  other: 十六进制颜色
+gallery.hide:
+  other: 隐藏
+gallery.home:
+  other: 主页
+gallery.horizontal:
+  other: 水平
+gallery.hours:
+  other: 小时
+gallery.hover_or_focus_me:
+  other: 悬停或聚焦
+gallery.hue:
+  other: 色相
+gallery.hue_degrees:
+  other: 色相角度
+gallery.icon_grid:
+  other: 图标网格
+gallery.icon_library:
+  other: 图标库
+gallery.icon_library_lucide:
+  other: 图标库 / Lucide
+gallery.icons:
+  other: 图标
+gallery.images:
+  other: 图片
+gallery.important_workspace_settings_are_updated:
+  other: 重要的工作区设置已更新。
+gallery.in_app:
+  other: 应用内
+gallery.in_the_zone:
+  other: 进入状态
+gallery.include_a_little_inspiration:
+  other: 加入一点灵感
+gallery.indeterminate:
+  other: 不确定进度
+gallery.indeterminate_progress:
+  other: 不确定进度
+gallery.inherited_muted_color:
+  other: 继承的次要文本颜色
+gallery.inline:
+  other: 行内
+gallery.inline_action:
+  other: 行内操作
+gallery.insets:
+  other: 内边距
+gallery.integer:
+  other: 整数
+gallery.intensity:
+  other: 强度
+gallery.italic:
+  other: 斜体
+gallery.item_d:
+  other: 项目 %d
+gallery.items:
+  other: 项目
+gallery.just_a_demo_your_ideas_stay_here:
+  other: 仅供演示，你的想法只保留在这里。
+gallery.kept_in_memory_until_you_quit_escape_hides_this_window:
+  other: 退出前保留在内存中。按 Escape 可隐藏窗口。
+gallery.kind:
+  other: 类型
+gallery.language:
+  other: 语言
+gallery.language_preference:
+  other: 语言偏好
+gallery.large:
+  other: 大
+gallery.large_project:
+  other: 大型项目
+gallery.layout:
+  other: 布局
+gallery.left_arrow:
+  other: 左侧箭头
+gallery.left_click:
+  other: 左键点击
+gallery.left_click_the_tray_icon_to_toggle_the_notes_window_right_click_for_it:
+  other: 左键点击托盘图标可显示或隐藏笔记窗口，右键点击可打开原生菜单。
+gallery.left_pane:
+  other: 左侧区域
+gallery.less_noise_a_little_more_flow:
+  other: 少一些干扰，多一些流畅。
+gallery.light:
+  other: 浅色
+gallery.lightness_percent:
+  other: 亮度百分比
+gallery.line_d:
+  other: 第 %d 行
+gallery.link:
+  other: 链接
+gallery.liquid_glass:
+  other: 液态玻璃
+gallery.list:
+  other: 列表
+gallery.list_view_selected:
+  other: 已选择列表视图
+gallery.loading:
+  other: 加载中
+gallery.loading_terminal:
+  other: 正在加载终端
+gallery.locations:
+  other: 位置
+gallery.long_text_wraps_within_the_available_width_including_in_narrow_windows:
+  other: 长文本会根据可用宽度自动换行，在窄窗口中也能完整显示。
+gallery.lucide_icons:
+  other: Lucide 图标
+gallery.major_lines:
+  other: 主网格线
+gallery.make_space_for:
+  other: 选择用途
+gallery.maximize_window:
+  other: 最大化窗口
+gallery.maximum:
+  other: 最大值
+gallery.media_text:
+  other: 媒体与文本
+gallery.medium:
+  other: 中
+gallery.meet_the_lucide_icon_collection:
+  other: 探索 Lucide 图标集。
+gallery.member_removed:
+  other: 成员被移除
+gallery.mentions:
+  other: 提及
+gallery.menus:
+  other: 菜单
+gallery.messages_notes:
+  other: 消息与笔记
+gallery.minimize_window:
+  other: 最小化窗口
+gallery.minimum:
+  other: 最小值
+gallery.minutes:
+  other: 分钟
+gallery.mixed:
+  other: 部分勾选
+gallery.month_selection:
+  other: 选择月份
+gallery.name:
+  other: 名称
+gallery.navigation:
+  other: 导航
+gallery.new:
+  other: 新
+gallery.new_sign_in:
+  other: 新登录
+gallery.new_team_member_joined:
+  other: 新成员加入
+gallery.next_month:
+  other: 下个月
+gallery.next_year:
+  other: 下一年
+gallery.next_years:
+  other: 下一组年份
+gallery.no_action_yet:
+  other: 尚未执行操作
+gallery.no_matching_components:
+  other: 没有匹配的组件。
+gallery.no_matching_settings_try_another_search:
+  other: 没有匹配的设置，请尝试其他关键词。
+gallery.no_matching_sizes:
+  other: 没有匹配的尺寸
+gallery.not_needed:
+  other: 无需提供
+gallery.note:
+  other: 笔记
+gallery.notes:
+  other: 笔记
+gallery.notice:
+  other: 通知
+gallery.notifications:
+  other: 通知
+gallery.off:
+  other: 关闭
+gallery.ok:
+  other: 确定
+gallery.on:
+  other: 开启
+gallery.onevra_gallery:
+  other: Onevra 组件库
+gallery.onevra_mygo:
+  other: Onevra × MyGo
+gallery.opacity:
+  other: 不透明度
+gallery.opacity_percent:
+  other: 不透明度百分比
+gallery.open_another_layer:
+  other: 打开另一层
+gallery.open_another_layer_or_click_the_backdrop_to_go_back_one_layer:
+  other: 打开另一层，或点击背景返回上一层。
+gallery.open_dialog:
+  other: 打开对话框
+gallery.open_notes:
+  other: 打开笔记
+gallery.original_strokes_at_16_24_and_32_dip_colors_inherit_from_mygo:
+  other: 以 16、24 和 32 DIP 显示原始线条，颜色继承自 MyGo。
+gallery.outline:
+  other: 描边
+gallery.outlined:
+  other: 描边
+gallery.overlays:
+  other: 浮层
+gallery.overview:
+  other: 概览
+gallery.password_changed:
+  other: 密码已更改
+gallery.path:
+  other: 路径
+gallery.pause_mobile_alerts_while_you_re_active_on_desktop:
+  other: 使用桌面端时暂停移动端通知。
+gallery.personal:
+  other: 个人
+gallery.personal_2:
+  other: 个人
+gallery.play:
+  other: 娱乐
+gallery.plugins:
+  other: 插件
+gallery.popover_content:
+  other: 弹出层内容
+gallery.preferences:
+  other: 偏好设置
+gallery.preview_category:
+  other: 预览类别
+gallery.preview_intensity:
+  other: 预览强度
+gallery.preview_name:
+  other: 预览名称
+gallery.previous_month:
+  other: 上个月
+gallery.previous_year:
+  other: 上一年
+gallery.previous_years:
+  other: 上一组年份
+gallery.primary:
+  other: 主要
+gallery.progress:
+  other: 进度
+gallery.progress_value:
+  other: 进度值
+gallery.project:
+  other: 项目
+gallery.project_outline:
+  other: 项目大纲
+gallery.project_table:
+  other: 项目表格
+gallery.protected:
+  other: 受保护
+gallery.quality:
+  other: 质量
+gallery.quality_0f:
+  other: 质量：%.0f
+gallery.quantity:
+  other: 数量
+gallery.quantity_0f:
+  other: 数量：%.0f
+gallery.quiet_mode:
+  other: 安静模式
+gallery.quit:
+  other: 退出
+gallery.range:
+  other: 范围
+gallery.rated:
+  other: 已评分
+gallery.rating:
+  other: 评分
+gallery.read_only:
+  other: 只读
+gallery.ready_to_explore_s:
+  other: 准备探索：%s
+gallery.red:
+  other: 红色
+gallery.regular:
+  other: 常规
+gallery.relax:
+  other: 放松
+gallery.replaced_by_onevra:
+  other: 已由 Onevra 替代
+gallery.reset_position:
+  other: 重置位置
+gallery.resize_sidebar:
+  other: 调整侧边栏宽度
+gallery.restore_window:
+  other: 还原窗口
+gallery.right_arrow:
+  other: 右侧箭头
+gallery.right_click:
+  other: 右键点击
+gallery.right_click_here:
+  other: 在此右键点击
+gallery.right_pane:
+  other: 右侧区域
+gallery.ring:
+  other: 圆环
+gallery.role_or_permission_changed:
+  other: 角色或权限变更
+gallery.room_to_breathe:
+  other: 留点空间
+gallery.rounded:
+  other: 圆角
+gallery.row_d:
+  other: 第 %d 行
+gallery.row_d_name_status_updated:
+  other: 第 %d 行 — 名称                         状态                         更新时间
+gallery.s_activity:
+  other: '%s活动'
+gallery.s_color:
+  other: '%s颜色'
+gallery.s_completion:
+  other: '%s完成进度'
+gallery.s_d:
+  other: '%s: %d'
+gallery.s_decrease:
+  other: 减少%s
+gallery.s_delivery:
+  other: '%s的通知方式'
+gallery.s_divider:
+  other: '%s分隔线'
+gallery.s_increase:
+  other: 增加%s
+gallery.s_loading:
+  other: '%s加载中'
+gallery.s_value:
+  other: '%s数值'
+gallery.saturation_and_brightness:
+  other: 饱和度与明度
+gallery.saturation_percent:
+  other: 饱和度百分比
+gallery.saved:
+  other: 已保存
+gallery.scroll_views:
+  other: 滚动视图
+gallery.scrub:
+  other: 拖动调节
+gallery.search:
+  other: 搜索
+gallery.search_2:
+  other: 搜索…
+gallery.search_components:
+  other: 搜索组件
+gallery.search_components_2:
+  other: 搜索组件…
+gallery.search_results:
+  other: 搜索结果
+gallery.search_samples:
+  other: 搜索示例
+gallery.search_settings:
+  other: 搜索设置
+gallery.search_settings_2:
+  other: 搜索设置…
+gallery.search_sizes:
+  other: 搜索尺寸
+gallery.search_sizes_2:
+  other: 搜索尺寸…
+gallery.searchable:
+  other: 可搜索
+gallery.second:
+  other: 第二项
+gallery.secondary:
+  other: 次要
+gallery.secondary_text:
+  other: 次要文本
+gallery.security_alert:
+  other: 安全提醒
+gallery.selected:
+  other: 已选择
+gallery.selected_item_d:
+  other: 已选项目：%d
+gallery.selected_s:
+  other: 已选择：%s
+gallery.selection_values:
+  other: 选择与数值
+gallery.selects:
+  other: 选择器
+gallery.settings:
+  other: 设置
+gallery.settings_category:
+  other: 设置类别
+gallery.shared_notes:
+  other: 共享笔记
+gallery.show_popover:
+  other: 显示弹出层
+gallery.show_s:
+  other: 显示%s
+gallery.show_toast:
+  other: 显示提示
+gallery.show_undo_toast:
+  other: 显示撤销提示
+gallery.size:
+  other: 尺寸
+gallery.size_options:
+  other: 尺寸选项
+gallery.sliders:
+  other: 滑块
+gallery.small:
+  other: 小
+gallery.small_components_real_possibilities:
+  other: 小组件，无限可能。
+gallery.smart_notifications:
+  other: 智能通知
+gallery.someone_is_removed_from_the_workspace:
+  other: 有人被移出工作区。
+gallery.someone_joins_the_workspace:
+  other: 有人加入工作区。
+gallery.someone_mentions_you_in_a_conversation:
+  other: 有人在对话中提及你。
+gallery.something_wonderful:
+  other: 一些美好的想法…
+gallery.sound:
+  other: 声音
+gallery.split_panes:
+  other: 分割区域
+gallery.spokes:
+  other: 辐条
+gallery.start:
+  other: 开始
+gallery.status:
+  other: 状态
+gallery.step:
+  other: 步进
+gallery.stepped_range:
+  other: 步进范围
+gallery.still_using_mygo:
+  other: 仍使用 MyGo
+gallery.stretch:
+  other: 拉伸
+gallery.style:
+  other: 样式
+gallery.styled:
+  other: 带样式的
+gallery.system:
+  other: 系统
+gallery.tags:
+  other: 标签
+gallery.template_preview_changes_stay_in_this_session_no_notifications_are_sen:
+  other: 模板预览 · 更改仅在当前会话中保留，不会发送通知。
+gallery.terminal_unavailable:
+  other: 终端不可用
+gallery.text_and_an:
+  other: 文本和
+gallery.text_areas:
+  other: 多行文本框
+gallery.text_boxes:
+  other: 文本框
+gallery.text_input:
+  other: 文本输入
+gallery.the_menu_stays_available_when_you_navigate_away_disable_it_here_or_clo:
+  other: 切换页面后菜单仍可使用。在此停用或关闭 Gallery 可移除演示菜单项。
+gallery.the_page_underneath_stays_open:
+  other: 下方页面保持打开。
+gallery.theme:
+  other: 主题
+gallery.theme_preference:
+  other: 主题偏好
+gallery.this_dialog_returns_your_choice:
+  other: 此对话框会返回你的选择。
+gallery.time:
+  other: 时间
+gallery.tint:
+  other: 色调
+gallery.tinted:
+  other: 着色
+gallery.today:
+  other: 今天
+gallery.toggle_or_resize_the_sidebar_inside_the_window_double_click_its_separa:
+  other: 在窗口内展开、收起或调整侧边栏。双击分隔线可恢复默认宽度，也可以直接打开设置对话框。
+gallery.toggle_sidebar:
+  other: 展开或收起侧边栏
+gallery.top_pane:
+  other: 上方区域
+gallery.tray:
+  other: 托盘
+gallery.tray_notes:
+  other: 托盘笔记
+gallery.tray_unavailable_s:
+  other: 托盘不可用：%s
+gallery.unable_to_load_avatar_jpeg:
+  other: 无法加载 avatar.jpeg
+gallery.unchecked:
+  other: 未勾选
+gallery.undo:
+  other: 撤销
+gallery.uniform:
+  other: 均匀
+gallery.unrated:
+  other: 未评分
+gallery.unusual_activity_or_important_security_updates:
+  other: 异常活动或重要安全更新。
+gallery.use_mygo_directly:
+  other: 直接使用 MyGo
+gallery.version_s:
+  other: 版本 %s
+gallery.vertical:
+  other: 垂直
+gallery.view_mode:
+  other: 视图模式
+gallery.volume:
+  other: 音量
+gallery.welcome:
+  other: 欢迎
+gallery.welcome_to_onevra:
+  other: 欢迎使用 Onevra
+gallery.with:
+  other: 搭配
+gallery.without_stepper:
+  other: 无步进按钮
+gallery.work:
+  other: 工作
+gallery.workspace_settings_changed:
+  other: 工作区设置变更
+gallery.workspace_updates:
+  other: 工作区更新
+gallery.wrap_as_one_paragraph_clicks_d:
+  other: 在同一段落内换行。点击次数：%d
+gallery.write_a_note:
+  other: 写一条笔记
+gallery.write_a_quick_note:
+  other: 快速记下一些内容…
+gallery.write_some_notes:
+  other: 写一些笔记
+gallery.year_selection:
+  other: 选择年份
+gallery.your_access_level_changes:
+  other: 你的访问权限发生变化。
+gallery.your_account_is_accessed_from_a_new_device:
+  other: 新设备登录了你的账户。
+gallery.your_name:
+  other: 你的名字
+gallery.your_next_idea:
+  other: 你的下一个想法
+gallery.your_password_is_updated:
+  other: 你的密码已更新。

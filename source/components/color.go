@@ -109,6 +109,7 @@ func (s *colorViewState) sync(c ui.Color) {
 // opacity-only edits preserve their gamut. Disable or key a parent before construction.
 // The plane supports arrow keys; sliders retain MyGo keyboard/accessibility input.
 func ColorView(c *ui.Context, value *ui.Color) *ColorControl {
+	words := localized(c)
 	if value == nil {
 		panic("components.ColorView: nil color")
 	}
@@ -134,7 +135,7 @@ func ColorView(c *ui.Context, value *ui.Color) *ColorControl {
 		st.sync(*value)
 	}
 	out.Children(func() {
-		plane := ui.Box(c).FillWidth().Height(t.Space(50)).Radius(t.Radius).Focusable().FocusRing(false).Role(ui.RoleSlider).Label("Saturation and brightness").Cursor(ui.CursorCrosshair)
+		plane := ui.Box(c).FillWidth().Height(t.Space(50)).Radius(t.Radius).Focusable().FocusRing(false).Role(ui.RoleSlider).Label(words.SaturationBrightness).Cursor(ui.CursorCrosshair)
 		_, _, held := plane.Dragged()
 		var knob ui.Element
 		plane.Children(func() {
@@ -193,7 +194,7 @@ func ColorView(c *ui.Context, value *ui.Color) *ColorControl {
 			}
 		})
 		h := st.hsv.h
-		hs := colorChannel(c, &h, 360, "Hue", func(p *ui.Painter, r ui.Rect) {
+		hs := colorChannel(c, &h, 360, words.Hue, func(p *ui.Painter, r ui.Rect) {
 			for i := 0; i < 6; i++ {
 				a := colorHSV{h: float64(i) * 60, s: 1, v: 1}.color(255)
 				b := colorHSV{h: float64(i+1) * 60, s: 1, v: 1}.color(255)
@@ -205,7 +206,7 @@ func ColorView(c *ui.Context, value *ui.Color) *ColorControl {
 			set(st.hsv.color(value.A), colorHSBA)
 		}
 		a := float64(value.A) / 255
-		as := colorChannel(c, &a, 1, "Opacity", func(p *ui.Painter, r ui.Rect) {
+		as := colorChannel(c, &a, 1, words.Opacity, func(p *ui.Painter, r ui.Rect) {
 			paintColorChecks(p, r, t.Space(1.5))
 			p.FillGradient(r, ui.LinearGradient{From: value.Alpha(0), To: value.Alpha(1), Angle: 90}, 0)
 		})
@@ -216,7 +217,7 @@ func ColorView(c *ui.Context, value *ui.Color) *ColorControl {
 		}
 		ui.Row(c).FillWidth().AlignItems(ui.Center).Children(func() {
 			labels := [...]string{"RGBA", "HSBA", "HSLA"}
-			format := Button(c, "", ButtonGhost).Label("Color format").Padding(0)
+			format := Button(c, "", ButtonGhost).Label(words.ColorFormat).Padding(0)
 			format.Menu(func(m *ui.Menu) {
 				for i, label := range labels {
 					if m.Item(label).Checked(st.format == colorFormat(i)).Chosen() {
@@ -230,7 +231,7 @@ func ColorView(c *ui.Context, value *ui.Color) *ColorControl {
 				Icon(c, lucide.ChevronDown()).Size(t.Space(3), t.Space(3)).TextColor(t.TextMuted)
 			})
 			ui.Box(c).Grow(1)
-			copy := Button(c, "", ButtonGhost).Label("Copy color").Size(t.Space(6), t.Space(6)).Padding(t.Space(1.5))
+			copy := Button(c, "", ButtonGhost).Label(words.CopyColor).Size(t.Space(6), t.Space(6)).Padding(t.Space(1.5))
 			copy.Children(func() { Icon(c, lucide.Copy()).Size(t.Space(3), t.Space(3)).TextColor(t.TextMuted) })
 			copy.Menu(func(m *ui.Menu) {
 				for _, format := range []string{"RGBA", "HSBA", "HSLA", "HEX"} {

@@ -25,6 +25,10 @@ func (s *welcomeState) initialize() {
 }
 
 func (g *Gallery) Welcome(c *ui.Context) {
+	g.withLanguage(c, func() { g.welcomeLocalized(c) })
+}
+
+func (g *Gallery) welcomeLocalized(c *ui.Context) {
 	g.welcome.initialize()
 	t := c.Theme()
 	components.ScrollView(c, components.ScrollViewOptions{}).Key("welcome").Fill().Children(func() {
@@ -32,8 +36,8 @@ func (g *Gallery) Welcome(c *ui.Context) {
 			Padding(t.Space(6)).Gap(t.Space(7)).Children(func() {
 			ui.Column(c).FillWidth().MinWidth(0).Gap(t.Space(4)).Children(func() {
 				ui.Column(c).Gap(t.Space(1.5)).Children(func() {
-					components.Text(c, "Small components. Real possibilities.").FontSize(t.Rem(1.35)).Bold().Wrap()
-					components.Text(c, "A few familiar pieces, brought together. Go ahead, make them yours.").TextColor(t.TextMuted).Wrap()
+					components.Text(c, tr(c, "gallery.small_components_real_possibilities")).FontSize(t.Rem(1.35)).Bold().Wrap()
+					components.Text(c, tr(c, "gallery.a_few_familiar_pieces_brought_together_go_ahead_make_them_yours")).TextColor(t.TextMuted).Wrap()
 				})
 				ui.Row(c).FillWidth().MinWidth(0).Wrap().AlignItems(ui.Stretch).Gap(t.Space(4)).Children(func() {
 					welcomeCard(c, "idea").Children(func() { g.welcomeIdea(c) })
@@ -41,7 +45,7 @@ func (g *Gallery) Welcome(c *ui.Context) {
 				})
 			})
 			g.welcomeIcons(c)
-			components.Text(c, "Built with Onevra · Powered by MyGo · Written in Go").
+			components.Text(c, tr(c, "gallery.built_with_onevra_powered_by_mygo_written_in_go")).
 				FontSize(t.Rem(.8)).TextColor(t.TextMuted).Wrap()
 		})
 	})
@@ -78,8 +82,8 @@ func welcomeCardHeading(c *ui.Context, icon func() *ui.SVG, title, subtitle stri
 			components.Icon(c, icon).Size(t.Space(5), t.Space(5))
 		})
 		ui.Column(c).MinWidth(0).Gap(t.Space(1)).Children(func() {
-			components.Text(c, title).Bold().Wrap()
-			components.Text(c, subtitle).FontSize(t.Rem(.8)).TextColor(t.TextMuted).Wrap()
+			components.Text(c, tr(c, title)).Bold().Wrap()
+			components.Text(c, tr(c, subtitle)).FontSize(t.Rem(.8)).TextColor(t.TextMuted).Wrap()
 		})
 	})
 }
@@ -88,27 +92,27 @@ func (g *Gallery) welcomeIdea(c *ui.Context) {
 	s, t := &g.welcome, c.Theme()
 	welcomeCardHeading(c, lucide.Sparkles, "Your next idea", "A fresh start, in a few small steps.", t.Accent)
 	ui.Column(c).FillWidth().MinWidth(0).Gap(t.Space(2)).Children(func() {
-		components.Text(c, "Give it a name").FontSize(t.Rem(.85)).TextColor(t.TextMuted)
-		if components.TextBox(c, &s.name, components.TextBoxOptions{}).Label("Preview name").Placeholder("Something wonderful…").FillWidth().MinWidth(0).Changed() {
+		components.Text(c, tr(c, "gallery.give_it_a_name")).FontSize(t.Rem(.85)).TextColor(t.TextMuted)
+		if components.TextBox(c, &s.name, components.TextBoxOptions{}).Label(tr(c, "gallery.preview_name")).Placeholder(tr(c, "gallery.something_wonderful")).FillWidth().MinWidth(0).Changed() {
 			s.created = false
 		}
 	})
 	ui.Column(c).FillWidth().MinWidth(0).Gap(t.Space(2)).Children(func() {
-		components.Text(c, "Make space for").FontSize(t.Rem(.85)).TextColor(t.TextMuted)
+		components.Text(c, tr(c, "gallery.make_space_for")).FontSize(t.Rem(.85)).TextColor(t.TextMuted)
 		sel := components.Select(c, &s.kind)
-		sel.Trigger.Label("Preview category").FillWidth().MinWidth(0).Children(func() {
-			components.Text(c, s.kind).SingleLine()
+		sel.Trigger.Label(tr(c, "gallery.preview_category")).FillWidth().MinWidth(0).Children(func() {
+			components.Text(c, tr(c, s.kind)).SingleLine()
 		})
 		sel.Popup(func(panel ui.Element) {
 			for _, kind := range []string{"Personal", "Work", "Play"} {
-				sel.Item(kind).Label(kind).Children(func() { components.Text(c, kind) })
+				sel.Item(kind).Label(tr(c, kind)).Children(func() { components.Text(c, tr(c, kind)) })
 			}
 		})
 		if sel.Trigger.Changed() {
 			s.created = false
 		}
 	})
-	if components.Checkbox(c, &s.include, "Include a little inspiration").Changed() {
+	if components.Checkbox(c, &s.include, tr(c, "gallery.include_a_little_inspiration")).Changed() {
 		s.created = false
 	}
 	ui.Spacer(c)
@@ -116,40 +120,40 @@ func (g *Gallery) welcomeIdea(c *ui.Context) {
 		s.created = true
 	}
 	if s.created {
-		ui.Textf(c, "Ready to explore: %s", s.name).FontSize(t.Rem(.8)).TextColor(t.Success).Wrap()
+		ui.Textf(c, tr(c, "gallery.ready_to_explore_s"), s.name).FontSize(t.Rem(.8)).TextColor(t.Success).Wrap()
 	} else {
-		components.Text(c, "Just a demo. Your ideas stay here.").FontSize(t.Rem(.8)).TextColor(t.TextMuted).Wrap()
+		components.Text(c, tr(c, "gallery.just_a_demo_your_ideas_stay_here")).FontSize(t.Rem(.8)).TextColor(t.TextMuted).Wrap()
 	}
 }
 
 func (g *Gallery) welcomeBalance(c *ui.Context) {
 	s, t := &g.welcome, c.Theme()
 	welcomeCardHeading(c, lucide.SlidersHorizontal, "Find your balance", "Less noise. A little more flow.", t.Success)
-	components.Tabs(c, &s.mode, "Focus", "Relax")
+	components.Tabs(c, &s.mode, tr(c, "gallery.focus"), tr(c, "gallery.relax"))
 	value := &s.intensity[s.mode]
 	ui.Row(c).FillWidth().Wrap().Gap(t.Space(4)).Padding(t.Space(3)).Radius(t.Space(3)).
 		Gradient(t.Background.Mix(t.Success, .07), t.Background, 110).Children(func() {
-		components.ProgressRing(c, *value/100).Size(t.Space(16), t.Space(16)).Label("Focus intensity")
+		components.ProgressRing(c, *value/100).Size(t.Space(16), t.Space(16)).Label(tr(c, "gallery.focus_intensity"))
 		ui.Column(c).Gap(t.Space(1)).Children(func() {
-			ui.Textf(c, "%.0f%%", *value).FontSize(t.Rem(2)).Bold()
+			ui.Textf(c, tr(c, "gallery.0f"), *value).FontSize(t.Rem(2)).Bold()
 			caption := "In the zone"
 			if s.mode == 1 {
 				caption = "Room to breathe"
 			}
-			components.Text(c, caption).FontSize(t.Rem(.8)).TextColor(t.TextMuted)
+			components.Text(c, tr(c, caption)).FontSize(t.Rem(.8)).TextColor(t.TextMuted)
 		})
 	})
 	ui.Column(c).FillWidth().Gap(t.Space(2)).Children(func() {
-		components.Text(c, "Intensity").FontSize(t.Rem(.85)).TextColor(t.TextMuted)
-		components.Slider(c, value, 0, 100).Label("Preview intensity").FillWidth().MinWidth(0)
+		components.Text(c, tr(c, "gallery.intensity")).FontSize(t.Rem(.85)).TextColor(t.TextMuted)
+		components.Slider(c, value, 0, 100).Label(tr(c, "gallery.preview_intensity")).FillWidth().MinWidth(0)
 	})
 	ui.Spacer(c)
-	components.Switch(c, &s.quiet, "Quiet mode")
+	components.Switch(c, &s.quiet, tr(c, "gallery.quiet_mode"))
 	caption := "A quieter corner, just for you."
 	if !s.quiet {
 		caption = "Back in the mix."
 	}
-	components.Text(c, caption).FontSize(t.Rem(.8)).TextColor(t.TextMuted).Wrap()
+	components.Text(c, tr(c, caption)).FontSize(t.Rem(.8)).TextColor(t.TextMuted).Wrap()
 }
 
 func (g *Gallery) welcomeIcons(c *ui.Context) {
@@ -165,8 +169,8 @@ func (g *Gallery) welcomeIcons(c *ui.Context) {
 		})
 		ui.Row(c).FillWidth().Wrap().Gap(t.Space(4)).Children(func() {
 			ui.Column(c).Basis(t.Space(50)).Grow(1).MinWidth(0).Gap(t.Space(1)).Children(func() {
-				components.Text(c, "A small mark. A big personality.").Bold().Wrap()
-				components.Text(c, "Meet the Lucide icon collection.").TextColor(t.TextMuted).FontSize(t.Rem(.85)).Wrap()
+				components.Text(c, tr(c, "gallery.a_small_mark_a_big_personality")).Bold().Wrap()
+				components.Text(c, tr(c, "gallery.meet_the_lucide_icon_collection")).TextColor(t.TextMuted).FontSize(t.Rem(.85)).Wrap()
 			})
 			if welcomeAction(c, "Explore Lucide", components.ButtonOutline, lucide.ArrowUpRight).Clicked() {
 				g.page = lucidePage
@@ -177,9 +181,9 @@ func (g *Gallery) welcomeIcons(c *ui.Context) {
 }
 
 func welcomeAction(c *ui.Context, label string, variant components.ButtonVariant, icon func() *ui.SVG) ui.Element {
-	b := components.Button(c, "", variant).Label(label)
+	b := components.Button(c, "", variant).Label(tr(c, label))
 	b.Children(func() {
-		components.Text(c, label).Wrap()
+		components.Text(c, tr(c, label)).Wrap()
 		components.Icon(c, icon).Size(c.Theme().Space(4), c.Theme().Space(4)).Shrink(0)
 	})
 	return b

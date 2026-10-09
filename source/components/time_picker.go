@@ -48,6 +48,7 @@ func timePickerSet(value *time.Time, hour, minute int) bool {
 // time.Date's normalization of nonexistent/ambiguous local times at DST changes.
 // Key or disable a parent before construction; Label names the trigger.
 func TimePicker(c *ui.Context, value *time.Time) *TimeControl {
+	words := localized(c)
 	if value == nil {
 		panic("components.TimePicker: nil time")
 	}
@@ -71,12 +72,12 @@ func TimePicker(c *ui.Context, value *time.Time) *TimeControl {
 		st.reset(*value)
 	}
 	Popover(c, out.Element, open, func(panel ui.Element) {
-		panel.Row().Width(t.Space(48)).Height(t.Space(64)).Padding(t.Space(2)).Gap(t.Space(2)).Label("Choose time")
+		panel.Row().Width(t.Space(48)).Height(t.Space(64)).Padding(t.Space(2)).Gap(t.Space(2)).Label(words.ChooseTime)
 		var columns [2]ui.Element
 		focus := -1
 		confirm := false
-		for index, label := range []string{"Hours", "Minutes"} {
-			ui.Column(c).Key(label).Width(0).Grow(1).FillHeight().Gap(t.Space(2)).Children(func() {
+		for index, label := range []string{words.Hours, words.Minutes} {
+			ui.Column(c).Key(index).Width(0).Grow(1).FillHeight().Gap(t.Space(2)).Children(func() {
 				Text(c, label).SingleLine().TextColor(t.TextMuted).FillWidth().TextAlign(ui.Center)
 				current, count := &st.hour, 24
 				if index == 1 {

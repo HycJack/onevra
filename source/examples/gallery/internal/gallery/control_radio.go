@@ -8,7 +8,7 @@ import (
 func controlRadio(c *ui.Context, s *controlState, _ string) {
 	ui.RadioGroup(c, func() {
 		for _, option := range []string{"Small", "Medium", "Large"} {
-			components.Radio(c, &s.choice, option, option)
+			components.Radio(c, &s.choice, option, tr(c, option))
 		}
-	}).Label("Size").Row().FillWidth().MinWidth(0).Wrap().Gap(c.Theme().Space(4))
+	}).Label(tr(c, "gallery.size")).Row().FillWidth().MinWidth(0).Wrap().Gap(c.Theme().Space(4))
 }

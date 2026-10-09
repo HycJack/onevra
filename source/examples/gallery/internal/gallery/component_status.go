@@ -42,6 +42,10 @@ func componentStatusCards(entries []mygoReviewEntry, status mygoStatus) []compon
 
 // ComponentStatus is a read-only name grid backed by the startup review decisions.
 func (g *Gallery) ComponentStatus(c *ui.Context) {
+	g.withLanguage(c, func() { g.componentStatusLocalized(c) })
+}
+
+func (g *Gallery) componentStatusLocalized(c *ui.Context) {
 	entries := mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled)
 	t := c.Theme()
 	components.ScrollView(c, components.ScrollViewOptions{}).Key("component-status").Fill().Children(func() {
@@ -52,7 +56,7 @@ func (g *Gallery) ComponentStatus(c *ui.Context) {
 					continue
 				}
 				ui.Column(c).Key(string(status)).FillWidth().MinWidth(0).Gap(t.Space(3)).Children(func() {
-					components.Text(c, string(status)).Bold()
+					components.Text(c, tr(c, string(status))).Bold()
 					// Fixed-width cells wrap against their actual parent width, including
 					// sidebar resizing, rather than assuming the context is the content area.
 					ui.Row(c).FillWidth().MinWidth(0).Wrap().Gap(t.Space(3)).Children(func() {

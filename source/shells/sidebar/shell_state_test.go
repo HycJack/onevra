@@ -23,3 +23,29 @@ func TestLeftWidthPersistence(t *testing.T) {
 		t.Fatal("lost chosen width or changed reset default")
 	}
 }
+
+func TestLiveLabelsPreserveShell(t *testing.T) {
+	s := newShell(ShellOptions{LeftWidth: 220})
+	s.SetLeftWidth(300)
+	tt := ui.NewTester(s.view, 820, 600)
+	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
+	if _, ok := tt.Find("Toggle sidebar"); !ok {
+		t.Fatal("English label missing")
+	}
+	s.SetLabels(Labels{LeftToggle: "切换侧边栏", LeftResize: "调整宽度"})
+	tt.Frame()
+	if _, ok := tt.Find("切换侧边栏"); !ok {
+		t.Fatal("localized label missing")
+	}
+	if _, ok := tt.Find("调整宽度"); !ok {
+		t.Fatal("localized resize label missing")
+	}
+	if s.LeftWidth() != 300 || !s.LeftExpanded() {
+		t.Fatal("label update reset sidebar")
+	}
+	s.SetLabels(Labels{})
+	tt.Frame()
+	if _, ok := tt.Find("Toggle sidebar"); !ok {
+		t.Fatal("English defaults not restored")
+	}
+}

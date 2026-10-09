@@ -62,6 +62,7 @@ func (s *SplitControl) AutoFocus() *SplitControl {
 // move it by Theme.Space(2.5), and Home/End move to the effective limits.
 // Label defaults to "Divider". Nil builders leave their panes empty.
 func Split(c *ui.Context, size *float32, first, second func(), options ...SplitOptions) *SplitControl {
+	words := localized(c)
 	if len(options) > 1 {
 		panic("components.Split: at most one options value")
 	}
@@ -109,7 +110,7 @@ func Split(c *ui.Context, size *float32, first, second func(), options ...SplitO
 				a.Children(first)
 			}
 			div := ui.Box(c).Key("divider").Shrink(0).Focusable().FocusRing(false).
-				Role(ui.RoleSplitter).Label("Divider").Background(t.Border)
+				Role(ui.RoleSplitter).Label(words.Divider).Background(t.Border)
 			s.divider = div
 			b := ui.Box(c).Key("second").Grow(1).Shrink(1).MinWidth(0).MinHeight(0).Clip()
 			if second != nil {

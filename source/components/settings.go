@@ -86,26 +86,27 @@ func SearchSettings(categories []SettingsCategory, query string) []SettingsResul
 // Use a keyed parent to distinguish multiple instances. state must not be nil.
 // Navigation clears Query; clearing Query alone restores the selected category.
 func Settings(c *ui.Context, state *SettingsState, categories []SettingsCategory, opts SettingsOptions) ui.Element {
+	words := localized(c)
 	if state == nil {
 		panic("components.Settings: nil state")
 	}
 	if opts.Title == "" {
-		opts.Title = "Settings"
+		opts.Title = words.Settings
 	}
 	if opts.SearchLabel == "" {
-		opts.SearchLabel = "Search settings"
+		opts.SearchLabel = words.SearchSettings
 	}
 	if opts.SearchPlaceholder == "" {
-		opts.SearchPlaceholder = "Search settings…"
+		opts.SearchPlaceholder = words.SearchSettingsPlaceholder
 	}
 	if opts.CategoryLabel == "" {
-		opts.CategoryLabel = "Settings category"
+		opts.CategoryLabel = words.SettingsCategory
 	}
 	if opts.ResultsTitle == "" {
-		opts.ResultsTitle = "Search results"
+		opts.ResultsTitle = words.SearchResults
 	}
 	if opts.EmptyText == "" {
-		opts.EmptyText = "No matching settings. Try another search."
+		opts.EmptyText = words.NoSettings
 	}
 	selected := -1
 	for i, category := range categories {

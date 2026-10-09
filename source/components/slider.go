@@ -83,10 +83,10 @@ func Slider(c *ui.Context, value *float64, lo, hi float64, options ...SliderOpti
 	var e ui.Element
 	s := &SliderControl{labels: [2]string{o.MinimumLabel, o.MaximumLabel}}
 	if s.labels[0] == "" {
-		s.labels[0] = "minimum"
+		s.labels[0] = localized(c).Minimum
 	}
 	if s.labels[1] == "" {
-		s.labels[1] = "maximum"
+		s.labels[1] = localized(c).Maximum
 	}
 	if o.Range == nil {
 		e = ui.SliderBase(c, value, lo, hi).Step(o.Step)

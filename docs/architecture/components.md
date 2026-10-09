@@ -23,6 +23,11 @@ Complex components live in independent packages under `source/plugins/<name>/`, 
 [Markdown plugin](../../source/plugins/markdown/doc.go) parses CommonMark and GFM syntax into Onevra text and MyGo layout primitives. MyGo owns a single selection across the rendered document, including default code blocks. Hosts retain parsed documents between source changes and provide ordinary scrolling so offscreen paragraphs remain selectable. Raw HTML stays literal. Standalone image paragraphs display application-supplied decoded bitmaps, shrinking to fit the document width; missing images and inline images retain alternative text. Image loading and caching remain application-owned, and rendering performs no file or network I/O.
 
 Applications may replace fenced code blocks with synchronous view builders selected by language, while retaining state and asynchronous work outside rendering. Custom text participates in the surrounding selection unless its builder chooses a separate selection scope or excludes it. Applications also own link activation; the component never opens destinations automatically. See the [gallery example](../../source/examples/gallery/internal/gallery/control_markdown.go) for an interactive embedded view.
+## Localization
+
+Applications own language choice and translation catalogs. `components.WithLocalization` supplies component-owned labels and date presentation within a synchronous, window-local build scope; components retain English defaults outside it. Explicit control labels still belong to the caller. Nested scopes restore their enclosing values and do not introduce global language state or change element identity. Calendar presentation can change without changing stored dates, time zones or selection semantics; numeric editors retain their canonical numeric syntax.
+
+Shell accepts updated control labels without recreating its window. Applications must keep keys and selection values independent of translated text and request a new frame after changing language. This scope does not translate MyGo's internal widgets, OS surfaces, native menus or user-provided content. It provides no automatic RTL layout mirroring.
 
 ## Page container and layout
 

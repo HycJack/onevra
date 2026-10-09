@@ -1,6 +1,7 @@
 package gallery
 
 import (
+	"fmt"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/components"
 )
@@ -10,17 +11,17 @@ func controlSpinner(c *ui.Context, _ *controlState, variant string) {
 	if variant == "Spokes" {
 		style = components.SpinnerSpokes
 	}
-	components.Spinner(c, style).Label(variant + " loading")
+	components.Spinner(c, style).Label(fmt.Sprintf(tr(c, "gallery.s_loading"), tr(c, variant)))
 }
 
 func controlProgress(c *ui.Context, s *controlState, variant string) {
-	components.Slider(c, &s.value, 0, 100).Label(variant + " value").FillWidth()
-	ui.Textf(c, "%.0f%%", s.value)
+	components.Slider(c, &s.value, 0, 100).Label(fmt.Sprintf(tr(c, "gallery.s_value"), tr(c, variant))).FillWidth()
+	ui.Textf(c, tr(c, "gallery.0f"), s.value)
 	build := components.Progress
 	if variant == "ProgressRing" {
 		build = components.ProgressRing
 	}
-	build(c, s.value/100).Label(variant + " completion")
-	components.Text(c, "Indeterminate").TextColor(c.Theme().TextMuted)
-	build(c, -1).Label(variant + " activity")
+	build(c, s.value/100).Label(fmt.Sprintf(tr(c, "gallery.s_completion"), tr(c, variant)))
+	components.Text(c, tr(c, "gallery.indeterminate")).TextColor(c.Theme().TextMuted)
+	build(c, -1).Label(fmt.Sprintf(tr(c, "gallery.s_activity"), tr(c, variant)))
 }

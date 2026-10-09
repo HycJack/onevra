@@ -15,6 +15,7 @@ type NumberInputControl struct {
 	ui.Element
 	input, increase, decrease, grip ui.Element
 	changed                         bool
+	words                           Localization
 }
 
 // Changed reports an input-driven value change, not initial clamping.
@@ -23,9 +24,9 @@ func (n *NumberInputControl) Changed() bool { return n.changed }
 // Label names the text field and any optional drag handle and step buttons.
 func (n *NumberInputControl) Label(label string) *NumberInputControl {
 	n.input.Label(label)
-	n.grip.Label(strings.TrimSpace("Adjust " + label))
-	n.increase.Label(strings.TrimSpace(label + " Increase"))
-	n.decrease.Label(strings.TrimSpace(label + " Decrease"))
+	n.grip.Label(n.words.numberAction("adjust", label))
+	n.increase.Label(n.words.numberAction("increase", label))
+	n.decrease.Label(n.words.numberAction("decrease", label))
 	return n
 }
 
@@ -81,7 +82,7 @@ func numberInput(c *ui.Context, value *float64, lo, hi, step float64, opts Numbe
 	}
 	*value = max(lo, min(hi, *value))
 	t := c.Theme()
-	n := &NumberInputControl{Element: ui.Row(c).AlignItems(ui.Stretch).Width(t.Space(32)).Role(ui.RoleGroup)}
+	n := &NumberInputControl{words: localized(c), Element: ui.Row(c).AlignItems(ui.Stretch).Width(t.Space(32)).Role(ui.RoleGroup)}
 	format := func() string { return strconv.FormatFloat(*value, 'f', -1, 64) }
 	state := ui.Local(n.Element, "number-input", func() numberInputState {
 		return numberInputState{text: format(), value: *value}

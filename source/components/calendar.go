@@ -63,7 +63,7 @@ func (s *calendarState) page(delta int) {
 	s.cursor = calendarMonth(s.cursor, delta*months)
 }
 
-// Calendar builds the fixed-size, Monday-first six-week view used inside
+// Calendar builds the fixed-size six-week view (Monday-first by default) used inside
 // CalendarPicker. Arrows move its cursor; Page Up/Down change months with day
 // clamping; Home/End move to month boundaries. Enter/Space or a day click selects
 // a date, preserving its time and location. Navigation alone does not select.
@@ -73,6 +73,7 @@ func (s *calendarState) page(delta int) {
 // day view without committing a value. All modes retain the same fixed size.
 // Key or disable a parent before construction.
 func Calendar(c *ui.Context, value *time.Time) *CalendarControl {
+	words := localized(c)
 	if value == nil {
 		panic("components.Calendar: nil date")
 	}
@@ -135,27 +136,30 @@ func Calendar(c *ui.Context, value *time.Time) *CalendarControl {
 	}
 	out.Children(func() {
 		ui.Row(c).FillWidth().Height(t.Space(8)).Margin(0, 0, t.Space(2), 0).AlignItems(ui.Center).Children(func() {
-			title := st.cursor.Format("January 2006")
-			titleLabel, pageLabel := "Choose month", "month"
+			title := words.date(st.cursor, "January 2006")
+			titleLabel := words.ChooseMonth
+			previous, next := words.PreviousMonth, words.NextMonth
 			if st.view == calendarMonths {
 				title = st.cursor.Format("2006")
-				titleLabel, pageLabel = "Choose year", "year"
+				titleLabel = words.ChooseYear
+				previous, next = words.PreviousYear, words.NextYear
 			}
 			if st.view == calendarYears {
 				first := calendarYearStart(st.cursor.Year())
 				title = fmt.Sprintf("%d–%d", first, first+11)
-				titleLabel, pageLabel = "Choose year", "years"
+				titleLabel = words.ChooseYear
+				previous, next = words.PreviousYears, words.NextYears
 			}
-			heading := Button(c, "", ButtonGhost).Grow(1).MinWidth(0).Height(t.Space(8)).Padding(0).
+			heading := Button(c, "", ButtonGhost).Width(0).Grow(1).MinWidth(0).Height(t.Space(8)).Padding(0).
 				Justify(ui.Start).Background(ui.Color{}).Label(titleLabel)
-			heading.Children(func() { Text(c, title).SingleLine().Bold() })
+			heading.Children(func() { Text(c, title).FillWidth().MinWidth(0).SingleLine().Bold() })
 			if !heading.IsDisabled() && heading.Clicked() {
 				if st.view < calendarYears {
 					st.view++
 				}
 				out.Focus()
 			}
-			today := Button(c, "", ButtonGhost).Size(t.Space(7), t.Space(8)).Padding(t.Space(1.5)).Label("Today")
+			today := Button(c, "", ButtonGhost).Size(t.Space(7), t.Space(8)).Padding(t.Space(1.5)).Label(words.Today)
 			today.Children(func() { Icon(c, lucide.RotateCcw()) })
 			if !today.IsDisabled() && today.Clicked() {
 				st.cursor, st.view = calendarDay(time.Now().In(value.Location())), calendarDays
@@ -169,21 +173,22 @@ func Calendar(c *ui.Context, value *time.Time) *CalendarControl {
 					out.Focus()
 				}
 			}
-			nav("Previous "+pageLabel, -1, lucide.ChevronLeft())
-			nav("Next "+pageLabel, 1, lucide.ChevronRight())
+			nav(previous, -1, lucide.ChevronLeft())
+			nav(next, 1, lucide.ChevronRight())
 		})
 		if st.view != calendarDays {
 			calendarPeriodGrid(c, out, st, *value)
 			return
 		}
 		month := time.Date(st.cursor.Year(), st.cursor.Month(), 1, 0, 0, 0, 0, time.UTC)
-		out.Label(month.Format("January 2006")).Value(st.cursor.Format("January 2, 2006"))
+		out.Label(words.date(month, "January 2006")).Value(words.date(st.cursor, "January 2, 2006"))
 		ui.Row(c).Height(t.Space(4)).Margin(0, 0, t.Space(2), 0).Children(func() {
-			for _, label := range []string{"Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"} {
+			for col := range 7 {
+				label := words.Weekdays[(int(words.firstWeekday())+col)%7]
 				Text(c, label).Width(t.Space(8)).TextAlign(ui.Center).TextColor(t.TextMuted).Role(ui.RoleColumnHeader)
 			}
 		})
-		start := month.AddDate(0, 0, -((int(month.Weekday()) + 6) % 7))
+		start := month.AddDate(0, 0, -((int(month.Weekday()) - int(words.firstWeekday()) + 7) % 7))
 		today := calendarDay(time.Now().In(value.Location()))
 		for week := range 6 {
 			ui.Row(c).Height(t.Space(7)).Role(ui.RoleRow).Children(func() {
@@ -194,7 +199,7 @@ func Calendar(c *ui.Context, value *time.Time) *CalendarControl {
 					if selected {
 						variant = ButtonPrimary
 					}
-					cell := Button(c, fmt.Sprint(day.Day()), variant).Size(t.Space(8), t.Space(7)).Padding(0).Label(day.Format("January 2, 2006")).Checked(selected)
+					cell := Button(c, fmt.Sprint(day.Day()), variant).Size(t.Space(8), t.Space(7)).Padding(0).Label(words.date(day, "January 2, 2006")).Checked(selected)
 					if !selected {
 						if day.Month() != month.Month() {
 							cell.TextColor(t.TextMuted)
@@ -221,13 +226,14 @@ func Calendar(c *ui.Context, value *time.Time) *CalendarControl {
 }
 
 func calendarPeriodGrid(c *ui.Context, out *CalendarControl, st *calendarState, value time.Time) {
+	words := localized(c)
 	t := c.Theme()
 	view := st.view
 	year := st.cursor.Year()
 	start := calendarYearStart(year)
-	out.Label("Month selection").Value(st.cursor.Format("January 2006"))
+	out.Label(words.MonthSelection).Value(words.date(st.cursor, "January 2006"))
 	if view == calendarYears {
-		out.Label("Year selection").Value(fmt.Sprint(year))
+		out.Label(words.YearSelection).Value(fmt.Sprint(year))
 	}
 	// Keep identities distinct when switching between month and year grids.
 	ui.Column(c).Key(fmt.Sprint(view)).FillWidth().Grow(1).Gap(t.Space(1)).Children(func() {
@@ -236,7 +242,7 @@ func calendarPeriodGrid(c *ui.Context, out *CalendarControl, st *calendarState, 
 				for col := range 3 {
 					index := row*3 + col
 					target := calendarMonth(st.cursor, index+1-int(st.cursor.Month()))
-					label, text := target.Format("January 2006"), target.Format("Jan")
+					label, text := words.date(target, "January 2006"), words.date(target, "Jan")
 					selected := value.Year() == year && int(value.Month()) == index+1
 					atCursor := int(st.cursor.Month()) == index+1
 					if view == calendarYears {
@@ -275,6 +281,7 @@ func calendarPeriodGrid(c *ui.Context, out *CalendarControl, st *calendarState, 
 // preserves its time of day and location. Changed excludes opening/navigation.
 // Key or disable a parent before construction; Label names the trigger.
 func CalendarPicker(c *ui.Context, value *time.Time) *CalendarControl {
+	words := localized(c)
 	if value == nil {
 		panic("components.CalendarPicker: nil date")
 	}
@@ -297,8 +304,8 @@ func CalendarPicker(c *ui.Context, value *time.Time) *CalendarControl {
 		}
 	})
 	out.Children(func() {
-		Text(c, value.Format("2006-01-02")).SingleLine().FontFeatures("tnum")
+		Text(c, words.date(*value, "2006-01-02")).SingleLine().FontFeatures("tnum")
 	})
-	out.Expanded(*open).Value(value.Format("2006-01-02"))
+	out.Expanded(*open).Value(words.date(*value, "2006-01-02"))
 	return out
 }

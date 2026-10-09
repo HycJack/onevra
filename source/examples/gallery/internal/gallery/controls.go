@@ -126,6 +126,10 @@ func (g *Gallery) controlState(name, variant string) *controlState {
 }
 
 func (g *Gallery) Controls(c *ui.Context, example controlExample) {
+	g.withLanguage(c, func() { g.controlsLocalized(c, example) })
+}
+
+func (g *Gallery) controlsLocalized(c *ui.Context, example controlExample) {
 	t := c.Theme()
 	components.ScrollView(c, components.ScrollViewOptions{}).Key("controls-" + example.name).Fill().Children(func() {
 		ui.Column(c).FillWidth().MinWidth(0).Padding(t.Space(6)).Gap(t.Space(6)).Children(func() {
@@ -172,7 +176,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 			components.Text(c, example.name).Bold().TextColor(t.Text)
 			for _, variant := range example.variants {
 				ui.Column(c).Key(variant).FillWidth().MinWidth(0).Gap(12).Children(func() {
-					components.Text(c, variant).TextColor(t.TextMuted)
+					components.Text(c, tr(c, variant)).TextColor(t.TextMuted)
 					example.build(c, g.controlState(example.name, variant), variant)
 				})
 			}
@@ -191,7 +195,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 				}
 				cell.Children(func() {
 					if len(example.variants) > 1 {
-						components.Text(c, variant).TextColor(t.TextMuted)
+						components.Text(c, tr(c, variant)).TextColor(t.TextMuted)
 					}
 					example.build(c, g.controlState(example.name, variant), variant)
 				})

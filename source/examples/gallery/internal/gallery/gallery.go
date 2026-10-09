@@ -17,6 +17,8 @@ type Gallery struct {
 	welcome         welcomeState
 	tray            trayDemo
 	dock            dockDemo
+	language        *translator
+	systemLanguage  string
 	config          Config
 	configPath      string
 	Clicks          int
@@ -39,12 +41,17 @@ func (g *Gallery) New() *sidebar.Shell {
 		Left: g.Left, Content: g.View, LeftToolbar: g.LeftToolbar,
 		ContentTitle: g.Titlebar,
 	})
+	g.updateLanguageWindows()
 	g.Shell.SetPage(g.WelcomePage)
 	g.Shell.Window().OnClosed(g.Close)
 	return g.Shell
 }
 
 func (g *Gallery) Titlebar(c *ui.Context) {
+	g.withLanguage(c, func() { g.titlebarLocalized(c) })
+}
+
+func (g *Gallery) titlebarLocalized(c *ui.Context) {
 	title := "Shell"
 	if g.page == welcomePage {
 		title = "Welcome"
@@ -62,15 +69,19 @@ func (g *Gallery) Titlebar(c *ui.Context) {
 		title = "Desktop / Dock menu"
 	}
 	if example, ok := mygoExampleFor(g.page); ok {
-		title = example.group + " / " + example.name
+		title = tr(c, example.group) + " / " + example.name
 	}
 	if example, ok := controlExampleFor(g.page); ok {
-		title = example.group + " / " + example.name
+		title = tr(c, example.group) + " / " + example.name
 	}
-	components.Text(c, title).Bold().SingleLine()
+	components.Text(c, tr(c, title)).Bold().SingleLine()
 }
 
 func (g *Gallery) Left(c *ui.Context) {
+	g.withLanguage(c, func() { g.leftLocalized(c) })
+}
+
+func (g *Gallery) leftLocalized(c *ui.Context) {
 	ui.Column(c).Fill().Padding(sidebar.HeaderHeight(c), 0, 0, 0).Children(func() { g.navigation(c) })
 }
 
@@ -78,13 +89,13 @@ func (g *Gallery) navigation(c *ui.Context) {
 	t := c.Theme()
 	ui.Column(c).FillWidth().Shrink(0).Padding(0, t.Space(3), t.Space(2), t.Space(3)).Children(func() {
 		components.TextBox(c, &g.navigationQuery, components.TextBoxOptions{LeadingIcon: lucide.Search()}).
-			Label("Search components").Placeholder("Search components…").FillWidth().MinWidth(0)
+			Label(tr(c, "gallery.search_components")).Placeholder(tr(c, "gallery.search_components_2")).FillWidth().MinWidth(0)
 	})
-	groups := filteredNavigation(g.navigationQuery)
+	groups := filteredNavigation(g.navigationQuery, g.text)
 	components.ScrollView(c, components.ScrollViewOptions{}).Fill().Children(func() {
 		components.Sidebar(c).Children(func() {
 			for _, group := range groups {
-				components.SidebarSection(c, group.label, func() {
+				components.SidebarSection(c, tr(c, group.label), func() {
 					for _, entry := range group.entries {
 						icon := lucide.Component()
 						switch entry.page {
@@ -98,24 +109,28 @@ func (g *Gallery) navigation(c *ui.Context) {
 				})
 			}
 			if len(groups) == 0 {
-				components.Text(c, "No matching components.").TextColor(t.TextMuted).Wrap()
+				components.Text(c, tr(c, "gallery.no_matching_components")).TextColor(t.TextMuted).Wrap()
 			}
 		})
 	})
 }
 
 func (g *Gallery) LeftToolbar(c *ui.Context) {
-	sidebar.IconButton(c, themeIcon(), "Theme").Menu(g.themeMenu)
+	g.withLanguage(c, func() { g.leftToolbarLocalized(c) })
+}
+
+func (g *Gallery) leftToolbarLocalized(c *ui.Context) {
+	sidebar.IconButton(c, themeIcon(), tr(c, "gallery.theme")).Menu(g.themeMenu)
 	ui.Spacer(c)
-	if sidebar.IconButton(c, lucide.Settings(), "Settings").Clicked() {
+	if sidebar.IconButton(c, lucide.Settings(), tr(c, "gallery.settings")).Clicked() {
 		g.settings.open = true
 	}
 }
 
 // iconSamples uses only named accessors, not a full-library runtime registry.
 func iconSamples(c *ui.Context) {
-	components.Text(c, "Lucide icons").Bold()
-	components.Text(c, "Original strokes at 16, 24 and 32 DIP; colors inherit from MyGo.").Wrap()
+	components.Text(c, tr(c, "gallery.lucide_icons")).Bold()
+	components.Text(c, tr(c, "gallery.original_strokes_at_16_24_and_32_dip_colors_inherit_from_mygo")).Wrap()
 	for _, sample := range []struct {
 		name string
 		get  func() *ui.SVG
@@ -127,7 +142,7 @@ func iconSamples(c *ui.Context) {
 		{"Accessibility", lucide.Accessibility},
 	} {
 		ui.Column(c).Gap(4).Children(func() {
-			components.Text(c, sample.name)
+			components.Text(c, tr(c, sample.name))
 			ui.Row(c).Gap(12).Children(func() {
 				for _, size := range []float32{16, 24, 32} {
 					components.Icon(c, sample.get).Size(size, size)
@@ -138,12 +153,16 @@ func iconSamples(c *ui.Context) {
 	ui.Row(c).Gap(12).TextColor(c.Theme().TextMuted).Children(func() {
 		components.Icon(c, lucide.Sun)
 		components.Icon(c, lucide.Moon)
-		components.Text(c, "Inherited muted color")
+		components.Text(c, tr(c, "gallery.inherited_muted_color"))
 	})
 }
 
 // View builds the default page's main content.
 func (g *Gallery) View(c *ui.Context) {
+	g.withLanguage(c, func() { g.viewLocalized(c) })
+}
+
+func (g *Gallery) viewLocalized(c *ui.Context) {
 	var content ui.Element
 	_, control := controlExampleFor(g.page)
 	example, upstream := mygoExampleFor(g.page)
@@ -192,12 +211,12 @@ func (g *Gallery) body(c *ui.Context) {
 	t := c.Theme()
 	components.ScrollView(c, components.ScrollViewOptions{}).Fill().Children(func() {
 		ui.Column(c).FillWidth().Padding(t.Space(6)).Gap(t.Space(4)).Children(func() {
-			components.Text(c, "A sidebar and content, one native window.").TextColor(t.TextMuted).Wrap()
-			components.Text(c, "Toggle or resize the sidebar inside the window. Double-click its separator to restore the default width. Open Settings in a dialog without leaving this page.").Wrap()
-			if components.Button(c, "Count", components.ButtonSecondary).Clicked() {
+			components.Text(c, tr(c, "gallery.a_sidebar_and_content_one_native_window")).TextColor(t.TextMuted).Wrap()
+			components.Text(c, tr(c, "gallery.toggle_or_resize_the_sidebar_inside_the_window_double_click_its_separa")).Wrap()
+			if components.Button(c, tr(c, "gallery.count"), components.ButtonSecondary).Clicked() {
 				g.Clicks++
 			}
-			components.Text(c, fmt.Sprintf("Clicks: %d", g.Clicks))
+			components.Text(c, fmt.Sprintf(tr(c, "gallery.clicks_d"), g.Clicks))
 			iconSamples(c)
 		})
 	})

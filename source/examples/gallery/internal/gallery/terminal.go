@@ -65,12 +65,12 @@ func newShellTerminal() (*terminal.Terminal, error) {
 func exampleTerminal(c *ui.Context, s *demoState) {
 	term, loading, err := s.terminal.snapshot()
 	if loading {
-		components.Spinner(c, components.SpinnerSpokes).Label("Loading terminal")
+		components.Spinner(c, components.SpinnerSpokes).Label(tr(c, "gallery.loading_terminal"))
 		c.After(50 * time.Millisecond)
 		return
 	}
 	if err != nil {
-		components.Text(c, "Terminal unavailable").Bold()
+		components.Text(c, tr(c, "gallery.terminal_unavailable")).Bold()
 		components.Text(c, err.Error()).TextColor(c.Theme().Danger).Wrap()
 		return
 	}

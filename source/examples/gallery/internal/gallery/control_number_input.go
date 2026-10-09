@@ -14,5 +14,5 @@ func controlNumberInput(c *ui.Context, s *controlState, variant string) {
 	if variant == "Scrub" {
 		options.LeadingText = "X"
 	}
-	components.NumberInput(c, &s.value, -100, 100, step, options).Label("Quantity").FillWidth()
+	components.NumberInput(c, &s.value, -100, 100, step, options).Label(tr(c, "gallery.quantity")).FillWidth()
 }

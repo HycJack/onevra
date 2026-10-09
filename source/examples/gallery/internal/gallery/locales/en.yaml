@@ -1,0 +1,840 @@
+gallery.0f:
+  other: '%.0f%%'
+gallery.0f_0f:
+  other: '%.0f – %.0f'
+gallery.12:
+  other: "12"
+gallery.a_collection_of_native_components_ready_to_explore:
+  other: A collection of native components, ready to explore.
+gallery.a_few_familiar_pieces_brought_together_go_ahead_make_them_yours:
+  other: A few familiar pieces, brought together. Go ahead, make them yours.
+gallery.a_fresh_start_in_a_few_small_steps:
+  other: A fresh start, in a few small steps.
+gallery.a_heading:
+  other: A heading
+gallery.a_helpful_description_of_this_action:
+  other: A helpful description of this action
+gallery.a_note_is_shared_with_you:
+  other: A note is shared with you.
+gallery.a_page_in_a_dialog:
+  other: A page in a dialog
+gallery.a_quieter_corner_just_for_you:
+  other: A quieter corner, just for you.
+gallery.a_sidebar_and_content_one_native_window:
+  other: A sidebar and content, one native window.
+gallery.a_single_line_label:
+  other: A single-line label
+gallery.a_small_mark_a_big_personality:
+  other: A small mark. A big personality.
+gallery.a_small_window_opened_from_the_tray:
+  other: A small window, opened from the tray.
+gallery.about:
+  other: About
+gallery.above:
+  other: Above
+gallery.accent:
+  other: Accent
+gallery.accessibility:
+  other: Accessibility
+gallery.account:
+  other: Account
+gallery.account_security:
+  other: Account & security
+gallery.actions:
+  other: Actions
+gallery.adjust_s:
+  other: Adjust %s
+gallery.an_inline_action:
+  other: an inline action
+gallery.another_layer:
+  other: Another layer
+gallery.appearance:
+  other: Appearance
+gallery.appindicator_supports_menus_only_choose_open_notes_from_the_tray_menu:
+  other: AppIndicator supports menus only. Choose Open notes from the tray menu.
+gallery.application:
+  other: APPLICATION
+gallery.applies_immediately_and_follows_the_toolbar_theme_menu:
+  other: Applies immediately and follows the toolbar theme menu.
+gallery.applies_immediately_system_menus_keep_their_current_language:
+  other: Applies immediately. System menus keep their current language.
+gallery.apply:
+  other: Apply
+gallery.apply_change:
+  other: Apply change?
+gallery.apply_these_settings:
+  other: Apply these settings?
+gallery.ask_for_confirmation:
+  other: Ask for confirmation
+gallery.author_avatar:
+  other: Author avatar
+gallery.author_avatar_s:
+  other: Author avatar — %s
+gallery.awaiting_review:
+  other: Awaiting review
+gallery.back_in_the_mix:
+  other: Back in the mix.
+gallery.below:
+  other: Below
+gallery.blue:
+  other: Blue
+gallery.bold:
+  other: Bold
+gallery.bold_text:
+  other: bold text
+gallery.both:
+  other: Both
+gallery.bottom_pane:
+  other: Bottom pane
+gallery.box:
+  other: Box
+gallery.brightness_percent:
+  other: Brightness percent
+gallery.buffer_text_areas:
+  other: Buffer text areas
+gallery.buffer_text_boxes:
+  other: Buffer text boxes
+gallery.built_with_mygo:
+  other: Built with MyGo
+gallery.built_with_onevra:
+  other: Built with Onevra
+gallery.built_with_onevra_powered_by_mygo_written_in_go:
+  other: Built with Onevra · Powered by MyGo · Written in Go
+gallery.bullet:
+  other: •
+gallery.buttons:
+  other: Buttons
+gallery.cancel:
+  other: Cancel
+gallery.cancelled:
+  other: Cancelled
+gallery.card_d:
+  other: Card %d
+gallery.cell_d:
+  other: Cell %d
+gallery.checked:
+  other: Checked
+gallery.choose_a_value:
+  other: Choose a value
+gallery.choose_an_ancestor:
+  other: Choose an ancestor
+gallery.choose_month:
+  other: Choose month
+gallery.choose_size:
+  other: Choose size
+gallery.choose_time:
+  other: Choose time
+gallery.choose_year:
+  other: Choose year
+gallery.chosen_s:
+  other: 'Chosen: %s'
+gallery.clear:
+  other: Clear
+gallery.clear_glass_style:
+  other: Clear
+gallery.clicks_d:
+  other: 'Clicks: %d'
+gallery.close:
+  other: Close
+gallery.close_settings:
+  other: Close settings
+gallery.close_window:
+  other: Close window
+gallery.cloud_rain:
+  other: Cloud rain
+gallery.collapsed:
+  other: Collapsed
+gallery.collections:
+  other: Collections
+gallery.color:
+  other: Color
+gallery.color_format:
+  other: Color format
+gallery.column_d:
+  other: Column %d
+gallery.combine:
+  other: 'Combine '
+gallery.component_status:
+  other: Component status
+gallery.components:
+  other: Components
+gallery.confirmation:
+  other: Confirmation
+gallery.confirmed:
+  other: Confirmed
+gallery.confirmed_d:
+  other: 'Confirmed: %d'
+gallery.contain:
+  other: Contain
+gallery.containers:
+  other: Containers
+gallery.copies:
+  other: Copies
+gallery.copies_0f:
+  other: 'Copies: %.0f'
+gallery.copy_color:
+  other: Copy color
+gallery.count:
+  other: Count
+gallery.count_d:
+  other: 'Count: %d'
+gallery.count_increased:
+  other: Count increased
+gallery.cover:
+  other: Cover
+gallery.create_preview:
+  other: Create preview
+gallery.d_5:
+  other: '%d / 5'
+gallery.d_kb:
+  other: '%d KB'
+gallery.d_of_5_stars:
+  other: '%d of 5 stars'
+gallery.dark:
+  other: Dark
+gallery.date:
+  other: Date
+gallery.day:
+  other: Day
+gallery.decimal:
+  other: Decimal
+gallery.default:
+  other: Default
+gallery.desktop:
+  other: Desktop
+gallery.desktop_dock_menu:
+  other: Desktop / Dock menu
+gallery.desktop_tray:
+  other: Desktop / Tray
+gallery.details:
+  other: Details
+gallery.dialog:
+  other: Dialog
+gallery.disable_dock_menu:
+  other: Disable Dock menu
+gallery.disable_tray:
+  other: Disable tray
+gallery.disabled:
+  other: Disabled
+gallery.divider:
+  other: Divider
+gallery.dock_menu:
+  other: Dock menu
+gallery.dock_menus_are_available_only_on_macos_use_desktop_tray_for_a_tray_men:
+  other: Dock menus are available only on macOS. Use Desktop / Tray for a tray menu on this platform.
+gallery.documents:
+  other: Documents
+gallery.done:
+  other: Done
+gallery.drag_the_glass_over_the_avatar:
+  other: Drag the glass over the avatar
+gallery.draggable_glass:
+  other: Draggable glass
+gallery.edit_name:
+  other: Edit name
+gallery.editable:
+  other: Editable
+gallery.editable_name:
+  other: Editable name
+gallery.editable_text:
+  other: Editable text
+gallery.email:
+  other: Email
+gallery.empty:
+  other: Empty
+gallery.enable_dock_menu:
+  other: Enable Dock menu
+gallery.enable_notifications:
+  other: Enable notifications
+gallery.enable_the_menu_then_right_click_gallery_s_dock_icon_show_gallery_open:
+  other: Enable the menu, then right-click Gallery's Dock icon. Show Gallery, Open Welcome and Open Settings appear above the standard macOS actions.
+gallery.enable_tray:
+  other: Enable tray
+gallery.enabled:
+  other: Enabled
+gallery.end:
+  other: End
+gallery.enter_a_name:
+  other: Enter a name
+gallery.enter_gallery:
+  other: Enter gallery
+gallery.escape_closing_the_notes_window_or_clicking_away_hides_it_notes_stay_i:
+  other: Escape, closing the notes window or clicking away hides it. Notes stay in memory; closing Gallery removes the tray.
+gallery.expanded:
+  other: Expanded
+gallery.explore_lucide:
+  other: Explore Lucide
+gallery.file:
+  other: File
+gallery.file_d:
+  other: File %d
+gallery.files:
+  other: Files
+gallery.filled:
+  other: Filled
+gallery.find_your_balance:
+  other: Find your balance
+gallery.fingerprint:
+  other: Fingerprint
+gallery.first:
+  other: First
+gallery.focus:
+  other: Focus
+gallery.focus_intensity:
+  other: Focus intensity
+gallery.follow_system:
+  other: Follow system
+gallery.gallery_tray_notes:
+  other: Gallery Tray notes
+gallery.general:
+  other: General
+gallery.ghost:
+  other: Ghost
+gallery.give_it_a_name:
+  other: Give it a name
+gallery.glass_canvas:
+  other: Glass canvas
+gallery.grayscale:
+  other: Grayscale
+gallery.green:
+  other: Green
+gallery.grid:
+  other: Grid
+gallery.grid_items:
+  other: Grid items
+gallery.grid_view_selected:
+  other: Grid view selected
+gallery.hello_world:
+  other: "Hello, world. 你好，世界。こんにちは \U0001F30D"
+gallery.hex_color:
+  other: Hex color
+gallery.hide:
+  other: Hide
+gallery.home:
+  other: Home
+gallery.horizontal:
+  other: Horizontal
+gallery.hours:
+  other: Hours
+gallery.hover_or_focus_me:
+  other: Hover or focus me
+gallery.hue:
+  other: Hue
+gallery.hue_degrees:
+  other: Hue degrees
+gallery.icon_grid:
+  other: Icon grid
+gallery.icon_library:
+  other: Icon library
+gallery.icon_library_lucide:
+  other: Icon library / Lucide
+gallery.icons:
+  other: Icons
+gallery.images:
+  other: Images
+gallery.important_workspace_settings_are_updated:
+  other: Important workspace settings are updated.
+gallery.in_app:
+  other: In-app
+gallery.in_the_zone:
+  other: In the zone
+gallery.include_a_little_inspiration:
+  other: Include a little inspiration
+gallery.indeterminate:
+  other: Indeterminate
+gallery.indeterminate_progress:
+  other: Indeterminate progress
+gallery.inherited_muted_color:
+  other: Inherited muted color
+gallery.inline:
+  other: 'Inline '
+gallery.inline_action:
+  other: inline action
+gallery.insets:
+  other: Insets
+gallery.integer:
+  other: Integer
+gallery.intensity:
+  other: Intensity
+gallery.italic:
+  other: Italic
+gallery.item_d:
+  other: Item %d
+gallery.items:
+  other: Items
+gallery.just_a_demo_your_ideas_stay_here:
+  other: Just a demo. Your ideas stay here.
+gallery.kept_in_memory_until_you_quit_escape_hides_this_window:
+  other: Kept in memory until you quit. Escape hides this window.
+gallery.kind:
+  other: Kind
+gallery.language:
+  other: Language
+gallery.language_preference:
+  other: Language preference
+gallery.large:
+  other: Large
+gallery.large_project:
+  other: Large project
+gallery.layout:
+  other: Layout
+gallery.left_arrow:
+  other: Left arrow
+gallery.left_click:
+  other: Left-click
+gallery.left_click_the_tray_icon_to_toggle_the_notes_window_right_click_for_it:
+  other: Left-click the tray icon to toggle the notes window. Right-click for its native menu.
+gallery.left_pane:
+  other: Left pane
+gallery.less_noise_a_little_more_flow:
+  other: Less noise. A little more flow.
+gallery.light:
+  other: Light
+gallery.lightness_percent:
+  other: Lightness percent
+gallery.line_d:
+  other: Line %d
+gallery.link:
+  other: Link
+gallery.liquid_glass:
+  other: Liquid Glass
+gallery.list:
+  other: List
+gallery.list_view_selected:
+  other: List view selected
+gallery.loading:
+  other: Loading
+gallery.loading_terminal:
+  other: Loading terminal
+gallery.locations:
+  other: Locations
+gallery.long_text_wraps_within_the_available_width_including_in_narrow_windows:
+  other: Long text wraps within the available width, including in narrow windows.
+gallery.lucide_icons:
+  other: Lucide icons
+gallery.major_lines:
+  other: Major lines
+gallery.make_space_for:
+  other: Make space for
+gallery.maximize_window:
+  other: Maximize window
+gallery.maximum:
+  other: maximum
+gallery.media_text:
+  other: Media & text
+gallery.medium:
+  other: Medium
+gallery.meet_the_lucide_icon_collection:
+  other: Meet the Lucide icon collection.
+gallery.member_removed:
+  other: Member removed
+gallery.mentions:
+  other: Mentions
+gallery.menus:
+  other: Menus
+gallery.messages_notes:
+  other: Messages & notes
+gallery.minimize_window:
+  other: Minimize window
+gallery.minimum:
+  other: minimum
+gallery.minutes:
+  other: Minutes
+gallery.mixed:
+  other: Mixed
+gallery.month_selection:
+  other: Month selection
+gallery.name:
+  other: Name
+gallery.navigation:
+  other: Navigation
+gallery.new:
+  other: New
+gallery.new_sign_in:
+  other: New sign-in
+gallery.new_team_member_joined:
+  other: New team member joined
+gallery.next_month:
+  other: Next month
+gallery.next_year:
+  other: Next year
+gallery.next_years:
+  other: Next years
+gallery.no_action_yet:
+  other: No action yet
+gallery.no_matching_components:
+  other: No matching components.
+gallery.no_matching_settings_try_another_search:
+  other: No matching settings. Try another search.
+gallery.no_matching_sizes:
+  other: No matching sizes
+gallery.not_needed:
+  other: Not needed
+gallery.note:
+  other: Note
+gallery.notes:
+  other: Notes
+gallery.notice:
+  other: Notice
+gallery.notifications:
+  other: Notifications
+gallery.off:
+  other: "Off"
+gallery.ok:
+  other: OK
+gallery.on:
+  other: "On"
+gallery.onevra_gallery:
+  other: Onevra Gallery
+gallery.onevra_mygo:
+  other: Onevra × MyGo
+gallery.opacity:
+  other: Opacity
+gallery.opacity_percent:
+  other: Opacity percent
+gallery.open_another_layer:
+  other: Open another layer
+gallery.open_another_layer_or_click_the_backdrop_to_go_back_one_layer:
+  other: Open another layer, or click the backdrop to go back one layer.
+gallery.open_dialog:
+  other: Open dialog
+gallery.open_notes:
+  other: Open notes
+gallery.original_strokes_at_16_24_and_32_dip_colors_inherit_from_mygo:
+  other: Original strokes at 16, 24 and 32 DIP; colors inherit from MyGo.
+gallery.outline:
+  other: Outline
+gallery.outlined:
+  other: Outlined
+gallery.overlays:
+  other: Overlays
+gallery.overview:
+  other: Overview
+gallery.password_changed:
+  other: Password changed
+gallery.path:
+  other: Path
+gallery.pause_mobile_alerts_while_you_re_active_on_desktop:
+  other: Pause mobile alerts while you’re active on desktop.
+gallery.personal:
+  other: PERSONAL
+gallery.personal_2:
+  other: Personal
+gallery.play:
+  other: Play
+gallery.plugins:
+  other: Plugins
+gallery.popover_content:
+  other: Popover content
+gallery.preferences:
+  other: Preferences
+gallery.preview_category:
+  other: Preview category
+gallery.preview_intensity:
+  other: Preview intensity
+gallery.preview_name:
+  other: Preview name
+gallery.previous_month:
+  other: Previous month
+gallery.previous_year:
+  other: Previous year
+gallery.previous_years:
+  other: Previous years
+gallery.primary:
+  other: Primary
+gallery.progress:
+  other: Progress
+gallery.progress_value:
+  other: Progress value
+gallery.project:
+  other: Project
+gallery.project_outline:
+  other: Project outline
+gallery.project_table:
+  other: Project table
+gallery.protected:
+  other: Protected
+gallery.quality:
+  other: Quality
+gallery.quality_0f:
+  other: 'Quality: %.0f'
+gallery.quantity:
+  other: Quantity
+gallery.quantity_0f:
+  other: 'Quantity: %.0f'
+gallery.quiet_mode:
+  other: Quiet mode
+gallery.quit:
+  other: Quit
+gallery.range:
+  other: Range
+gallery.rated:
+  other: Rated
+gallery.rating:
+  other: Rating
+gallery.read_only:
+  other: Read only
+gallery.ready_to_explore_s:
+  other: 'Ready to explore: %s'
+gallery.red:
+  other: Red
+gallery.regular:
+  other: Regular
+gallery.relax:
+  other: Relax
+gallery.replaced_by_onevra:
+  other: Replaced by Onevra
+gallery.reset_position:
+  other: Reset position
+gallery.resize_sidebar:
+  other: Resize sidebar
+gallery.restore_window:
+  other: Restore window
+gallery.right_arrow:
+  other: Right arrow
+gallery.right_click:
+  other: Right-click
+gallery.right_click_here:
+  other: Right-click here
+gallery.right_pane:
+  other: Right pane
+gallery.ring:
+  other: Ring
+gallery.role_or_permission_changed:
+  other: Role or permission changed
+gallery.room_to_breathe:
+  other: Room to breathe
+gallery.rounded:
+  other: Rounded
+gallery.row_d:
+  other: Row %d
+gallery.row_d_name_status_updated:
+  other: Row %d — Name                         Status                         Updated
+gallery.s_activity:
+  other: '%s activity'
+gallery.s_color:
+  other: '%s color'
+gallery.s_completion:
+  other: '%s completion'
+gallery.s_d:
+  other: '%s: %d'
+gallery.s_decrease:
+  other: '%s Decrease'
+gallery.s_delivery:
+  other: '%s delivery'
+gallery.s_divider:
+  other: '%s divider'
+gallery.s_increase:
+  other: '%s Increase'
+gallery.s_loading:
+  other: '%s loading'
+gallery.s_value:
+  other: '%s value'
+gallery.saturation_and_brightness:
+  other: Saturation and brightness
+gallery.saturation_percent:
+  other: Saturation percent
+gallery.saved:
+  other: Saved
+gallery.scroll_views:
+  other: Scroll views
+gallery.scrub:
+  other: Scrub
+gallery.search:
+  other: Search
+gallery.search_2:
+  other: Search…
+gallery.search_components:
+  other: Search components
+gallery.search_components_2:
+  other: Search components…
+gallery.search_results:
+  other: Search results
+gallery.search_samples:
+  other: Search samples
+gallery.search_settings:
+  other: Search settings
+gallery.search_settings_2:
+  other: Search settings…
+gallery.search_sizes:
+  other: Search sizes
+gallery.search_sizes_2:
+  other: Search sizes…
+gallery.searchable:
+  other: Searchable
+gallery.second:
+  other: Second
+gallery.secondary:
+  other: Secondary
+gallery.secondary_text:
+  other: Secondary text
+gallery.security_alert:
+  other: Security alert
+gallery.selected:
+  other: Selected
+gallery.selected_item_d:
+  other: 'Selected item: %d'
+gallery.selected_s:
+  other: 'Selected: %s'
+gallery.selection_values:
+  other: Selection & values
+gallery.selects:
+  other: Selects
+gallery.settings:
+  other: Settings
+gallery.settings_category:
+  other: Settings category
+gallery.shared_notes:
+  other: Shared notes
+gallery.show_popover:
+  other: Show popover
+gallery.show_s:
+  other: Show %s
+gallery.show_toast:
+  other: Show toast
+gallery.show_undo_toast:
+  other: Show undo toast
+gallery.size:
+  other: Size
+gallery.size_options:
+  other: Size options
+gallery.sliders:
+  other: Sliders
+gallery.small:
+  other: Small
+gallery.small_components_real_possibilities:
+  other: Small components. Real possibilities.
+gallery.smart_notifications:
+  other: Smart notifications
+gallery.someone_is_removed_from_the_workspace:
+  other: Someone is removed from the workspace.
+gallery.someone_joins_the_workspace:
+  other: Someone joins the workspace.
+gallery.someone_mentions_you_in_a_conversation:
+  other: Someone mentions you in a conversation.
+gallery.something_wonderful:
+  other: Something wonderful…
+gallery.sound:
+  other: Sound
+gallery.split_panes:
+  other: Split panes
+gallery.spokes:
+  other: Spokes
+gallery.start:
+  other: Start
+gallery.status:
+  other: Status
+gallery.step:
+  other: Step
+gallery.stepped_range:
+  other: Stepped range
+gallery.still_using_mygo:
+  other: Still using MyGo
+gallery.stretch:
+  other: Stretch
+gallery.style:
+  other: Style
+gallery.styled:
+  other: 'Styled '
+gallery.system:
+  other: System
+gallery.tags:
+  other: Tags
+gallery.template_preview_changes_stay_in_this_session_no_notifications_are_sen:
+  other: Template preview · Changes stay in this session; no notifications are sent.
+gallery.terminal_unavailable:
+  other: Terminal unavailable
+gallery.text_and_an:
+  other: 'text and an '
+gallery.text_areas:
+  other: Text areas
+gallery.text_boxes:
+  other: Text boxes
+gallery.text_input:
+  other: Text input
+gallery.the_menu_stays_available_when_you_navigate_away_disable_it_here_or_clo:
+  other: The menu stays available when you navigate away. Disable it here or close Gallery to remove the demonstration items.
+gallery.the_page_underneath_stays_open:
+  other: The page underneath stays open.
+gallery.theme:
+  other: Theme
+gallery.theme_preference:
+  other: Theme preference
+gallery.this_dialog_returns_your_choice:
+  other: This dialog returns your choice.
+gallery.time:
+  other: Time
+gallery.tint:
+  other: Tint
+gallery.tinted:
+  other: Tinted
+gallery.today:
+  other: Today
+gallery.toggle_or_resize_the_sidebar_inside_the_window_double_click_its_separa:
+  other: Toggle or resize the sidebar inside the window. Double-click its separator to restore the default width. Open Settings in a dialog without leaving this page.
+gallery.toggle_sidebar:
+  other: Toggle sidebar
+gallery.top_pane:
+  other: Top pane
+gallery.tray:
+  other: Tray
+gallery.tray_notes:
+  other: Tray notes
+gallery.tray_unavailable_s:
+  other: 'Tray unavailable: %s'
+gallery.unable_to_load_avatar_jpeg:
+  other: Unable to load avatar.jpeg
+gallery.unchecked:
+  other: Unchecked
+gallery.undo:
+  other: Undo
+gallery.uniform:
+  other: Uniform
+gallery.unrated:
+  other: Unrated
+gallery.unusual_activity_or_important_security_updates:
+  other: Unusual activity or important security updates.
+gallery.use_mygo_directly:
+  other: Use MyGo directly
+gallery.version_s:
+  other: Version %s
+gallery.vertical:
+  other: Vertical
+gallery.view_mode:
+  other: View mode
+gallery.volume:
+  other: Volume
+gallery.welcome:
+  other: Welcome
+gallery.welcome_to_onevra:
+  other: Welcome to Onevra
+gallery.with:
+  other: ' with '
+gallery.without_stepper:
+  other: Without stepper
+gallery.work:
+  other: Work
+gallery.workspace_settings_changed:
+  other: Workspace settings changed
+gallery.workspace_updates:
+  other: Workspace updates
+gallery.wrap_as_one_paragraph_clicks_d:
+  other: ' wrap as one paragraph. Clicks: %d'
+gallery.write_a_note:
+  other: Write a note
+gallery.write_a_quick_note:
+  other: Write a quick note…
+gallery.write_some_notes:
+  other: Write some notes
+gallery.year_selection:
+  other: Year selection
+gallery.your_access_level_changes:
+  other: Your access level changes.
+gallery.your_account_is_accessed_from_a_new_device:
+  other: Your account is accessed from a new device.
+gallery.your_name:
+  other: Your name
+gallery.your_next_idea:
+  other: Your next idea
+gallery.your_password_is_updated:
+  other: Your password is updated.

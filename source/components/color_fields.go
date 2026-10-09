@@ -12,6 +12,7 @@ type colorFieldState struct {
 }
 
 func colorField(c *ui.Context, st *colorViewState, value *ui.Color, i int, label string, set func(ui.Color, colorFormat)) {
+	words := localized(c)
 	weight := float32(1)
 	if i == 3 {
 		weight = 2
@@ -19,12 +20,12 @@ func colorField(c *ui.Context, st *colorViewState, value *ui.Color, i int, label
 	box := ui.Box(c).MinWidth(0).Grow(weight).Width(0)
 	edit := ui.Local(box, "color-field", func() colorFieldState { return colorFieldState{} })
 	box.Children(func() {
-		names := [5]string{"Red", "Green", "Blue", "Hex color", "Opacity percent"}
+		names := [5]string{words.Red, words.Green, words.Blue, words.HexColor, words.OpacityPercent}
 		if st.format == colorHSBA {
-			names[0], names[1], names[2] = "Hue degrees", "Saturation percent", "Brightness percent"
+			names[0], names[1], names[2] = words.HueDegrees, words.SaturationPercent, words.BrightnessPercent
 		}
 		if st.format == colorHSLA {
-			names[0], names[1], names[2] = "Hue degrees", "Saturation percent", "Lightness percent"
+			names[0], names[1], names[2] = words.HueDegrees, words.SaturationPercent, words.LightnessPercent
 		}
 		editor := func() ui.Element {
 			previous := st.fields[i]

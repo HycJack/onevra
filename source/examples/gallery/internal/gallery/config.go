@@ -14,7 +14,8 @@ import (
 
 // Config holds application preferences, separate from transient window state.
 type Config struct {
-	Theme mygo.ThemeSource `yaml:"theme"`
+	Theme    mygo.ThemeSource `yaml:"theme"`
+	Language string           `yaml:"language,omitempty"`
 }
 
 func validTheme(source mygo.ThemeSource) bool {
@@ -37,12 +38,18 @@ func LoadConfig(path string) (Config, error) {
 	if !validTheme(config.Theme) {
 		return fallback, fmt.Errorf("unknown theme %q", config.Theme)
 	}
+	if !validLanguage(config.Language) {
+		return Config{Theme: config.Theme}, fmt.Errorf("unknown language %q", config.Language)
+	}
 	return config, nil
 }
 
 func SaveConfig(path string, config Config) error {
 	if !validTheme(config.Theme) {
 		return fmt.Errorf("unknown theme %q", config.Theme)
+	}
+	if !validLanguage(config.Language) {
+		return fmt.Errorf("unknown language %q", config.Language)
 	}
 	return saveYAML(path, config)
 }
@@ -55,6 +62,8 @@ func (g *Gallery) Configure(path string, override mygo.ThemeSource) {
 		log.Printf("Load gallery config: %v", err)
 	}
 	g.config, g.configPath = config, path
+	g.systemLanguage = mygo.App.Locale()
+	g.applyLanguage()
 	source := config.Theme
 	if validTheme(override) {
 		source = override

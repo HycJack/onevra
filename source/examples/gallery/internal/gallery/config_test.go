@@ -57,7 +57,7 @@ func TestNativeThemeMenu(t *testing.T) {
 	previous := mygo.Theme.Source()
 	defer mygo.Theme.SetSource(previous)
 	path := filepath.Join(t.TempDir(), "config.yaml")
-	if err := SaveConfig(path, Config{Theme: mygo.ThemeDark}); err != nil {
+	if err := SaveConfig(path, Config{Theme: mygo.ThemeDark, Language: "en"}); err != nil {
 		t.Fatal(err)
 	}
 	g := &Gallery{}
@@ -108,7 +108,7 @@ func TestNativeThemeMenu(t *testing.T) {
 	if err := settingsUI.Click("Theme preference"); err != nil {
 		t.Fatal(err)
 	}
-	if err := settingsUI.Click("light"); err != nil {
+	if err := settingsUI.Click("Light"); err != nil {
 		t.Fatal(err)
 	}
 	saved, err = LoadConfig(path)

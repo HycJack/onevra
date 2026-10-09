@@ -2,6 +2,7 @@ package gallery
 
 import (
 	"bytes"
+	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
@@ -19,15 +20,23 @@ const trayPage galleryPage = componentStatusPage + 1
 // The application owns the panel, in-memory note and lifetime. All callbacks
 // run on MyGo's UI thread; hiding the panel does not discard the note.
 type trayDemo struct {
-	tray    *mygo.Tray
-	win     *mygo.Window
-	note    string
-	owner   *mygo.Window
-	offQuit func()
-	err     error
+	localize func(*ui.Context, func())
+	tray     *mygo.Tray
+	win      *mygo.Window
+	note     string
+	owner    *mygo.Window
+	offQuit  func()
+	err      error
 }
 
 func (a *trayDemo) view(c *ui.Context) {
+	if a.localize != nil {
+		a.localize(c, func() { a.localizedView(c) })
+		return
+	}
+	a.localizedView(c)
+}
+func (a *trayDemo) localizedView(c *ui.Context) {
 	theme.Apply(c, theme.Auto)
 	if c.Shortcut(0, ui.KeyEscape) || c.Shortcut(ui.Cmd, ui.KeyW) {
 		a.win.Hide()
@@ -35,19 +44,19 @@ func (a *trayDemo) view(c *ui.Context) {
 	c.OnShortcut(ui.Cmd, ui.KeyQ, mygo.App.Quit)
 	ui.Column(c).Fill().Padding(20).Gap(12).Children(func() {
 		ui.Row(c).Gap(12).Children(func() {
-			components.Text(c, "Tray notes").FontSize(22).Bold().Grow(1)
-			components.Button(c, "Hide", components.ButtonGhost).OnClick(a.win.Hide)
+			components.Text(c, tr(c, "gallery.tray_notes")).FontSize(22).Bold().Grow(1)
+			components.Button(c, tr(c, "gallery.hide"), components.ButtonGhost).OnClick(a.win.Hide)
 		})
-		components.Text(c, "A small window, opened from the tray.").TextColor(c.Theme().TextMuted)
+		components.Text(c, tr(c, "gallery.a_small_window_opened_from_the_tray")).TextColor(c.Theme().TextMuted)
 		components.TextBox(c, &a.note, components.TextBoxOptions{Multiline: true}).
-			Grow(1).Label("Note").Placeholder("Write a quick note…").AutoFocus()
+			Grow(1).Label(tr(c, "gallery.note")).Placeholder(tr(c, "gallery.write_a_quick_note")).AutoFocus()
 		ui.Row(c).Gap(8).Children(func() {
-			components.Button(c, "Clear", components.ButtonOutline).
+			components.Button(c, tr(c, "gallery.clear"), components.ButtonOutline).
 				Disabled(a.note == "").OnClick(func() { a.note = "" })
 			ui.Spacer(c)
-			components.Button(c, "Quit", components.ButtonSecondary).OnClick(mygo.App.Quit)
+			components.Button(c, tr(c, "gallery.quit"), components.ButtonSecondary).OnClick(mygo.App.Quit)
 		})
-		components.Text(c, "Kept in memory until you quit. Escape hides this window.").
+		components.Text(c, tr(c, "gallery.kept_in_memory_until_you_quit_escape_hides_this_window")).
 			FontSize(12).TextColor(c.Theme().TextMuted)
 	})
 }
@@ -182,28 +191,33 @@ func (a *trayDemo) close() {
 // Tray creates native resources only in response to an explicit action. Merely
 // navigating here, including in a headless test, never creates a status item.
 func (g *Gallery) Tray(c *ui.Context) {
+	g.withLanguage(c, func() { g.trayLocalized(c) })
+}
+
+func (g *Gallery) trayLocalized(c *ui.Context) {
 	d := &g.tray
 	components.ScrollView(c, components.ScrollViewOptions{}).Fill().Children(func() {
 		ui.Column(c).FillWidth().Padding(c.Theme().Space(6)).Gap(16).Children(func() {
-			components.Text(c, "Tray").FontSize(22).Bold()
+			components.Text(c, tr(c, "gallery.tray")).FontSize(22).Bold()
 			instructions := "Left-click the tray icon to toggle the notes window. Right-click for its native menu."
 			if runtime.GOOS == "linux" {
 				instructions = "AppIndicator supports menus only. Choose Open notes from the tray menu."
 			}
-			components.Text(c, instructions).Wrap()
-			components.Text(c, "Escape, closing the notes window or clicking away hides it. Notes stay in memory; closing Gallery removes the tray.").Wrap().TextColor(c.Theme().TextMuted)
+			components.Text(c, tr(c, instructions)).Wrap()
+			components.Text(c, tr(c, "gallery.escape_closing_the_notes_window_or_clicking_away_hides_it_notes_stay_i")).Wrap().TextColor(c.Theme().TextMuted)
 			ui.Row(c).Gap(8).Wrap().Children(func() {
 				if d.tray == nil {
-					if components.Button(c, "Enable tray", components.ButtonPrimary).Disabled(g.Shell == nil).Clicked() {
+					if components.Button(c, tr(c, "gallery.enable_tray"), components.ButtonPrimary).Disabled(g.Shell == nil).Clicked() {
 						_ = d.start(g.Shell.Window())
+						g.updateLanguageWindows()
 					}
 				} else {
-					components.Button(c, "Open notes", components.ButtonPrimary).OnClick(d.show)
-					components.Button(c, "Disable tray", components.ButtonOutline).OnClick(d.close)
+					components.Button(c, tr(c, "gallery.open_notes"), components.ButtonPrimary).OnClick(d.show)
+					components.Button(c, tr(c, "gallery.disable_tray"), components.ButtonOutline).OnClick(d.close)
 				}
 			})
 			if d.err != nil {
-				components.Text(c, "Tray unavailable: "+d.err.Error()).Wrap().TextColor(c.Theme().Danger)
+				components.Text(c, fmt.Sprintf(tr(c, "gallery.tray_unavailable_s"), d.err.Error())).Wrap().TextColor(c.Theme().Danger)
 			}
 		})
 	})

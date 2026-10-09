@@ -13,5 +13,5 @@ func controlTextBox(c *ui.Context, s *controlState, variant string) {
 		options.LeadingIcon = lucide.Search()
 		label, placeholder = "Search samples", "Search…"
 	}
-	components.TextBox(c, &s.text, options).Label(label).Placeholder(placeholder).FillWidth().MinWidth(0)
+	components.TextBox(c, &s.text, options).Label(tr(c, label)).Placeholder(tr(c, placeholder)).FillWidth().MinWidth(0)
 }

@@ -20,13 +20,13 @@ func controlMenu(c *ui.Context, s *controlState, variant string) {
 		}
 	}
 	if variant == "Right-click" {
-		components.Button(c, "Right-click here", components.ButtonOutline).ContextMenu(build)
+		components.Button(c, tr(c, "gallery.right_click_here"), components.ButtonOutline).ContextMenu(build)
 	} else {
-		components.Button(c, "Actions", components.ButtonSecondary).Menu(build)
+		components.Button(c, tr(c, "gallery.actions"), components.ButtonSecondary).Menu(build)
 	}
 	if s.index > 0 {
-		ui.Textf(c, "%s: %d", s.text, s.index)
+		ui.Textf(c, tr(c, "gallery.s_d"), s.text, s.index)
 	} else {
-		components.Text(c, "No action yet")
+		components.Text(c, tr(c, "gallery.no_action_yet"))
 	}
 }

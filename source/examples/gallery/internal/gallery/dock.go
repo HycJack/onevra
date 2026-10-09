@@ -65,20 +65,24 @@ func (g *Gallery) enableDockMenu() {
 // DockMenu demonstrates MyGo's native Dock API without changing the normal
 // application menu or replacing the operating system's standard Dock items.
 func (g *Gallery) DockMenu(c *ui.Context) {
+	g.withLanguage(c, func() { g.dockMenuLocalized(c) })
+}
+
+func (g *Gallery) dockMenuLocalized(c *ui.Context) {
 	components.ScrollView(c, components.ScrollViewOptions{}).Fill().Children(func() {
 		ui.Column(c).FillWidth().Padding(c.Theme().Space(6)).Gap(16).Children(func() {
-			components.Text(c, "Dock menu").FontSize(22).Bold()
+			components.Text(c, tr(c, "gallery.dock_menu")).FontSize(22).Bold()
 			if runtime.GOOS != "darwin" {
-				components.Text(c, "Dock menus are available only on macOS. Use Desktop / Tray for a tray menu on this platform.").Wrap()
+				components.Text(c, tr(c, "gallery.dock_menus_are_available_only_on_macos_use_desktop_tray_for_a_tray_men")).Wrap()
 				return
 			}
-			components.Text(c, "Enable the menu, then right-click Gallery's Dock icon. Show Gallery, Open Welcome and Open Settings appear above the standard macOS actions.").Wrap()
-			components.Text(c, "The menu stays available when you navigate away. Disable it here or close Gallery to remove the demonstration items.").Wrap().TextColor(c.Theme().TextMuted)
+			components.Text(c, tr(c, "gallery.enable_the_menu_then_right_click_gallery_s_dock_icon_show_gallery_open")).Wrap()
+			components.Text(c, tr(c, "gallery.the_menu_stays_available_when_you_navigate_away_disable_it_here_or_clo")).Wrap().TextColor(c.Theme().TextMuted)
 			if g.dock.menu == nil {
-				components.Button(c, "Enable Dock menu", components.ButtonPrimary).
+				components.Button(c, tr(c, "gallery.enable_dock_menu"), components.ButtonPrimary).
 					Disabled(g.Shell == nil).OnClick(g.enableDockMenu)
 			} else {
-				components.Button(c, "Disable Dock menu", components.ButtonOutline).OnClick(g.dock.close)
+				components.Button(c, tr(c, "gallery.disable_dock_menu"), components.ButtonOutline).OnClick(g.dock.close)
 			}
 		})
 	})

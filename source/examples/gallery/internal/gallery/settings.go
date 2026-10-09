@@ -1,6 +1,7 @@
 package gallery
 
 import (
+	"fmt"
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/components"
@@ -40,6 +41,10 @@ func (s *settingsState) initialize() {
 
 // Settings hosts the public settings surface in an application-owned dialog.
 func (g *Gallery) Settings(c *ui.Context) {
+	g.withLanguage(c, func() { g.settingsLocalized(c) })
+}
+
+func (g *Gallery) settingsLocalized(c *ui.Context) {
 	if !g.settings.open {
 		return
 	}
@@ -48,12 +53,12 @@ func (g *Gallery) Settings(c *ui.Context) {
 	w, h := c.Size()
 	inset := sidebar.HeaderHeight(c)
 	width := min(t.Space(200), w*.88, max(0, w-2*inset))
-	components.Dialog(c, &g.settings.open, components.DialogOptions{Label: "Settings", Inset: inset}, func(panel ui.Element) {
+	components.Dialog(c, &g.settings.open, components.DialogOptions{Label: tr(c, "gallery.settings"), Inset: inset}, func(panel ui.Element) {
 		panel.Width(width).Height(min(t.Space(180), h*.85)).Padding(0).Gap(0).Clip()
 		components.Settings(c, &g.settings.view, g.settingsCategories(), components.SettingsOptions{
 			Narrow: width < t.Space(170),
 			HeaderActions: func(c *ui.Context) {
-				if sidebar.IconButton(c, lucide.X(), "Close settings").Clicked() {
+				if sidebar.IconButton(c, lucide.X(), tr(c, "gallery.close_settings")).Clicked() {
 					g.settings.open = false
 				}
 			},
@@ -63,36 +68,47 @@ func (g *Gallery) Settings(c *ui.Context) {
 
 func (g *Gallery) settingsCategories() []components.SettingsCategory {
 	notifications := components.SettingsCategory{
-		ID: "notifications", Title: "Notifications", Section: "PERSONAL", Icon: lucide.Bell(),
-		Description: "Template preview · Changes stay in this session; no notifications are sent.",
+		ID: "notifications", Title: g.text("gallery.notifications"), Section: g.text("gallery.personal"), Icon: lucide.Bell(),
+		Description: g.text("gallery.template_preview_changes_stay_in_this_session_no_notifications_are_sen"),
 		Groups: []components.SettingsGroup{{
 			ID: "smart",
 			Items: []components.SettingsItem{{
-				ID: "smart", Title: "Smart notifications", Description: "Pause mobile alerts while you’re active on desktop.",
-				Build: func(c *ui.Context) { components.Switch(c, &g.settings.smart, "Enabled") },
+				ID: "smart", Title: g.text("gallery.smart_notifications"), Description: g.text("gallery.pause_mobile_alerts_while_you_re_active_on_desktop"),
+				Build: func(c *ui.Context) { components.Switch(c, &g.settings.smart, g.text("gallery.enabled")) },
 			}},
 		}},
 	}
 	for i, row := range notificationRows {
-		if notifications.Groups[len(notifications.Groups)-1].Title != row.group {
-			notifications.Groups = append(notifications.Groups, components.SettingsGroup{ID: row.group, Title: row.group})
+		if notifications.Groups[len(notifications.Groups)-1].ID != row.group {
+			notifications.Groups = append(notifications.Groups, components.SettingsGroup{ID: row.group, Title: g.text(row.group)})
 		}
 		group := &notifications.Groups[len(notifications.Groups)-1]
 		group.Items = append(group.Items, components.SettingsItem{
-			ID: row.title, Title: row.title, Description: row.description,
+			ID: row.title, Title: g.text(row.title), Description: g.text(row.description),
 			Build: func(c *ui.Context) {
-				settingsSelect(c, &g.settings.channels[i], row.title+" delivery", []string{"Email", "In-app", "Off"}).Shrink(0)
+				settingsSelect(c, &g.settings.channels[i], fmt.Sprintf(g.text("gallery.s_delivery"), g.text(row.title)), []string{"Email", "In-app", "Off"}).Shrink(0)
 			},
 		})
 	}
 	return []components.SettingsCategory{
 		notifications,
-		{ID: "appearance", Title: "Appearance", Section: "APPLICATION", Icon: lucide.Palette(),
+		{ID: "general", Title: g.text("gallery.general"), Section: g.text("gallery.application"), Icon: lucide.Settings(),
+			Groups: []components.SettingsGroup{{ID: "language", Items: []components.SettingsItem{{
+				ID: "language", Title: g.text("gallery.language"), Description: g.text("gallery.applies_immediately_system_menus_keep_their_current_language"), Keywords: []string{"language", "English", "中文", g.text("gallery.follow_system")},
+				Build: func(c *ui.Context) {
+					choice := g.config.Language
+					if settingsSelect(c, &choice, g.text("gallery.language_preference"), []string{"", "en", "zh-Hans"}).Changed() {
+						g.chooseLanguage(choice)
+						c.Invalidate()
+					}
+				},
+			}}}}},
+		{ID: "appearance", Title: g.text("gallery.appearance"), Section: g.text("gallery.application"), Icon: lucide.Palette(),
 			Groups: []components.SettingsGroup{{ID: "theme", Items: []components.SettingsItem{{
-				ID: "theme", Title: "Theme", Description: "Applies immediately and follows the toolbar theme menu.", Keywords: []string{"System", "Light", "Dark"},
+				ID: "theme", Title: g.text("gallery.theme"), Description: g.text("gallery.applies_immediately_and_follows_the_toolbar_theme_menu"), Keywords: []string{"System", "Light", "Dark", g.text("gallery.system"), g.text("gallery.light"), g.text("gallery.dark")},
 				Build: func(c *ui.Context) {
 					choice := string(mygo.Theme.Source())
-					if settingsSelect(c, &choice, "Theme preference", []string{"system", "light", "dark"}).Changed() {
+					if settingsSelect(c, &choice, g.text("gallery.theme_preference"), []string{"system", "light", "dark"}).Changed() {
 						g.chooseTheme(mygo.ThemeSource(choice))
 					}
 				},
@@ -103,11 +119,30 @@ func (g *Gallery) settingsCategories() []components.SettingsCategory {
 
 func settingsSelect(c *ui.Context, value *string, label string, choices []string) ui.Element {
 	sel := components.Select(c, value)
-	sel.Trigger.Label(label).Width(c.Theme().Space(32)).Children(func() { components.Text(c, *value).SingleLine() })
+	sel.Trigger.Label(label).MinWidth(c.Theme().Space(32)).MaxWidthPercent(100).Children(func() { components.Text(c, settingChoiceLabel(c, *value)).SingleLine() })
 	sel.Popup(func(panel ui.Element) {
 		for _, choice := range choices {
-			sel.Item(choice).Label(choice).Children(func() { components.Text(c, choice) })
+			sel.Item(choice).Label(settingChoiceLabel(c, choice)).Children(func() { components.Text(c, settingChoiceLabel(c, choice)) })
 		}
 	})
 	return sel.Trigger
+}
+
+func settingChoiceLabel(c *ui.Context, choice string) string {
+	switch choice {
+	case "":
+		return tr(c, "gallery.follow_system")
+	case "en":
+		return "English"
+	case "zh-Hans":
+		return "简体中文"
+	case "system":
+		return tr(c, "gallery.system")
+	case "light":
+		return tr(c, "gallery.light")
+	case "dark":
+		return tr(c, "gallery.dark")
+	default:
+		return tr(c, choice)
+	}
 }
