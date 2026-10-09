@@ -29,6 +29,7 @@ There is one Go module under `source/`, with module path `github.com/oneo-me/one
 
 - `source/shells/`: native window presentation styles, currently `sidebar` with a replaceable sidebar-and-content page container.
 - `source/components/`: common controls built on MyGo's unstyled bases, usable independently of Shell.
+- `source/plugins/`: independent packages for complex components, currently selectable Markdown with custom code-block views; see [plugin composition](docs/architecture/components.md#plugin-composition).
 - `source/icons/lucide/`: public icon assets and upstream provenance.
 - `source/tools/`: Packer, the minimal desktop app runner/packager, and library maintenance commands such as the Lucide importer; these share the Go module but are not runtime library dependencies.
 - `source/examples/gallery/`: standalone example, with presentation, native review tests and MyGo inventory tooling under its own `internal/` directory.

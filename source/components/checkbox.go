@@ -9,7 +9,7 @@ func Checkbox(c *ui.Context, checked *bool, label string) ui.Element {
 	row := ui.CheckboxBase(c, checked).Gap(t.Space(2)).FocusRing(false)
 	on := *checked
 	row.Children(func() {
-		box := ui.Box(c).Size(t.Space(4), t.Space(4)).Radius(t.Space(1)).Shrink(0)
+		box := ui.Box(c).Size(t.Space(4), t.Space(4)).Radius(t.Space(1)).Shrink(0).PassThrough()
 		border := t.Border.Mix(t.Text, 0.25)
 		if !on && row.Hovered() {
 			border = t.Accent

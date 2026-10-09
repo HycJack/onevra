@@ -14,6 +14,16 @@ Components read the frame theme and style their own elements; they must not call
 
 For basic usage, see the [README](../../README.md#basic-usage); public contracts and defaults belong to the [API source](../../source/shells/sidebar/shell.go).
 
+## Plugin composition
+
+Complex components live in independent packages under `source/plugins/<name>/`, with their implementation, tests and package documentation kept together. Plugins may compose common controls; the common components package must not depend on plugins. MyGo plugins continue to be used directly.
+
+### Markdown
+
+[Markdown plugin](../../source/plugins/markdown/doc.go) parses CommonMark and GFM syntax into Onevra text and MyGo layout primitives. MyGo owns a single selection across the rendered document, including default code blocks. Hosts retain parsed documents between source changes and provide ordinary scrolling so offscreen paragraphs remain selectable. Raw HTML stays literal. Standalone image paragraphs display application-supplied decoded bitmaps, shrinking to fit the document width; missing images and inline images retain alternative text. Image loading and caching remain application-owned, and rendering performs no file or network I/O.
+
+Applications may replace fenced code blocks with synchronous view builders selected by language, while retaining state and asynchronous work outside rendering. Custom text participates in the surrounding selection unless its builder chooses a separate selection scope or excludes it. Applications also own link activation; the component never opens destinations automatically. See the [gallery example](../../source/examples/gallery/internal/gallery/control_markdown.go) for an interactive embedded view.
+
 ## Page container and layout
 
 The page container reserves space for system window controls and overlays a transparent draggable header with a Lucide sidebar control. The toggle keeps additional clearance from macOS traffic lights. Its default page contains a collapsible left sidebar and a flexible main region. Both regions and their application-built content extend to the top of the window behind the header. Applications own the top inset: use Shell's frame-aware header height to keep interactive content clear while painting backgrounds through the titlebar area. The header retains window dragging and control interaction above the body. Applications can supply the leading main-content titlebar area for a title, breadcrumbs or actions. It aligns with the main surface, clears the sidebar toggle when collapsed, and clips within the remaining native-control safe area.

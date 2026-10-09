@@ -55,6 +55,7 @@ var controlCatalog = []controlExample{
 	{"Dialog", "Dialog", "Overlays", []string{"Default", "Protected"}, controlDialog},
 	{"AlertDialog", "AlertDialog", "Overlays", []string{"Confirmation", "Notice"}, controlAlertDialog},
 	{"Badge", "Badge", "Status", []string{"Default", "Accent"}, controlBadge},
+	{"Markdown", "Markdown", "Plugins", []string{"Default"}, controlMarkdown},
 	{"RichText", "RichText", "Media & text", []string{"Default"}, controlRichText},
 	{"Breadcrumbs", "Breadcrumbs", "Navigation", []string{"Default"}, controlBreadcrumbs},
 	{"Rating", "Rating", "Selection & values", []string{"Default"}, controlRating},
@@ -128,6 +129,10 @@ func (g *Gallery) Controls(c *ui.Context, example controlExample) {
 	t := c.Theme()
 	components.ScrollView(c, components.ScrollViewOptions{}).Key("controls-" + example.name).Fill().Children(func() {
 		ui.Column(c).FillWidth().MinWidth(0).Padding(t.Space(6)).Gap(t.Space(6)).Children(func() {
+			if example.name == "Markdown" {
+				example.build(c, g.controlState(example.name, "Default"), "Default")
+				return
+			}
 			if example.name == "TextBox" || example.name == "TextBoxBuffer" {
 				catalog := textBoxControlCatalog
 				if example.name == "TextBoxBuffer" {
@@ -179,7 +184,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 			for _, variant := range example.variants {
 				cell := ui.Column(c).Key(variant).MinWidth(0).MaxWidthPercent(100).Gap(12)
 				switch example.name {
-				case "Text", "GridView":
+				case "Text", "GridView", "Markdown":
 					cell.FillWidth()
 				case "TextBox", "TextBox (multiline)", "TextBoxBuffer", "TextBoxBuffer (multiline)", "NumberInput", "Slider", "Sidebar", "List", "Split", "ScrollView", "Progress", "Accordion", "Collapsible", "PixelGrid":
 					cell.Width(240)
