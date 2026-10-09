@@ -101,9 +101,9 @@ func (s *colorViewState) sync(c ui.Color) {
 // accepts eight-digit RRGGBBAA), and opacity percent. Mode changes do not change
 // the color or report Changed. The Copy color native menu copies RGBA, HSBA,
 // HSLA or HEX text, including alpha. Numeric prefixes scrub horizontally by one
-// unit per theme-scaled DIP; the Hex prefix scrubs packed RGB, preserving alpha.
-// Prefixes also support arrow keys and Home/End. Unsupported text is rejected;
-// valid text applies immediately. Incomplete drafts survive while focused and
+// unit per theme-scaled DIP and support arrow keys and Home/End. Hex uses a
+// plain text field with a decorative prefix, without numeric stepping or scrubbing.
+// Unsupported text is rejected; valid text applies immediately. Incomplete drafts survive while focused and
 // reset on submission or blur. External changes replace drafts. Hue is retained
 // through gray/black edits. RGB/HSV edits map wide-gamut inputs to sRGB;
 // opacity-only edits preserve their gamut. Disable or key a parent before construction.
@@ -215,22 +215,23 @@ func ColorView(c *ui.Context, value *ui.Color) *ColorControl {
 			set(next, colorAlpha)
 		}
 		ui.Row(c).FillWidth().AlignItems(ui.Center).Children(func() {
-			format := Select(c, &st.format)
 			labels := [...]string{"RGBA", "HSBA", "HSLA"}
-			format.Trigger.Label("Color format").Padding(0, t.Space(5), 0, 0).Background(ui.Color{}).Border(0, ui.Color{})
-			format.Popup(func(panel ui.Element) {
-				panel.Label("Color formats")
+			format := Button(c, "", ButtonGhost).Label("Color format").Padding(0)
+			format.Menu(func(m *ui.Menu) {
 				for i, label := range labels {
-					format.Item(colorFormat(i)).Label(label).Children(func() { Text(c, label).SingleLine() })
+					if m.Item(label).Checked(st.format == colorFormat(i)).Chosen() {
+						st.format = colorFormat(i)
+						st.sync(*value)
+					}
 				}
 			})
-			if format.Trigger.Changed() {
-				st.sync(*value)
-			}
-			format.Trigger.Children(func() { Text(c, labels[st.format]).SingleLine() })
+			format.Children(func() {
+				Text(c, labels[st.format]).SingleLine()
+				Icon(c, lucide.ChevronDown()).Size(t.Space(3), t.Space(3)).TextColor(t.TextMuted)
+			})
 			ui.Box(c).Grow(1)
-			copy := Button(c, "", ButtonGhost).Label("Copy color").Size(t.Space(7), t.Space(7)).Padding(t.Space(1.5))
-			copy.Children(func() { Icon(c, lucide.Copy()).Size(t.Space(4), t.Space(4)) })
+			copy := Button(c, "", ButtonGhost).Label("Copy color").Size(t.Space(6), t.Space(6)).Padding(t.Space(1.5))
+			copy.Children(func() { Icon(c, lucide.Copy()).Size(t.Space(3), t.Space(3)).TextColor(t.TextMuted) })
 			copy.Menu(func(m *ui.Menu) {
 				for _, format := range []string{"RGBA", "HSBA", "HSLA", "HEX"} {
 					if m.Item(format).Chosen() {

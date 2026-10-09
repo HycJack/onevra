@@ -234,7 +234,8 @@ func TestControlExampleInteractions(t *testing.T) {
 					tt.Key(0, ui.KeyRight)
 					changed = s.split != 100
 				case "NumberInput":
-					click("Quantity Increase")
+					click("Quantity")
+					tt.Key(0, ui.KeyUp)
 					changed = s.value == 41
 				case "Slider":
 					click("Volume")

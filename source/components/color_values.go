@@ -92,9 +92,6 @@ func (s *colorViewState) channel(i int, c ui.Color) (value, maximum float64) {
 	if i == 4 {
 		return float64(c.A) * 100 / 255, 100
 	}
-	if i == 3 {
-		return float64(uint32(c.R)<<16 | uint32(c.G)<<8 | uint32(c.B)), 0xffffff
-	}
 	if s.format == colorHSBA {
 		return [3]float64{s.hsv.h, s.hsv.s * 100, s.hsv.v * 100}[i], [3]float64{360, 100, 100}[i]
 	}
@@ -108,10 +105,6 @@ func (s *colorViewState) setChannel(i int, v float64, c ui.Color) (ui.Color, col
 	if i == 4 {
 		c.A = uint8(math.Round(v * 255 / 100))
 		return c, colorAlpha
-	}
-	if i == 3 {
-		n := uint32(v)
-		return ui.Color{R: uint8(n >> 16), G: uint8(n >> 8), B: uint8(n), A: c.A}, colorRGBA
 	}
 	switch s.format {
 	case colorHSBA:

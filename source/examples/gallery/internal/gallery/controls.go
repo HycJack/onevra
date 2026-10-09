@@ -65,7 +65,7 @@ var controlCatalog = []controlExample{
 	{"Selection", "Selection", "Selection & values", []string{"Checkbox", "Switch", "Radio"}, controlSelection},
 	{"Select", "Selects", "Selection & values", []string{"Default", "Selected", "Searchable", "NativeSelect"}, controlSelect},
 	{"Menu", "Menus", "Overlays", []string{"Left-click", "Right-click"}, controlMenu},
-	{"NumberInput", "NumberInput", "Text input", []string{"Integer", "Decimal"}, controlNumberInput},
+	{"NumberInput", "NumberInput", "Text input", []string{"Integer", "Decimal", "Scrub", "Without stepper"}, controlNumberInput},
 	{"Slider", "Sliders", "Selection & values", []string{"Default", "Step", "Range", "Stepped range"}, controlSlider},
 	{"Progress", "Progress", "Status", []string{"Progress", "ProgressRing"}, controlProgress},
 	{"Spinner", "Spinner", "Status", []string{"Ring", "Spokes"}, controlSpinner},

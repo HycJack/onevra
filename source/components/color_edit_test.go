@@ -40,7 +40,7 @@ func TestColorHSLFields(t *testing.T) {
 	choose := func(mode string) {
 		t.Helper()
 		click("Color format")
-		if err := tt.Click(mode); err != nil {
+		if err := tt.ChooseMenuItem(mode); err != nil {
 			t.Fatal(err)
 		}
 	}
@@ -207,7 +207,7 @@ func TestColorFieldFiltering(t *testing.T) {
 		t.Fatal("partial hex not restored")
 	}
 	tt.Click("Color format")
-	tt.Click("HSLA")
+	tt.ChooseMenuItem("HSLA")
 	replace("Lightness percent", "12.5%", true)
 	if state.fields[2] != "12.5%" {
 		t.Fatal("decimal percent rejected", state.fields)
@@ -218,6 +218,36 @@ func TestColorFieldFiltering(t *testing.T) {
 		if value != before || state.fields[2] != "12.5%" {
 			t.Fatal("invalid HSL accepted", text, state.fields)
 		}
+	}
+}
+
+func TestColorHexIsPlainText(t *testing.T) {
+	value := ui.Color{R: 12, G: 34, B: 56, A: 128}
+	tt := ui.NewTester(func(c *ui.Context) { ColorView(c, &value) }, 360, 550)
+	for _, label := range []string{"Adjust Hex color", "Hex color Increase", "Hex color Decrease", "Red Increase", "Opacity percent Increase"} {
+		if _, ok := tt.Find(label); ok {
+			t.Fatalf("unexpected numeric control: %s", label)
+		}
+	}
+	before := value
+	if err := tt.Click("Hex color"); err != nil {
+		t.Fatal(err)
+	}
+	for _, key := range []ui.Key{ui.KeyUp, ui.KeyDown, ui.KeyHome, ui.KeyEnd} {
+		tt.Key(0, key)
+	}
+	r, _ := tt.Find("Hex color")
+	x, y := r.X+8, r.Y+r.H/2
+	tt.Press(x, y)
+	tt.Move(x+30, y)
+	tt.Release(x+30, y)
+	if value != before {
+		t.Fatal("hex navigation or prefix dragging adjusted color")
+	}
+	tt.Key(selectionModifier(), ui.KeyA)
+	tt.Type("#AABBCC80")
+	if value != (ui.Color{R: 170, G: 187, B: 204, A: 128}) {
+		t.Fatal("hex text editing", value)
 	}
 }
 
@@ -278,7 +308,7 @@ func TestColorFieldScrub(t *testing.T) {
 		t.Fatal("alpha scrub", value)
 	}
 	tt.Click("Color format")
-	tt.Click("HSLA")
+	tt.ChooseMenuItem("HSLA")
 	old := state.hsl
 	drag("Hue degrees", 10)
 	if state.hsl.h != float64(int((old.h+10)*10+.5))/10 {

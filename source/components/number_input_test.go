@@ -116,6 +116,9 @@ func TestNumberInput(t *testing.T) {
 		if up.Y-1 != input.Y || down.Y+down.H+1 != input.Y+input.H || up.H != down.H {
 			t.Fatalf("stepper must match text field height: %v %v %v", input, up, down)
 		}
+		if up.X+up.W != input.X+input.W-1 || down.X+down.W != input.X+input.W-1 {
+			t.Fatalf("stepper must sit inside the editor's right border: %v %v %v", input, up, down)
+		}
 		if up.X <= input.X || up.Y >= down.Y || up.X != down.X || up.H <= 0 || down.H <= 0 {
 			t.Fatalf("layout: %v %v %v", input, up, down)
 		}

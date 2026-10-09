@@ -12,7 +12,7 @@ import (
 
 func TestPickerGlassSurfaces(t *testing.T) {
 	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
-		for _, kind := range []string{"Color", "Calendar", "Time", "Color format"} {
+		for _, kind := range []string{"Color", "Calendar", "Time"} {
 			t.Run(fmt.Sprintf("%v/%s", mode, kind), func(t *testing.T) {
 				backdrop := ui.RGB(0, 0, 0)
 				value := ui.RGB(110, 90, 230)
@@ -23,7 +23,7 @@ func TestPickerGlassSurfaces(t *testing.T) {
 					tint = c.Theme().Background
 					ui.Column(c).Fill().Padding(40).Background(backdrop).Children(func() {
 						switch kind {
-						case "Color", "Color format":
+						case "Color":
 							ColorPicker(c, &value).Label("Picker")
 						case "Calendar":
 							CalendarPicker(c, &day).Label("Picker")
@@ -39,13 +39,10 @@ func TestPickerGlassSurfaces(t *testing.T) {
 					}
 				}
 				click("Picker")
-				if kind == "Color format" {
-					click("Color format")
-				}
 				sample := func() color.RGBA {
 					t.Helper()
 					tt.Frame()
-					label := map[string]string{"Color": "Saturation and brightness", "Calendar": "June 2026", "Time": "Choose time", "Color format": "Color formats"}[kind]
+					label := map[string]string{"Color": "Saturation and brightness", "Calendar": "June 2026", "Time": "Choose time"}[kind]
 					r, ok := tt.Find(label)
 					if !ok {
 						t.Fatalf("missing popup content %s", label)
@@ -55,17 +52,12 @@ func TestPickerGlassSurfaces(t *testing.T) {
 					if kind == "Time" {
 						x, y = r.X+r.W/2, r.Y+3
 					}
-					if kind == "Color format" {
-						x, y = r.X+r.W/2, r.Y+r.H-3
-					}
 					return tt.Image().RGBAAt(int(x), int(y))
 				}
 				dark := sample()
 				backdrop = ui.RGB(255, 255, 255)
 				light := sample()
-				// Nested glass samples the already tinted parent; an additional
-				// tint can round its response to the same 8-bit pixel value.
-				if kind != "Color format" && dark == light {
+				if dark == light {
 					t.Fatal("picker surface did not sample its backdrop")
 				}
 				for _, p := range []color.RGBA{dark, light} {
@@ -76,10 +68,13 @@ func TestPickerGlassSurfaces(t *testing.T) {
 						}
 					}
 				}
-				if kind == "Color format" {
-					click("HSLA")
-					if !tt.HasText("Lightness percent") || !tt.HasText("Saturation and brightness") || tt.HasText("Color formats") {
-						t.Fatal("nested format selection closed the color picker or failed to apply")
+				if kind == "Color" {
+					click("Color format")
+					if err := tt.ChooseMenuItem("HSLA"); err != nil {
+						t.Fatal(err)
+					}
+					if !tt.HasText("Lightness percent") || !tt.HasText("Saturation and brightness") {
+						t.Fatal("native format selection closed the picker or failed to apply")
 					}
 					if value != ui.RGB(110, 90, 230) {
 						t.Fatal("format selection changed color")
