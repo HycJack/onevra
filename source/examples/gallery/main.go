@@ -40,6 +40,9 @@ func main() {
 	g.Configure(filepath.Join(configDir, "config.yaml"), override)
 	mygo.App.WhenReady(func() {
 		win := g.NewPersistent(filepath.Join(configDir, "state.yaml")).Window()
+		if menu := g.ApplicationMenu(); menu != nil {
+			mygo.App.SetMenu(menu)
+		}
 		win.OnClosed(func() { mygo.App.Quit() })
 	})
 	if err := mygo.App.Run(); err != nil {

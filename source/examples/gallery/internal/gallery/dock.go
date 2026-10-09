@@ -48,9 +48,7 @@ func (g *Gallery) dockMenu() *mygo.Menu {
 			g.showFromDock()
 		}},
 		{ID: "settings", Label: "Open Settings", Click: func(*mygo.MenuItem, *mygo.Window) {
-			g.enterGallery()
-			g.settings.open = true
-			g.showFromDock()
+			g.openSettingsFromMenu()
 		}},
 	})
 }
