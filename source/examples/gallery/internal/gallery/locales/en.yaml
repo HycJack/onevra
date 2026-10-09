@@ -1055,3 +1055,65 @@ gallery.toggle_command_auto_abc:
   other: Toggle automatic ABC switching
 gallery.toggle_command_default_expanded:
   other: Toggle results on opening
+gallery.chat:
+  other: "Chat"
+gallery.chat_completed:
+  other: "Completed"
+gallery.chat_failed:
+  other: "Failed"
+gallery.chat_cancelled:
+  other: "Stopped"
+gallery.chat_waiting:
+  other: "Waiting for confirmation"
+gallery.chat_running:
+  other: "Working"
+gallery.chat_replay:
+  other: "Replay stream"
+gallery.chat_fail:
+  other: "Simulate failure"
+gallery.chat_retry:
+  other: "Retry"
+gallery.chat_latest:
+  other: "Back to latest"
+gallery.chat_reasoning:
+  other: "Reasoning summary"
+gallery.chat_summary:
+  other: "%s · 2 tool calls"
+gallery.chat_message:
+  other: "Message"
+gallery.chat_placeholder:
+  other: "Write a message. Enter adds a new line."
+gallery.chat_send:
+  other: "Send"
+gallery.chat_stop:
+  other: "Stop"
+gallery.chat_worked:
+  other: "Worked for %dm %ds"
+gallery.chat_working:
+  other: "%s · %dm %ds"
+gallery.chat_copy_answer:
+  other: "Copy answer"
+gallery.chat_copied:
+  other: "Copied"
+gallery.chat_remove_attachment:
+  other: "Remove attachment"
+gallery.chat_demo_context:
+  other: "Local demonstration · no requests sent"
+gallery.chat_changed:
+  other: "Changed 6 files"
+gallery.chat_review:
+  other: "Review"
+gallery.chat_more_files:
+  other: "Show 3 more files"
+gallery.chat_less_files:
+  other: "Show fewer files"
+gallery.chat_sample_diff:
+  other: "Sample change preview"
+gallery.chat_close_review:
+  other: "Close preview"
+gallery.chat_attach:
+  other: "Attach sample context"
+gallery.chat_model:
+  other: "Model"
+gallery.chat_effort:
+  other: "Reasoning effort"

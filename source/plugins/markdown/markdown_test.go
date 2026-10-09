@@ -41,6 +41,29 @@ func TestMarkdownSelection(t *testing.T) {
 	}
 }
 
+func TestCodeHeaderCopyAndSelection(t *testing.T) {
+	doc := ParseMarkdown("Before\n\n```go\nfmt.Println(42)\n```\n\nAfter")
+	tt := ui.NewTester(func(c *ui.Context) { doc.Render(c, MarkdownOptions{CodeHeaders: true}) }, 400, 400)
+	if !tt.HasText("go") {
+		t.Fatal("missing language label")
+	}
+	tt.Key(0, ui.KeyTab)
+	if !tt.Focused("Copy code") {
+		t.Fatal("code copy requires mouse hover")
+	}
+	tt.Key(0, ui.KeyEnter)
+	if tt.Clipboard() != "fmt.Println(42)\n" {
+		t.Fatal("code copy changed source")
+	}
+	r, _ := tt.Find("Before")
+	tt.ClickAt(r.X+2, r.Y+r.H/2)
+	tt.Key(ui.Cmd, ui.KeyA)
+	tt.Key(ui.Cmd, ui.KeyC)
+	if tt.Clipboard() != "Before\nfmt.Println(42)\nAfter" {
+		t.Fatalf("header contaminated selection: %q", tt.Clipboard())
+	}
+}
+
 func TestMarkdownCodeViews(t *testing.T) {
 	doc := ParseMarkdown("```unknown\nfallback\n```\n\n~~~counter title=demo\n世界\n~~~\n\n```counter\nsecond\n```\n\n    indented\n")
 	var blocks []MarkdownCodeBlock

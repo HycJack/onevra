@@ -12,7 +12,8 @@ User-facing updates for Onevra library consumers. No version has been published 
 - Add theme-tinted glass surfaces for text Tooltips, anchored Popovers and selection popups, plus composable layered glass Dialogs and result-bearing AlertDialogs with optional cancellation; dialogs inherit window dragging from Shell or a standalone host scope, with per-dialog overrides.
 - Add a single-content application Shell through `shells/plain` with a hidden title bar, automatic window-control clearance and live theme and caption localization.
 - Add a native sidebar-style application Shell through `shells/sidebar` with a collapsible, resizable sidebar, customizable titlebar and toolbar actions, and replaceable page content; expose system materials on macOS and supported Windows systems with opaque theme backgrounds when unavailable.
-- Add reusable read-only syntax highlighting and selectable Markdown documents with highlighted code blocks, code copying, application-supplied images and custom code-block views.
+- Add reusable read-only syntax highlighting and selectable Markdown documents with highlighted code blocks, optional language headers and keyboard-reachable copying, application-supplied images and custom code-block views.
+- Add composable chat views with independently expandable execution blocks, successful-turn folding, persistent result summaries, bottom following and a multiline composer with attachment and accessory slots.
 - Support application-supplied component localization, calendar presentation and live Shell label updates without recreating windows.
 - Add reusable settings surfaces with application-defined controls, grouped categories, narrow layouts and cross-category search, embeddable in pages or dialogs.
 - Add searchable command palettes for embedded and dialog use, with grouped results, optional expansion after searching, keyboard navigation, optional macOS input-source switching with restoration, and application-owned actions.

@@ -30,6 +30,9 @@ type MarkdownOptions struct {
 	// CopyCodeLabel names the code-block copy button and its tooltip.
 	// Empty uses "Copy code". Copy preserves the source's trailing newline.
 	CopyCodeLabel string
+	// CodeHeaders shows a language header and an always-available copy button.
+	// Header labels are excluded from document selection.
+	CodeHeaders bool
 	// CodeBlocks maps exact, case-sensitive language names to synchronous UI-thread
 	// builders. A nil or missing builder uses the default code view. Builders run
 	// every frame, must not retain Elements or start asynchronous work, and own
@@ -247,6 +250,24 @@ func markdownTask(item ast.Node) *east.TaskCheckBox {
 
 func (r *markdownRenderer) code(prepared markdownCode) {
 	c, t := r.c, r.c.Theme()
+	if r.options.CodeHeaders {
+		ui.Column(c).MinWidth(0).Radius(t.Rem(.75)).Border(1, t.Border).Background(t.Text.Alpha(.06)).Children(func() {
+			ui.Row(c).FillWidth().MinWidth(0).Unselectable().AlignItems(ui.Center).Padding(t.Space(1), t.Space(3)).BorderWidth(0, 0, 1, 0).BorderColor(t.Border).Children(func() {
+				components.Text(c, prepared.block.Language).Grow(1).TextColor(t.TextMuted)
+				label := r.options.CopyCodeLabel
+				if label == "" {
+					label = "Copy code"
+				}
+				b := components.Button(c, "", components.ButtonGhost).Label(label).Padding(t.Space(1.5)).Children(func() { components.Icon(c, lucide.Copy).Size(t.Space(4), t.Space(4)) })
+				components.Tooltip(c, b, label)
+				if b.Clicked() {
+					c.WriteClipboard(prepared.block.Code)
+				}
+			})
+			prepared.text.Render(c).MinWidth(0).Padding(t.Space(3)).FontSize(t.Rem(.85)).LineHeight(1.6)
+		})
+		return
+	}
 	box := ui.Box(c).MinWidth(0).Padding(t.Space(3), t.Space(10), t.Space(3), t.Space(3.5)).
 		Radius(t.Rem(.75)).Border(1, t.Border).Background(t.Text.Alpha(.06))
 	hovered := box.Hovered()

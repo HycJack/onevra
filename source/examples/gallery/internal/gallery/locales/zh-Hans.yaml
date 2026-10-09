@@ -1055,3 +1055,65 @@ gallery.toggle_command_auto_abc:
   other: 切换自动使用 ABC
 gallery.toggle_command_default_expanded:
   other: 切换默认展开结果列表
+gallery.chat:
+  other: "对话"
+gallery.chat_completed:
+  other: "已完成"
+gallery.chat_failed:
+  other: "失败"
+gallery.chat_cancelled:
+  other: "已停止"
+gallery.chat_waiting:
+  other: "等待确认"
+gallery.chat_running:
+  other: "执行中"
+gallery.chat_replay:
+  other: "重播消息流"
+gallery.chat_fail:
+  other: "模拟失败"
+gallery.chat_retry:
+  other: "重试"
+gallery.chat_latest:
+  other: "回到最新"
+gallery.chat_reasoning:
+  other: "思考摘要"
+gallery.chat_summary:
+  other: "%s · 2 次工具调用"
+gallery.chat_message:
+  other: "消息"
+gallery.chat_placeholder:
+  other: "输入消息，按 Enter 换行。"
+gallery.chat_send:
+  other: "发送"
+gallery.chat_stop:
+  other: "停止"
+gallery.chat_worked:
+  other: "用时 %d 分 %d 秒"
+gallery.chat_working:
+  other: "%s · %d 分 %d 秒"
+gallery.chat_copy_answer:
+  other: "复制答复"
+gallery.chat_copied:
+  other: "已复制"
+gallery.chat_remove_attachment:
+  other: "移除附件"
+gallery.chat_demo_context:
+  other: "本地示例 · 不发送请求"
+gallery.chat_changed:
+  other: "更改了 6 个文件"
+gallery.chat_review:
+  other: "审阅"
+gallery.chat_more_files:
+  other: "再显示 3 个文件"
+gallery.chat_less_files:
+  other: "收起文件列表"
+gallery.chat_sample_diff:
+  other: "示例变更预览"
+gallery.chat_close_review:
+  other: "关闭预览"
+gallery.chat_attach:
+  other: "添加示例上下文"
+gallery.chat_model:
+  other: "模型"
+gallery.chat_effort:
+  other: "思考强度"

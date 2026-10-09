@@ -15,6 +15,7 @@ type controlExample struct {
 
 // Control examples keep their state separate from the upstream widget catalog.
 type controlState struct {
+	chat                   *chatDemoState
 	dialogOpen, nestedOpen bool
 	tree                   components.TreeVirtualizedState[string]
 	list                   components.ListState
@@ -57,6 +58,7 @@ var controlCatalog = []controlExample{
 	{"Badge", "Badge", "Feedback & overlays", []string{"Default", "Accent"}, controlBadge},
 	{"Code", "Code", "Plugins", []string{"Default"}, controlCode},
 	{"Markdown", "Markdown", "Plugins", []string{"Default"}, controlMarkdown},
+	{"Chat", "Chat", "Plugins", []string{"Default"}, controlChat},
 	{"RichText", "RichText", "Content display", []string{"Default"}, controlRichText},
 	{"Breadcrumbs", "Breadcrumbs", "Actions & navigation", []string{"Default"}, controlBreadcrumbs},
 	{"Rating", "Rating", "Selection & values", []string{"Default"}, controlRating},
@@ -132,6 +134,10 @@ func (g *Gallery) Controls(c *ui.Context, example controlExample) {
 
 func (g *Gallery) controlsLocalized(c *ui.Context, example controlExample) {
 	t := c.Theme()
+	if example.name == "Chat" {
+		example.build(c, g.controlState(example.name, "Default"), "Default")
+		return
+	}
 	components.ScrollView(c, components.ScrollViewOptions{}).Key("controls-" + example.name).Fill().Children(func() {
 		ui.Column(c).FillWidth().MinWidth(0).Padding(t.Space(6)).Gap(t.Space(6)).Children(func() {
 			if example.name == "Markdown" {
