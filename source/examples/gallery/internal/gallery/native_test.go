@@ -6,6 +6,7 @@ import (
 	"image/png"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
@@ -87,6 +88,9 @@ func TestNativeGallery(t *testing.T) {
 		icons         bool
 		review        bool
 	}{
+		{"welcome-light", mygo.ThemeLight, 820, 600, false, false, false},
+		{"welcome-dark", mygo.ThemeDark, 820, 600, false, false, false},
+		{"welcome-narrow", mygo.ThemeLight, 360, 600, false, false, false},
 		{"light", mygo.ThemeLight, 820, 900, false, false, false},
 		{"dark", mygo.ThemeDark, 820, 900, false, false, false},
 		{"settings", mygo.ThemeLight, 820, 600, true, false, false},
@@ -106,7 +110,10 @@ func TestNativeGallery(t *testing.T) {
 		mygo.Theme.SetSource(mode.theme)
 		mygo.RunOnMain(func() {
 			g.settings.open = false
-			appShell.SetPage(nil)
+			g.enterGallery()
+			if strings.HasPrefix(mode.name, "welcome-") {
+				appShell.SetPage(g.WelcomePage)
+			}
 		})
 		time.Sleep(400 * time.Millisecond)
 		var before mygo.Rectangle

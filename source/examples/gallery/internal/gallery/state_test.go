@@ -8,7 +8,47 @@ import (
 	"testing"
 
 	"github.com/egoist/mygo"
+	"go.yaml.in/yaml/v3"
 )
+
+func TestGalleryVersionMatchesPackaging(t *testing.T) {
+	data, err := os.ReadFile("../../../../packer.yaml")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var config struct {
+		Version string `yaml:"version"`
+	}
+	if err := yaml.Unmarshal(data, &config); err != nil {
+		t.Fatal(err)
+	}
+	if config.Version != galleryVersion {
+		t.Fatalf("update galleryVersion to match packer.yaml: %q != %q", galleryVersion, config.Version)
+	}
+}
+
+func TestWelcomeVersionStorage(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "state.yaml")
+	state := State{SelectedItem: "controls/Button", SidebarWidth: 310, SidebarCollapsed: true}
+	for _, step := range []struct {
+		version string
+		show    bool
+	}{
+		{"1.0", true}, {"1.0", false}, {"1.1", true}, {"1.1", false}, {"1.0", true},
+	} {
+		if got := recordWelcomeVersion(path, &state, step.version); got != step.show {
+			t.Fatalf("version %s: show = %v", step.version, got)
+		}
+		loaded, err := LoadState(path)
+		if err != nil || loaded != state || loaded.WelcomeVersion != step.version {
+			t.Fatalf("immediate persistence: %+v, %v", loaded, err)
+		}
+		if loaded.SelectedItem != "controls/Button" || loaded.SidebarWidth != 310 || !loaded.SidebarCollapsed {
+			t.Fatal("welcome changed the saved main interface")
+		}
+		state = loaded
+	}
+}
 
 func TestStateStorage(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config", "state.yaml")
@@ -87,7 +127,7 @@ func TestNativeState(t *testing.T) {
 			s.SetLeftExpanded(!collapsed)
 			g.page = controlPageStart()
 			b := s.Window().Bounds()
-			want = State{Window: &WindowState{b.X, b.Y, b.Width, b.Height}, SidebarWidth: 315.5, SidebarCollapsed: collapsed, SelectedItem: pageKey(g.page)}
+			want = State{Window: &WindowState{b.X, b.Y, b.Width, b.Height}, SidebarWidth: 315.5, SidebarCollapsed: collapsed, SelectedItem: pageKey(g.page), WelcomeVersion: galleryVersion}
 			s.Window().Close()
 		})
 		got, err := LoadState(path)

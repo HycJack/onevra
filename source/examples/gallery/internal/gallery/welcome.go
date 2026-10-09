@@ -170,6 +170,7 @@ func (g *Gallery) welcomeIcons(c *ui.Context) {
 			})
 			if welcomeAction(c, "Explore Lucide", components.ButtonOutline, lucide.ArrowUpRight).Clicked() {
 				g.page = lucidePage
+				g.enterGallery()
 			}
 		})
 	})

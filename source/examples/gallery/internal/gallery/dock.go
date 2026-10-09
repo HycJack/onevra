@@ -43,10 +43,12 @@ func (g *Gallery) dockMenu() *mygo.Menu {
 		mygo.Separator(),
 		{ID: "welcome", Label: "Open Welcome", Click: func(*mygo.MenuItem, *mygo.Window) {
 			g.page = welcomePage
+			g.enterGallery()
 			g.settings.open = false
 			g.showFromDock()
 		}},
 		{ID: "settings", Label: "Open Settings", Click: func(*mygo.MenuItem, *mygo.Window) {
+			g.enterGallery()
 			g.settings.open = true
 			g.showFromDock()
 		}},

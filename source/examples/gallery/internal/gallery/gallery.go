@@ -39,6 +39,7 @@ func (g *Gallery) New() *shell.Shell {
 		Left: g.Left, Content: g.View, LeftToolbar: g.LeftToolbar,
 		ContentTitle: g.Titlebar,
 	})
+	g.Shell.SetPage(g.WelcomePage)
 	g.Shell.Window().OnClosed(g.Close)
 	return g.Shell
 }

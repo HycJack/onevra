@@ -7,6 +7,38 @@ import (
 	"github.com/oneo-me/onevra/theme"
 )
 
+func TestWelcomeStartupPage(t *testing.T) {
+	for _, width := range []int{360, 820, 1100} {
+		for _, dark := range []bool{false, true} {
+			g := &Gallery{page: componentStatusPage}
+			tt := ui.NewTester(func(c *ui.Context) {
+				theme.Apply(c, theme.Auto)
+				g.WelcomePage(c)
+			}, width, 600)
+			tt.SetDark(dark)
+			if g.page != componentStatusPage || !tt.HasText("Welcome to Onevra") {
+				t.Fatal("startup must show Welcome without replacing the saved main route")
+			}
+			if g.welcome.initialized || tt.HasText("Your next idea") {
+				t.Fatal("startup must not build shared component samples")
+			}
+			if _, ok := tt.Find("Search components"); ok {
+				t.Fatal("startup must not show main navigation")
+			}
+			r, ok := tt.Find("Enter gallery")
+			if !ok || r.Y < 48 || r.X < 0 || r.X+r.W > float32(width) || r.Y+r.H > 600 {
+				t.Fatalf("entry outside the safe visible area: %v", r)
+			}
+			if err := tt.Click("Enter gallery"); err != nil {
+				t.Fatal(err)
+			}
+			if g.page != componentStatusPage {
+				t.Fatal("entry must retain the saved main route")
+			}
+		}
+	}
+}
+
 func TestWelcome(t *testing.T) {
 	for _, width := range []int{360, 600, 1100} {
 		for _, dark := range []bool{false, true} {

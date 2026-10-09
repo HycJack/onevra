@@ -35,7 +35,7 @@ func captureCatalog(t *testing.T, controls bool) {
 	}
 	g := &Gallery{}
 	var appShell *shell.Shell
-	mygo.RunOnMain(func() { appShell = g.New() })
+	mygo.RunOnMain(func() { appShell = g.New(); g.enterGallery() })
 	win := appShell.Window()
 	defer win.Destroy()
 	// Only native captures relax the default minimum to exercise narrow layouts.
