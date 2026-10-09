@@ -27,7 +27,7 @@ func TestSettingsDialog(t *testing.T) {
 	if g.settings.smart {
 		t.Fatal("switch did not update template state")
 	}
-	g.settings.query = "New sign-in"
+	g.settings.view.Query = "New sign-in"
 	tt.Frame()
 	if err := tt.Click("New sign-in delivery"); err != nil {
 		t.Fatal(err)
@@ -38,7 +38,7 @@ func TestSettingsDialog(t *testing.T) {
 	if g.settings.channels[1] != "Off" || !g.settings.open {
 		t.Fatal("delivery selection did not stay inside the dialog")
 	}
-	g.settings.query = ""
+	g.settings.view.Query = ""
 	tt.Frame()
 	if err := tt.Click("Appearance"); err != nil {
 		t.Fatal(err)
@@ -98,7 +98,7 @@ func TestSettingsSearchAndGeometry(t *testing.T) {
 		g.settings.open = true
 		tt := ui.NewTester(g.Settings, width, 600)
 		tt.SetPreferences(ui.Preferences{ReduceMotion: true})
-		g.settings.query = "NEW SIGN-IN"
+		g.settings.view.Query = "NEW SIGN-IN"
 		tt.Frame()
 		if !tt.HasText("New sign-in") || tt.HasText("Password changed") {
 			t.Fatal("search did not filter settings", tt.Texts())
@@ -116,7 +116,7 @@ func TestSettingsSearchAndGeometry(t *testing.T) {
 				t.Fatalf("%d: %s bounds = %+v, found=%v", width, label, r, ok)
 			}
 		}
-		g.settings.query = "no such setting"
+		g.settings.view.Query = "no such setting"
 		tt.Frame()
 		if !tt.HasText("No matching settings. Try another search.") {
 			t.Fatal("empty search feedback missing")

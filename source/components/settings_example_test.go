@@ -1,0 +1,38 @@
+package components_test
+
+import (
+	"fmt"
+
+	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/components"
+)
+
+func ExampleSettings() {
+	// Retain state and values in the application, not inside the frame builder.
+	state := components.SettingsState{}
+	enabled := false
+	categories := []components.SettingsCategory{{
+		ID: "notifications", Title: "Notifications",
+		Groups: []components.SettingsGroup{{ID: "delivery", Title: "Delivery", Items: []components.SettingsItem{{
+			ID: "desktop", Title: "Desktop notifications", Keywords: []string{"alerts"},
+			Build: func(c *ui.Context) { components.Switch(c, &enabled, "Enable desktop notifications") },
+		}}}},
+	}}
+	view := func(c *ui.Context) {
+		// The host decides narrow layout from the width allocated to this surface.
+		components.Settings(c, &state, categories, components.SettingsOptions{Narrow: true})
+	}
+	// Use view as window content or inside an application-owned Dialog.
+	tester := ui.NewTester(view, 400, 500)
+	tester.Frame()
+	fmt.Println(tester.HasText("Desktop notifications"))
+	// Output: true
+}
+
+func ExampleSearchSettings() {
+	categories := []components.SettingsCategory{{ID: "appearance", Title: "Appearance", Groups: []components.SettingsGroup{{ID: "theme", Items: []components.SettingsItem{{ID: "mode", Title: "Color mode", Keywords: []string{"dark"}}}}}}}
+	for _, result := range components.SearchSettings(categories, "dark appearance") {
+		fmt.Println(categories[result.Category].Groups[result.Group].Items[result.Item].Title)
+	}
+	// Output: Color mode
+}

@@ -102,7 +102,7 @@ func TestNativeThemeMenu(t *testing.T) {
 		}
 	}
 	g.settings.initialize()
-	g.settings.open, g.settings.page = true, "Appearance"
+	g.settings.open, g.settings.view.Category = true, "appearance"
 	settingsUI := ui.NewTester(g.Settings, 820, 600)
 	settingsUI.SetPreferences(ui.Preferences{ReduceMotion: true})
 	if err := settingsUI.Click("Theme preference"); err != nil {

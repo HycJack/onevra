@@ -16,7 +16,7 @@ The Terminal plugin page automatically opens the user's default login shell on f
 
 Packaging and native-library path adaptation belong to the gallery application, not the library. Startup selects the bundled Terminal library before the page can load it, without forcing eager native-library initialization. Build commands and distribution limitations are maintained in the [development guide](../build.md#app-bundles).
 
-The settings toolbar action opens a Onevra Dialog over the current page, preserving navigation and sidebar state. Its searchable, grouped notification template keeps edits in memory and does not send notifications; the appearance section uses the same persisted theme preference as the toolbar. Narrow windows replace the settings sidebar with a category selector. The application owns this composition rather than adding settings or routing policy to Shell.
+The settings toolbar action opens a Onevra Dialog over the current page, preserving navigation and sidebar state. It hosts the public Settings component with application-defined categories and controls. Its grouped notification template keeps edits in memory and does not send notifications; the appearance section uses the same persisted theme preference as the toolbar. Search includes settings across both categories. Narrow windows replace the settings sidebar with a category selector. The application owns the dialog and persistence rather than adding settings or routing policy to Shell.
 
 ## Component review
 
