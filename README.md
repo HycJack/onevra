@@ -2,7 +2,7 @@
 
 **English** | [简体中文](README.zh-CN.md)
 
-Experimental, product-neutral Go components built on [MyGo](https://github.com/egoist/mygo). Currently provides a native Shell component, Lucide icons for MyGo and a standalone gallery.
+Experimental, product-neutral Go components built on [MyGo](https://github.com/egoist/mygo). Currently provides a native sidebar-style Shell (`shells/sidebar`), Lucide icons for MyGo and a standalone gallery.
 
 The library is not yet published as a downloadable module, and its API is not stable.
 
@@ -33,7 +33,7 @@ The **Desktop / Tray** page enables a tray icon: left-click toggles a small note
 
 ## Basic usage
 
-Until publication, use a local Go workspace that includes your application and this repository's `source/` directory. Import `github.com/oneo-me/onevra/shell`:
+Until publication, use a local Go workspace that includes your application and this repository's `source/` directory. Import `github.com/oneo-me/onevra/shells/sidebar`:
 
 ```go
 package main
@@ -43,20 +43,20 @@ import (
 
     "github.com/egoist/mygo"
     "github.com/egoist/mygo/ui"
-    "github.com/oneo-me/onevra/shell"
+    "github.com/oneo-me/onevra/shells/sidebar"
 )
 
 func main() {
     mygo.App.WhenReady(func() {
-        appShell := shell.NewShell(shell.ShellOptions{
+        appShell := sidebar.NewShell(sidebar.ShellOptions{
             Title: "Hello",
             Left: func(c *ui.Context) {
-                ui.Column(c).Fill().Padding(shell.HeaderHeight(c), 0, 0, 0).Children(func() {
+                ui.Column(c).Fill().Padding(sidebar.HeaderHeight(c), 0, 0, 0).Children(func() {
                     ui.Text(c, "Navigation")
                 })
             },
             Content: func(c *ui.Context) {
-                ui.Column(c).Fill().Padding(shell.HeaderHeight(c), 0, 0, 0).Children(func() {
+                ui.Column(c).Fill().Padding(sidebar.HeaderHeight(c), 0, 0, 0).Children(func() {
                     ui.Text(c, "Hello, Shell")
                 })
             },
@@ -71,7 +71,7 @@ func main() {
 
 Create a Shell when the app is ready; build its columns with MyGo widgets. Use `appShell.SetPage(view)` to replace the entire sidebar-and-content page (for example, with settings), and `appShell.SetPage(nil)` to restore it. Your application owns business state and lifecycle handling. See the [runnable gallery](source/examples/gallery/main.go) for another example.
 
-Content extends behind Shell's floating header. Use `shell.HeaderHeight(c)` for a top inset when needed; paint the padded container's background to cover the titlebar area without placing controls under it. This also applies to replacement pages.
+Content extends behind Shell's floating header. Use `sidebar.HeaderHeight(c)` for a top inset when needed; paint the padded container's background to cover the titlebar area without placing controls under it. This also applies to replacement pages.
 
 ## Appearance
 
@@ -80,7 +80,7 @@ Shell uses Onevra's built-in light and dark themes, applied through MyGo's own t
 ```go
 import "github.com/oneo-me/onevra/theme"
 
-appShell := shell.NewShell(shell.ShellOptions{
+appShell := sidebar.NewShell(sidebar.ShellOptions{
     Title:      "Hello",
     Appearance: theme.Dark,
     // ...

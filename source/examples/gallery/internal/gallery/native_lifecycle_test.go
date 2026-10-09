@@ -7,7 +7,7 @@ import (
 
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/shell"
+	"github.com/oneo-me/onevra/shells/sidebar"
 )
 
 // Closing from a content builder must end the frame before presentation, as
@@ -20,7 +20,7 @@ func TestNativeCloseDuringFrame(t *testing.T) {
 	returned := make(chan struct{}, 1)
 	var win *mygo.Window
 	mygo.RunOnMain(func() {
-		s := shell.NewShell(shell.ShellOptions{})
+		s := sidebar.NewShell(sidebar.ShellOptions{})
 		win = s.Window()
 		win.OnClosed(func() { closed <- struct{}{} })
 		s.SetPage(func(c *ui.Context) {

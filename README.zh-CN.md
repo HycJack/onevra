@@ -2,7 +2,7 @@
 
 [English](README.md) | **简体中文**
 
-基于 [MyGo](https://github.com/egoist/mygo) 的实验性通用 Go 组件库。目前提供原生 Shell 组件、适用于 MyGo 的 Lucide 图标和独立展示程序。
+基于 [MyGo](https://github.com/egoist/mygo) 的实验性通用 Go 组件库。目前提供原生侧栏式 Shell（`shells/sidebar`）、适用于 MyGo 的 Lucide 图标和独立展示程序。
 
 尚未发布为可下载的 module，API 暂不稳定。
 
@@ -33,7 +33,7 @@ go run ./examples/gallery
 
 ## 基本使用
 
-发布前，请使用包含你的应用和本仓库 `source/` 目录的本地 Go workspace。导入 `github.com/oneo-me/onevra/shell`：
+发布前，请使用包含你的应用和本仓库 `source/` 目录的本地 Go workspace。导入 `github.com/oneo-me/onevra/shells/sidebar`：
 
 ```go
 package main
@@ -43,20 +43,20 @@ import (
 
     "github.com/egoist/mygo"
     "github.com/egoist/mygo/ui"
-    "github.com/oneo-me/onevra/shell"
+    "github.com/oneo-me/onevra/shells/sidebar"
 )
 
 func main() {
     mygo.App.WhenReady(func() {
-        appShell := shell.NewShell(shell.ShellOptions{
+        appShell := sidebar.NewShell(sidebar.ShellOptions{
             Title: "Hello",
             Left: func(c *ui.Context) {
-                ui.Column(c).Fill().Padding(shell.HeaderHeight(c), 0, 0, 0).Children(func() {
+                ui.Column(c).Fill().Padding(sidebar.HeaderHeight(c), 0, 0, 0).Children(func() {
                     ui.Text(c, "Navigation")
                 })
             },
             Content: func(c *ui.Context) {
-                ui.Column(c).Fill().Padding(shell.HeaderHeight(c), 0, 0, 0).Children(func() {
+                ui.Column(c).Fill().Padding(sidebar.HeaderHeight(c), 0, 0, 0).Children(func() {
                     ui.Text(c, "Hello, Shell")
                 })
             },
@@ -71,7 +71,7 @@ func main() {
 
 在应用就绪后创建 Shell，使用 MyGo 控件构建各栏内容。使用 `appShell.SetPage(view)` 替换整个侧边栏与主内容页面（例如显示设置），使用 `appShell.SetPage(nil)` 恢复。由应用管理业务状态和生命周期。另可参考[可运行的展示程序](source/examples/gallery/main.go)。
 
-内容默认延伸到 Shell 的悬浮标题栏下方。需要避让时，使用 `shell.HeaderHeight(c)` 设置顶部内边距；在这个容器上绘制背景，即可覆盖标题栏区域而不遮挡内容控件。替换页也遵循这一规则。
+内容默认延伸到 Shell 的悬浮标题栏下方。需要避让时，使用 `sidebar.HeaderHeight(c)` 设置顶部内边距；在这个容器上绘制背景，即可覆盖标题栏区域而不遮挡内容控件。替换页也遵循这一规则。
 
 ## 外观
 
@@ -80,7 +80,7 @@ Shell 使用 Onevra 内置的浅色与深色主题，通过 MyGo 自身的主题
 ```go
 import "github.com/oneo-me/onevra/theme"
 
-appShell := shell.NewShell(shell.ShellOptions{
+appShell := sidebar.NewShell(sidebar.ShellOptions{
     Title:      "Hello",
     Appearance: theme.Dark,
     // ...

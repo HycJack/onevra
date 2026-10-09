@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/egoist/mygo"
-	"github.com/oneo-me/onevra/shell"
+	"github.com/oneo-me/onevra/shells/sidebar"
 )
 
 // Ordinary tests never open windows.
@@ -52,7 +52,7 @@ func TestNativeGallery(t *testing.T) {
 		t.Skip("requires a desktop session")
 	}
 	g := &Gallery{}
-	var appShell *shell.Shell
+	var appShell *sidebar.Shell
 	mygo.RunOnMain(func() { appShell = g.New() })
 	win := appShell.Window()
 	defer win.Destroy()
@@ -65,7 +65,7 @@ func TestNativeGallery(t *testing.T) {
 	// Only native captures relax the default minimum to exercise narrow layouts.
 	mygo.RunOnMain(func() { win.SetMinimumSize(360, 480) })
 	var blank *mygo.Window
-	mygo.RunOnMain(func() { blank = shell.NewShell(shell.ShellOptions{}).Window() })
+	mygo.RunOnMain(func() { blank = sidebar.NewShell(sidebar.ShellOptions{}).Window() })
 	if blank.Page() != nil {
 		t.Error("nil content created a web page")
 	}

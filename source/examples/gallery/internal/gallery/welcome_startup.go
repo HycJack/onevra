@@ -4,7 +4,7 @@ import (
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/components"
 	"github.com/oneo-me/onevra/icons/lucide"
-	"github.com/oneo-me/onevra/shell"
+	"github.com/oneo-me/onevra/shells/sidebar"
 )
 
 // Keep the application version aligned with packer.yaml; a test checks both.
@@ -14,10 +14,10 @@ const galleryVersion = "0.2026.1"
 func (g *Gallery) WelcomePage(c *ui.Context) {
 	t := c.Theme()
 	_, height := c.Size()
-	ui.Column(c).Fill().Padding(shell.HeaderHeight(c), 0, 0, 0).
+	ui.Column(c).Fill().Padding(sidebar.HeaderHeight(c), 0, 0, 0).
 		Gradient(t.Background.Mix(t.Accent, .06), t.Background, 140).Children(func() {
 		components.ScrollView(c, components.ScrollViewOptions{}).Fill().Children(func() {
-			ui.Column(c).FillWidth().MinHeight(height - shell.HeaderHeight(c)).
+			ui.Column(c).FillWidth().MinHeight(height - sidebar.HeaderHeight(c)).
 				Padding(t.Space(8)).Center().Children(func() {
 				ui.Column(c).FillWidth().MaxWidth(t.Space(100)).AlignItems(ui.Center).Gap(t.Space(5)).Children(func() {
 					ui.Box(c).Size(t.Space(16), t.Space(16)).Radius(t.Space(5)).Center().

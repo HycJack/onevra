@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/egoist/mygo"
-	"github.com/oneo-me/onevra/shell"
+	"github.com/oneo-me/onevra/shells/sidebar"
 	"go.yaml.in/yaml/v3"
 )
 
@@ -154,7 +154,7 @@ func recordWelcomeVersion(path string, state *State, version string) bool {
 
 // NewPersistent is the application-owned startup path. New remains disk-free for
 // isolated demonstrations and tests. Normal close and application quit save state.
-func (g *Gallery) NewPersistent(path string) *shell.Shell {
+func (g *Gallery) NewPersistent(path string) *sidebar.Shell {
 	state, err := LoadState(path)
 	if err != nil {
 		log.Printf("Load gallery state: %v", err)

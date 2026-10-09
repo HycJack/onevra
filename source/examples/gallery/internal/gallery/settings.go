@@ -7,7 +7,7 @@ import (
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/components"
 	"github.com/oneo-me/onevra/icons/lucide"
-	"github.com/oneo-me/onevra/shell"
+	"github.com/oneo-me/onevra/shells/sidebar"
 )
 
 // Template values are session-only; appearance uses the real gallery preference.
@@ -52,7 +52,7 @@ func (g *Gallery) Settings(c *ui.Context) {
 	g.settings.initialize()
 	s, t := &g.settings, c.Theme()
 	w, h := c.Size()
-	inset := shell.HeaderHeight(c)
+	inset := sidebar.HeaderHeight(c)
 	width := min(t.Space(200), w*.88, max(0, w-2*inset))
 	narrow := width < t.Space(170)
 	components.Dialog(c, &s.open, components.DialogOptions{Label: "Settings", Inset: inset, WindowDragHeight: inset}, func(panel ui.Element) {
@@ -111,7 +111,7 @@ func (g *Gallery) settingsHeading(c *ui.Context, title string, closeButton bool)
 	ui.Row(c).FillWidth().MinHeight(t.Space(14)).Shrink(0).Padding(t.Space(3), t.Space(4)).Gap(t.Space(2)).Children(func() {
 		components.Text(c, title).Bold()
 		ui.Spacer(c)
-		if closeButton && shell.IconButton(c, lucide.X(), "Close settings").Clicked() {
+		if closeButton && sidebar.IconButton(c, lucide.X(), "Close settings").Clicked() {
 			g.settings.open = false
 		}
 	})

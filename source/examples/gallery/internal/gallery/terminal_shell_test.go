@@ -11,7 +11,7 @@ import (
 
 	"github.com/egoist/mygo/plugins/terminal"
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/shell"
+	"github.com/oneo-me/onevra/shells/sidebar"
 )
 
 func terminalPage() galleryPage {
@@ -56,7 +56,7 @@ func TestNativeTerminal(t *testing.T) {
 	defer g.Close()
 	var header float32
 	tt := ui.NewTester(func(c *ui.Context) {
-		header = shell.HeaderHeight(c)
+		header = sidebar.HeaderHeight(c)
 		g.View(c)
 	}, 600, 400)
 	term, err := waitTerminal(t, &g.mygoStates["Terminal"].terminal)

@@ -8,7 +8,7 @@ import (
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/components"
 	"github.com/oneo-me/onevra/icons/lucide"
-	"github.com/oneo-me/onevra/shell"
+	"github.com/oneo-me/onevra/shells/sidebar"
 )
 
 // Gallery owns demonstration state and application preferences.
@@ -20,7 +20,7 @@ type Gallery struct {
 	config          Config
 	configPath      string
 	Clicks          int
-	Shell           *shell.Shell
+	Shell           *sidebar.Shell
 	page            galleryPage
 	navigationQuery string
 	grid            components.GridState
@@ -31,9 +31,9 @@ type Gallery struct {
 }
 
 // New creates the standalone shell demonstration.
-func (g *Gallery) New() *shell.Shell {
+func (g *Gallery) New() *sidebar.Shell {
 	g.createTerminal = newShellTerminal
-	g.Shell = shell.NewShell(shell.ShellOptions{
+	g.Shell = sidebar.NewShell(sidebar.ShellOptions{
 		Title:     "Onevra Gallery",
 		LeftWidth: 220, LeftMinWidth: 220, LeftMaxWidth: 520,
 		Left: g.Left, Content: g.View, LeftToolbar: g.LeftToolbar,
@@ -71,7 +71,7 @@ func (g *Gallery) Titlebar(c *ui.Context) {
 }
 
 func (g *Gallery) Left(c *ui.Context) {
-	ui.Column(c).Fill().Padding(shell.HeaderHeight(c), 0, 0, 0).Children(func() { g.navigation(c) })
+	ui.Column(c).Fill().Padding(sidebar.HeaderHeight(c), 0, 0, 0).Children(func() { g.navigation(c) })
 }
 
 func (g *Gallery) navigation(c *ui.Context) {
@@ -105,9 +105,9 @@ func (g *Gallery) navigation(c *ui.Context) {
 }
 
 func (g *Gallery) LeftToolbar(c *ui.Context) {
-	shell.IconButton(c, themeIcon(), "Theme").Menu(g.themeMenu)
+	sidebar.IconButton(c, themeIcon(), "Theme").Menu(g.themeMenu)
 	ui.Spacer(c)
-	if shell.IconButton(c, lucide.Settings(), "Settings").Clicked() {
+	if sidebar.IconButton(c, lucide.Settings(), "Settings").Clicked() {
 		g.settings.open = true
 	}
 }
@@ -152,7 +152,7 @@ func (g *Gallery) View(c *ui.Context) {
 	} else {
 		content = ui.Column(c)
 	}
-	content.Fill().Padding(shell.HeaderHeight(c), 0, 0, 0)
+	content.Fill().Padding(sidebar.HeaderHeight(c), 0, 0, 0)
 	if g.page == welcomePage {
 		welcomeBackground(c, content)
 	}
