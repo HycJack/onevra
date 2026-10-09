@@ -57,8 +57,8 @@ func TestPickerGlassSurfaces(t *testing.T) {
 				dark := sample()
 				backdrop = ui.RGB(255, 255, 255)
 				light := sample()
-				if dark == light {
-					t.Fatal("picker surface did not sample its backdrop")
+				if int(light.R)-int(dark.R) < 15 {
+					t.Fatalf("picker glass obscures its backdrop: dark=%v light=%v", dark, light)
 				}
 				for _, p := range []color.RGBA{dark, light} {
 					for i, channel := range []uint8{p.R, p.G, p.B} {

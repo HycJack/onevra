@@ -80,6 +80,9 @@ func TestOverlayGlassTint(t *testing.T) {
 				if dark == light {
 					t.Fatal("surface is opaque: backdrop does not affect glass")
 				}
+				if kind != "Tooltip" && int(light.R)-int(dark.R) < 15 {
+					t.Fatalf("panel glass obscures its backdrop: dark=%v light=%v", dark, light)
+				}
 				for _, pixel := range []color.RGBA{dark, light} {
 					for i, got := range []uint8{pixel.R, pixel.G, pixel.B} {
 						want := []uint8{tint.R, tint.G, tint.B}[i]

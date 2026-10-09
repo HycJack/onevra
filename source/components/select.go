@@ -21,7 +21,7 @@ type SelectParts[T comparable] struct {
 func (s *SelectParts[T]) Popup(build func(panel ui.Element)) ui.Element {
 	t := s.c.Theme()
 	return s.SelectParts.Popup(func(panel ui.Element) {
-		panel.Padding(t.Space(1)).Radius(t.Radius*1.5).Material(glass.Glass{Tint: t.Background}).Border(1, t.Border).
+		panel.Padding(t.Space(1)).Radius(t.Radius*1.5).Material(glass.Glass{Tint: t.Background.Alpha(.92)}).Border(1, t.Border).
 			Shadow(0, t.Space(1), t.Space(4), 0, ui.RGBA(0, 0, 0, 0.14))
 		build(panel)
 	})

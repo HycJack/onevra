@@ -82,6 +82,7 @@ func SearchSettings(categories []SettingsCategory, query string) []SettingsResul
 // Settings builds a bounded, scrollable settings surface using application-owned
 // state and definitions. Place it in a parent with a finite height. It fills its
 // parent, and can be embedded in Dialog, Shell content, or a standalone window.
+// The host supplies the background or material; navigation adds a subtle tint.
 // Use a keyed parent to distinguish multiple instances. state must not be nil.
 // Navigation clears Query; clearing Query alone restores the selected category.
 func Settings(c *ui.Context, state *SettingsState, categories []SettingsCategory, opts SettingsOptions) ui.Element {
@@ -132,7 +133,7 @@ func Settings(c *ui.Context, state *SettingsState, categories []SettingsCategory
 	}
 	return ui.Row(c).Fill().MinWidth(0).Gap(0).Children(func() {
 		if !opts.Narrow {
-			ui.Column(c).Width(t.Space(54)).FillHeight().Shrink(0).Background(t.Background.Mix(t.Text, .035)).Children(func() {
+			ui.Column(c).Width(t.Space(54)).FillHeight().Shrink(0).Background(t.Text.Alpha(.035)).Children(func() {
 				heading(opts.Title, false)
 				ui.Column(c).FillWidth().Padding(0, t.Space(3), t.Space(4), t.Space(3)).Children(search)
 				ScrollView(c, ScrollViewOptions{}).Fill().Children(func() {
@@ -154,7 +155,7 @@ func Settings(c *ui.Context, state *SettingsState, categories []SettingsCategory
 			})
 			ui.Box(c).Width(1).FillHeight().Shrink(0).Background(t.Border)
 		}
-		ui.Column(c).Fill().MinWidth(0).Background(t.Background).Children(func() {
+		ui.Column(c).Fill().MinWidth(0).Children(func() {
 			title := opts.Title
 			if !opts.Narrow && selected >= 0 {
 				title = categories[selected].Title

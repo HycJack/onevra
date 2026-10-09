@@ -69,7 +69,7 @@ func Dialog(c *ui.Context, open *bool, options DialogOptions, build func(panel u
 			panel = ui.Column(c).Role(ui.RoleDialog).Label(options.Label).
 				Width(t.Space(110)).MaxWidth(max(0, w-2*inset)).MaxHeight(max(0, h-2*inset)).Shrink(0).
 				Padding(t.Space(5)).Gap(t.Space(3)).Radius(t.Radius*2).
-				Material(glass.Glass{Tint: t.Background}).TextColor(t.Text).
+				Material(glass.Glass{Tint: t.Background.Alpha(.92)}).TextColor(t.Text).
 				Border(1, t.Background.Mix(t.Text, .25)).
 				Shadow(0, t.Space(2), t.Space(6), 0, ui.RGBA(0, 0, 0, .12))
 			// Register a hit target so blank panel space never dismisses the backdrop.
