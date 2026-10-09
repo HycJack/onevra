@@ -38,13 +38,39 @@ func calendarSetDay(value *time.Time, day time.Time) bool {
 	return true
 }
 
-type calendarState struct{ cursor, last time.Time }
+type calendarView uint8
+
+const (
+	calendarDays calendarView = iota
+	calendarMonths
+	calendarYears
+)
+
+type calendarState struct {
+	cursor, last time.Time
+	view         calendarView
+}
+
+func calendarYearStart(year int) int { return year - ((year%12 + 12) % 12) }
+func (s *calendarState) page(delta int) {
+	months := 1
+	if s.view == calendarMonths {
+		months = 12
+	}
+	if s.view == calendarYears {
+		months = 144
+	}
+	s.cursor = calendarMonth(s.cursor, delta*months)
+}
 
 // Calendar builds the fixed-size, Monday-first six-week view used inside
 // CalendarPicker. Arrows move its cursor; Page Up/Down change months with day
 // clamping; Home/End move to month boundaries. Enter/Space or a day click selects
 // a date, preserving its time and location. Navigation alone does not select.
-// The view keeps the same size inside CalendarPicker and when displayed directly.
+// Click the title to switch from days to months, then to a twelve-year grid.
+// Choose a year to open months, and a month to open days. In these grids,
+// arrows move by cell and Page Up/Down changes pages. Today returns to today's
+// day view without committing a value. All modes retain the same fixed size.
 // Key or disable a parent before construction.
 func Calendar(c *ui.Context, value *time.Time) *CalendarControl {
 	if value == nil {
@@ -52,16 +78,40 @@ func Calendar(c *ui.Context, value *time.Time) *CalendarControl {
 	}
 	t := c.Theme()
 	out := &CalendarControl{Element: ui.Column(c).Width(t.Space(56)).Height(t.Space(62)).Shrink(0).Gap(t.Space(.5)).Focusable().Role(ui.RoleTable)}
-	st := ui.Local(out.Element, "calendar", func() calendarState { return calendarState{calendarDay(*value), *value} })
+	st := ui.Local(out.Element, "calendar", func() calendarState { return calendarState{cursor: calendarDay(*value), last: *value} })
 	if st.last != *value {
-		st.cursor, st.last = calendarDay(*value), *value
+		st.cursor, st.last, st.view = calendarDay(*value), *value, calendarDays
 	}
 	choose := func(d time.Time) {
 		out.chosen = true
 		out.changed = calendarSetDay(value, d)
 		st.cursor, st.last = d, *value
 	}
-	if !out.IsDisabled() {
+	if !out.IsDisabled() && st.view != calendarDays {
+		delta := 0
+		switch {
+		case out.Shortcut(0, ui.KeyLeft):
+			delta = -1
+		case out.Shortcut(0, ui.KeyRight):
+			delta = 1
+		case out.Shortcut(0, ui.KeyUp):
+			delta = -3
+		case out.Shortcut(0, ui.KeyDown):
+			delta = 3
+		case out.Shortcut(0, ui.KeyPageUp):
+			st.page(-1)
+		case out.Shortcut(0, ui.KeyPageDown):
+			st.page(1)
+		case out.Shortcut(0, ui.KeyEnter), out.Shortcut(0, ui.KeySpace):
+			st.view--
+		}
+		if st.view == calendarYears {
+			delta *= 12
+		}
+		if delta != 0 {
+			st.cursor = calendarMonth(st.cursor, delta)
+		}
+	} else if !out.IsDisabled() {
 		switch {
 		case out.Shortcut(0, ui.KeyLeft):
 			st.cursor = st.cursor.AddDate(0, 0, -1)
@@ -85,18 +135,47 @@ func Calendar(c *ui.Context, value *time.Time) *CalendarControl {
 	}
 	out.Children(func() {
 		ui.Row(c).FillWidth().Height(t.Space(8)).Margin(0, 0, t.Space(2), 0).AlignItems(ui.Center).Children(func() {
+			title := st.cursor.Format("January 2006")
+			titleLabel, pageLabel := "Choose month", "month"
+			if st.view == calendarMonths {
+				title = st.cursor.Format("2006")
+				titleLabel, pageLabel = "Choose year", "year"
+			}
+			if st.view == calendarYears {
+				first := calendarYearStart(st.cursor.Year())
+				title = fmt.Sprintf("%d–%d", first, first+11)
+				titleLabel, pageLabel = "Choose year", "years"
+			}
+			heading := Button(c, "", ButtonGhost).Grow(1).MinWidth(0).Height(t.Space(8)).Padding(0).
+				Justify(ui.Start).Background(ui.Color{}).Label(titleLabel)
+			heading.Children(func() { Text(c, title).SingleLine().Bold() })
+			if !heading.IsDisabled() && heading.Clicked() {
+				if st.view < calendarYears {
+					st.view++
+				}
+				out.Focus()
+			}
+			today := Button(c, "", ButtonGhost).Size(t.Space(7), t.Space(8)).Padding(t.Space(1.5)).Label("Today")
+			today.Children(func() { Icon(c, lucide.RotateCcw()) })
+			if !today.IsDisabled() && today.Clicked() {
+				st.cursor, st.view = calendarDay(time.Now().In(value.Location())), calendarDays
+				out.Focus()
+			}
 			nav := func(label string, delta int, icon *ui.SVG) {
-				b := Button(c, "", ButtonGhost).Size(t.Space(8), t.Space(8)).Padding(t.Space(2)).Label(label)
+				b := Button(c, "", ButtonGhost).Size(t.Space(7), t.Space(8)).Padding(t.Space(1.5)).Label(label)
 				b.Children(func() { Icon(c, icon) })
 				if !b.IsDisabled() && b.Clicked() {
-					st.cursor = calendarMonth(st.cursor, delta)
+					st.page(delta)
 					out.Focus()
 				}
 			}
-			nav("Previous month", -1, lucide.ChevronLeft())
-			Text(c, st.cursor.Format("January 2006")).SingleLine().Bold().Grow(1).TextAlign(ui.Center)
-			nav("Next month", 1, lucide.ChevronRight())
+			nav("Previous "+pageLabel, -1, lucide.ChevronLeft())
+			nav("Next "+pageLabel, 1, lucide.ChevronRight())
 		})
+		if st.view != calendarDays {
+			calendarPeriodGrid(c, out, st, *value)
+			return
+		}
 		month := time.Date(st.cursor.Year(), st.cursor.Month(), 1, 0, 0, 0, 0, time.UTC)
 		out.Label(month.Format("January 2006")).Value(st.cursor.Format("January 2, 2006"))
 		ui.Row(c).Height(t.Space(4)).Margin(0, 0, t.Space(2), 0).Children(func() {
@@ -105,7 +184,7 @@ func Calendar(c *ui.Context, value *time.Time) *CalendarControl {
 			}
 		})
 		start := month.AddDate(0, 0, -((int(month.Weekday()) + 6) % 7))
-		today := calendarDay(time.Now())
+		today := calendarDay(time.Now().In(value.Location()))
 		for week := range 6 {
 			ui.Row(c).Height(t.Space(7)).Role(ui.RoleRow).Children(func() {
 				for col := range 7 {
@@ -139,6 +218,54 @@ func Calendar(c *ui.Context, value *time.Time) *CalendarControl {
 	})
 	dimmed(out.Element)
 	return out
+}
+
+func calendarPeriodGrid(c *ui.Context, out *CalendarControl, st *calendarState, value time.Time) {
+	t := c.Theme()
+	view := st.view
+	year := st.cursor.Year()
+	start := calendarYearStart(year)
+	out.Label("Month selection").Value(st.cursor.Format("January 2006"))
+	if view == calendarYears {
+		out.Label("Year selection").Value(fmt.Sprint(year))
+	}
+	// Keep identities distinct when switching between month and year grids.
+	ui.Column(c).Key(fmt.Sprint(view)).FillWidth().Grow(1).Gap(t.Space(1)).Children(func() {
+		for row := range 4 {
+			ui.Row(c).FillWidth().Grow(1).Gap(t.Space(1)).Role(ui.RoleRow).Children(func() {
+				for col := range 3 {
+					index := row*3 + col
+					target := calendarMonth(st.cursor, index+1-int(st.cursor.Month()))
+					label, text := target.Format("January 2006"), target.Format("Jan")
+					selected := value.Year() == year && int(value.Month()) == index+1
+					atCursor := int(st.cursor.Month()) == index+1
+					if view == calendarYears {
+						target = calendarMonth(st.cursor, (start+index-year)*12)
+						label = fmt.Sprint(start + index)
+						text = label
+						selected = value.Year() == start+index
+						atCursor = year == start+index
+					}
+					variant := ButtonGhost
+					if selected {
+						variant = ButtonPrimary
+					}
+					cell := Button(c, text, variant).Width(0).Grow(1).FillHeight().Padding(0).Label(label).Checked(selected)
+					if atCursor {
+						out.ActiveDescendant(cell)
+						if !selected {
+							cell.Background(t.SurfaceHover)
+						}
+					}
+					if !cell.IsDisabled() && cell.Clicked() {
+						st.cursor = target
+						st.view = view - 1
+						out.Focus()
+					}
+				}
+			})
+		}
+	})
 }
 
 // CalendarPicker displays a leading calendar icon and an ISO date. Click,
