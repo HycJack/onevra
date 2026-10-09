@@ -6,32 +6,72 @@ import (
 	"github.com/oneo-me/onevra/components"
 )
 
+// Positions belong to this demo page and survive navigation, not app restarts.
+type glassDemo struct {
+	x, y float32
+}
+
 func exampleGlass(c *ui.Context, s *demoState) {
-	components.Slider(c, &s.value, 0, 100).Label("Background position").FillWidth()
-	for _, sample := range []struct {
-		name     string
-		material glass.Glass
-	}{
-		{"Regular", glass.Glass{}},
-		{"Clear", glass.Glass{Style: glass.Clear}},
-		{"Tinted", glass.Glass{Tint: c.Theme().Accent}},
-	} {
-		components.Text(c, sample.name).Bold()
-		ui.Box(c).FillWidth().Height(170).Radius(16).Clip().Children(func() {
-			// Paint the backdrop first: glass samples content in the same window.
-			ui.Image(c, demoImage).Absolute().Top(0).Bottom(0).
-				Left(-float32(s.value)).Right(float32(s.value) - 100).Fit(ui.Cover)
-			ui.Column(c).Absolute().Top(30).Left(24).Right(24).Height(110).
-				Radius(28).Material(sample.material).Center().Gap(8).Children(func() {
-				color := c.Theme().Text
-				if sample.name == "Tinted" {
-					color = c.Theme().AccentText
-				} else if sample.name == "Clear" {
-					color = ui.RGB(15, 23, 42)
-				}
-				components.Text(c, "Liquid Glass").Bold().TextColor(color)
-				components.Text(c, "Onevra × MyGo").TextColor(color)
-			})
-		})
+	bitmap, err := galleryImage()
+	if err != nil {
+		components.Text(c, "Unable to load avatar.jpeg").TextColor(c.Theme().TextMuted)
+		return
 	}
+	glassPreview(c, s, bitmap)
+}
+
+func glassPreview(c *ui.Context, s *demoState, bitmap *ui.Bitmap) {
+	ui.Row(c).Gap(8).Wrap().Children(func() {
+		for i, name := range []string{"Regular", "Clear", "Tinted"} {
+			style := components.ButtonSecondary
+			if s.index == i {
+				style = components.ButtonPrimary
+			}
+			if components.Button(c, name, style).Clicked() {
+				s.index = i
+			}
+		}
+		if components.Button(c, "Reset position", components.ButtonOutline).Clicked() {
+			s.glass = glassDemo{}
+		}
+	})
+	components.Text(c, "Drag the glass over the avatar").TextColor(c.Theme().TextMuted)
+	canvas := ui.Box(c).FillWidth().Height(420).Radius(20).Clip().Label("Glass canvas")
+	previousWidth := canvas.Bounds().W
+	// Bounds is the previous layout; settle initial layout and window resizing.
+	canvas.Draw(func(_ *ui.Painter, r ui.Rect) {
+		if r.W != previousWidth {
+			c.Invalidate()
+		}
+	})
+	canvas.Children(func() {
+		// Paint the avatar first: the material samples content beneath it.
+		components.Image(c, bitmap).Absolute().Left(0).Top(0).Right(0).Bottom(0).
+			Fit(ui.Cover).Label("Author avatar")
+		width := min(float32(220), max(0, canvas.Bounds().W-32))
+		maxX := max(0, canvas.Bounds().W-width-32)
+		material := glass.Glass{}
+		color := c.Theme().Text
+		switch s.index {
+		case 1:
+			material.Style = glass.Clear
+			color = ui.RGB(15, 23, 42)
+		case 2:
+			material.Tint = c.Theme().Accent
+			color = c.Theme().AccentText
+		}
+		pane := ui.Column(c).Absolute().Width(width).Height(120).
+			Radius(30).Material(material).Center().Gap(8).Label("Draggable glass")
+		if dx, dy, ok := pane.Dragged(); ok {
+			s.glass.x += dx
+			s.glass.y += dy
+		}
+		// Keep the entire drag target reachable after dragging or resizing.
+		s.glass.x = min(maxX, max(0, s.glass.x))
+		s.glass.y = min(float32(268), max(0, s.glass.y))
+		pane.Left(16 + s.glass.x).Top(16 + s.glass.y).Children(func() {
+			components.Text(c, "Liquid Glass").Bold().TextColor(color)
+			components.Text(c, "Onevra × MyGo").TextColor(color)
+		})
+	})
 }

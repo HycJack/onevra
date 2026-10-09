@@ -12,6 +12,7 @@ import (
 
 // demoState is owned by one page, survives navigation, and is never persisted.
 type demoState struct {
+	glass           glassDemo
 	terminal        terminalDemo
 	text            string
 	buffer          *ui.TextBuffer
