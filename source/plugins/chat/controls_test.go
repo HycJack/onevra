@@ -1,6 +1,7 @@
 package chat
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 
@@ -97,5 +98,42 @@ func TestAttachmentAndThreadItem(t *testing.T) {
 	}
 	if err := tt.Click("Fix login"); err != nil || clicked != 1 || !tt.HasText("neorio") || !tt.HasText("2m") {
 		t.Fatal("thread item activation failed")
+	}
+}
+
+func TestPickerGroupsFiltersAndChooses(t *testing.T) {
+	var state PickerState
+	chosen := ""
+	var options []Option
+	for i := range 10 {
+		options = append(options, Option{ID: fmt.Sprint("a/", i), Label: fmt.Sprint("Alpha ", i), Group: "alpha", Detail: "128k"})
+	}
+	options = append(options, Option{ID: "b/1", Label: "Beta One", Group: "beta"})
+	tt := ui.NewTester(func(c *ui.Context) {
+		r := Picker(c, &state, PickerOptions{Label: "Model", SearchLabel: "Search models", EmptyText: "None", Options: options, Selected: "a/1"})
+		if r.Chosen != "" {
+			chosen = r.Chosen
+		}
+	}, 600, 800)
+	if tt.HasText("Beta One") {
+		t.Fatal("closed picker built options")
+	}
+	if err := tt.Click("Model"); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if !tt.HasText("alpha") || !tt.HasText("Alpha 1") {
+		t.Fatalf("groups missing: %v", tt.Texts())
+	}
+	tt.Type("beta")
+	tt.Frame()
+	if tt.HasText("Alpha 1") || !tt.HasText("Beta One") {
+		t.Fatalf("filter failed: %v", tt.Texts())
+	}
+	if err := tt.Click("Beta One"); err != nil {
+		t.Fatal(err)
+	}
+	if chosen != "b/1" || state.Open {
+		t.Fatalf("choice: %q open=%v", chosen, state.Open)
 	}
 }
