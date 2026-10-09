@@ -2,6 +2,7 @@ package chat
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 
 	"github.com/egoist/mygo/ui"
@@ -201,5 +202,59 @@ func BenchmarkCompletedTurn(b *testing.B) {
 				tt.Frame()
 			}
 		})
+	}
+}
+
+func TestComposerSubmitOnEnterAndSteering(t *testing.T) {
+	draft := ""
+	sends, stops := 0, 0
+	running := false
+	tt := ui.NewTester(func(c *ui.Context) {
+		p := Composer(c, &draft, ComposerOptions{Label: "Message", SendLabel: "Send", StopLabel: "Stop",
+			Running: running})
+		if p.Send {
+			sends++
+		}
+		if p.Stop {
+			stops++
+		}
+	}, 400, 240)
+	tt.Click("Message")
+	tt.Key(0, ui.KeyEnter)
+	if sends != 0 {
+		t.Fatal("empty draft sent")
+	}
+	tt.Compose("ni", 2)
+	tt.Key(0, ui.KeyEnter)
+	if sends != 0 {
+		t.Fatal("composition sent")
+	}
+	tt.Type("你")
+	lines := strings.Count(draft, "\n")
+	tt.Key(ui.Shift, ui.KeyEnter)
+	tt.Type("b")
+	if sends != 0 || strings.Count(draft, "\n") != lines+1 {
+		t.Fatalf("shift+enter: sends=%d draft=%q", sends, draft)
+	}
+	before := draft
+	tt.Key(0, ui.KeyEnter)
+	if sends != 1 || draft != before {
+		t.Fatalf("enter: sends=%d draft=%q", sends, draft)
+	}
+	running = true
+	tt.Frame()
+	if !tt.HasText("Stop") && tt.Click("Stop") != nil {
+		t.Fatal("stop missing")
+	}
+	if err := tt.Click("Send"); err != nil || sends != 2 {
+		t.Fatalf("steer send unavailable: %v %d", err, sends)
+	}
+	draft = ""
+	tt.Frame()
+	if _, ok := tt.Find("Send"); ok {
+		t.Fatal("send shown for an empty draft while running")
+	}
+	if err := tt.Click("Stop"); err != nil || stops != 1 {
+		t.Fatal("stop failed")
 	}
 }

@@ -1111,9 +1111,5 @@ gallery.chat_model:
   other: "Model"
 gallery.chat_effort:
   other: "Reasoning effort"
-gallery.chat_usage:
-  other: "Usage"
-gallery.chat_context:
-  other: "Context"
 gallery.chat_think:
   other: "Think"

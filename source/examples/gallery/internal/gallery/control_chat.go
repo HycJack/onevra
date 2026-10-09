@@ -34,7 +34,6 @@ type chatDemoState struct {
 	draft         string
 	model, effort string
 	attachment    bool
-	meter         chat.MeterState
 }
 
 func newChatDemoState(now time.Time) *chatDemoState {
@@ -120,7 +119,7 @@ func controlChat(c *ui.Context, state *controlState, _ string) {
 					ID: turn.id, Summary: chatTurnSummary(c, turn), Status: turn.status,
 					Prompt: func(c *ui.Context) {
 						if turn.attached {
-							chat.Attachment(c, chat.AttachmentOptions{Label: "context.md"})
+							components.Text(c, "context.md").TextColor(c.Theme().TextMuted)
 						}
 						components.Text(c, turn.prompt).Selectable()
 					},
@@ -147,17 +146,17 @@ func controlChat(c *ui.Context, state *controlState, _ string) {
 				SendLabel: tr(c, "gallery.chat_send"), StopLabel: tr(c, "gallery.chat_stop"),
 				Accessory: func(c *ui.Context) { chatDemoToolbar(c, s) },
 				Attachments: func(c *ui.Context) {
-					if s.attachment && chat.Attachment(c, chat.AttachmentOptions{Label: "context.md", Detail: "2 KB",
-						RemoveLabel: tr(c, "gallery.chat_remove_attachment")}).Remove {
-						s.attachment = false
+					if s.attachment {
+						components.Text(c, "context.md").TextColor(t.TextMuted)
+						if chat.IconAction(c, tr(c, "gallery.chat_remove_attachment"), lucide.X).Clicked() {
+							s.attachment = false
+						}
 					}
 				},
 				Footer: func(c *ui.Context) {
-					chat.Chip(c, lucide.Folder, "onevra", false).Disabled(true)
-					components.Text(c, tr(c, "gallery.chat_demo_context")).FontSize(t.Rem(.8)).TextColor(t.TextMuted)
-					ui.Box(c).Grow(1)
-					chat.ContextMeter(c, &s.meter, chat.ContextMeterOptions{Label: tr(c, "gallery.chat_usage"), Title: tr(c, "gallery.chat_context"),
-						Value: "48k / 200k (24%)", Fraction: .24})
+					components.Icon(c, lucide.Folder).Size(t.Space(4), t.Space(4)).TextColor(t.TextMuted)
+					components.Text(c, "onevra").TextColor(t.TextMuted)
+					components.Text(c, tr(c, "gallery.chat_demo_context")).TextColor(t.TextMuted)
 				},
 			})
 		})
