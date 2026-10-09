@@ -4,9 +4,9 @@ import "strings"
 
 // Component sections describe purpose, never implementation ownership.
 var navigationGroups = []string{
-	"Plugins", "Actions", "Selection & values", "Text input",
-	"Collections", "Layout", "Containers", "Navigation", "Overlays",
-	"Status", "Media & text",
+	"Plugins", "Actions & navigation", "Text input", "Selection & values",
+	"Date & time", "Color", "Content display", "Layout & containers",
+	"Feedback & overlays",
 }
 
 type navigationEntry struct {

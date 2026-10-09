@@ -28,7 +28,7 @@ func TestNavigationGroupOrder(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.Left, 220, 6000)
 	var bottom float32
-	for _, label := range []string{"Overview", "Welcome", "Component status", "Icon library", "Lucide", "Desktop", "Tray", "Dock menu", "Plugins", "Markdown", "Terminal", "Actions", "Buttons", "Selection & values", "Text input", "Overlays"} {
+	for _, label := range []string{"Overview", "Welcome", "Component status", "Icon library", "Lucide", "Desktop", "Tray", "Dock menu", "Plugins", "Markdown", "Terminal", "Actions & navigation", "Buttons", "Text input", "Selection & values", "Date & time", "Color", "Content display", "Layout & containers", "Feedback & overlays"} {
 		r, ok := tt.Find(label)
 		if !ok || r.Y < bottom {
 			t.Fatalf("%s missing or out of order: %v (previous bottom %v)", label, r, bottom)
@@ -117,8 +117,15 @@ func TestFilteredNavigation(t *testing.T) {
 		t.Fatal("whitespace should show all entries")
 	}
 	count := 0
+	seen := map[galleryPage]bool{}
 	for _, group := range all {
 		count += len(group.entries)
+		for _, entry := range group.entries {
+			if seen[entry.page] {
+				t.Fatalf("duplicate navigation destination: %s", entry.label)
+			}
+			seen[entry.page] = true
+		}
 	}
 	if count != 5+len(controlCatalog)+len(mygoCatalog) {
 		t.Fatalf("missing catalog entries: %d", count)
@@ -197,6 +204,9 @@ func TestChineseNavigationNames(t *testing.T) {
 	g := &Gallery{}
 	g.chooseLanguage("zh-Hans")
 	for _, group := range filteredNavigation("") {
+		if g.text(group.label) == group.label {
+			t.Errorf("untranslated navigation group: %s", group.label)
+		}
 		for _, entry := range group.entries {
 			if entry.label == "Lucide" || entry.label == "Markdown" {
 				continue

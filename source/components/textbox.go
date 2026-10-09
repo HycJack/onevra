@@ -60,6 +60,8 @@ func styleTextBox(c *ui.Context, e ui.Element, options TextBoxOptions) ui.Elemen
 	if options.ReadOnly {
 		background = background.Mix(t.Text, 0.04)
 	}
+	// Let host surfaces and native sidebar materials show through the field.
+	background = background.Alpha(0.5)
 	if !e.IsDisabled() {
 		switch {
 		case e.Focused() && !options.ReadOnly:

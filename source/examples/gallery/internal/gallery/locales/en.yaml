@@ -984,3 +984,13 @@ gallery.your_password_is_updated:
   other: Your password is updated.
 gallery.toggle_smart_notifications:
   other: Toggle smart notifications
+gallery.actions_navigation:
+  other: Actions & navigation
+gallery.date_time:
+  other: Date & time
+gallery.content_display:
+  other: Content display
+gallery.layout_containers:
+  other: Layout & containers
+gallery.feedback_overlays:
+  other: Feedback & overlays

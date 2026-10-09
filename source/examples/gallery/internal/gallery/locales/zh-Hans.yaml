@@ -984,3 +984,13 @@ gallery.your_password_is_updated:
   other: 你的密码已更新。
 gallery.toggle_smart_notifications:
   other: 切换智能通知
+gallery.actions_navigation:
+  other: 操作与导航
+gallery.date_time:
+  other: 日期与时间
+gallery.content_display:
+  other: 内容展示
+gallery.layout_containers:
+  other: 布局与容器
+gallery.feedback_overlays:
+  other: 反馈与浮层

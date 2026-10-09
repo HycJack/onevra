@@ -16,7 +16,7 @@ func pickerTrigger(c *ui.Context, icon *ui.SVG) ui.Element {
 		}
 	}
 	e.Padding(t.Space(1.5), t.Space(2.5), t.Space(1.5), t.Space(8)).
-		Radius(t.Radius).Background(t.Surface).Border(1, border).TextColor(t.Text)
+		Radius(t.Radius).Background(t.Surface.Alpha(0.5)).Border(1, border).TextColor(t.Text)
 	e.DrawOver(func(p *ui.Painter, r ui.Rect) {
 		size := t.Space(4)
 		p.Icon(icon, ui.Rect{X: r.X + t.Space(2.5), Y: r.Y + (r.H-size)/2, W: size, H: size}, t.TextMuted)

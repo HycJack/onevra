@@ -201,14 +201,14 @@ func Settings(c *ui.Context, state *SettingsState, categories []SettingsCategory
 						item := group.Items[result.Item]
 						if lastCategory != result.Category {
 							if searching {
-								Text(c, category.Title).Bold()
+								Text(c, category.Title)
 							}
 							if category.Description != "" {
 								Text(c, category.Description).TextColor(t.TextMuted).Wrap()
 							}
 						}
 						if (lastCategory != result.Category || lastGroup != result.Group) && group.Title != "" {
-							ui.Column(c).FillWidth().Gap(t.Space(3)).Children(func() { Text(c, group.Title).Bold(); ui.Box(c).FillWidth().Height(1).Background(t.Border) })
+							ui.Column(c).FillWidth().Gap(t.Space(3)).Children(func() { Text(c, group.Title); ui.Box(c).FillWidth().Height(1).Background(t.Border) })
 						}
 						lastCategory, lastGroup = result.Category, result.Group
 						count++
@@ -220,7 +220,7 @@ func Settings(c *ui.Context, state *SettingsState, categories []SettingsCategory
 						}
 						row.Key(struct{ Category, Group, Item string }{category.ID, group.ID, item.ID}).FillWidth().MinWidth(0).Gap(t.Space(3)).Children(func() {
 							ui.Column(c).FillWidth().Shrink(1).MinWidth(0).Gap(t.Space(1)).Children(func() {
-								Text(c, item.Title).Bold().Wrap()
+								Text(c, item.Title).Wrap()
 								if item.Description != "" {
 									Text(c, item.Description).TextColor(t.TextMuted).FontSize(t.Rem(.875)).Wrap()
 								}

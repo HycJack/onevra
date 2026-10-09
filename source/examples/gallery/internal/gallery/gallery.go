@@ -120,11 +120,11 @@ func (g *Gallery) LeftToolbar(c *ui.Context) {
 }
 
 func (g *Gallery) leftToolbarLocalized(c *ui.Context) {
-	sidebar.IconButton(c, themeIcon(), tr(c, "gallery.theme")).Menu(g.themeMenu)
-	ui.Spacer(c)
 	if sidebar.IconButton(c, lucide.Settings(), tr(c, "gallery.settings")).Clicked() {
 		g.settings.open = true
 	}
+	ui.Spacer(c)
+	sidebar.IconButton(c, themeIcon(), tr(c, "gallery.theme")).Menu(g.themeMenu)
 }
 
 // iconSamples uses only named accessors, not a full-library runtime registry.
