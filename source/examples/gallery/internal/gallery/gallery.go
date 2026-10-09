@@ -186,7 +186,7 @@ func (g *Gallery) viewLocalized(c *ui.Context) {
 	var content ui.Element
 	_, control := controlExampleFor(g.page)
 	example, upstream := mygoExampleFor(g.page)
-	if control || upstream && example.name != "Terminal" {
+	if !g.config.DisablePixelGrid && (control || upstream && example.name != "Terminal") {
 		content = components.PixelGrid(c, components.PixelGridOptions{Spacing: 22, MajorEvery: -1}).Column()
 	} else {
 		content = ui.Column(c)

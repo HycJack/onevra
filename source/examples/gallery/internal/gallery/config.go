@@ -14,8 +14,9 @@ import (
 
 // Config holds application preferences, separate from transient window state.
 type Config struct {
-	Theme    mygo.ThemeSource `yaml:"theme"`
-	Language string           `yaml:"language,omitempty"`
+	Theme            mygo.ThemeSource `yaml:"theme"`
+	Language         string           `yaml:"language,omitempty"`
+	DisablePixelGrid bool             `yaml:"disablePixelGrid,omitempty"`
 	// Zero values preserve automatic ABC selection and initially visible results.
 	DisableCommandABC     bool `yaml:"disableCommandABC,omitempty"`
 	CommandExpandOnSearch bool `yaml:"commandExpandOnSearch,omitempty"`
@@ -113,7 +114,7 @@ func (g *Gallery) themeMenu(m *ui.Menu) {
 	}
 }
 
-func (g *Gallery) saveCommandPreferences() {
+func (g *Gallery) savePreferences() {
 	if g.configPath != "" {
 		if err := SaveConfig(g.configPath, g.config); err != nil {
 			log.Printf("Save gallery config: %v", err)

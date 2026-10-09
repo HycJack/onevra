@@ -116,6 +116,17 @@ func (g *Gallery) settingsCategories() []components.SettingsCategory {
 						g.chooseTheme(mygo.ThemeSource(choice))
 					}
 				},
+			}, {
+				ID: "pixel-grid", Title: g.text("gallery.pixel_grid_background"), Description: g.text("gallery.pixel_grid_background_description"),
+				Build: func(c *ui.Context) {
+					enabled := !g.config.DisablePixelGrid
+					components.Switch(c, &enabled, g.text("gallery.toggle_pixel_grid_background"), components.SwitchOptions{HideLabel: true}).Changed()
+					if enabled != !g.config.DisablePixelGrid {
+						g.config.DisablePixelGrid = !enabled
+						g.savePreferences()
+						c.Invalidate()
+					}
+				},
 			}}}},
 		},
 	}
@@ -158,7 +169,7 @@ func (g *Gallery) commandSettingsGroup() components.SettingsGroup {
 			components.Switch(c, &enabled, g.text("gallery.toggle_command_auto_abc"), components.SwitchOptions{HideLabel: true}).Disabled(runtime.GOOS != "darwin").Changed()
 			if enabled != !g.config.DisableCommandABC {
 				g.config.DisableCommandABC = !enabled
-				g.saveCommandPreferences()
+				g.savePreferences()
 			}
 		}},
 		{ID: "command-expanded", Title: g.text("gallery.command_default_expanded"), Description: g.text("gallery.command_default_expanded_description"), Keywords: []string{"search", "results", "Raycast"}, Build: func(c *ui.Context) {
@@ -166,7 +177,7 @@ func (g *Gallery) commandSettingsGroup() components.SettingsGroup {
 			components.Switch(c, &expanded, g.text("gallery.toggle_command_default_expanded"), components.SwitchOptions{HideLabel: true}).Changed()
 			if expanded != !g.config.CommandExpandOnSearch {
 				g.config.CommandExpandOnSearch = !expanded
-				g.saveCommandPreferences()
+				g.savePreferences()
 			}
 		}},
 	}}

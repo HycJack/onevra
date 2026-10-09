@@ -428,6 +428,12 @@ gallery.grayscale:
   other: Grayscale
 gallery.green:
   other: Green
+gallery.toggle_pixel_grid_background:
+  other: "Toggle pixel grid background"
+gallery.pixel_grid_background:
+  other: "Pixel grid background"
+gallery.pixel_grid_background_description:
+  other: "Show a pixel grid behind component previews."
 gallery.grid:
   other: Grid
 gallery.grid_items:

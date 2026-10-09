@@ -300,6 +300,15 @@ func TestControlPageGrid(t *testing.T) {
 			if img.RGBAAt(176, 575) != img.RGBAAt(22, 575) {
 				t.Fatal("page grid must not emphasize major lines")
 			}
+			g.config.DisablePixelGrid = true
+			tt.Frame()
+			img = tt.Image()
+			background = img.RGBAAt(5, 575)
+			for x := 0; x < width; x++ {
+				if img.RGBAAt(x, 575) != background {
+					t.Fatalf("disabled grid still visible at %d", x)
+				}
+			}
 		}
 	}
 }

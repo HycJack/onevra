@@ -8,6 +8,26 @@ import (
 	"github.com/egoist/mygo/ui"
 )
 
+func TestPixelGridPreference(t *testing.T) {
+	g := &Gallery{configPath: filepath.Join(t.TempDir(), "config.yaml")}
+	g.config.Theme = "system"
+	g.settings.open, g.settings.view.Category = true, "appearance"
+	tt := ui.NewTester(g.Settings, 820, 600)
+	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
+	for _, disabled := range []bool{true, false} {
+		if err := tt.Click("Toggle pixel grid background"); err != nil {
+			t.Fatal(err)
+		}
+		if g.config.DisablePixelGrid != disabled {
+			t.Fatal("background preference did not update")
+		}
+		saved, err := LoadConfig(g.configPath)
+		if err != nil || saved.DisablePixelGrid != disabled {
+			t.Fatalf("background preference not persisted: %+v, %v", saved, err)
+		}
+	}
+}
+
 func TestSettingsDialog(t *testing.T) {
 	g := &Gallery{page: shellPage}
 	tt := ui.NewTester(func(c *ui.Context) {

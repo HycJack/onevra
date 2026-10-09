@@ -428,6 +428,12 @@ gallery.grayscale:
   other: 灰度
 gallery.green:
   other: 绿色
+gallery.toggle_pixel_grid_background:
+  other: "切换像素网格背景"
+gallery.pixel_grid_background:
+  other: "像素网格背景"
+gallery.pixel_grid_background_description:
+  other: "在组件预览页面显示像素网格背景。"
 gallery.grid:
   other: "网格"
 gallery.grid_items:
