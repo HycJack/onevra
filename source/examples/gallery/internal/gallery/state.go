@@ -77,6 +77,9 @@ func saveYAML(path string, value any) error {
 }
 
 func pageKey(page galleryPage) string {
+	if page == notificationsPage {
+		return "desktop/notifications"
+	}
 	if page == dockPage {
 		return "desktop/dock-menu"
 	}
@@ -102,6 +105,9 @@ func pageKey(page galleryPage) string {
 }
 
 func pageFromKey(key string) galleryPage {
+	if key == "desktop/notifications" {
+		return notificationsPage
+	}
 	if key == "desktop/dock-menu" {
 		return dockPage
 	}

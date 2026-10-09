@@ -41,7 +41,7 @@ func filteredNavigation(query string, translators ...func(string) string) []navi
 	}
 	add("Overview", []navigationEntry{{"Welcome", welcomePage}, {"Component status", componentStatusPage}})
 	add("Icon library", []navigationEntry{{"Lucide", lucidePage}})
-	add("Desktop", []navigationEntry{{"Tray", trayPage}, {"Dock menu", dockPage}})
+	add("Desktop", []navigationEntry{{"Tray", trayPage}, {"Dock menu", dockPage}, {"System notifications", notificationsPage}})
 	for _, group := range navigationGroups {
 		var entries []navigationEntry
 		for i, example := range controlCatalog {

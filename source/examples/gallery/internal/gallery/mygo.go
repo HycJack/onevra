@@ -5,7 +5,7 @@ import (
 	"github.com/oneo-me/onevra/components"
 )
 
-const mygoPageStart galleryPage = dockPage + 1
+const mygoPageStart galleryPage = notificationsPage + 1
 
 type mygoExample struct {
 	name, group string

@@ -17,6 +17,7 @@ type Gallery struct {
 	welcome         welcomeState
 	tray            trayDemo
 	dock            dockDemo
+	notification    notificationDemo
 	language        *translator
 	systemLanguage  string
 	config          Config
@@ -64,6 +65,9 @@ func (g *Gallery) titlebarLocalized(c *ui.Context) {
 	}
 	if g.page == trayPage {
 		title = "Desktop / Tray"
+	}
+	if g.page == notificationsPage {
+		title = "Desktop / System notifications"
 	}
 	if g.page == dockPage {
 		title = "Desktop / Dock menu"
@@ -180,6 +184,10 @@ func (g *Gallery) viewLocalized(c *ui.Context) {
 }
 
 func (g *Gallery) body(c *ui.Context) {
+	if g.page == notificationsPage {
+		g.Notifications(c)
+		return
+	}
 	if g.page == dockPage {
 		g.DockMenu(c)
 		return

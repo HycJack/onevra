@@ -997,3 +997,35 @@ gallery.feedback_overlays:
 
 gallery.code:
   other: "Code"
+gallery.system_notifications:
+  other: "System notifications"
+gallery.desktop_system_notifications:
+  other: "Desktop / System notifications"
+gallery.notification_description:
+  other: "Send a system notification, then click it to return to this page. Sending again replaces this demo’s previous notification."
+gallery.notification_requirements:
+  other: "macOS requires a packaged app and notification permission. Linux requires a desktop notification service. System settings may silence or hide notifications."
+gallery.notification_silent:
+  other: "Silent notification"
+gallery.notification_send:
+  other: "Send notification"
+gallery.notification_withdraw:
+  other: "Withdraw notification"
+gallery.notification_title:
+  other: "Hello from Onevra Gallery"
+gallery.notification_body:
+  other: "Click to return to the system notification example."
+gallery.notification_unsupported:
+  other: "Notifications are unavailable. On macOS, run the packaged Gallery app."
+gallery.notification_sending:
+  other: "Sending… Allow notifications if the system asks."
+gallery.notification_denied:
+  other: "Notification permission was denied. You can allow notifications in System Settings."
+gallery.notification_failed:
+  other: "Could not send the notification."
+gallery.notification_sent:
+  other: "Submitted to the system. Click the notification to return here."
+gallery.notification_clicked:
+  other: "Notification clicked. Welcome back!"
+gallery.notification_withdrawn:
+  other: "Notification withdrawn."

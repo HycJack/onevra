@@ -28,7 +28,7 @@ func TestNavigationGroupOrder(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.Left, 220, 6000)
 	var bottom float32
-	for _, label := range []string{"Overview", "Welcome", "Component status", "Icon library", "Lucide", "Desktop", "Tray", "Dock menu", "Plugins", "Markdown", "Terminal", "Actions & navigation", "Buttons", "Text input", "Selection & values", "Date & time", "Color", "Content display", "Layout & containers", "Feedback & overlays"} {
+	for _, label := range []string{"Overview", "Welcome", "Component status", "Icon library", "Lucide", "Desktop", "Tray", "Dock menu", "System notifications", "Plugins", "Markdown", "Terminal", "Actions & navigation", "Buttons", "Text input", "Selection & values", "Date & time", "Color", "Content display", "Layout & containers", "Feedback & overlays"} {
 		r, ok := tt.Find(label)
 		if !ok || r.Y < bottom {
 			t.Fatalf("%s missing or out of order: %v (previous bottom %v)", label, r, bottom)
@@ -81,7 +81,7 @@ func TestNavigationSelectionAndHover(t *testing.T) {
 	for _, dark := range []bool{false, true} {
 		t.Run(map[bool]string{false: "light", true: "dark"}[dark], func(t *testing.T) {
 			g := &Gallery{}
-			tt := ui.NewTester(g.Left, 220, 600)
+			tt := ui.NewTester(g.Left, 220, 800)
 			tt.SetDark(dark)
 			for _, label := range []string{"Lucide", "Buttons"} {
 				tt.Move(219, 479)
@@ -127,7 +127,7 @@ func TestFilteredNavigation(t *testing.T) {
 			seen[entry.page] = true
 		}
 	}
-	if count != 5+len(controlCatalog)+len(mygoCatalog) {
+	if count != 6+len(controlCatalog)+len(mygoCatalog) {
 		t.Fatalf("missing catalog entries: %d", count)
 	}
 	for _, group := range all {

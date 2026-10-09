@@ -61,6 +61,12 @@ On macOS, select **Desktop / Dock menu** in Gallery and click **Enable Dock menu
 
 From `source/`, run `ONEVRA_NATIVE_SMOKE=1 GOWORK=off go test ./examples/gallery/internal/gallery -run '^TestNativeDockMenu$' -count=1 -timeout 30s` in a macOS desktop session. This checks menu installation, callback behavior and cleanup, not Dock pointer interaction. Manually verify the actual Dock menu, all three shortcuts with Gallery visible, hidden or minimized, the Settings dialog, and removal of the custom items without changing standard macOS actions. A packaged Gallery run is recommended to review the Dock icon's application identity.
 
+## Notification example
+
+Select **Desktop / System notifications** and click **Send notification**. On macOS, use `go run ./tools/packer run` so Gallery has an application bundle, and allow notifications when prompted. An unpackaged executable reports that notifications are unavailable. Linux requires a desktop notification service; Windows uses notification-area balloons.
+
+Review delivery with sound enabled and disabled, denied permission, repeated sends, withdrawal, and clicking a notification while Gallery is hidden or minimized or showing another page. Clicking restores the notification page; closing Gallery withdraws the demo notification. System notification settings and Do Not Disturb can suppress presentation even after successful submission. Check both interface languages and themes, narrow layouts and keyboard navigation. Windows and Linux need their own native review.
+
 ## Development checks
 
 ```sh

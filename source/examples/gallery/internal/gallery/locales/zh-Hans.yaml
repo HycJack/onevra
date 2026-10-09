@@ -997,3 +997,35 @@ gallery.feedback_overlays:
 
 gallery.code:
   other: "代码高亮"
+gallery.system_notifications:
+  other: "系统通知"
+gallery.desktop_system_notifications:
+  other: "桌面 / 系统通知"
+gallery.notification_description:
+  other: "发送系统通知，点击通知即可返回此页面。再次发送会替换本演示的上一条通知。"
+gallery.notification_requirements:
+  other: "macOS 需要打包的应用及通知权限；Linux 需要桌面通知服务。系统设置可能静音或隐藏通知。"
+gallery.notification_silent:
+  other: "静音通知"
+gallery.notification_send:
+  other: "发送通知"
+gallery.notification_withdraw:
+  other: "撤回通知"
+gallery.notification_title:
+  other: "来自 Onevra Gallery 的问候"
+gallery.notification_body:
+  other: "点击返回系统通知示例。"
+gallery.notification_unsupported:
+  other: "当前无法使用系统通知。在 macOS 上，请运行打包后的 Gallery 应用。"
+gallery.notification_sending:
+  other: "正在发送…如系统询问，请允许通知。"
+gallery.notification_denied:
+  other: "通知权限已被拒绝，可在系统设置中允许通知。"
+gallery.notification_failed:
+  other: "无法发送通知。"
+gallery.notification_sent:
+  other: "已提交给系统。点击通知可返回此处。"
+gallery.notification_clicked:
+  other: "已点击通知，欢迎回来！"
+gallery.notification_withdrawn:
+  other: "已撤回通知。"
