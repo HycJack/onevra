@@ -80,6 +80,7 @@ func (g *Gallery) Settings(c *ui.Context) {
 						})
 					})
 				})
+				ui.Box(c).Width(1).FillHeight().Shrink(0).Background(t.Border)
 			}
 			ui.Column(c).Fill().MinWidth(0).Background(t.Background).Children(func() {
 				if narrow {
@@ -91,7 +92,6 @@ func (g *Gallery) Settings(c *ui.Context) {
 				} else {
 					g.settingsHeading(c, s.page, true)
 				}
-				ui.Box(c).FillWidth().Height(1).Background(t.Border)
 				components.ScrollView(c, components.ScrollViewOptions{}).Fill().Children(func() {
 					ui.Column(c).Key(s.page).FillWidth().MinWidth(0).Padding(t.Space(5)).Gap(t.Space(5)).Children(func() {
 						if s.page == "Appearance" {
