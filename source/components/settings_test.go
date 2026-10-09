@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/theme"
 )
 
 func settingsFixture() []SettingsCategory {
@@ -86,6 +87,59 @@ func TestSettingsStateAndBuilders(t *testing.T) {
 		tt.Frame()
 		if !tt.HasText("No matching settings. Try another search.") {
 			t.Fatal("empty catalog")
+		}
+	}
+}
+
+func TestSettingsSidebarSpacing(t *testing.T) {
+	catalog := []SettingsCategory{
+		{ID: "account", Title: "Account", Section: "Personal"},
+		{ID: "notifications", Title: "Notifications", Section: "Personal"},
+		{ID: "general", Title: "General", Section: "Application"},
+		{ID: "appearance", Title: "Appearance", Section: "Application"},
+		{ID: "about", Title: "About"},
+		{ID: "help", Title: "Help"},
+		{ID: "privacy", Title: "Privacy", Section: "Personal"},
+	}
+	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+		state := SettingsState{}
+		var itemGap, sectionGap float32
+		tt := ui.NewTester(func(c *ui.Context) {
+			theme.Apply(c, mode)
+			itemGap, sectionGap = c.Theme().Space(1), c.Theme().Space(3)
+			Settings(c, &state, catalog, SettingsOptions{})
+		}, 800, 600)
+		find := func(label string) ui.Rect {
+			t.Helper()
+			r, ok := tt.Find(label)
+			if !ok {
+				t.Fatalf("missing navigation element %q", label)
+			}
+			return r
+		}
+		for _, pair := range [][2]string{{"Account", "Notifications"}, {"General", "Appearance"}, {"About", "Help"}} {
+			first, second := find(pair[0]), find(pair[1])
+			if gap := second.Y - first.Y - first.H; gap != itemGap {
+				t.Fatalf("%v: item gap = %v, want %v", pair, gap, itemGap)
+			}
+		}
+		notifications, application := find("Notifications"), find("Application")
+		appearance, about := find("Appearance"), find("About")
+		for _, pair := range [][2]ui.Rect{{notifications, application}, {appearance, about}} {
+			if gap := pair[1].Y - pair[0].Y - pair[0].H; gap != sectionGap {
+				t.Fatalf("section gap = %v, want %v", gap, sectionGap)
+			}
+		}
+		// Repeated and unheaded sections must keep every category actionable.
+		for _, category := range catalog {
+			state.Query = "unmatched"
+			tt.Frame()
+			if err := tt.Click(category.Title); err != nil {
+				t.Fatal(err)
+			}
+			if state.Category != category.ID || state.Query != "" {
+				t.Fatalf("navigation to %q: %+v", category.ID, state)
+			}
 		}
 	}
 }

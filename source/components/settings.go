@@ -139,17 +139,28 @@ func Settings(c *ui.Context, state *SettingsState, categories []SettingsCategory
 				ui.Column(c).FillWidth().Padding(0, t.Space(3), t.Space(4), t.Space(3)).Children(search)
 				ScrollView(c, ScrollViewOptions{}).Fill().Children(func() {
 					Sidebar(c).Children(func() {
-						section := ""
-						for i, category := range categories {
-							if category.Section != "" && category.Section != section {
-								SidebarSection(c, category.Section, nil)
+						for start := 0; start < len(categories); {
+							section := categories[start].Section
+							end := start + 1
+							for end < len(categories) && categories[end].Section == section {
+								end++
 							}
-							section = category.Section
-							if SidebarItem(c, category.Title, category.Icon, selected == i).Key(category.ID).Clicked() {
-								state.Category = category.ID
-								selected = i
-								state.Query = ""
+							items := func() {
+								for i := start; i < end; i++ {
+									category := categories[i]
+									if SidebarItem(c, category.Title, category.Icon, selected == i).Key(category.ID).Clicked() {
+										state.Category = category.ID
+										selected = i
+										state.Query = ""
+									}
+								}
 							}
+							if section != "" {
+								SidebarSection(c, section, items)
+							} else {
+								ui.Column(c).FillWidth().MinWidth(0).Gap(t.Space(1)).Children(items)
+							}
+							start = end
 						}
 					})
 				})
