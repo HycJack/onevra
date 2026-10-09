@@ -17,11 +17,12 @@ type DialogOptions struct {
 	// Inset is the minimum viewport clearance in DIPs on every edge.
 	// Non-positive values use 20. WindowDragHeight can increase this clearance.
 	Inset float32
-	// WindowDragHeight reserves a full-width native window drag strip at the
-	// viewport top, inside this modal layer. Non-positive values disable it.
-	// Set this and Inset to the host's header height to retain window dragging
-	// without enabling underlying header actions. MyGo owns drag and focus behavior.
+	// WindowDragHeight overrides the host's native window drag strip height
+	// in DIPs. Non-positive values inherit WithDialogWindowDrag (zero without
+	// a host). MyGo owns native drag and focus behavior.
 	WindowDragHeight float32
+	// DisableWindowDrag disables the strip, including an explicit height.
+	DisableWindowDrag bool
 }
 
 // Dialog builds arbitrary content in a modal panel and returns its frame-local
@@ -44,7 +45,14 @@ func Dialog(c *ui.Context, open *bool, options DialogOptions, build func(panel u
 	if inset <= 0 {
 		inset = 20
 	}
-	dragHeight := min(max(0, options.WindowDragHeight), max(0, h))
+	dragHeight := options.WindowDragHeight
+	if dragHeight <= 0 {
+		dragHeight = *dialogWindowDrag(c)
+	}
+	if options.DisableWindowDrag {
+		dragHeight = 0
+	}
+	dragHeight = min(max(0, dragHeight), max(0, h))
 	inset = max(inset, dragHeight)
 	ui.Overlay(c, func() {
 		back := ui.Column(c).Absolute().Left(0).Top(0).Right(0).Bottom(0).

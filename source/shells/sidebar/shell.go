@@ -7,6 +7,7 @@ import (
 
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/components"
 	"github.com/oneo-me/onevra/icons/lucide"
 	"github.com/oneo-me/onevra/theme"
 )
@@ -220,6 +221,10 @@ func openFraction(open bool) float32 {
 func (s *Shell) view(c *ui.Context) {
 	// The theme must be installed before any widget is created.
 	theme.Apply(c, s.options.Appearance)
+	components.WithDialogWindowDrag(c, HeaderHeight(c), func() { s.build(c) })
+}
+
+func (s *Shell) build(c *ui.Context) {
 	vibrant := c.Vibrancy()
 	if vibrant {
 		c.Root().Background(ui.Transparent)
