@@ -5,6 +5,14 @@ import (
 	"github.com/oneo-me/onevra/components"
 )
 
+func controlSpinner(c *ui.Context, _ *controlState, variant string) {
+	style := components.SpinnerRing
+	if variant == "Spokes" {
+		style = components.SpinnerSpokes
+	}
+	components.Spinner(c, style).Label(variant + " loading")
+}
+
 func controlProgress(c *ui.Context, s *controlState, variant string) {
 	components.Slider(c, &s.value, 0, 100).Label(variant + " value").FillWidth()
 	components.Textf(c, "%.0f%%", s.value)

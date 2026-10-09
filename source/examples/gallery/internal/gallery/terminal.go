@@ -65,7 +65,7 @@ func newShellTerminal() (*terminal.Terminal, error) {
 func exampleTerminal(c *ui.Context, s *demoState) {
 	term, loading, err := s.terminal.snapshot()
 	if loading {
-		ui.Spinner(c).Label("Loading terminal")
+		components.Spinner(c, components.SpinnerSpokes).Label("Loading terminal")
 		c.After(50 * time.Millisecond)
 		return
 	}

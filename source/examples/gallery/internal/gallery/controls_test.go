@@ -8,7 +8,7 @@ import (
 )
 
 func TestControlPages(t *testing.T) {
-	if len(controlCatalog) != 29 {
+	if len(controlCatalog) != 30 {
 		t.Fatal("missing control examples")
 	}
 	for i, example := range controlCatalog {
@@ -162,8 +162,8 @@ func TestControlExampleInteractions(t *testing.T) {
 					tt.Key(0, ui.KeyTab)
 					tt.Key(0, ui.KeyRight)
 					changed = s.index == 1
-				case "Badge", "Icon", "Image":
-					return // Media components have no interaction state.
+				case "Badge", "Icon", "Image", "Spinner":
+					return // Display-only components have no interaction state.
 				case "ScrollView":
 					return // ScrollView interactions are covered in the component tests.
 				case "Text":
