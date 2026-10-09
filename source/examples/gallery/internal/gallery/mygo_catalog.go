@@ -1,6 +1,6 @@
 package gallery
 
-// Only unresolved upstream components get standalone examples.
+// Unresolved upstream components and direct-use plugins retain standalone examples.
 var mygoCatalog = unhandledMyGoExamples(mygoExamples)
 
 // Hand-built demonstrations are independent of the generated source inventory.

@@ -37,11 +37,15 @@ func TestMyGoReviewDecisions(t *testing.T) {
 }
 
 func TestDirectUseComponentsHaveOnlyExplicitExamples(t *testing.T) {
+	plugins := map[string]bool{}
+	for _, example := range mygoExamples {
+		plugins[example.name] = example.group == "Plugins"
+	}
 	for _, entry := range mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled) {
 		if entry.Status != mygoPrimitive {
 			continue
 		}
-		if _, demonstrated := mygoDirectExamples[entry.Name]; demonstrated {
+		if plugins[entry.Name] {
 			if !entry.HasExample || pageFromKey("mygo/"+entry.Name) == lucidePage {
 				t.Fatalf("direct-use demonstration missing: %s", entry.Name)
 			}
@@ -58,6 +62,35 @@ func TestDirectUseComponentsHaveOnlyExplicitExamples(t *testing.T) {
 		if pageFromKey("mygo/"+entry.Name) != lucidePage {
 			t.Fatalf("direct-use route remains: %s", entry.Name)
 		}
+	}
+}
+
+func TestMyGoPluginsAreDirectUse(t *testing.T) {
+	examples := []mygoExample{
+		{name: "Glass", group: "Plugins"},
+		{name: "Terminal", group: "Plugins"},
+		{name: "FuturePlugin", group: "Plugins"},
+	}
+	entries := mygoReviewEntries(nil, examples, nil)
+	for _, example := range examples {
+		found := false
+		for _, entry := range entries {
+			if entry.Name == example.name {
+				found = true
+				if entry.Status != mygoPrimitive || !entry.HasExample || entry.Reason == "" {
+					t.Fatalf("plugin is not direct-use: %+v", entry)
+				}
+			}
+		}
+		if !found {
+			t.Fatalf("missing plugin: %s", example.name)
+		}
+	}
+	if pending := pendingMyGo(nil, examples); len(pending) != 0 {
+		t.Fatalf("plugins pending review: %v", pending)
+	}
+	if got := unhandledMyGoExamples(examples); len(got) != len(examples) {
+		t.Fatalf("plugin examples filtered: %v", got)
 	}
 }
 
@@ -115,7 +148,7 @@ func TestMyGoReviewLog(t *testing.T) {
 			t.Fatalf("unexpected reminder: %s", name)
 		}
 	}
-	for _, name := range []string{"ContextMenu", "Menu"} {
+	for _, name := range []string{"ContextMenu", "Menu", "Glass", "Terminal"} {
 		if strings.Contains(output, "pending: "+name+" (") {
 			t.Fatalf("native menu should not need review: %s", name)
 		}

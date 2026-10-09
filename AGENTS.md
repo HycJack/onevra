@@ -7,6 +7,7 @@ Onevra is an independent Go component library built on MyGo. Read [ARCHITECTURE.
 - Keep Go source, tests, examples, module files and application packaging configuration in `source/`. Run Go commands from that module directory; keep documentation at the repository root and in `docs/`.
 
 - When Onevra implements a component, use that component instead of MyGo's equivalent styled widget in application and gallery UI. MyGo primitives and unstyled bases remain implementation building blocks; dedicated MyGo component demonstrations are the only styled-widget exception. Check `source/components/` and `source/shell/` before choosing a control.
+- Use all MyGo plugins directly, including Glass and future plugins; do not implement Onevra replacements.
 - Compose MyGo primitives and unstyled bases; do not create a parallel renderer, input system or theme manager.
 - Keep public components product-neutral. Applications own business state, localized text, persistence and asynchronous work.
 - Read upstream public signatures before using MyGo APIs. MyGo documentation: https://mygo.egoist.dev/docs; Markdown index: https://mygo.egoist.dev/llms.txt; complete Markdown: https://mygo.egoist.dev/llms-full.txt; individual pages: `/docs/*.md`. Version-matched documentation and implementation live in `docs/` and `ui/` under the directory returned by `GOWORK=off go list -m -f '{{.Dir}}' github.com/egoist/mygo` from `source/`; prefer these over the latest website when versions differ. Keep examples runnable independently of consumer applications.

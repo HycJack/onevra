@@ -112,11 +112,6 @@ var mygoNativeMenus = map[string]string{
 	"Menu":        "ui/menu.go",
 }
 
-// These direct-use APIs retain their dedicated gallery demonstrations.
-var mygoDirectExamples = map[string]string{
-	"Terminal": "Use MyGo's terminal plugin directly; no Onevra terminal implementation",
-}
-
 type mygoComponent struct{ Name, Source string }
 
 type mygoStatus string
@@ -148,8 +143,10 @@ func mygoReviewEntries(discovered []mygoComponent, examples []mygoExample, decis
 		found[name] = mygoComponent{name, source}
 	}
 	demonstrated := map[string]bool{}
+	plugins := map[string]bool{}
 	for _, entry := range examples {
 		demonstrated[entry.name] = true
+		plugins[entry.name] = entry.group == "Plugins"
 		if _, ok := found[entry.name]; !ok {
 			found[entry.name] = mygoComponent{entry.name, "gallery catalog"}
 		}
@@ -172,8 +169,9 @@ func mygoReviewEntries(discovered []mygoComponent, examples []mygoExample, decis
 			entry.Status, entry.HasExample = mygoPrimitive, false
 			entry.Reason = "Use MyGo native menus directly; no Onevra menu implementation"
 		}
-		if reason, direct := mygoDirectExamples[name]; direct {
-			entry.Status, entry.Reason = mygoPrimitive, reason
+		if plugins[name] {
+			entry.Status = mygoPrimitive
+			entry.Reason = "Use MyGo plugins directly; no Onevra plugin implementation"
 		}
 		if decision, handled := decisions[name]; handled {
 			entry.Status, entry.Replacement, entry.Reason, entry.HasExample = mygoExcluded, decision.Replacement, decision.Reason, false
