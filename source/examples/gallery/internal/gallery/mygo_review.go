@@ -15,6 +15,8 @@ type mygoDecision struct {
 // exclusion decisions hide upstream examples and suppress pending reminders.
 // To exclude a component, add {Reason: "why this component is not needed"}.
 var mygoHandled = map[string]mygoDecision{
+	"ColorPicker":      {Replacement: "components.ColorView", Reason: "Onevra RGBA color editing view"},
+	"ColorWell":        {Replacement: "components.ColorPicker", Reason: "Customizable swatch opening Onevra ColorView"},
 	"Tooltip":          {Replacement: "components.Tooltip", Reason: "Onevra text hints on MyGo tooltip behavior"},
 	"Toast":            {Reason: "Transient toast notifications are not needed; prefer contextual feedback in application content"},
 	"Popover":          {Replacement: "components.Popover", Reason: "Onevra anchored non-modal panel on MyGo popover behavior"},

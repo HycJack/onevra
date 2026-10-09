@@ -13,6 +13,11 @@ type TextBoxOptions struct {
 	// It reserves space on the left and aligns with the first line in multiline
 	// mode. Supply the accessible name with Label. Nil leaves no icon or gap.
 	LeadingIcon *ui.SVG
+	// LeadingText is a non-editable, theme-font prefix inside the field, such as
+	// "R", "#" or "$". It follows LeadingIcon when both are set, reserves measured
+	// space and does not become part of the value, selection or copied text.
+	// Keep it short and single-line; supply the accessible name with Label.
+	LeadingText string
 }
 
 // TextBox creates a text input editing *value. Configure mode and read-only
@@ -64,15 +69,34 @@ func styleTextBox(c *ui.Context, e ui.Element, options TextBoxOptions) ui.Elemen
 		}
 	}
 	e.Padding(t.Space(1.5), t.Space(2.5)).Radius(t.Radius).Background(background).Border(1, border)
-	if icon := options.LeadingIcon; icon != nil {
-		e.Padding(t.Space(1.5), t.Space(2.5), t.Space(1.5), t.Space(8))
+	if options.LeadingIcon != nil || options.LeadingText != "" {
+		span := ui.Span{Text: options.LeadingText, Color: t.TextMuted}
+		width, height := c.MeasureText(0, span)
+		left := t.Space(2.5)
+		if options.LeadingIcon != nil {
+			left = t.Space(8)
+		}
+		inset := left
+		if options.LeadingText != "" {
+			inset += width + t.Space(2)
+		}
+		e.Padding(t.Space(1.5), t.Space(2.5), t.Space(1.5), inset)
 		e.DrawOver(func(p *ui.Painter, r ui.Rect) {
-			size := t.Space(4)
-			y := r.Y + (r.H-size)/2
-			if options.Multiline {
-				y = r.Y + 1 + t.Space(1.5)
+			if icon := options.LeadingIcon; icon != nil {
+				size := t.Space(4)
+				y := r.Y + (r.H-size)/2
+				if options.Multiline {
+					y = r.Y + 1 + t.Space(1.5)
+				}
+				p.Icon(icon, ui.Rect{X: r.X + t.Space(2.5), Y: y, W: size, H: size}, t.TextMuted)
 			}
-			p.Icon(icon, ui.Rect{X: r.X + t.Space(2.5), Y: y, W: size, H: size}, t.TextMuted)
+			if options.LeadingText != "" {
+				y := r.Y + (r.H-height)/2
+				if options.Multiline {
+					y = r.Y + 1 + t.Space(1.5)
+				}
+				p.Clip(r, t.Radius, func() { p.RichText(r.X+1+left, y, 0, span) })
+			}
 		})
 	}
 	return dimmed(e)

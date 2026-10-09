@@ -54,6 +54,80 @@ func TestTextBoxLeadingIcon(t *testing.T) {
 	}
 }
 
+func TestTextBoxLeadingText(t *testing.T) {
+	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+		for _, multiline := range []bool{false, true} {
+			for _, buffered := range []bool{false, true} {
+				value := ""
+				buffer := ui.NewTextBuffer("")
+				options := TextBoxOptions{Multiline: multiline, LeadingIcon: lucide.Search()}
+				var input ui.Element
+				tt := ui.NewTester(func(c *ui.Context) {
+					theme.Apply(c, mode)
+					if buffered {
+						input = TextBoxBuffer(c, buffer, options)
+					} else {
+						input = TextBox(c, &value, options)
+					}
+					input.Label("Amount").Width(240).Height(100)
+				}, 300, 120)
+				plain := append([]byte(nil), tt.Image().Pix...)
+				options.LeadingText = "USD"
+				tt.Frame()
+				img := tt.Image()
+				changed := 0
+				for y := 0; y < 120; y++ {
+					for x := 0; x < 300; x++ {
+						i := img.PixOffset(x, y)
+						if !bytes.Equal(plain[i:i+4], img.Pix[i:i+4]) {
+							changed++
+							if x < 32 || x > 70 {
+								t.Fatalf("prefix displaced icon or escaped inset: %d,%d", x, y)
+							}
+						}
+					}
+				}
+				if changed == 0 {
+					t.Fatal("prefix missing")
+				}
+				// The prefix remains in the input's hit region but outside its buffer.
+				tt.ClickAt(40, 15)
+				tt.Type("123")
+				got := value
+				if buffered {
+					got = buffer.String()
+				}
+				if got != "123" {
+					t.Fatalf("prefix became editable: %q", got)
+				}
+				options.ReadOnly = true
+				tt.Frame()
+				tt.Type("4")
+				got = value
+				if buffered {
+					got = buffer.String()
+				}
+				if got != "123" {
+					t.Fatal("read-only prefix input changed")
+				}
+				options.LeadingText = ""
+				tt.Frame()
+				options.ReadOnly = false
+				tt.Frame()
+				tt.Key(selectionModifier(), ui.KeyA)
+				tt.Type("9")
+				got = value
+				if buffered {
+					got = buffer.String()
+				}
+				if got != "9" {
+					t.Fatal("removing prefix broke editing")
+				}
+			}
+		}
+	}
+}
+
 func TestTextBoxType(t *testing.T) {
 	for _, dark := range []bool{false, true} {
 		mode := theme.Light

@@ -28,6 +28,7 @@ type controlState struct {
 	value                  float64
 	high                   float64
 	split                  float32
+	color                  ui.Color
 }
 
 var textBoxControlCatalog = []controlExample{
@@ -41,6 +42,8 @@ var textBoxBufferControlCatalog = []controlExample{
 }
 
 var controlCatalog = []controlExample{
+	{"ColorView", "ColorView", "Selection & values", []string{"Default"}, controlColorView},
+	{"ColorPicker", "ColorPicker", "Selection & values", []string{"Default", "Outlined", "Rounded"}, controlColorPicker},
 	{"Tooltip", "Tooltip", "Overlays", []string{"Default"}, controlTooltip},
 	{"Popover", "Popover", "Overlays", []string{"Default"}, controlPopover},
 	{"Dialog", "Dialog", "Overlays", []string{"Default", "Protected"}, controlDialog},
@@ -91,7 +94,7 @@ func (g *Gallery) controlState(name, variant string) *controlState {
 	if s := g.controlStates[key]; s != nil {
 		return s
 	}
-	s := &controlState{on: variant == "On", choice: "Small", value: 40, high: 80, split: 100, toggles: [2]bool{false, true}}
+	s := &controlState{color: ui.RGB(110, 90, 230), on: variant == "On", choice: "Small", value: 40, high: 80, split: 100, toggles: [2]bool{false, true}}
 	if variant == "Selected" {
 		s.choice, s.index = "Large", 1
 	}
