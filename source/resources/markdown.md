@@ -57,6 +57,21 @@ func main() {
 }
 ```
 
+```typescript
+interface User { name: string; active: boolean }
+const welcome = (user: User) => `Hello, ${user.name}`;
+```
+
+```python
+# Unicode and multiline strings retain their source text.
+def greet(name):
+    return f"Hello, {name} 世界"
+```
+
+```json
+{ "name": "Onevra", "readonly": true, "languages": 18 }
+```
+
 ```unknown
 An unregistered language remains a selectable code block.
 ```

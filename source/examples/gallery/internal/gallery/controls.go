@@ -55,6 +55,7 @@ var controlCatalog = []controlExample{
 	{"Dialog", "Dialog", "Feedback & overlays", []string{"Default", "Protected"}, controlDialog},
 	{"AlertDialog", "AlertDialog", "Feedback & overlays", []string{"Confirmation", "Notice"}, controlAlertDialog},
 	{"Badge", "Badge", "Feedback & overlays", []string{"Default", "Accent"}, controlBadge},
+	{"Code", "Code", "Plugins", []string{"Default"}, controlCode},
 	{"Markdown", "Markdown", "Plugins", []string{"Default"}, controlMarkdown},
 	{"RichText", "RichText", "Content display", []string{"Default"}, controlRichText},
 	{"Breadcrumbs", "Breadcrumbs", "Actions & navigation", []string{"Default"}, controlBreadcrumbs},
@@ -188,7 +189,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 			for _, variant := range example.variants {
 				cell := ui.Column(c).Key(variant).MinWidth(0).MaxWidthPercent(100).Gap(12)
 				switch example.name {
-				case "Text", "GridView", "Markdown":
+				case "Text", "GridView", "Markdown", "Code":
 					cell.FillWidth()
 				case "TextBox", "TextBox (multiline)", "TextBoxBuffer", "TextBoxBuffer (multiline)", "NumberInput", "Slider", "Sidebar", "List", "Split", "ScrollView", "Progress", "Accordion", "Collapsible", "PixelGrid":
 					cell.Width(240)

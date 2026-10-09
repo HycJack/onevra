@@ -994,3 +994,6 @@ gallery.layout_containers:
   other: Layout & containers
 gallery.feedback_overlays:
   other: Feedback & overlays
+
+gallery.code:
+  other: "Code"

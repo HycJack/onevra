@@ -18,9 +18,15 @@ For basic usage, see the [README](../../README.md#basic-usage); public contracts
 
 Complex components live in independent packages under `source/plugins/<name>/`, with their implementation, tests and package documentation kept together. Plugins may compose common controls; the common components package must not depend on plugins. MyGo plugins continue to be used directly.
 
+### Read-only code
+
+The [code plugin](../../source/plugins/code/code.go) tokenizes explicitly named languages with Chroma and renders retained spans through Onevra RichText and MyGo's text engine. Applications retain immutable documents outside frame builders; parsing can run in application-owned background work. Theme changes select prepared palettes without re-tokenization. Adjacent tokens sharing an appearance are merged, and a code block remains one text node rather than a UI element per token. Unknown languages, failed lexers and inputs exceeding highlighting limits retain their complete plain text.
+
+This path targets code snippets and Markdown blocks. It preserves MyGo selection across the document, so it does not virtualize individual lines. Highlighting limits bound lexer input and styling, not the layout cost of arbitrarily large files or a hard regex execution deadline. Large-file viewers need a separate viewport strategy and an explicit whole-document selection contract.
+
 ### Markdown
 
-[Markdown plugin](../../source/plugins/markdown/doc.go) parses CommonMark and GFM syntax into Onevra text and MyGo layout primitives. MyGo owns a single selection across the rendered document, including default code blocks. Hosts retain parsed documents between source changes and provide ordinary scrolling so offscreen paragraphs remain selectable. Raw HTML stays literal. Standalone image paragraphs display application-supplied decoded bitmaps, shrinking to fit the document width; missing images and inline images retain alternative text. Image loading and caching remain application-owned, and rendering performs no file or network I/O.
+[Markdown plugin](../../source/plugins/markdown/doc.go) parses CommonMark and GFM syntax into Onevra text and MyGo layout primitives. MyGo owns a single selection across the rendered document, including default code blocks. Parsing prepares fenced-code highlighting through the code plugin; indented code remains plain text. Hosts retain parsed documents between source changes and provide ordinary scrolling so offscreen paragraphs remain selectable. Raw HTML stays literal. Standalone image paragraphs display application-supplied decoded bitmaps, shrinking to fit the document width; missing images and inline images retain alternative text. Image loading and caching remain application-owned, and rendering performs no file or network I/O.
 
 Applications may replace fenced code blocks with synchronous view builders selected by language, while retaining state and asynchronous work outside rendering. Custom text participates in the surrounding selection unless its builder chooses a separate selection scope or excludes it. Applications also own link activation; the component never opens destinations automatically. See the [gallery example](../../source/examples/gallery/internal/gallery/control_markdown.go) for an interactive embedded view.
 

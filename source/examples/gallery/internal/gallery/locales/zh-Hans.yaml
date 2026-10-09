@@ -994,3 +994,6 @@ gallery.layout_containers:
   other: 布局与容器
 gallery.feedback_overlays:
   other: 反馈与浮层
+
+gallery.code:
+  other: "代码高亮"

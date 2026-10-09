@@ -256,3 +256,31 @@ func TestMarkdownCopyCodeOnHover(t *testing.T) {
 		}
 	}
 }
+
+func TestMarkdownPreparedHighlighting(t *testing.T) {
+	d := ParseMarkdown("```Go extra=info\nconst n = 42\n```\n\n```unknown\nraw\n```\n\n    plain\n")
+	highlighted := 0
+	for _, prepared := range d.code {
+		if prepared.text.Highlighted() {
+			highlighted++
+		}
+	}
+	if len(d.code) != 3 || highlighted != 1 {
+		t.Fatalf("blocks=%d highlighted=%d", len(d.code), highlighted)
+	}
+	calls := 0
+	tt := ui.NewTester(func(c *ui.Context) {
+		d.Render(c, MarkdownOptions{CodeBlocks: map[string]func(*ui.Context, MarkdownCodeBlock){
+			"Go": func(c *ui.Context, block MarkdownCodeBlock) {
+				calls++
+				if block.Info != "Go extra=info" || block.Code != "const n = 42\n" || block.Index != 0 {
+					t.Fatalf("block: %+v", block)
+				}
+				components.Text(c, "replacement")
+			},
+		}})
+	}, 400, 300)
+	if calls == 0 || !tt.HasText("replacement") || tt.HasText("const n = 42") {
+		t.Fatal(tt.Texts())
+	}
+}

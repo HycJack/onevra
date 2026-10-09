@@ -7,6 +7,7 @@ import (
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/components"
 	"github.com/oneo-me/onevra/icons/lucide"
+	"github.com/oneo-me/onevra/plugins/code"
 	"github.com/yuin/goldmark"
 	"github.com/yuin/goldmark/ast"
 	"github.com/yuin/goldmark/extension"
@@ -53,13 +54,41 @@ type MarkdownOptions struct {
 type MarkdownDocument struct {
 	source []byte
 	root   ast.Node
+	code   map[ast.Node]markdownCode
 }
 
 // ParseMarkdown parses source without creating UI resources or loading URLs.
+// Fenced code is highlighted once using its declared language. Retain the result
+// across frames; parsing can run in application-owned background work.
 // Raw HTML is displayed literally; images use supplied bitmaps or alt text.
 func ParseMarkdown(source string) *MarkdownDocument {
 	data := []byte(source)
-	return &MarkdownDocument{source: data, root: goldmark.New(goldmark.WithExtensions(extension.GFM)).Parser().Parse(text.NewReader(data))}
+	d := &MarkdownDocument{source: data, root: goldmark.New(goldmark.WithExtensions(extension.GFM)).Parser().Parse(text.NewReader(data)), code: make(map[ast.Node]markdownCode)}
+	index := 0
+	_ = ast.Walk(d.root, func(n ast.Node, entering bool) (ast.WalkStatus, error) {
+		if !entering {
+			return ast.WalkContinue, nil
+		}
+		b := MarkdownCodeBlock{}
+		switch n := n.(type) {
+		case *ast.FencedCodeBlock:
+			b.Index = index
+			index++
+			if n.Info != nil {
+				b.Info = markdownDecode(n.Info.Text(data))
+				if fields := strings.Fields(b.Info); len(fields) > 0 {
+					b.Language = fields[0]
+				}
+			}
+		case *ast.CodeBlock:
+		default:
+			return ast.WalkContinue, nil
+		}
+		b.Code = string(n.Lines().Value(data))
+		d.code[n] = markdownCode{block: b, text: code.Parse(strings.TrimSuffix(b.Code, "\n"), b.Language)}
+		return ast.WalkContinue, nil
+	})
+	return d
 }
 
 // Markdown parses and renders source. For repeatedly rendered or large documents,
@@ -89,11 +118,15 @@ func (d *MarkdownDocument) Render(c *ui.Context, options ...MarkdownOptions) ui.
 	})
 }
 
+type markdownCode struct {
+	block MarkdownCodeBlock
+	text  *code.Document
+}
+
 type markdownRenderer struct {
-	c         *ui.Context
-	document  *MarkdownDocument
-	options   MarkdownOptions
-	codeIndex int
+	c        *ui.Context
+	document *MarkdownDocument
+	options  MarkdownOptions
 }
 
 func (r *markdownRenderer) blocks(parent ast.Node) {
@@ -119,23 +152,17 @@ func (r *markdownRenderer) block(n ast.Node) {
 		r.paragraph(n).FontSize(t.Rem([]float32{1.5, 1.25, 1.125, 1, 1, 1}[n.Level-1])).
 			FontWeight(600).LineHeight(1.4).Margin(t.Space([]float32{0, 2, 1, 0, 0, 0}[n.Level-1]), 0, 0, 0)
 	case *ast.FencedCodeBlock:
-		b := MarkdownCodeBlock{Code: string(n.Lines().Value(r.document.source)), Index: r.codeIndex}
-		if n.Info != nil {
-			b.Info = markdownDecode(n.Info.Text(r.document.source))
-			if fields := strings.Fields(b.Info); len(fields) > 0 {
-				b.Language = fields[0]
-			}
-		}
-		r.codeIndex++
+		prepared := r.document.code[n]
+		b := prepared.block
 		ui.Column(c).MinWidth(0).Key(b.Index).Children(func() {
 			if build := r.options.CodeBlocks[b.Language]; build != nil {
 				build(c, b)
 			} else {
-				r.code(b.Code)
+				r.code(prepared)
 			}
 		})
 	case *ast.CodeBlock:
-		r.code(string(n.Lines().Value(r.document.source)))
+		r.code(r.document.code[n])
 	case *ast.Blockquote:
 		ui.Column(c).MinWidth(0).Padding(0, 0, 0, t.Space(4)).Gap(t.Space(1)).BorderColor(t.Border).BorderWidth(0, 0, 0, t.Space(.75)).Children(func() { r.blocks(n) })
 	case *ast.List:
@@ -218,13 +245,13 @@ func markdownTask(item ast.Node) *east.TaskCheckBox {
 	return nil
 }
 
-func (r *markdownRenderer) code(value string) {
+func (r *markdownRenderer) code(prepared markdownCode) {
 	c, t := r.c, r.c.Theme()
 	box := ui.Box(c).MinWidth(0).Padding(t.Space(3), t.Space(10), t.Space(3), t.Space(3.5)).
 		Radius(t.Rem(.75)).Border(1, t.Border).Background(t.Text.Alpha(.06))
 	hovered := box.Hovered()
 	box.Children(func() {
-		components.Text(c, strings.TrimSuffix(value, "\n")).Font("monospace").FontSize(t.Rem(.85)).LineHeight(1.6)
+		prepared.text.Render(c).FontSize(t.Rem(.85)).LineHeight(1.6)
 		if hovered {
 			label := r.options.CopyCodeLabel
 			if label == "" {
@@ -237,7 +264,7 @@ func (r *markdownRenderer) code(value string) {
 			})
 			components.Tooltip(c, button, label)
 			if button.Clicked() {
-				c.WriteClipboard(value)
+				c.WriteClipboard(prepared.block.Code)
 			}
 		}
 	})
