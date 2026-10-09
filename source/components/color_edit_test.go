@@ -40,7 +40,7 @@ func TestColorHSLFields(t *testing.T) {
 	choose := func(mode string) {
 		t.Helper()
 		click("Color format")
-		if err := tt.ChooseMenuItem(mode); err != nil {
+		if err := tt.Click(mode); err != nil {
 			t.Fatal(err)
 		}
 	}
@@ -207,7 +207,7 @@ func TestColorFieldFiltering(t *testing.T) {
 		t.Fatal("partial hex not restored")
 	}
 	tt.Click("Color format")
-	tt.ChooseMenuItem("HSLA")
+	tt.Click("HSLA")
 	replace("Lightness percent", "12.5%", true)
 	if state.fields[2] != "12.5%" {
 		t.Fatal("decimal percent rejected", state.fields)
@@ -278,7 +278,7 @@ func TestColorFieldScrub(t *testing.T) {
 		t.Fatal("alpha scrub", value)
 	}
 	tt.Click("Color format")
-	tt.ChooseMenuItem("HSLA")
+	tt.Click("HSLA")
 	old := state.hsl
 	drag("Hue degrees", 10)
 	if state.hsl.h != float64(int((old.h+10)*10+.5))/10 {

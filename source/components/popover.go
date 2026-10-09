@@ -1,6 +1,9 @@
 package components
 
-import "github.com/egoist/mygo/ui"
+import (
+	"github.com/egoist/mygo/plugins/glass"
+	"github.com/egoist/mygo/ui"
+)
 
 // Popover builds a non-modal panel anchored below anchor, flipping above it when
 // needed. Applications own open and trigger activation and call Popover every
@@ -18,7 +21,7 @@ func Popover(c *ui.Context, anchor ui.Element, open *bool, build func(panel ui.E
 	return ui.PopoverBase(c, anchor, open, func(panel ui.Element) {
 		panel.Column().Padding(t.Space(4)).Gap(t.Space(3)).
 			Margin(t.Space(1), 0, 0, 0).Radius(t.Radius*1.5).
-			Background(t.Background).TextColor(t.Text).Border(1, t.Border).
+			Material(glass.Glass{Tint: t.Background}).TextColor(t.Text).Border(1, t.Border).
 			Shadow(0, t.Space(1), t.Space(4), 0, ui.RGBA(0, 0, 0, .14))
 		if build != nil {
 			build(panel)

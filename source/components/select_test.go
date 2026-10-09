@@ -8,10 +8,13 @@ import (
 	"github.com/oneo-me/onevra/theme"
 )
 
-func buildSelect(c *ui.Context, selected *string, options []string) {
+func buildSelect(c *ui.Context, selected *string, options []string, style ...func(ui.Element)) {
 	sel := Select(c, selected)
 	sel.Trigger.Label("size").Children(func() { ui.Text(c, *selected).SingleLine() })
 	sel.Popup(func(panel ui.Element) {
+		for _, apply := range style {
+			apply(panel)
+		}
 		for _, opt := range options {
 			item := sel.Item(opt).Label("item " + opt)
 			item.Children(func() { ui.Text(c, opt).SingleLine() })
@@ -39,7 +42,10 @@ func TestSelectItemBackgrounds(t *testing.T) {
 		tt := ui.NewTester(func(c *ui.Context) {
 			theme.Apply(c, mode)
 			background = c.Theme().Background
-			buildSelect(c, &selected, []string{"S", "M", "L"})
+			// Isolate item state fills from the backdrop-dependent glass surface.
+			buildSelect(c, &selected, []string{"S", "M", "L"}, func(panel ui.Element) {
+				panel.Gradient(background, background, 0)
+			})
 		}, 320, 320)
 		tt.Click("size")
 		assertFill := func(label string, want ui.Color) {

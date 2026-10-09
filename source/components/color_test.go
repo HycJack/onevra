@@ -155,7 +155,7 @@ func TestColorViewFormats(t *testing.T) {
 		if err := tt.Click("Color format"); err != nil {
 			t.Fatal(err)
 		}
-		if err := tt.ChooseMenuItem(label); err != nil {
+		if err := tt.Click(label); err != nil {
 			t.Fatal(err)
 		}
 	}

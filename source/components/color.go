@@ -96,7 +96,7 @@ func (s *colorViewState) sync(c ui.Color) {
 }
 
 // ColorView edits an application-owned sRGB color in place. It includes a
-// saturation/brightness plane, hue and opacity sliders, native RGBA/HSBA/HSLA
+// saturation/brightness plane, hue and opacity sliders, RGBA/HSBA/HSLA
 // selection, RGB byte or HSB/HSL degree/percent fields, a six-digit Hex field (also
 // accepts eight-digit RRGGBBAA), and opacity percent. Mode changes do not change
 // the color or report Changed. The Copy color native menu copies RGBA, HSBA,
@@ -215,13 +215,19 @@ func ColorView(c *ui.Context, value *ui.Color) *ColorControl {
 			set(next, colorAlpha)
 		}
 		ui.Row(c).FillWidth().AlignItems(ui.Center).Children(func() {
-			format := NativeSelect(c, &st.format, []NativeSelectOption[colorFormat]{
-				{Value: colorRGBA, Label: "RGBA"}, {Value: colorHSBA, Label: "HSBA"}, {Value: colorHSLA, Label: "HSLA"},
-			})
+			format := Select(c, &st.format)
+			labels := [...]string{"RGBA", "HSBA", "HSLA"}
 			format.Trigger.Label("Color format").Padding(0, t.Space(5), 0, 0).Background(ui.Color{}).Border(0, ui.Color{})
-			if format.Changed() {
+			format.Popup(func(panel ui.Element) {
+				panel.Label("Color formats")
+				for i, label := range labels {
+					format.Item(colorFormat(i)).Label(label).Children(func() { Text(c, label).SingleLine() })
+				}
+			})
+			if format.Trigger.Changed() {
 				st.sync(*value)
 			}
+			format.Trigger.Children(func() { Text(c, labels[st.format]).SingleLine() })
 			ui.Box(c).Grow(1)
 			copy := Button(c, "", ButtonGhost).Label("Copy color").Size(t.Space(7), t.Space(7)).Padding(t.Space(1.5))
 			copy.Children(func() { Icon(c, lucide.Copy()).Size(t.Space(4), t.Space(4)) })
