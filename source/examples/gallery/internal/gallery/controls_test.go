@@ -8,7 +8,7 @@ import (
 )
 
 func TestControlPages(t *testing.T) {
-	if len(controlCatalog) != 32 {
+	if len(controlCatalog) != 33 {
 		t.Fatal("missing control examples")
 	}
 	for i, example := range controlCatalog {
@@ -55,18 +55,23 @@ func TestControlPages(t *testing.T) {
 	}
 }
 
-func TestPixelGridHasNoStandaloneExample(t *testing.T) {
-	g := &Gallery{}
-	tt := ui.NewTester(g.Left, 220, 1800)
-	if tt.HasText("Pixel grid") || tt.HasText("PixelGrid") {
-		t.Fatal("pixel grid sidebar entry remains")
+func TestPixelGridStandaloneExample(t *testing.T) {
+	page := pageFromKey("controls/PixelGrid")
+	example, ok := controlExampleFor(page)
+	if !ok || example.name != "PixelGrid" {
+		t.Fatal("missing pixel grid route")
 	}
-	if pageFromKey("controls/PixelGrid") != lucidePage {
-		t.Fatal("removed pixel grid route must use the unknown-route fallback")
-	}
-	for _, example := range controlCatalog {
-		if example.name == "PixelGrid" {
-			t.Fatal("pixel grid standalone example remains")
+	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+		for _, variant := range example.variants {
+			tt := ui.NewTester(func(c *ui.Context) {
+				theme.Apply(c, mode)
+				controlPixelGrid(c, nil, variant)
+			}, 240, 160)
+			img := tt.Image()
+			minor, major := img.RGBAAt(16, 8), img.RGBAAt(64, 8)
+			if minor == img.RGBAAt(8, 8) || (minor != major) != (variant == "Major lines") {
+				t.Fatalf("mode=%v variant=%s: incorrect grid emphasis", mode, variant)
+			}
 		}
 	}
 }
@@ -170,7 +175,7 @@ func TestControlExampleInteractions(t *testing.T) {
 					tt.Key(0, ui.KeyTab)
 					tt.Key(0, ui.KeyRight)
 					changed = s.index == 1
-				case "Badge", "Icon", "Image", "Spinner":
+				case "Badge", "Icon", "Image", "Spinner", "PixelGrid":
 					return // Display-only components have no interaction state.
 				case "ScrollView":
 					return // ScrollView interactions are covered in the component tests.
@@ -266,10 +271,13 @@ func TestControlPreviewGeometry(t *testing.T) {
 		}
 		img := tt.Image()
 		background := img.RGBAAt(50, 50)
-		for _, x := range []int{22, 44, 66, 88} {
+		for _, x := range []int{22, 44, 66, 88, 176} {
 			if img.RGBAAt(x, 50) == background || img.RGBAAt(x+5, 50) != background {
 				t.Fatalf("missing 22-pixel grid at x=%d", x)
 			}
+		}
+		if img.RGBAAt(176, 50) != img.RGBAAt(22, 50) {
+			t.Fatal("preview grid must not emphasize major lines")
 		}
 		if img.RGBAAt(100, 0) == background {
 			t.Fatal("missing preview border")

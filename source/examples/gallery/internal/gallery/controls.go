@@ -72,6 +72,7 @@ var controlCatalog = []controlExample{
 	{"GridView", "GridView", "Collections", []string{"Default"}, controlGridView},
 	{"Tree", "Tree", "Collections", []string{"Tree", "TreeVirtualized"}, controlTree},
 	{"Sidebar", "Sidebar", "Navigation", []string{"Default"}, controlSidebar},
+	{"PixelGrid", "PixelGrid", "Layout", []string{"Uniform", "Major lines"}, controlPixelGrid},
 	{"Split", "Split panes", "Layout", []string{"Horizontal", "Vertical"}, controlSplit},
 	{"ScrollView", "Scroll views", "Layout", []string{"Vertical", "Horizontal", "Both", "Insets"}, controlScrollView},
 }
@@ -176,7 +177,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 				switch example.name {
 				case "Text", "GridView":
 					cell.FillWidth()
-				case "TextBox", "TextBox (multiline)", "TextBoxBuffer", "TextBoxBuffer (multiline)", "NumberInput", "Slider", "Sidebar", "List", "Split", "ScrollView", "Progress", "Accordion", "Collapsible":
+				case "TextBox", "TextBox (multiline)", "TextBoxBuffer", "TextBoxBuffer (multiline)", "NumberInput", "Slider", "Sidebar", "List", "Split", "ScrollView", "Progress", "Accordion", "Collapsible", "PixelGrid":
 					cell.Width(240)
 				}
 				cell.Children(func() {
@@ -200,7 +201,7 @@ func (g *Gallery) controlSection(c *ui.Context, name string, build func()) {
 // controlPreview provides a shared canvas for component demonstrations.
 func controlPreview(c *ui.Context) ui.Element {
 	t := c.Theme()
-	return components.PixelGrid(c, components.PixelGridOptions{Spacing: 22}).
+	return components.PixelGrid(c, components.PixelGridOptions{Spacing: 22, MajorEvery: -1}).
 		Key("control-preview").Column().FillWidth().MinWidth(0).
 		Padding(20).Gap(12).Radius(t.Radius).Border(1, t.Border)
 }
