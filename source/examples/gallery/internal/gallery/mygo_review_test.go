@@ -36,9 +36,15 @@ func TestMyGoReviewDecisions(t *testing.T) {
 	}
 }
 
-func TestDirectUseComponentsHaveNoExamples(t *testing.T) {
+func TestDirectUseComponentsHaveOnlyExplicitExamples(t *testing.T) {
 	for _, entry := range mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled) {
 		if entry.Status != mygoPrimitive {
+			continue
+		}
+		if _, demonstrated := mygoDirectExamples[entry.Name]; demonstrated {
+			if !entry.HasExample || pageFromKey("mygo/"+entry.Name) == lucidePage {
+				t.Fatalf("direct-use demonstration missing: %s", entry.Name)
+			}
 			continue
 		}
 		if entry.HasExample {

@@ -51,6 +51,58 @@ func TestComponentStatuses(t *testing.T) {
 	}
 }
 
+func TestTerminalUsesMyGoDirectly(t *testing.T) {
+	found := false
+	for _, entry := range mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled) {
+		if entry.Name == "Terminal" {
+			found = true
+			if entry.Status != mygoPrimitive || !entry.HasExample || entry.Reason == "" {
+				t.Fatalf("unexpected terminal status: %+v", entry)
+			}
+		}
+	}
+	if !found {
+		t.Fatal("Terminal missing from review inventory")
+	}
+	for _, entry := range pendingMyGo(mygoDiscovered, mygoExamples) {
+		if entry.Name == "Terminal" {
+			t.Fatal("Terminal still awaiting review")
+		}
+	}
+	for _, example := range mygoCatalog {
+		if example.name == "Terminal" && example.group == "Plugins" {
+			return
+		}
+	}
+	t.Fatal("Terminal plugin demonstration missing")
+}
+
+func TestFocusedValueUsesMyGoDirectly(t *testing.T) {
+	entries := mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled)
+	found := false
+	for _, entry := range entries {
+		if entry.Name == "FocusedValue" {
+			found = true
+			if entry.Status != mygoPrimitive || entry.HasExample {
+				t.Fatalf("unexpected focus API status: %+v", entry)
+			}
+		}
+	}
+	if !found {
+		t.Fatal("FocusedValue missing from review inventory")
+	}
+	for _, entry := range pendingMyGo(mygoDiscovered, mygoExamples) {
+		if entry.Name == "FocusedValue" {
+			t.Fatal("FocusedValue still awaiting review")
+		}
+	}
+	for _, example := range mygoCatalog {
+		if example.name == "FocusedValue" {
+			t.Fatal("FocusedValue still has a standalone example")
+		}
+	}
+}
+
 func TestComponentStatusCards(t *testing.T) {
 	entries := mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled)
 	cards := componentStatusCards(entries, mygoReplaced)

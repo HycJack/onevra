@@ -101,6 +101,8 @@ var mygoHandled = map[string]mygoDecision{
 var mygoPrimitives = map[string]bool{
 	"Box": true, "Column": true, "Row": true, "Spacer": true,
 	"Grid": true, "Overlay": true,
+	// Focus inspection stays with MyGo alongside FocusBind; no styled wrapper.
+	"FocusedValue": true,
 }
 
 // Element methods are not found by the free-function scanner. These native menu
@@ -108,6 +110,11 @@ var mygoPrimitives = map[string]bool{
 var mygoNativeMenus = map[string]string{
 	"ContextMenu": "ui/menu.go",
 	"Menu":        "ui/menu.go",
+}
+
+// These direct-use APIs retain their dedicated gallery demonstrations.
+var mygoDirectExamples = map[string]string{
+	"Terminal": "Use MyGo's terminal plugin directly; no Onevra terminal implementation",
 }
 
 type mygoComponent struct{ Name, Source string }
@@ -164,6 +171,9 @@ func mygoReviewEntries(discovered []mygoComponent, examples []mygoExample, decis
 		if _, native := mygoNativeMenus[name]; native {
 			entry.Status, entry.HasExample = mygoPrimitive, false
 			entry.Reason = "Use MyGo native menus directly; no Onevra menu implementation"
+		}
+		if reason, direct := mygoDirectExamples[name]; direct {
+			entry.Status, entry.Reason = mygoPrimitive, reason
 		}
 		if decision, handled := decisions[name]; handled {
 			entry.Status, entry.Replacement, entry.Reason, entry.HasExample = mygoExcluded, decision.Replacement, decision.Reason, false
