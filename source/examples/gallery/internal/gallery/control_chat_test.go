@@ -1,60 +1,39 @@
 package gallery
 
 import (
-	"fmt"
 	"testing"
-	"time"
 
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/plugins/chat"
 )
 
-func TestChatStreamLifecycle(t *testing.T) {
+func TestChatStaticPreview(t *testing.T) {
 	s := &controlState{}
 	tt := ui.NewTester(func(c *ui.Context) { controlChat(c, s, "Default") }, 640, 800)
-	if tt.HasText("read_source") {
-		t.Fatal("completed demo not folded")
-	}
-	if err := tt.Click("Replay stream"); err != nil {
-		t.Fatal(err)
-	}
 	turn := s.chat.turns[0]
-	if !tt.HasText("read_source") || turn.status != chat.Running {
-		t.Fatal("replay missing mixed blocks")
-	}
-	for range 4 {
-		turn.advance(time.Now())
-	}
-	tt.Frame()
-	if turn.answer == nil {
-		t.Fatal("no partial answer")
-	}
-	partial := turn.answer
-	tt.Click("Stop")
-	turn.advance(time.Now())
-	if turn.status != chat.Cancelled || turn.answer != partial {
-		t.Fatal("stop changed partial response")
-	}
-	tt.Click("Retry")
-	tt.Click("Simulate failure")
-	if turn.status != chat.Failed || !tt.HasText("read_source") {
-		t.Fatal("failed process hidden")
-	}
-	tt.Click("Retry")
-	for turn.status == chat.Running {
-		turn.advance(time.Now())
-	}
-	tt.Frame()
 	if tt.HasText("read_source") || !tt.HasText("The review is complete.") {
-		t.Fatal("final response did not replace execution")
+		t.Fatal("completed preview missing or not folded")
+	}
+	for _, label := range []string{"Replay stream", "Simulate failure", "Retry", "Stop"} {
+		if tt.HasText(label) {
+			t.Fatalf("unexpected simulation control %q", label)
+		}
+	}
+	for range 10 {
+		tt.Frame()
+	}
+	if len(s.chat.turns) != 1 || turn.status != chat.Completed || turn.answer == nil {
+		t.Fatal("static preview changed across frames")
 	}
 	tt.Scroll(120, 140, 0, -5000)
-	seconds := max(0, int(turn.ended.Sub(turn.started).Seconds()))
-	if err := tt.Click(fmt.Sprintf("Worked for %dm %ds", seconds/60, seconds%60)); err != nil {
+	if err := tt.Click("Worked for 9m 21s"); err != nil {
 		t.Fatal(err)
 	}
 	if !tt.HasText("read_source") {
 		t.Fatal("completed details unavailable")
+	}
+	if navigationIcons["Chat"] == nil {
+		t.Fatal("chat navigation icon missing")
 	}
 }
 
@@ -92,7 +71,7 @@ func TestChatResultAndComposerActions(t *testing.T) {
 	click("Message")
 	tt.Type("Continue")
 	click("Send")
-	if !s.chat.turns[len(s.chat.turns)-1].attached || s.chat.attachment || s.chat.draft != "" {
-		t.Fatal("attachment was not transferred with draft")
+	if len(s.chat.turns) != 1 || s.chat.turns[0].status != chat.Completed || !s.chat.attachment || s.chat.draft != "Continue" {
+		t.Fatal("composer started a simulated conversation or changed the draft")
 	}
 }

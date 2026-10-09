@@ -10,7 +10,6 @@ import (
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/plugins/chat"
-	"github.com/oneo-me/onevra/plugins/markdown"
 	"github.com/oneo-me/onevra/shells/sidebar"
 	"github.com/oneo-me/onevra/theme"
 )
@@ -35,14 +34,8 @@ func TestNativeChat(t *testing.T) {
 					if width == 360 {
 						g.language = newTranslator("zh-Hans", "en")
 					}
-					s := &chatDemoState{model: "Demo model", effort: "Medium"}
-					s.start("Review this component and explain the results.", time.Now().Add(time.Hour))
-					s.turns[0].step, s.turns[0].status = 4, status
-					s.turns[0].started = time.Now().Add(-561 * time.Second)
-					if status != chat.Running {
-						s.turns[0].ended = time.Now()
-					}
-					s.turns[0].answer = markdown.ParseMarkdown(chatDemoAnswer)
+					s := newChatDemoState(time.Now())
+					s.turns[0].status = status
 					g.controlState("Chat", "Default").chat = s
 					height := 820
 					if width == 760 {

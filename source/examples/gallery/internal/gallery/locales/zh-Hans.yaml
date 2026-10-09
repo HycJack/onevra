@@ -1067,12 +1067,6 @@ gallery.chat_waiting:
   other: "等待确认"
 gallery.chat_running:
   other: "执行中"
-gallery.chat_replay:
-  other: "重播消息流"
-gallery.chat_fail:
-  other: "模拟失败"
-gallery.chat_retry:
-  other: "重试"
 gallery.chat_latest:
   other: "回到最新"
 gallery.chat_reasoning:

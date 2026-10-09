@@ -1067,12 +1067,6 @@ gallery.chat_waiting:
   other: "Waiting for confirmation"
 gallery.chat_running:
   other: "Working"
-gallery.chat_replay:
-  other: "Replay stream"
-gallery.chat_fail:
-  other: "Simulate failure"
-gallery.chat_retry:
-  other: "Retry"
 gallery.chat_latest:
   other: "Back to latest"
 gallery.chat_reasoning:

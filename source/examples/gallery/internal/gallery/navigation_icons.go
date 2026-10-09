@@ -18,6 +18,7 @@ var navigationIcons = map[string]func() *ui.SVG{
 	"AlertDialog":      lucide.TriangleAlert,
 	"Badge":            lucide.Badge,
 	"Code":             lucide.Code,
+	"Chat":             lucide.MessagesSquare,
 	"Markdown":         lucide.FileText,
 	"RichText":         lucide.Bold,
 	"Breadcrumbs":      lucide.ChevronsRight,

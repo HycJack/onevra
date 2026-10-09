@@ -184,8 +184,8 @@ func TestControlExampleInteractions(t *testing.T) {
 					click("Increment")
 					changed = s.index == 1
 				case "Chat":
-					click("Replay stream")
-					changed = s.chat.turns[0].status == 0
+					click("Attach sample context")
+					changed = s.chat.attachment
 				case "RichText":
 					click("inline action")
 					changed = s.index == 1

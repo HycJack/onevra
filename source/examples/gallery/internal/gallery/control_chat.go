@@ -19,7 +19,6 @@ type chatDemoTurn struct {
 	status             chat.Status
 	step               int
 	answer             *markdown.MarkdownDocument
-	next               time.Time
 	started, ended     time.Time
 	blocks             [3]chat.BlockState
 	summary            chat.SummaryState
@@ -32,36 +31,20 @@ type chatDemoState struct {
 	conversation  chat.ConversationState
 	turns         []*chatDemoTurn
 	draft         string
-	serial        int
 	model, effort string
 	attachment    bool
 }
 
-func (s *chatDemoState) start(prompt string, now time.Time) {
-	s.serial++
-	s.turns = append(s.turns, &chatDemoTurn{id: fmt.Sprint(s.serial), prompt: prompt, next: now.Add(350 * time.Millisecond), started: now, review: markdown.ParseMarkdown("```diff\n- renderEveryBlock()\n+ renderVisibleBlocks()\n```"), blocks: [3]chat.BlockState{{Expanded: true}, {}, {}}})
-	// The demonstration bounds retained history rather than claiming unlimited
-	// transcript performance. A production host owns its retention policy.
-	if len(s.turns) > 8 {
-		s.turns = s.turns[len(s.turns)-8:]
-	}
-	s.conversation.JumpToLatest()
-}
-
-func (s *chatDemoTurn) advance(now time.Time) {
-	if s.status != chat.Running {
-		return
-	}
-	s.step++
-	s.next = now.Add(350 * time.Millisecond)
-	if s.step >= 4 {
-		s.copied = false
-		text := []rune(chatDemoAnswer)
-		s.answer = markdown.ParseMarkdown(string(text[:min(len(text), (s.step-3)*48)]))
-		if (s.step-3)*48 >= len(text) {
-			s.status = chat.Completed
-			s.ended = now
-		}
+func newChatDemoState(now time.Time) *chatDemoState {
+	return &chatDemoState{
+		model: "Demo model", effort: "Medium",
+		turns: []*chatDemoTurn{{
+			id: "sample", prompt: "Review this component and explain the results.",
+			step: 20, status: chat.Completed, answer: markdown.ParseMarkdown(chatDemoAnswer),
+			started: now.Add(-561 * time.Second), ended: now,
+			review: markdown.ParseMarkdown("```diff\n- renderEveryBlock()\n+ renderVisibleBlocks()\n```"),
+			blocks: [3]chat.BlockState{{Expanded: true}, {}, {}},
+		}},
 	}
 }
 
@@ -82,44 +65,13 @@ func chatStatusLabel(c *ui.Context, status chat.Status) string {
 
 func controlChat(c *ui.Context, state *controlState, _ string) {
 	if state.chat == nil {
-		state.chat = &chatDemoState{model: "Demo model", effort: "Medium"}
-		state.chat.start("Review this component and explain the results.", c.Now())
-		turn := state.chat.turns[0]
-		turn.step, turn.status, turn.answer = 20, chat.Completed, markdown.ParseMarkdown(chatDemoAnswer)
-		turn.started, turn.ended = c.Now().Add(-561*time.Second), c.Now()
+		state.chat = newChatDemoState(c.Now())
 	}
 	s := state.chat
-	last := s.turns[len(s.turns)-1]
-	if last.status == chat.Running {
-		if !c.Now().Before(last.next) {
-			last.advance(c.Now())
-		}
-		if last.status == chat.Running {
-			c.After(max(time.Millisecond, last.next.Sub(c.Now())))
-		}
-	}
 	t := c.Theme()
 	ui.Column(c).Fill().MinWidth(0).Gap(t.Space(3)).Children(func() {
 		ui.Row(c).FillWidth().Shrink(0).Wrap().AlignItems(ui.Center).Gap(t.Space(2)).Padding(0, t.Space(4)).Children(func() {
 			components.Text(c, tr(c, "gallery.chat")).Bold().Grow(1)
-			if components.Button(c, tr(c, "gallery.chat_replay"), components.ButtonSecondary).Clicked() {
-				s.turns = nil
-				s.start("Review this component and explain the results.", c.Now())
-				c.Invalidate()
-			}
-			if last.status == chat.Running {
-				if components.Button(c, tr(c, "gallery.chat_fail"), components.ButtonOutline).Clicked() {
-					last.status = chat.Failed
-					last.ended = c.Now()
-				}
-			} else if last.status == chat.Failed || last.status == chat.Cancelled {
-				if components.Button(c, tr(c, "gallery.chat_retry"), components.ButtonOutline).Clicked() {
-					last.status, last.next = chat.Running, c.Now()
-					last.state.ResetExpansion()
-					last.ended = time.Time{}
-					c.Invalidate()
-				}
-			}
 		})
 		chat.Conversation(c, &s.conversation, tr(c, "gallery.chat_latest"), func(c *ui.Context) {
 			for _, turn := range s.turns {
@@ -177,8 +129,7 @@ func controlChat(c *ui.Context, state *controlState, _ string) {
 								label = tr(c, "gallery.chat_copied")
 							}
 							if chat.IconAction(c, label, lucide.Copy).Clicked() {
-								text := []rune(chatDemoAnswer)
-								c.WriteClipboard(string(text[:min(len(text), max(0, turn.step-3)*48)]))
+								c.WriteClipboard(chatDemoAnswer)
 								turn.copied = true
 							}
 						}
@@ -187,9 +138,9 @@ func controlChat(c *ui.Context, state *controlState, _ string) {
 			}
 		})
 		ui.Column(c).FillWidth().Shrink(0).MinWidth(0).Padding(0, t.Space(4), t.Space(4)).Children(func() {
-			result := chat.Composer(c, &s.draft, chat.ComposerOptions{
+			chat.Composer(c, &s.draft, chat.ComposerOptions{
 				Label: tr(c, "gallery.chat_message"), Placeholder: tr(c, "gallery.chat_placeholder"),
-				SendLabel: tr(c, "gallery.chat_send"), StopLabel: tr(c, "gallery.chat_stop"), Running: last.status == chat.Running,
+				SendLabel: tr(c, "gallery.chat_send"), StopLabel: tr(c, "gallery.chat_stop"),
 				Accessory: func(c *ui.Context) { chatDemoToolbar(c, s) },
 				Attachments: func(c *ui.Context) {
 					if s.attachment {
@@ -205,17 +156,6 @@ func controlChat(c *ui.Context, state *controlState, _ string) {
 					components.Text(c, tr(c, "gallery.chat_demo_context")).TextColor(t.TextMuted)
 				},
 			})
-			if result.Stop {
-				last.status = chat.Cancelled
-				last.ended = c.Now()
-			}
-			if result.Send {
-				s.start(s.draft, c.Now())
-				s.turns[len(s.turns)-1].attached = s.attachment
-				s.attachment = false
-				s.draft = ""
-				c.Invalidate()
-			}
 		})
 	})
 }
