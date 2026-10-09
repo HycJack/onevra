@@ -4,6 +4,7 @@ import (
 	"math"
 	"time"
 
+	"github.com/egoist/mygo/plugins/glass"
 	"github.com/egoist/mygo/ui"
 )
 
@@ -122,12 +123,6 @@ func Slider(c *ui.Context, value *float64, lo, hi float64, options ...SliderOpti
 			x0, x1 = x1, tx+tw*sliderFraction(*o.Range, lo, hi)
 			positions = []float32{x0, x1}
 		}
-		for i, x := range positions {
-			if glass[i] > 0 {
-				knob := sliderKnobRect(t, x, cy, glass[i])
-				p.Fill(knob, ui.RGBA(255, 255, 255, 0.1*glass[i]), knob.H/2)
-			}
-		}
 		p.Fill(ui.Rect{X: tx, Y: cy - h/2, W: tw, H: h}, t.Border, h/2)
 		p.Fill(ui.Rect{X: x0, Y: cy - h/2, W: max(float32(0), x1-x0), H: h}, t.Accent, h/2)
 		// Bound tick density and work for tiny steps; snapping remains unchanged.
@@ -152,8 +147,8 @@ func Slider(c *ui.Context, value *float64, lo, hi float64, options ...SliderOpti
 	return s
 }
 
-// Match MyGo's capsule-to-glass treatment using its painter and animation
-// primitives; the upstream styled widget's knob helpers are not exported.
+// Keep press geometry shared by sliders and color channels; MyGo owns the
+// glass rendering and backdrop sampling.
 func sliderKnobRect(t *ui.Theme, x, y, held float32) ui.Rect {
 	grow := 1 + 0.35*held
 	w, h := t.Space(5)*grow, t.Space(4)*grow
@@ -161,22 +156,24 @@ func sliderKnobRect(t *ui.Theme, x, y, held float32) ui.Rect {
 }
 
 func paintSliderKnob(p *ui.Painter, t *ui.Theme, k ui.Rect, held float32, focus bool) {
-	face, rim, drop := ui.RGB(255, 255, 255), ui.RGBA(0, 0, 0, 0.22), ui.RGBA(0, 0, 0, 0.14)
+	face, drop := ui.RGB(255, 255, 255), ui.RGBA(0, 0, 0, .14)
 	if t.Dark {
-		face, rim, drop = ui.RGB(224, 225, 225), ui.RGBA(0, 0, 0, 0.7), ui.RGBA(0, 0, 0, 0.3)
+		face, drop = ui.RGB(224, 225, 225), ui.RGBA(0, 0, 0, .3)
 	}
 	rad := k.H / 2
 	if held > 0 {
 		p.Shadow(k, rad, 0, 8, 14, -3, drop.Alpha(held))
 	}
 	if held < 1 {
-		p.Shadow(k, rad, 0, 0.5, 1, 0, ui.RGBA(0, 0, 0, 0.08*(1-held)))
-		p.Shadow(k, rad, 0, 1.5, 7, 0, ui.RGBA(0, 0, 0, 0.1*(1-held)))
-		p.Fill(k, face.Alpha(1-held), rad)
+		p.Shadow(k, rad, 0, .5, 1, 0, ui.RGBA(0, 0, 0, .08*(1-held)))
+		p.Shadow(k, rad, 0, 1.5, 7, 0, ui.RGBA(0, 0, 0, .1*(1-held)))
 	}
 	if held > 0 {
-		p.Stroke(k, rim.Alpha(held), rad, 1)
-		p.Stroke(ui.Rect{X: k.X + 1, Y: k.Y + 1, W: k.W - 2, H: k.H - 2}, ui.RGBA(255, 255, 255, 0.25*held), rad-1, 1)
+		glass.Paint(p, k, rad, glass.Glass{Style: glass.Clear})
+	}
+	// Keep the original opaque face at rest, revealing Clear glass on press.
+	if held < 1 {
+		p.Fill(k, face.Alpha(1-held), rad)
 	}
 	if focus {
 		p.FocusRing(k, [4]float32{rad, rad, rad, rad})

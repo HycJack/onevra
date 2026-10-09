@@ -7,6 +7,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/egoist/mygo/plugins/glass"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/icons/lucide"
 )
@@ -135,6 +136,20 @@ func ColorView(c *ui.Context, value *ui.Color) *ColorControl {
 	out.Children(func() {
 		plane := ui.Box(c).FillWidth().Height(t.Space(50)).Radius(t.Radius).Focusable().FocusRing(false).Role(ui.RoleSlider).Label("Saturation and brightness").Cursor(ui.CursorCrosshair)
 		_, _, held := plane.Dragged()
+		var knob ui.Element
+		plane.Children(func() {
+			// A real child hit target includes the part painted outside the plane.
+			// The plane still owns keyboard focus and color coordinates.
+			knob = ui.Box(c).Key("thumb").Absolute()
+			_, _, knobHeld := knob.Dragged()
+			held = held || knobHeld
+		})
+		target := float32(0)
+		if held && !plane.IsDisabled() {
+			target = 1
+		}
+		press := plane.Animate(0, target, 150*time.Millisecond)
+		diameter := t.Space(4.5) * (1 + .35*press)
 		x := st.hsv
 		if !plane.IsDisabled() {
 			if held {
@@ -163,17 +178,16 @@ func ColorView(c *ui.Context, value *ui.Color) *ColorControl {
 				set(x.color(value.A), colorHSBA)
 			}
 		}
+		knob.Size(diameter, diameter).LeftPercent(float32(x.s)*100).TopPercent(float32(1-x.v)*100).
+			Margin(-diameter/2, 0, 0, -diameter/2)
 		plane.Range(0, 100, x.s*100).Step(1).Value(fmt.Sprintf("%.0f%% saturation, %.0f%% brightness", x.s*100, x.v*100))
 		plane.Draw(func(p *ui.Painter, r ui.Rect) {
 			hue := colorHSV{h: st.hsv.h, s: 1, v: 1}.color(255)
 			p.FillGradient(r, ui.LinearGradient{From: ui.RGB(255, 255, 255), To: hue, Angle: 90}, t.Radius)
 			p.FillGradient(r, ui.LinearGradient{From: ui.RGBA(0, 0, 0, 0), To: ui.RGB(0, 0, 0), Angle: 180}, t.Radius)
-			d := t.Space(4.5)
 			cx := r.X + r.W*float32(st.hsv.s)
 			cy := r.Y + r.H*float32(1-st.hsv.v)
-			knob := ui.Rect{X: cx - d/2, Y: cy - d/2, W: d, H: d}
-			p.Stroke(knob, ui.RGBA(0, 0, 0, .4), d/2, 3)
-			p.Stroke(knob, ui.RGB(255, 255, 255), d/2, 2)
+			paintColorPlaneKnob(p, ui.Rect{X: cx - diameter/2, Y: cy - diameter/2, W: diameter, H: diameter}, press)
 			if plane.FocusVisible() {
 				p.FocusRing(r, [4]float32{t.Radius, t.Radius, t.Radius, t.Radius})
 			}
@@ -238,10 +252,29 @@ func ColorView(c *ui.Context, value *ui.Color) *ColorControl {
 	return out
 }
 
+func paintColorPlaneKnob(p *ui.Painter, k ui.Rect, held float32) {
+	rad := k.H / 2
+	if held > 0 {
+		glass.Paint(p, k, rad, glass.Glass{Style: glass.Clear})
+	}
+	if held < 1 {
+		p.Stroke(k, ui.RGBA(0, 0, 0, .4*(1-held)), rad, 3)
+		p.Stroke(k, ui.RGBA(255, 255, 255, 1-held), rad, 2)
+	}
+}
+
 func colorChannel(c *ui.Context, value *float64, hi float64, label string, paint func(*ui.Painter, ui.Rect)) ui.Element {
 	t := c.Theme()
 	d := t.Space(5)
-	e := ui.SliderBase(c, value, 0, hi).FillWidth().Height(d).PaddingX(0).Label(label).FocusRing(false)
+	var e ui.Element
+	ui.Box(c).FillWidth().Height(d).Children(func() {
+		// Expand input bounds by half a thumb while leaving the visible track
+		// aligned with the color plane. SliderBase maps its padded content box.
+		e = ui.SliderBase(c, value, 0, hi).Absolute().Left(-d / 2).Right(-d / 2).
+			Height(d).PaddingX(d / 2).Label(label).FocusRing(false)
+	})
+	// Apply pending input before capturing the fraction for this frame's paint.
+	e.Changed()
 	fraction := float32(*value / hi)
 	_, _, held := e.Dragged()
 	target := float32(0)
@@ -250,9 +283,9 @@ func colorChannel(c *ui.Context, value *float64, hi float64, label string, paint
 	}
 	glass := e.Animate(0, target, 150*time.Millisecond)
 	e.Draw(func(p *ui.Painter, r ui.Rect) {
-		bar := ui.Rect{X: r.X, Y: r.Y + d*.2, W: r.W, H: d * .6}
+		bar := ui.Rect{X: r.X + d/2, Y: r.Y + d*.2, W: max(0, r.W-d), H: d * .6}
 		p.Clip(bar, bar.H/2, func() { paint(p, bar) })
-		x, y := r.X+r.W*fraction, r.Y+d/2
+		x, y := bar.X+bar.W*fraction, r.Y+d/2
 		paintSliderKnob(p, t, sliderKnobRect(t, x, y, glass), glass, e.FocusVisible())
 	})
 	return e

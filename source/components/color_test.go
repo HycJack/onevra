@@ -257,16 +257,25 @@ func TestColorChannelEndpoints(t *testing.T) {
 	if !ok {
 		t.Fatal("channel missing")
 	}
+	// The hit bounds now include the overhang; the visible track stays aligned
+	// with its parent, inset by half the thumb width inside the hit bounds.
 	for _, end := range []float64{0, 1} {
 		value = end
 		tt.Frame()
-		x := r.X - 4
+		x := r.X + 6
 		if end == 1 {
-			x = r.X + r.W + 4
+			x = r.X + r.W - 6
 		}
 		pixel := tt.Image().RGBAAt(int(x), int(r.Y+r.H/2))
-		if pixel.A < 200 || pixel.R < 200 || pixel.G < 200 || pixel.B < 200 {
+		if pixel.A == 0 {
 			t.Fatalf("thumb does not overhang end %v: %v", end, pixel)
+		}
+		// Start on the outer half, not the track, then drag towards the middle.
+		tt.Press(x, r.Y+r.H/2)
+		tt.Move(r.X+r.W/2, r.Y+r.H/2)
+		tt.Release(r.X+r.W/2, r.Y+r.H/2)
+		if value < .49 || value > .51 {
+			t.Fatalf("outer half did not capture at end %v: %v", end, value)
 		}
 	}
 	tt.Press(r.X+r.W/2, r.Y+r.H/2)
