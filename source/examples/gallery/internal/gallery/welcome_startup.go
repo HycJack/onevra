@@ -39,6 +39,7 @@ func (g *Gallery) welcomePageLocalized(c *ui.Context) {
 			})
 		})
 	})
+	g.Commands(c)
 }
 
 func (g *Gallery) enterGallery() {

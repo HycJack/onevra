@@ -1029,3 +1029,23 @@ gallery.notification_clicked:
   other: "Notification clicked. Welcome back!"
 gallery.notification_withdrawn:
   other: "Notification withdrawn."
+gallery.command_palette:
+  other: Command palette
+gallery.search_commands:
+  other: Search pages and actions…
+gallery.commands:
+  other: Commands
+gallery.no_matching_commands:
+  other: No matching commands
+gallery.command_auto_abc:
+  other: Automatically switch to ABC
+gallery.command_auto_abc_description:
+  other: Use ABC when opening the panel and restore the previous input source on close. macOS only.
+gallery.command_default_expanded:
+  other: Show results when opened
+gallery.command_default_expanded_description:
+  other: Turn off to show results only after typing a search.
+gallery.toggle_command_auto_abc:
+  other: Toggle automatic ABC switching
+gallery.toggle_command_default_expanded:
+  other: Toggle results on opening

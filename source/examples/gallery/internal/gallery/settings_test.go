@@ -1,6 +1,8 @@
 package gallery
 
 import (
+	"path/filepath"
+	"runtime"
 	"testing"
 
 	"github.com/egoist/mygo/ui"
@@ -121,5 +123,50 @@ func TestSettingsSearchAndGeometry(t *testing.T) {
 		if !tt.HasText("No matching settings. Try another search.") {
 			t.Fatal("empty search feedback missing")
 		}
+	}
+}
+
+func TestCommandPreferencesPersistAndApply(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "config.yaml")
+	config, err := LoadConfig(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	g := &Gallery{config: config, configPath: path}
+	g.settings.open, g.settings.view.Category = true, "general"
+	tt := ui.NewTester(g.Settings, 820, 700)
+	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
+	if err := tt.Click("Toggle results on opening"); err != nil {
+		t.Fatal(err)
+	}
+	if runtime.GOOS == "darwin" {
+		if err := tt.Click("Toggle automatic ABC switching"); err != nil {
+			t.Fatal(err)
+		}
+	}
+	saved, err := LoadConfig(path)
+	if err != nil || !saved.CommandExpandOnSearch || saved.DisableCommandABC != (runtime.GOOS == "darwin") {
+		t.Fatalf("preferences not persisted: %+v, %v", saved, err)
+	}
+	reopened := &Gallery{config: saved}
+	reopened.openCommands()
+	palette := ui.NewTester(reopened.View, 820, 600)
+	before, ok := palette.Find("Command palette")
+	if !ok || before.H > 100 {
+		t.Fatalf("expected compact panel: %+v", before)
+	}
+	palette.Type("settings")
+	after, ok := palette.Find("Command palette")
+	if !ok || after.H < 300 {
+		t.Fatalf("search did not expand panel: %+v", after)
+	}
+	// Saving another preference must preserve the command settings.
+	saved.Language = "zh-Hans"
+	if err := SaveConfig(path, saved); err != nil {
+		t.Fatal(err)
+	}
+	reloaded, err := LoadConfig(path)
+	if err != nil || reloaded != saved {
+		t.Fatalf("round trip: %+v %v", reloaded, err)
 	}
 }

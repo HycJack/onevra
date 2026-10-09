@@ -31,6 +31,8 @@ To preview a specific appearance, append `-theme light` or `-theme dark`. `go ru
 
 The **Desktop / Tray** page enables a tray icon: left-click toggles a small notes window and right-click opens a native menu on macOS and Windows. Linux uses a menu action instead and requires AppIndicator. See [tray review and requirements](docs/build.md#tray-example). On macOS, **Desktop / Dock menu** adds Gallery shortcuts to the Dock icon's right-click menu; see [Dock menu review](docs/build.md#dock-menu-example).
 
+Press Command+E on macOS or Ctrl+E on other platforms to search Gallery pages and actions. Applications can reuse the [command palette and dialog](source/plugins/command/example_test.go), supplying their own commands and execution handlers.
+
 ## Basic usage
 
 Until publication, use a local Go workspace that includes your application and this repository's `source/` directory. Import `github.com/oneo-me/onevra/shells/sidebar`:

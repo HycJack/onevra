@@ -3,7 +3,6 @@ package gallery
 import (
 	"bytes"
 	"math"
-	"reflect"
 	"testing"
 
 	"github.com/egoist/mygo/ui"
@@ -111,11 +110,8 @@ func absDiff(a, b uint8) int {
 	return max(int(a)-int(b), int(b)-int(a))
 }
 
-func TestFilteredNavigation(t *testing.T) {
-	all := filteredNavigation("")
-	if !reflect.DeepEqual(all, filteredNavigation("  \t")) {
-		t.Fatal("whitespace should show all entries")
-	}
+func TestNavigationCatalog(t *testing.T) {
+	all := navigationCatalog()
 	count := 0
 	seen := map[galleryPage]bool{}
 	for _, group := range all {
@@ -130,33 +126,9 @@ func TestFilteredNavigation(t *testing.T) {
 	if count != 6+len(controlCatalog)+len(mygoCatalog) {
 		t.Fatalf("missing catalog entries: %d", count)
 	}
-	for _, group := range all {
-		for _, entry := range group.entries {
-			found := false
-			for _, match := range filteredNavigation(entry.label) {
-				if len(match.entries) == 0 {
-					t.Fatal("empty group")
-				}
-				for _, candidate := range match.entries {
-					if candidate == entry {
-						found = true
-					}
-				}
-			}
-			if !found {
-				t.Fatalf("entry lost its route: %+v", entry)
-			}
-		}
-	}
-	if !reflect.DeepEqual(filteredNavigation("  bUtToN  "), filteredNavigation("Button")) {
-		t.Fatal("case-insensitive trimmed search failed")
-	}
-	if len(filteredNavigation("no-such-component")) != 0 {
-		t.Fatal("unexpected results")
-	}
 }
 
-func TestNavigationSearch(t *testing.T) {
+func TestNavigationSearchTrigger(t *testing.T) {
 	for _, width := range []int{220, 520} {
 		g := &Gallery{page: welcomePage}
 		tt := ui.NewTester(g.Left, width, 600)
@@ -164,38 +136,16 @@ func TestNavigationSearch(t *testing.T) {
 		if !ok || before.X < 0 || before.X+before.W > float32(width) || before.Y < 48 {
 			t.Fatalf("search bounds: %+v", before)
 		}
+		_, shortcut := commandShortcut()
+		if !tt.HasText(shortcut) {
+			t.Fatal("missing shortcut hint")
+		}
 		if err := tt.Click("Search components"); err != nil {
 			t.Fatal(err)
 		}
-		tt.Type("bUtToN")
-		tt.Frame()
-		if !tt.HasText("Buttons") || tt.HasText("Welcome") || tt.HasText("Overview") || tt.HasText("Icon library") {
-			t.Fatal("search did not filter navigation", tt.Texts())
-		}
-		if g.page != welcomePage {
-			t.Fatal("search changed selection")
-		}
-		if err := tt.Click("Buttons"); err != nil {
-			t.Fatal(err)
-		}
-		example, ok := controlExampleFor(g.page)
-		if !ok || example.name != "Button" {
-			t.Fatal("filtered item navigated to wrong page")
-		}
-		selected := g.page
-		g.navigationQuery = "no-such-component"
-		tt.Frame()
-		if !tt.HasText("No matching components.") {
-			t.Fatal("missing empty state")
-		}
-		g.navigationQuery = ""
-		tt.Frame()
-		if !tt.HasText("Welcome") || g.page != selected {
-			t.Fatal("clearing search lost navigation or selection")
-		}
-		after, _ := tt.Find("Search components")
-		if before != after {
-			t.Fatalf("search moved: %+v -> %+v", before, after)
+		tt.Type("button")
+		if !g.commands.open || !tt.HasText("Welcome") || !tt.HasText("Icon library") || g.page != welcomePage {
+			t.Fatal("trigger must open commands without filtering or navigating")
 		}
 	}
 }
@@ -203,7 +153,7 @@ func TestNavigationSearch(t *testing.T) {
 func TestChineseNavigationNames(t *testing.T) {
 	g := &Gallery{}
 	g.chooseLanguage("zh-Hans")
-	for _, group := range filteredNavigation("") {
+	for _, group := range navigationCatalog() {
 		if g.text(group.label) == group.label {
 			t.Errorf("untranslated navigation group: %s", group.label)
 		}
@@ -216,14 +166,7 @@ func TestChineseNavigationNames(t *testing.T) {
 			}
 		}
 	}
-	for _, query := range []string{"TimePicker", "时间选择器"} {
-		groups := filteredNavigation(query, g.text)
-		if len(groups) != 1 || len(groups[0].entries) != 1 || groups[0].entries[0].label != "TimePicker" {
-			t.Fatalf("search %q did not preserve component identity: %v", query, groups)
-		}
-	}
-	g.navigationQuery = "时间选择器"
-	tt := ui.NewTester(g.Left, 240, 600)
+	tt := ui.NewTester(g.Left, 240, 6000)
 	if err := tt.Click("时间选择器"); err != nil {
 		t.Fatal(err)
 	}

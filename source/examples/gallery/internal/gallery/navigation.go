@@ -1,7 +1,5 @@
 package gallery
 
-import "strings"
-
 // Component sections describe purpose, never implementation ownership.
 var navigationGroups = []string{
 	"Plugins", "Actions & navigation", "Text input", "Selection & values",
@@ -19,24 +17,11 @@ type navigationGroup struct {
 	entries []navigationEntry
 }
 
-func filteredNavigation(query string, translators ...func(string) string) []navigationGroup {
-	translated := func(s string) string {
-		if len(translators) > 0 {
-			return translators[0](s)
-		}
-		return s
-	}
-	query = strings.ToLower(strings.TrimSpace(query))
+func navigationCatalog() []navigationGroup {
 	var groups []navigationGroup
 	add := func(label string, entries []navigationEntry) {
-		var matches []navigationEntry
-		for _, entry := range entries {
-			if strings.Contains(strings.ToLower(entry.label+" "+translated(entry.label)), query) {
-				matches = append(matches, entry)
-			}
-		}
-		if len(matches) > 0 {
-			groups = append(groups, navigationGroup{label, matches})
+		if len(entries) > 0 {
+			groups = append(groups, navigationGroup{label, entries})
 		}
 	}
 	add("Overview", []navigationEntry{{"Welcome", welcomePage}, {"Component status", componentStatusPage}})

@@ -16,6 +16,9 @@ import (
 type Config struct {
 	Theme    mygo.ThemeSource `yaml:"theme"`
 	Language string           `yaml:"language,omitempty"`
+	// Zero values preserve automatic ABC selection and initially visible results.
+	DisableCommandABC     bool `yaml:"disableCommandABC,omitempty"`
+	CommandExpandOnSearch bool `yaml:"commandExpandOnSearch,omitempty"`
 }
 
 func validTheme(source mygo.ThemeSource) bool {
@@ -106,6 +109,14 @@ func (g *Gallery) themeMenu(m *ui.Menu) {
 	} {
 		if m.Item(g.text(option.label)).Checked(mygo.Theme.Source() == option.source).Chosen() {
 			g.chooseTheme(option.source)
+		}
+	}
+}
+
+func (g *Gallery) saveCommandPreferences() {
+	if g.configPath != "" {
+		if err := SaveConfig(g.configPath, g.config); err != nil {
+			log.Printf("Save gallery config: %v", err)
 		}
 	}
 }

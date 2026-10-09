@@ -4,6 +4,7 @@ package gallery
 import (
 	"fmt"
 
+	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/plugins/terminal"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/components"
@@ -13,22 +14,22 @@ import (
 
 // Gallery owns demonstration state and application preferences.
 type Gallery struct {
-	settings        settingsState
-	welcome         welcomeState
-	tray            trayDemo
-	dock            dockDemo
-	notification    notificationDemo
-	language        *translator
-	systemLanguage  string
-	config          Config
-	configPath      string
-	Clicks          int
-	Shell           *sidebar.Shell
-	page            galleryPage
-	navigationQuery string
-	grid            components.GridState
-	mygoStates      map[string]*demoState
-	controlStates   map[string]*controlState
+	commands       commandState
+	settings       settingsState
+	welcome        welcomeState
+	tray           trayDemo
+	dock           dockDemo
+	notification   notificationDemo
+	language       *translator
+	systemLanguage string
+	config         Config
+	configPath     string
+	Clicks         int
+	Shell          *sidebar.Shell
+	page           galleryPage
+	grid           components.GridState
+	mygoStates     map[string]*demoState
+	controlStates  map[string]*controlState
 	// Native startup supplies the factory; headless views never load libraries.
 	createTerminal func() (*terminal.Terminal, error)
 }
@@ -44,6 +45,7 @@ func (g *Gallery) New() *sidebar.Shell {
 	})
 	g.updateLanguageWindows()
 	g.Shell.SetPage(g.WelcomePage)
+	g.Shell.Window().OnClose(func(*mygo.CloseEvent) { g.commands.palette.ReleaseInputSource() })
 	g.Shell.Window().OnClosed(g.Close)
 	return g.Shell
 }
@@ -92,10 +94,27 @@ func (g *Gallery) leftLocalized(c *ui.Context) {
 func (g *Gallery) navigation(c *ui.Context) {
 	t := c.Theme()
 	ui.Column(c).FillWidth().Shrink(0).Padding(0, t.Space(3), t.Space(2), t.Space(3)).Children(func() {
-		components.TextBox(c, &g.navigationQuery, components.TextBoxOptions{LeadingIcon: lucide.Search()}).
-			Label(tr(c, "gallery.search_components")).Placeholder(tr(c, "gallery.search_components_2")).FillWidth().MinWidth(0)
+		_, shortcut := commandShortcut()
+		trigger := components.Button(c, "", components.ButtonSecondary).
+			Label(tr(c, "gallery.search_components")).FillWidth().MinWidth(0).
+			Padding(t.Space(1.5), t.Space(2.5)).Gap(t.Space(2)).TextColor(t.TextMuted)
+		tint, borderAlpha := float32(.08), float32(.18)
+		if trigger.Pressed() {
+			tint, borderAlpha = .18, .4
+		} else if trigger.Hovered() {
+			tint, borderAlpha = .12, .3
+		}
+		trigger.Background(t.Background.Mix(t.Text, tint).Alpha(.3)).Border(1, t.Text.Alpha(borderAlpha))
+		trigger.Children(func() {
+			components.Icon(c, lucide.Search).Size(t.Space(4), t.Space(4)).Shrink(0)
+			components.Text(c, tr(c, "gallery.search_2")).Grow(1).MinWidth(0).SingleLine()
+			components.Text(c, shortcut).FontSize(t.Rem(.8)).Shrink(0).SingleLine()
+		})
+		if trigger.Clicked() {
+			g.openCommands()
+		}
 	})
-	groups := filteredNavigation(g.navigationQuery, g.text)
+	groups := navigationCatalog()
 	components.ScrollView(c, components.ScrollViewOptions{}).Fill().Children(func() {
 		components.Sidebar(c).Children(func() {
 			for _, group := range groups {
@@ -111,9 +130,6 @@ func (g *Gallery) navigation(c *ui.Context) {
 						g.navigationItem(c, entry.label, icon, entry.page)
 					}
 				})
-			}
-			if len(groups) == 0 {
-				components.Text(c, tr(c, "gallery.no_matching_components")).TextColor(t.TextMuted).Wrap()
 			}
 		})
 	})
@@ -181,6 +197,7 @@ func (g *Gallery) viewLocalized(c *ui.Context) {
 	}
 	content.Children(func() { g.body(c) })
 	g.Settings(c)
+	g.Commands(c)
 }
 
 func (g *Gallery) body(c *ui.Context) {

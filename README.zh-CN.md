@@ -31,6 +31,8 @@ go run ./examples/gallery
 
 在 **Desktop / Tray** 页面启用托盘图标后，macOS 和 Windows 上可左键切换便笺小窗口、右键打开原生菜单。Linux 改为通过菜单项打开窗口，需要 AppIndicator。参见[托盘示例依赖与检查](docs/build.md#tray-example)。macOS 上还可在 **Desktop / Dock menu** 中为 Dock 图标的右键菜单添加 Gallery 快捷操作，参见[Dock 菜单检查](docs/build.md#dock-menu-example)。
 
+在 macOS 上按 Command+E，其他平台按 Ctrl+E，即可搜索 Gallery 页面和操作。应用可以复用[命令面板与弹窗](source/plugins/command/example_test.go)，提供自己的命令和执行逻辑。
+
 ## 基本使用
 
 发布前，请使用包含你的应用和本仓库 `source/` 目录的本地 Go workspace。导入 `github.com/oneo-me/onevra/shells/sidebar`：

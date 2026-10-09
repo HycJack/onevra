@@ -144,9 +144,6 @@ func TestLanguageSwitchRetainsState(t *testing.T) {
 	if err != nil || saved.Language != "zh-Hans" || saved.Theme != mygo.ThemeDark {
 		t.Fatalf("config: %+v %v", saved, err)
 	}
-	if len(filteredNavigation("欢迎", g.text)) == 0 || len(filteredNavigation("welcome", g.text)) == 0 {
-		t.Fatal("bilingual navigation search")
-	}
 	other := &Gallery{}
 	english := ui.NewTester(other.Welcome, 820, 900)
 	if !english.HasText("Small components. Real possibilities.") {

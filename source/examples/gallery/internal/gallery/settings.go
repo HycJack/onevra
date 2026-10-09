@@ -2,6 +2,8 @@ package gallery
 
 import (
 	"fmt"
+	"runtime"
+
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/components"
@@ -9,7 +11,7 @@ import (
 	"github.com/oneo-me/onevra/shells/sidebar"
 )
 
-// Template values are session-only; appearance uses the real gallery preference.
+// Template values are session-only; application preferences are persisted.
 type settingsState struct {
 	open, initialized bool
 	view              components.SettingsState
@@ -104,7 +106,7 @@ func (g *Gallery) settingsCategories() []components.SettingsCategory {
 						c.Invalidate()
 					}
 				},
-			}}}}},
+			}}}, g.commandSettingsGroup()}},
 		{ID: "appearance", Title: g.text("gallery.appearance"), Section: g.text("gallery.application"), Icon: lucide.Palette(),
 			Groups: []components.SettingsGroup{{ID: "theme", Items: []components.SettingsItem{{
 				ID: "theme", Title: g.text("gallery.theme"), Description: g.text("gallery.applies_immediately_and_follows_the_toolbar_theme_menu"), Keywords: []string{"System", "Light", "Dark", g.text("gallery.system"), g.text("gallery.light"), g.text("gallery.dark")},
@@ -147,4 +149,25 @@ func settingChoiceLabel(c *ui.Context, choice string) string {
 	default:
 		return tr(c, choice)
 	}
+}
+
+func (g *Gallery) commandSettingsGroup() components.SettingsGroup {
+	return components.SettingsGroup{ID: "commands", Title: g.text("gallery.command_palette"), Items: []components.SettingsItem{
+		{ID: "command-abc", Title: g.text("gallery.command_auto_abc"), Description: g.text("gallery.command_auto_abc_description"), Keywords: []string{"ABC", "input", "Raycast"}, Build: func(c *ui.Context) {
+			enabled := !g.config.DisableCommandABC
+			components.Switch(c, &enabled, g.text("gallery.toggle_command_auto_abc"), components.SwitchOptions{HideLabel: true}).Disabled(runtime.GOOS != "darwin").Changed()
+			if enabled != !g.config.DisableCommandABC {
+				g.config.DisableCommandABC = !enabled
+				g.saveCommandPreferences()
+			}
+		}},
+		{ID: "command-expanded", Title: g.text("gallery.command_default_expanded"), Description: g.text("gallery.command_default_expanded_description"), Keywords: []string{"search", "results", "Raycast"}, Build: func(c *ui.Context) {
+			expanded := !g.config.CommandExpandOnSearch
+			components.Switch(c, &expanded, g.text("gallery.toggle_command_default_expanded"), components.SwitchOptions{HideLabel: true}).Changed()
+			if expanded != !g.config.CommandExpandOnSearch {
+				g.config.CommandExpandOnSearch = !expanded
+				g.saveCommandPreferences()
+			}
+		}},
+	}}
 }

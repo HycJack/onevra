@@ -1029,3 +1029,23 @@ gallery.notification_clicked:
   other: "已点击通知，欢迎回来！"
 gallery.notification_withdrawn:
   other: "已撤回通知。"
+gallery.command_palette:
+  other: 命令面板
+gallery.search_commands:
+  other: 搜索页面和操作…
+gallery.commands:
+  other: 命令
+gallery.no_matching_commands:
+  other: 没有匹配的命令
+gallery.command_auto_abc:
+  other: 自动切换到 ABC
+gallery.command_auto_abc_description:
+  other: 打开面板时使用 ABC，关闭后恢复之前的输入法。仅限 macOS。
+gallery.command_default_expanded:
+  other: 默认展开结果列表
+gallery.command_default_expanded_description:
+  other: 关闭后，仅在输入搜索内容时展开结果列表。
+gallery.toggle_command_auto_abc:
+  other: 切换自动使用 ABC
+gallery.toggle_command_default_expanded:
+  other: 切换默认展开结果列表

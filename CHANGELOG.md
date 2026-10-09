@@ -15,5 +15,6 @@ User-facing updates for Onevra library consumers. No version has been published 
 - Add reusable read-only syntax highlighting and selectable Markdown documents with highlighted code blocks, code copying, application-supplied images and custom code-block views.
 - Support application-supplied component localization, calendar presentation and live Shell label updates without recreating windows.
 - Add reusable settings surfaces with application-defined controls, grouped categories, narrow layouts and cross-category search, embeddable in pages or dialogs.
+- Add searchable command palettes for embedded and dialog use, with grouped results, optional expansion after searching, keyboard navigation, optional macOS input-source switching with restoration, and application-owned actions.
 - Add built-in Onevra light and dark themes with warm neutrals and a shared terracotta accent that support system appearance or an application-selected mode and work with MyGo widgets.
 - Add Lucide assets through `icons/lucide` and a composable Icon component accepting named icon accessors or parsed SVGs.
