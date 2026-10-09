@@ -3,7 +3,7 @@ module github.com/oneo-me/onevra
 go 1.27.1
 
 require (
-	github.com/egoist/mygo v0.3.4
+	github.com/egoist/mygo v0.3.5
 	github.com/tc-hib/winres v0.3.1
 	go.yaml.in/yaml/v3 v3.0.4
 )
