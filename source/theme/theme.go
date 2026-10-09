@@ -25,10 +25,9 @@ func (m Mode) String() string {
 	}
 }
 
-// Palettes follow the Light and Shadow (light-shadow) design style from
-// oneo-me/desgin-styles: a warm white light mode and a deep navy dark mode.
-// Accent hover/pressed states derive the same way MyGo derives them, and the
-// control radius follows the style; spacing and font size keep following MyGo.
+// Onevra pairs warm white and warm charcoal surfaces with a terracotta accent.
+// Dark mode lifts the accent for legibility without changing its color family.
+// Spacing and font size keep following MyGo.
 
 // LightPalette returns Onevra's light palette.
 func LightPalette() *ui.Theme {
@@ -47,7 +46,7 @@ func LightPalette() *ui.Theme {
 	t.AccentPressed = accent.Mix(black, 0.25)
 	t.AccentText = ui.Hex("#ffffff")
 	t.Danger = ui.Hex("#b4444c")
-	// The style defines no warning token; amber matches its warm palette.
+	// Amber complements the warm accent while remaining distinct from danger.
 	t.Warning = ui.Hex("#b45309")
 	t.Success = ui.Hex("#059669")
 	t.Selection = ui.RGBA(230, 101, 43, 0.22)
@@ -62,26 +61,26 @@ func LightPalette() *ui.Theme {
 func DarkPalette() *ui.Theme {
 	t := ui.DarkTheme()
 	t.Dark = true
-	accent := ui.Hex("#9cbff9")
+	accent := ui.Hex("#ed986e")
 	black := ui.RGB(0, 0, 0)
 	white := ui.RGB(255, 255, 255)
-	t.Background = ui.Hex("#192332")
-	t.Surface = ui.Hex("#243247")
-	t.SurfaceHover = ui.Hex("#30435e")
-	t.SurfacePressed = ui.Hex("#2b3c54")
-	t.Border = ui.Hex("#2e3e55")
-	t.Text = ui.Hex("#e7edf8")
-	t.TextMuted = ui.Hex("#a4b4cc")
+	t.Background = ui.Hex("#211f1c")
+	t.Surface = ui.Hex("#2b2925")
+	t.SurfaceHover = ui.Hex("#36332e")
+	t.SurfacePressed = ui.Hex("#403c36")
+	t.Border = ui.Hex("#504b43")
+	t.Text = ui.Hex("#eeeae2")
+	t.TextMuted = ui.Hex("#bdb6aa")
 	t.Accent = accent
-	t.AccentHover = accent.Mix(white, 0.2)
-	t.AccentPressed = accent.Mix(black, 0.15)
-	t.AccentText = ui.Hex("#122540")
-	t.Danger = ui.Hex("#ef9aa1")
-	// The style defines no warning token; amber matches its palette.
-	t.Warning = ui.Hex("#fbbf24")
-	t.Success = ui.Hex("#34d399")
-	t.Selection = ui.RGBA(113, 162, 236, 0.25)
-	t.Focus = ui.RGBA(131, 175, 244, 0.55)
+	t.AccentHover = accent.Mix(white, 0.12)
+	t.AccentPressed = accent.Mix(black, 0.12)
+	t.AccentText = ui.Hex("#291b14")
+	t.Danger = ui.Hex("#e58f95")
+	// Muted semantic colors stay readable without overpowering the accent.
+	t.Warning = ui.Hex("#e6b567")
+	t.Success = ui.Hex("#79bea1")
+	t.Selection = accent.Alpha(0.24)
+	t.Focus = accent.Alpha(0.8)
 	t.Scrollbar = t.Text.Alpha(.35)
 	t.Radius = 8
 	return t

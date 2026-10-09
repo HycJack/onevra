@@ -8,8 +8,7 @@ type ButtonVariant int
 const (
 	// ButtonPrimary is the accent-filled main action.
 	ButtonPrimary ButtonVariant = iota
-	// ButtonSecondary is a bordered action with a light fill in light mode
-	// and a high-contrast fill in dark mode.
+	// ButtonSecondary is a bordered action with a subtle text-tinted fill.
 	ButtonSecondary
 	// ButtonOutline is the bordered quiet action.
 	ButtonOutline
@@ -36,12 +35,8 @@ func Button(c *ui.Context, label string, variant ButtonVariant) ui.Element {
 	case ButtonPrimary:
 		bg, hover, pressed, fg, border = t.Accent, t.AccentHover, t.AccentPressed, t.AccentText, ui.Color{}
 	case ButtonSecondary:
-		bg, fg, border = t.Text, t.Background, t.Border
-		hover, pressed = bg.Mix(t.Background, .12), bg.Mix(t.Background, .25)
-		if !t.Dark {
-			bg, fg = t.Background.Mix(t.Text, .08), t.Text
-			hover, pressed = t.Background.Mix(t.Text, .12), t.Background.Mix(t.Text, .18)
-		}
+		bg, fg = t.Background.Mix(t.Text, .08), t.Text
+		hover, pressed = t.Background.Mix(t.Text, .12), t.Background.Mix(t.Text, .18)
 	case ButtonOutline:
 		bg, border = ui.Color{}, t.Border
 	case ButtonGhost:

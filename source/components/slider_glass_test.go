@@ -35,9 +35,6 @@ func TestKnobUsesClearOnlyWhileHeld(t *testing.T) {
 			x, y := int(k.X+k.W/2), int(k.Y+k.H/2)
 			rest := bytes.Clone(tt.Image().Pix)
 			want := uint8(255)
-			if dark {
-				want = 224
-			}
 			if plane {
 				want = 0 // The original plane marker is a ring, not a filled thumb.
 			}

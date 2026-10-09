@@ -87,7 +87,7 @@ appShell := sidebar.NewShell(sidebar.ShellOptions{
 })
 ```
 
-色板遵循 [oneo-me/desgin-styles](https://github.com/oneo-me/desgin-styles) 的 Light and Shadow（light-shadow）设计风格：暖白色浅色模式与深海军蓝深色模式。参见 [theme 包](source/theme/doc.go)与[外观设计](docs/architecture/components.md#native-appearance)。
+Onevra 设计风格以暖白色浅色界面与暖炭灰深色界面搭配同一色系的陶土橙强调色。参见 [theme 包](source/theme/doc.go)与[外观设计](docs/architecture/components.md#native-appearance)。
 
 ## 控件
 

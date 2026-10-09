@@ -1,7 +1,6 @@
 package sidebar
 
 import (
-	"runtime"
 	"testing"
 
 	"github.com/egoist/mygo/ui"
@@ -27,9 +26,6 @@ func TestShellEffectiveVibrancy(t *testing.T) {
 				wantAlpha := uint8(255)
 				if vibrant {
 					wantAlpha = 0
-					if mode == theme.Dark && runtime.GOOS != "windows" {
-						wantAlpha = palette.Surface.Alpha(0.65).A
-					}
 				}
 				for _, y := range []int{2, 400, 599} {
 					pixel := tt.Image().RGBAAt(100, y)

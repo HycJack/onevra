@@ -10,5 +10,5 @@ User-facing updates for Onevra library consumers. No version has been published 
 - Add theme-tinted glass surfaces for text Tooltips, anchored Popovers and selection popups, plus composable layered glass Dialogs and result-bearing AlertDialogs with optional cancellation; dialogs inherit window dragging from Shell or a standalone host scope, with per-dialog overrides.
 - Add a native sidebar-style application Shell through `shells/sidebar` with a collapsible, resizable sidebar, customizable titlebar and toolbar actions, and replaceable page content; expose system materials on macOS and supported Windows systems with opaque theme backgrounds when unavailable.
 - Add reusable settings surfaces with application-defined controls, grouped categories, narrow layouts and cross-category search, embeddable in pages or dialogs.
-- Add built-in light and dark themes that support system appearance or an application-selected mode and work with MyGo widgets.
+- Add built-in Onevra light and dark themes with warm neutrals and a shared terracotta accent that support system appearance or an application-selected mode and work with MyGo widgets.
 - Add Lucide assets through `icons/lucide` and a composable Icon component accepting named icon accessors or parsed SVGs.

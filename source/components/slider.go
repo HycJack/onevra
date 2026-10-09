@@ -157,9 +157,6 @@ func sliderKnobRect(t *ui.Theme, x, y, held float32) ui.Rect {
 
 func paintSliderKnob(p *ui.Painter, t *ui.Theme, k ui.Rect, held float32, focus bool) {
 	face, drop := ui.RGB(255, 255, 255), ui.RGBA(0, 0, 0, .14)
-	if t.Dark {
-		face, drop = ui.RGB(224, 225, 225), ui.RGBA(0, 0, 0, .3)
-	}
 	rad := k.H / 2
 	if held > 0 {
 		p.Shadow(k, rad, 0, 8, 14, -3, drop.Alpha(held))

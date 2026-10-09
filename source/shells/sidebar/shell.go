@@ -145,7 +145,7 @@ func (s *Shell) nativeOptions() mygo.WindowOptions {
 func shellVibrancy() mygo.Vibrancy {
 	switch runtime.GOOS {
 	case "darwin":
-		return mygo.VibrancyTitlebar
+		return mygo.VibrancySidebar
 	case "windows":
 		return mygo.VibrancyMica
 	default:
@@ -262,10 +262,7 @@ func (s *Shell) build(c *ui.Context) {
 					// Only the visible slice changes width. Sidebar content stays put
 					// while the opaque main region covers or uncovers it.
 					sidebar := ui.Column(c).Key("left").Width(leftWidth * leftProgress).Shrink(0).FillHeight().Clip()
-					if c.Theme().Dark && vibrant && runtime.GOOS != "windows" {
-						// Windows materials supply their own tint; preserve it unchanged.
-						sidebar.Background(c.Theme().Surface.Alpha(0.65))
-					} else if !vibrant {
+					if !vibrant {
 						sidebar.Background(c.Theme().Surface.Alpha(1))
 					}
 					sidebar.Children(func() {

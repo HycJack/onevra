@@ -24,7 +24,7 @@ func TestOverlayGlassTint(t *testing.T) {
 				tt := ui.NewTester(func(c *ui.Context) {
 					theme.Apply(c, mode)
 					tint = c.Theme().Background
-					ui.Box(c).Absolute().Left(0).Top(0).Size(480, 360).Background(backdrop)
+					ui.Box(c).Absolute().Left(0).Top(0).Size(480, 361).Background(backdrop)
 					style := func(panel ui.Element) {
 						panel.Size(180, 120).DrawOver(func(_ *ui.Painter, r ui.Rect) { bounds = r })
 					}
@@ -43,7 +43,7 @@ func TestOverlayGlassTint(t *testing.T) {
 						sel.Trigger.Label("Anchor").Absolute().Left(100).Top(160)
 						sel.Popup(style)
 					}
-				}, 480, 360)
+				}, 480, 361)
 				if kind == "Tooltip" {
 					tt.Key(0, ui.KeyTab)
 				}
@@ -61,6 +61,20 @@ func TestOverlayGlassTint(t *testing.T) {
 					return tt.Image().RGBAAt(int(bounds.X+bounds.W/2), int(bounds.Y+bounds.H/2))
 				}
 				dark := sample()
+				if kind == "Dialog" || kind == "Popover" {
+					palette := theme.LightPalette()
+					if mode == theme.Dark {
+						palette = theme.DarkPalette()
+					}
+					edge := tt.Image().RGBAAt(int(bounds.X+bounds.W/2), int(bounds.Y))
+					want := palette.Border
+					if kind == "Dialog" {
+						want = palette.Background.Mix(palette.Text, .25)
+					}
+					if edge.R != want.R || edge.G != want.G || edge.B != want.B {
+						t.Fatalf("panel border = %v, want %v", edge, want)
+					}
+				}
 				backdrop = ui.RGB(255, 255, 255)
 				light := sample()
 				if dark == light {

@@ -38,7 +38,7 @@ func TestShellNativeOptions(t *testing.T) {
 	}
 	material := mygo.VibrancyNone
 	if runtime.GOOS == "darwin" {
-		material = mygo.VibrancyTitlebar
+		material = mygo.VibrancySidebar
 	} else if runtime.GOOS == "windows" {
 		material = mygo.VibrancyMica
 	}
@@ -336,7 +336,7 @@ func TestShellSidebarBackground(t *testing.T) {
 		img := tt.Image()
 		sidebar, main := img.RGBAAt(100, 400), img.RGBAAt(400, 400)
 		wantAlpha := uint8(255)
-		if sidebar == main || sidebar.A != wantAlpha || (dark && !(sidebar.B > sidebar.R)) {
+		if sidebar == main || sidebar.A != wantAlpha || (dark && !(sidebar.R > sidebar.G && sidebar.G > sidebar.B)) {
 			t.Fatalf("dark=%v: sidebar=%v main=%v", dark, sidebar, main)
 		}
 		for _, y := range []int{2, 599} {

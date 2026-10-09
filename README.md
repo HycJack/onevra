@@ -87,7 +87,7 @@ appShell := sidebar.NewShell(sidebar.ShellOptions{
 })
 ```
 
-The palettes follow the Light and Shadow (light-shadow) design style from [oneo-me/desgin-styles](https://github.com/oneo-me/desgin-styles): a warm white light mode and a deep navy dark mode. See the [theme package](source/theme/doc.go) and [appearance design](docs/architecture/components.md#native-appearance).
+The Onevra design style pairs warm white light surfaces and warm charcoal dark surfaces with a shared terracotta accent. See the [theme package](source/theme/doc.go) and [appearance design](docs/architecture/components.md#native-appearance).
 
 ## Controls
 

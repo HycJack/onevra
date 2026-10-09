@@ -165,10 +165,7 @@ func TestButtonSecondaryFill(t *testing.T) {
 		var want ui.Color
 		tt := ui.NewTester(func(c *ui.Context) {
 			theme.Apply(c, mode)
-			want = c.Theme().Text
-			if mode == theme.Light {
-				want = c.Theme().Background.Mix(c.Theme().Text, .08)
-			}
+			want = c.Theme().Background.Mix(c.Theme().Text, .08)
 			Button(c, "Secondary", ButtonSecondary)
 		}, 300, 100)
 		r, _ := tt.Find("Secondary")
@@ -189,7 +186,7 @@ func TestButtonSecondaryFill(t *testing.T) {
 		if mode == theme.Light {
 			want = theme.LightPalette().Background.Mix(theme.LightPalette().Text, .12)
 		} else {
-			want = want.Mix(theme.DarkPalette().Background, .12)
+			want = theme.DarkPalette().Background.Mix(theme.DarkPalette().Text, .12)
 		}
 		pixel = tt.Image().RGBAAt(int(r.X+6), int(r.Y+r.H/2))
 		if pixel.R != want.R || pixel.G != want.G || pixel.B != want.B {

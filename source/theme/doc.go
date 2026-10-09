@@ -1,5 +1,5 @@
-// Package theme provides Onevra's built-in light and dark appearances,
-// following the Light and Shadow (light-shadow) design style from oneo-me/desgin-styles.
+// Package theme provides the Onevra design style's built-in light and dark
+// appearances: warm neutrals with a shared terracotta accent.
 //
 // The palettes are ui.Theme values applied through MyGo's own theme
 // mechanism, so every MyGo widget keeps working unchanged. Shell applies
