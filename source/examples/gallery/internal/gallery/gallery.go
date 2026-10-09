@@ -135,7 +135,15 @@ func iconSamples(c *ui.Context) {
 
 // View builds the default page's main content.
 func (g *Gallery) View(c *ui.Context) {
-	content := ui.Column(c).Fill().Padding(shell.HeaderHeight(c), 0, 0, 0)
+	var content ui.Element
+	_, control := controlExampleFor(g.page)
+	example, upstream := mygoExampleFor(g.page)
+	if control || upstream && example.name != "Terminal" {
+		content = components.PixelGrid(c, components.PixelGridOptions{Spacing: 22, MajorEvery: -1}).Column()
+	} else {
+		content = ui.Column(c)
+	}
+	content.Fill().Padding(shell.HeaderHeight(c), 0, 0, 0)
 	if g.page == welcomePage {
 		welcomeBackground(c, content)
 	}

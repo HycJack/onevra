@@ -268,34 +268,31 @@ func TestControlExampleInteractions(t *testing.T) {
 	}
 }
 
-func TestControlPreviewGeometry(t *testing.T) {
+func TestControlPageGrid(t *testing.T) {
 	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
-		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
-			controlPreview(c).Height(120).Children(func() {
-				ui.Box(c).Size(10, 10).Label("content")
-			})
-		}, 200, 120)
-		r, ok := tt.Find("content")
-		// The one-pixel border sits outside the 20-pixel padding.
-		if !ok || r.X != 21 || r.Y != 21 {
-			t.Fatalf("preview padding: %+v", r)
-		}
-		img := tt.Image()
-		background := img.RGBAAt(50, 50)
-		for _, x := range []int{22, 44, 66, 88, 176} {
-			if img.RGBAAt(x, 50) == background || img.RGBAAt(x+5, 50) != background {
-				t.Fatalf("missing 22-pixel grid at x=%d", x)
+		for _, width := range []int{280, 900} {
+			g := &Gallery{page: pageFromKey("controls/Popover")}
+			tt := ui.NewTester(func(c *ui.Context) {
+				theme.Apply(c, mode)
+				g.View(c)
+			}, width, 600)
+			img := tt.Image()
+			background := img.RGBAAt(5, 575)
+			// The grid covers the header, outer margins and empty space far below
+			// the examples, with one continuous origin rather than local canvases.
+			for _, y := range []int{5, 575} {
+				for x := 22; x < width-10; x += 22 {
+					if img.RGBAAt(x, y) == background || img.RGBAAt(x+5, y) != background {
+						t.Fatalf("mode=%v width=%d: missing page grid at %d,%d", mode, width, x, y)
+					}
+				}
 			}
-		}
-		if img.RGBAAt(176, 50) != img.RGBAAt(22, 50) {
-			t.Fatal("preview grid must not emphasize major lines")
-		}
-		if img.RGBAAt(100, 0) == background {
-			t.Fatal("missing preview border")
-		}
-		if img.RGBAAt(0, 0) == img.RGBAAt(100, 0) {
-			t.Fatal("preview corner is not rounded")
+			if img.RGBAAt(5, 572) == background {
+				t.Fatal("missing horizontal grid near the page bottom")
+			}
+			if img.RGBAAt(176, 575) != img.RGBAAt(22, 575) {
+				t.Fatal("page grid must not emphasize major lines")
+			}
 		}
 	}
 }

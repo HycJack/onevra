@@ -168,9 +168,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 			for _, variant := range example.variants {
 				ui.Column(c).Key(variant).FillWidth().MinWidth(0).Gap(12).Children(func() {
 					components.Text(c, variant).TextColor(t.TextMuted)
-					controlPreview(c).Children(func() {
-						example.build(c, g.controlState(example.name, variant), variant)
-					})
+					example.build(c, g.controlState(example.name, variant), variant)
 				})
 			}
 		})
@@ -200,14 +198,6 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 func (g *Gallery) controlSection(c *ui.Context, name string, build func()) {
 	ui.Column(c).Key(name).FillWidth().MinWidth(0).Gap(12).Children(func() {
 		components.Text(c, name).Bold().TextColor(c.Theme().Text)
-		controlPreview(c).Children(build)
+		build()
 	})
-}
-
-// controlPreview provides a shared canvas for component demonstrations.
-func controlPreview(c *ui.Context) ui.Element {
-	t := c.Theme()
-	return components.PixelGrid(c, components.PixelGridOptions{Spacing: 22, MajorEvery: -1}).
-		Key("control-preview").Column().FillWidth().MinWidth(0).
-		Padding(20).Gap(12).Radius(t.Radius).Border(1, t.Border)
 }
