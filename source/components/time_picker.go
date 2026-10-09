@@ -38,8 +38,9 @@ func timePickerSet(value *time.Time, hour, minute int) bool {
 }
 
 // TimePicker displays a leading clock icon and a 24-hour HH:mm value. Its fixed
-// popup contains independently scrolling hour (left) and minute (right) columns.
-// Choosing an hour moves focus to minutes; choosing a minute confirms and closes.
+// popup contains independently scrolling hour (left) and minute (right) columns
+// without scrollbars. Choosing an hour moves focus to minutes; choosing a minute
+// confirms without closing the popup.
 // Up/Down and Home/End move the focused column's draft cursor; Left/Right switch
 // columns; Enter/Space activates it. Escape/outside press discards the draft.
 // Opening reveals the current hour and minute. External changes reset the draft.
@@ -81,7 +82,11 @@ func TimePicker(c *ui.Context, value *time.Time) *TimeControl {
 				if index == 1 {
 					current, count = &st.minute, 60
 				}
-				column := ScrollView(c, ScrollViewOptions{}).FillWidth().Grow(1).Focusable().Role(ui.RoleList).Label(label)
+				// MyGo has no per-view scrollbar visibility option. Reserve the
+				// popup's full height from the track, leaving no visible or
+				// draggable bar while retaining native wheel scrolling.
+				column := ScrollView(c, ScrollViewOptions{}).ScrollbarInsets(0, 0, t.Space(64), 0).
+					FillWidth().Grow(1).Focusable().Role(ui.RoleList).Label(label)
 				columns[index] = column
 				if index == 0 {
 					column.AutoFocus()
@@ -143,8 +148,7 @@ func TimePicker(c *ui.Context, value *time.Time) *TimeControl {
 		}
 		if confirm {
 			out.changed = timePickerSet(value, st.hour, st.minute)
-			*open = false
-			out.Focus()
+			st.last = *value
 		}
 	})
 	out.Children(func() { Text(c, value.Format("15:04")).SingleLine().FontFeatures("tnum") })
