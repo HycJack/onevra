@@ -79,3 +79,41 @@ func TestTargetEnvironmentAndFlags(t *testing.T) {
 		t.Fatalf("Windows development should use the GUI subsystem without stripping debug information: %v", got)
 	}
 }
+
+func TestArchiveFormatSelection(t *testing.T) {
+	for _, tc := range []struct {
+		name      string
+		platforms []string
+		target    target
+		want      []string
+	}{
+		{"defaults", nil, target{"darwin", "arm64"}, []string{".dmg", ".zip"}},
+		{"dmg", []string{"darwin/arm64/dmg"}, target{"darwin", "arm64"}, []string{".dmg"}},
+		{"zip", []string{"darwin/arm64/zip"}, target{"darwin", "arm64"}, []string{".zip"}},
+		{"merge", []string{"darwin/arm64/dmg", "darwin/arm64/zip", "darwin/arm64/dmg"}, target{"darwin", "arm64"}, []string{".dmg", ".zip"}},
+		{"mixed", []string{"darwin/arm64/zip", "darwin/arm64"}, target{"darwin", "arm64"}, []string{".zip", ".dmg"}},
+		{"separate-architectures", []string{"darwin/arm64/dmg", "darwin/amd64/zip"}, target{"darwin", "amd64"}, []string{".zip"}},
+		{"windows", []string{"windows/amd64/zip"}, target{"windows", "amd64"}, []string{".zip"}},
+		{"linux", []string{"linux/arm64/tar.gz"}, target{"linux", "arm64"}, []string{".tar.gz"}},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			c := &config{Platforms: tc.platforms}
+			if _, err := c.targets("build"); err != nil {
+				t.Fatal(err)
+			}
+			if got := c.archiveSuffixes(tc.target); !reflect.DeepEqual(got, tc.want) {
+				t.Fatalf("formats = %v, want %v", got, tc.want)
+			}
+		})
+	}
+	got, err := parseTargets([]string{"darwin/arm64/dmg", "darwin/arm64/zip", "windows/amd64"})
+	want := []target{{"darwin", "arm64"}, {"windows", "amd64"}}
+	if err != nil || !reflect.DeepEqual(got, want) {
+		t.Fatalf("merged targets = %v, %v", got, err)
+	}
+	for _, bad := range []string{"darwin/arm64/", "darwin/arm64/dmg/zip", "windows/amd64/dmg", "linux/arm64/zip", "darwin/arm64/tar.gz"} {
+		if _, err := parseTargets([]string{bad}); err == nil {
+			t.Errorf("accepted %q", bad)
+		}
+	}
+}

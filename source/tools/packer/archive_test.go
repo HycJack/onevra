@@ -5,45 +5,9 @@ import (
 	"context"
 	"os"
 	"path/filepath"
-	"reflect"
 	"runtime"
 	"testing"
 )
-
-func TestDisableDMG(t *testing.T) {
-	for _, tc := range []struct {
-		name, macos string
-		disabled    bool
-	}{
-		{"default", `{}`, false},
-		{"enabled", `{"disableDMG":false}`, false},
-		{"disabled", `{"disableDMG":true}`, true},
-	} {
-		t.Run(tc.name, func(t *testing.T) {
-			file := filepath.Join(t.TempDir(), "packer.yaml")
-			put(t, file, `{"name":"App","identifier":"me.app","macos":`+tc.macos+`}`)
-			c, err := loadConfig(file)
-			if err != nil {
-				t.Fatal(err)
-			}
-			if c.MacOS.DisableDMG != tc.disabled {
-				t.Fatalf("unexpected setting: %+v", c.MacOS)
-			}
-			for _, goos := range []string{"darwin", "windows", "linux"} {
-				want := []string{".zip"}
-				if goos == "darwin" && !tc.disabled {
-					want = []string{".dmg", ".zip"}
-				}
-				if goos == "linux" {
-					want = []string{".tar.gz"}
-				}
-				if got := c.archiveSuffixes(target{goos, "arm64"}); !reflect.DeepEqual(got, want) {
-					t.Fatalf("%s suffixes = %v, want %v", goos, got, want)
-				}
-			}
-		})
-	}
-}
 
 // Exercises the real ZIP tool without requiring Finder or creating a disk image.
 func TestArchiveWithoutDMG(t *testing.T) {
@@ -54,7 +18,7 @@ func TestArchiveWithoutDMG(t *testing.T) {
 	app := filepath.Join(stage, "artifacts", "App.app")
 	put(t, filepath.Join(app, "Contents", "payload"), "payload")
 	c := &config{Name: "App", Version: "1.0"}
-	c.MacOS.DisableDMG = true
+	c.Platforms = []string{"darwin/" + runtime.GOARCH + "/zip"}
 	target := hostTarget()
 	if err := archive(context.Background(), c, stage, app, target); err != nil {
 		t.Fatal(err)

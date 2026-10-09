@@ -20,11 +20,10 @@ func parseTargets(values []string) ([]target, error) {
 	var targets []target
 	seen := map[target]bool{}
 	for _, value := range values {
-		goos, arch, ok := strings.Cut(strings.TrimSpace(value), "/")
-		if !ok || (goos != "darwin" && goos != "windows" && goos != "linux") || (arch != "arm64" && arch != "amd64") {
-			return nil, fmt.Errorf("invalid platform %q: use darwin, windows or linux with /arm64 or /amd64", value)
+		t, _, err := parsePlatform(value)
+		if err != nil {
+			return nil, err
 		}
-		t := target{goos, arch}
 		if !seen[t] {
 			seen[t] = true
 			targets = append(targets, t)
@@ -53,18 +52,61 @@ func buildEnv(t target) []string {
 	return append(os.Environ(), "CGO_ENABLED=0", "GOOS="+t.OS, "GOARCH="+t.Arch)
 }
 
-func (c *config) archiveSuffixes(t target) []string {
+// A missing format selects the platform's default archive formats.
+func parsePlatform(value string) (target, string, error) {
+	parts := strings.Split(strings.TrimSpace(value), "/")
+	if len(parts) < 2 || len(parts) > 3 {
+		return target{}, "", fmt.Errorf("invalid platform %q: use OS/ARCH[/FORMAT]", value)
+	}
+	t := target{parts[0], parts[1]}
+	if (t.OS != "darwin" && t.OS != "windows" && t.OS != "linux") || (t.Arch != "arm64" && t.Arch != "amd64") {
+		return target{}, "", fmt.Errorf("invalid platform %q: use darwin, windows or linux with /arm64 or /amd64", value)
+	}
+	if len(parts) == 2 {
+		return t, "", nil
+	}
+	for _, suffix := range defaultArchiveSuffixes(t) {
+		if parts[2] == strings.TrimPrefix(suffix, ".") {
+			return t, parts[2], nil
+		}
+	}
+	return target{}, "", fmt.Errorf("unsupported archive format in %q", value)
+}
+
+func defaultArchiveSuffixes(t target) []string {
 	switch t.OS {
 	case "darwin":
-		if c.MacOS.DisableDMG {
-			return []string{".zip"}
-		}
 		return []string{".dmg", ".zip"}
 	case "windows":
 		return []string{".zip"}
 	default:
 		return []string{".tar.gz"}
 	}
+}
+
+func (c *config) archiveSuffixes(t target) []string {
+	var suffixes []string
+	seen := map[string]bool{}
+	for _, value := range c.Platforms {
+		selected, format, err := parsePlatform(value)
+		if err != nil || selected != t {
+			continue
+		}
+		formats := defaultArchiveSuffixes(t)
+		if format != "" {
+			formats = []string{"." + format}
+		}
+		for _, suffix := range formats {
+			if !seen[suffix] {
+				seen[suffix] = true
+				suffixes = append(suffixes, suffix)
+			}
+		}
+	}
+	if len(suffixes) == 0 {
+		return defaultArchiveSuffixes(t)
+	}
+	return suffixes
 }
 
 func (c *config) executable(app string, t target) string {

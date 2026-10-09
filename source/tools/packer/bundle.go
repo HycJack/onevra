@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"slices"
 	"strings"
 	"unicode"
 )
@@ -132,10 +133,12 @@ func (c *config) archiveName(t target) string { return c.slug() + "-" + t.key() 
 func archive(ctx context.Context, c *config, stage, app string, t target) error {
 	// ditto preserves macOS bundle metadata and includes the .app parent.
 	base := filepath.Join(filepath.Dir(app), c.archiveName(t))
-	if _, err := command(ctx, "ditto", "-c", "-k", "--sequesterRsrc", "--keepParent", app, base+".zip"); err != nil {
-		return err
+	if slices.Contains(c.archiveSuffixes(t), ".zip") {
+		if _, err := command(ctx, "ditto", "-c", "-k", "--sequesterRsrc", "--keepParent", app, base+".zip"); err != nil {
+			return err
+		}
 	}
-	if c.MacOS.DisableDMG {
+	if !slices.Contains(c.archiveSuffixes(t), ".dmg") {
 		return nil
 	}
 	// Isolate the image input, so the ZIP and image never include one another.

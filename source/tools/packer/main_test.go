@@ -258,6 +258,18 @@ end run`, mount, c.Name+".app")
 	if _, err := command(ctx, "codesign", "--verify", "--deep", "--strict", filepath.Join(mount, c.Name+".app")); err != nil {
 		t.Fatal(err)
 	}
+	t.Run("dmg-only", func(t *testing.T) {
+		only := *c
+		only.Platforms = []string{"darwin/" + runtime.GOARCH + "/dmg"}
+		out := filepath.Join(root, "dmg-only")
+		if _, err := build(ctx, &only, out, true, hostTarget()); err != nil {
+			t.Fatal(err)
+		}
+		entries, err := os.ReadDir(out)
+		if err != nil || len(entries) != 1 || entries[0].Name() != filepath.Base(dmg) {
+			t.Fatalf("expected only DMG: %v, %v", entries, err)
+		}
+	})
 	marker := filepath.Join(root, "launch marker")
 	t.Setenv("PACKER_TEST_MARKER", marker)
 	t.Chdir(root)

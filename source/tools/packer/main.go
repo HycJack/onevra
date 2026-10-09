@@ -26,8 +26,7 @@ type config struct {
 	Out        string   `yaml:"out"`
 	Platforms  []string `yaml:"platforms"` // Release targets; omitted means host OS/architecture.
 	MacOS      struct {
-		DisableDMG           bool   `yaml:"disableDMG"` // Skip release disk images; ZIP output is always retained.
-		Icon                 string `yaml:"icon"`       // ICNS file or an Icon Composer .icon directory.
+		Icon                 string `yaml:"icon"` // ICNS file or an Icon Composer .icon directory.
 		MinimumSystemVersion string `yaml:"minimumSystemVersion"`
 	} `yaml:"macos"`
 	Windows struct {
