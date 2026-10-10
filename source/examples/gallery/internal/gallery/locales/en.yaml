@@ -730,8 +730,12 @@ gallery.relax:
   other: Relax
 gallery.replaced_by_onevra:
   other: Replaced by Onevra
+gallery.reset_defaults:
+  other: Reset to defaults
 gallery.reset_position:
   other: Reset position
+gallery.reset_s:
+  other: 'Reset %s'
 gallery.resize_sidebar:
   other: Resize sidebar
 gallery.restore_window:

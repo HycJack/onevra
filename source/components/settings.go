@@ -23,9 +23,14 @@ type SettingsCategory struct {
 }
 
 // SettingsGroup groups related items. Title may be empty for an unheaded group.
+// Actions optionally builds trailing controls on the group's header row, such
+// as a refresh button; like Build, it runs on the UI thread only when the
+// header is visible and must not start background work during rendering.
+// Actions are not searched.
 type SettingsGroup struct {
 	ID, Title string
 	Items     []SettingsItem
+	Actions   func(c *ui.Context)
 }
 
 // SettingsItem describes a searchable row. Build runs synchronously on the UI
@@ -218,8 +223,16 @@ func Settings(c *ui.Context, state *SettingsState, categories []SettingsCategory
 								Text(c, category.Description).TextColor(t.TextMuted).Wrap()
 							}
 						}
-						if (lastCategory != result.Category || lastGroup != result.Group) && group.Title != "" {
-							ui.Column(c).FillWidth().Gap(t.Space(3)).Children(func() { Text(c, group.Title); ui.Box(c).FillWidth().Height(1).Background(t.Border) })
+						if (lastCategory != result.Category || lastGroup != result.Group) && (group.Title != "" || group.Actions != nil) {
+							ui.Column(c).FillWidth().Gap(t.Space(3)).Children(func() {
+								ui.Row(c).FillWidth().MinWidth(0).AlignItems(ui.Center).Gap(t.Space(3)).Children(func() {
+									Text(c, group.Title).Grow(1).MinWidth(0).Wrap()
+									if group.Actions != nil {
+										group.Actions(c)
+									}
+								})
+								ui.Box(c).FillWidth().Height(1).Background(t.Border)
+							})
 						}
 						lastCategory, lastGroup = result.Category, result.Group
 						count++

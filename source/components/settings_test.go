@@ -159,3 +159,43 @@ func TestSettingsLocalizedAndIndependent(t *testing.T) {
 		t.Fatal(tt.Texts())
 	}
 }
+
+func TestSettingsGroupActions(t *testing.T) {
+	for _, narrow := range []bool{false, true} {
+		state := SettingsState{}
+		catalog := settingsFixture()
+		clicks := 0
+		catalog[0].Groups[0].Actions = func(c *ui.Context) {
+			if Button(c, "Refresh", ButtonSecondary).Clicked() {
+				clicks++
+			}
+		}
+		tt := ui.NewTester(func(c *ui.Context) { Settings(c, &state, catalog, SettingsOptions{Narrow: narrow}) }, 800, 600)
+		tt.Frame()
+		title, ok := tt.Find("Security")
+		action, found := tt.Find("Refresh")
+		if !ok || !found || action.X <= title.X || action.Y > title.Y+title.H || action.Y+action.H < title.Y {
+			t.Fatalf("narrow %v: action not trailing the group title: %+v %+v", narrow, title, action)
+		}
+		if err := tt.Click("Refresh"); err != nil || clicks != 1 {
+			t.Fatalf("narrow %v: action not clicked: %v %d", narrow, err, clicks)
+		}
+		// Actions follow their group into search results but are not searched.
+		state.Query = "Refresh"
+		tt.Frame()
+		if tt.HasText("Refresh") || tt.HasText("Alerts") {
+			t.Fatal("actions were searched", tt.Texts())
+		}
+		state.Query = "sign-in"
+		tt.Frame()
+		if !tt.HasText("Refresh") {
+			t.Fatal("actions missing from search results", tt.Texts())
+		}
+		state.Query = ""
+		state.Category = "appearance"
+		tt.Frame()
+		if tt.HasText("Refresh") {
+			t.Fatal("actions shown outside their category", tt.Texts())
+		}
+	}
+}

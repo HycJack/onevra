@@ -84,7 +84,16 @@ func (g *Gallery) settingsCategories() []components.SettingsCategory {
 	}
 	for i, row := range notificationRows {
 		if notifications.Groups[len(notifications.Groups)-1].ID != row.group {
-			notifications.Groups = append(notifications.Groups, components.SettingsGroup{ID: row.group, Title: g.text(row.group)})
+			group := row.group
+			notifications.Groups = append(notifications.Groups, components.SettingsGroup{ID: group, Title: g.text(group), Actions: func(c *ui.Context) {
+				if components.Button(c, g.text("gallery.reset_defaults"), components.ButtonGhost).Label(fmt.Sprintf(g.text("gallery.reset_s"), g.text(group))).Shrink(0).Clicked() {
+					for i, row := range notificationRows {
+						if row.group == group {
+							g.settings.channels[i] = row.channel
+						}
+					}
+				}
+			}})
 		}
 		group := &notifications.Groups[len(notifications.Groups)-1]
 		group.Items = append(group.Items, components.SettingsItem{

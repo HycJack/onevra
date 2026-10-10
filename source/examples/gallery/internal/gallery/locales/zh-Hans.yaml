@@ -730,8 +730,12 @@ gallery.relax:
   other: 放松
 gallery.replaced_by_onevra:
   other: 已由 Onevra 替代
+gallery.reset_defaults:
+  other: 恢复默认
 gallery.reset_position:
   other: 重置位置
+gallery.reset_s:
+  other: '恢复%s的默认设置'
 gallery.resize_sidebar:
   other: 调整侧边栏宽度
 gallery.restore_window:

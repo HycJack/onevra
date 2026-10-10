@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Let settings groups place application actions, such as a refresh button, at the end of their header row.
+
 ## [0.2026.1] - 2026-10-10
 
 Initial experimental release. No application archives are included.

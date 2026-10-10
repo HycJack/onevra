@@ -13,7 +13,10 @@ func ExampleSettings() {
 	enabled := false
 	categories := []components.SettingsCategory{{
 		ID: "notifications", Title: "Notifications",
-		Groups: []components.SettingsGroup{{ID: "delivery", Title: "Delivery", Items: []components.SettingsItem{{
+		Groups: []components.SettingsGroup{{ID: "delivery", Title: "Delivery", Actions: func(c *ui.Context) {
+			// Group actions sit at the end of the group's header row.
+			components.Button(c, "Reset", components.ButtonGhost).OnClick(func() { enabled = false })
+		}, Items: []components.SettingsItem{{
 			ID: "desktop", Title: "Desktop notifications", Keywords: []string{"alerts"},
 			Build: func(c *ui.Context) { components.Switch(c, &enabled, "Enable desktop notifications") },
 		}}}},
