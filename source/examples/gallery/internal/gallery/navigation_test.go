@@ -52,7 +52,7 @@ func TestNavigationMyGoMarkers(t *testing.T) {
 	markers := 0
 	want := 0
 	for _, example := range mygoCatalog {
-		if example.group != "Plugins" {
+		if !mygoDirectUse(example) {
 			want++
 		}
 	}
@@ -66,7 +66,7 @@ func TestNavigationMyGoMarkers(t *testing.T) {
 		}
 		found := false
 		for _, example := range mygoCatalog {
-			found = found || (example.group != "Plugins" && texts[i-1] == example.name)
+			found = found || (!mygoDirectUse(example) && texts[i-1] == example.name)
 		}
 		if !found {
 			t.Fatalf("marker follows non-MyGo item: %q", texts[i-1])

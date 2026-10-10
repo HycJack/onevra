@@ -5,6 +5,7 @@ User-facing updates for Onevra library consumers.
 ## [Unreleased]
 
 - Let settings groups place application actions, such as a refresh button, at the end of their header row.
+- Require MyGo 0.4.0. Popover elements report Escape or outside-press dismissal through `Dismissed`, and Select popups now keep their wheel scroll position while revealing options reached with the keyboard.
 
 ## [0.2026.1] - 2026-10-10
 

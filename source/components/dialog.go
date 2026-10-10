@@ -33,6 +33,8 @@ type DialogOptions struct {
 // Its default maximum size leaves 20 logical pixels clear on every viewport edge;
 // Inset overrides the clearance; WindowDragHeight can increase it.
 // Content may customize the panel and should provide scrolling for long pages.
+// The returned panel does not report Dismissed; use DisableBackdropClose and
+// DisableEscapeClose to keep a layer open.
 func Dialog(c *ui.Context, open *bool, options DialogOptions, build func(panel ui.Element)) ui.Element {
 	var panel ui.Element
 	if !*open {

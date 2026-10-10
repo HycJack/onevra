@@ -93,3 +93,37 @@ func TestPopoverPlacement(t *testing.T) {
 		}
 	}
 }
+
+func TestPopoverReportsDismissal(t *testing.T) {
+	open := true
+	var dismissed []bool
+	tt := ui.NewTester(func(c *ui.Context) {
+		ui.Column(c).Fill().Padding(20).Gap(180).Children(func() {
+			anchor := Button(c, "Open", ButtonOutline)
+			dismissed = append(dismissed, Popover(c, anchor, &open, func(panel ui.Element) {
+				Text(c, "Panel")
+			}).Dismissed())
+			Button(c, "Outside", ButtonSecondary)
+		})
+	}, 400, 500)
+	count := func() (n int) {
+		for _, d := range dismissed {
+			if d {
+				n++
+			}
+		}
+		return n
+	}
+	tt.Key(0, ui.KeyEscape)
+	if open || count() != 1 {
+		t.Fatalf("Escape: open=%v dismissals=%d", open, count())
+	}
+	open = true
+	tt.Frame()
+	if err := tt.Click("Outside"); err != nil {
+		t.Fatal(err)
+	}
+	if open || count() != 2 {
+		t.Fatalf("outside press: open=%v dismissals=%d", open, count())
+	}
+}

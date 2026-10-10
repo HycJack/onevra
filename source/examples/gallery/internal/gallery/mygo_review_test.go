@@ -45,7 +45,7 @@ func TestDirectUseComponentsHaveOnlyExplicitExamples(t *testing.T) {
 		if entry.Status != mygoPrimitive {
 			continue
 		}
-		if plugins[entry.Name] {
+		if _, direct := mygoDirectExamples[entry.Name]; plugins[entry.Name] || direct {
 			if !entry.HasExample || pageFromKey("mygo/"+entry.Name) == lucidePage {
 				t.Fatalf("direct-use demonstration missing: %s", entry.Name)
 			}
@@ -148,7 +148,7 @@ func TestMyGoReviewLog(t *testing.T) {
 			t.Fatalf("unexpected reminder: %s", name)
 		}
 	}
-	for _, name := range []string{"ContextMenu", "Menu", "Glass", "Terminal"} {
+	for _, name := range []string{"ContextMenu", "Menu", "Glass", "Terminal", "WebView"} {
 		if strings.Contains(output, "pending: "+name+" (") {
 			t.Fatalf("native menu should not need review: %s", name)
 		}

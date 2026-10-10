@@ -106,6 +106,19 @@ var mygoPrimitives = map[string]bool{
 	"FocusedValue": true,
 }
 
+// Like plugins, these APIs host native content Onevra does not style, and keep a
+// demonstration of direct use.
+var mygoDirectExamples = map[string]string{
+	"WebView": "Use MyGo web views directly; applications own their pages and windows",
+}
+
+// mygoDirectUse reports examples of MyGo APIs used directly, which the sidebar
+// does not mark as awaiting an Onevra decision.
+func mygoDirectUse(example mygoExample) bool {
+	_, direct := mygoDirectExamples[example.name]
+	return direct || example.group == "Plugins"
+}
+
 // Element methods are not found by the free-function scanner. These native menu
 // APIs are deliberately used directly, including by the Onevra gallery examples.
 var mygoNativeMenus = map[string]string{
@@ -173,6 +186,9 @@ func mygoReviewEntries(discovered []mygoComponent, examples []mygoExample, decis
 		if plugins[name] {
 			entry.Status = mygoPrimitive
 			entry.Reason = "Use MyGo plugins directly; no Onevra plugin implementation"
+		}
+		if reason, direct := mygoDirectExamples[name]; direct {
+			entry.Status, entry.Reason = mygoPrimitive, reason
 		}
 		if decision, handled := decisions[name]; handled {
 			entry.Status, entry.Replacement, entry.Reason, entry.HasExample = mygoExcluded, decision.Replacement, decision.Reason, false

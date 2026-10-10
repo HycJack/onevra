@@ -2,6 +2,7 @@ package gallery
 
 import (
 	"bytes"
+	"image"
 	"image/png"
 	"os"
 	"path/filepath"
@@ -107,7 +108,100 @@ func captureCatalog(t *testing.T, controls bool) {
 			if err := os.WriteFile(path, data, 0600); err != nil {
 				t.Fatal(err)
 			}
+			if example.name == "WebView" {
+				// Window captures leave a hole where the system web view shows.
+				captureWebViewPage(t, g, filepath.Join(dir, prefix+mode.name+"-WebView-page.png"))
+			}
 		}
 	}
 	t.Logf("Captured %d pages in light, dark and narrow layouts in %s", len(catalog), dir)
+}
+
+// captureWebViewPage waits for the demonstration page to paint more than its
+// background, then writes the web view's own capture to path.
+func captureWebViewPage(t *testing.T, g *Gallery, path string) {
+	t.Helper()
+	var d *webViewDemo
+	mygo.RunOnMain(func() { d = &g.mygoState("WebView", "Default", true).webView })
+	if d.err != nil || d.view == nil {
+		t.Fatalf("web view not created: %v", d.err)
+	}
+	deadline := time.Now().Add(10 * time.Second)
+	for {
+		data, err := d.view.CapturePage()
+		if err == nil {
+			if img, err := png.Decode(bytes.NewReader(data)); err == nil && !uniformImage(img) {
+				if err := os.WriteFile(path, data, 0600); err != nil {
+					t.Fatal(err)
+				}
+				return
+			}
+		}
+		if time.Now().After(deadline) {
+			t.Fatalf("web view page did not paint: %v", err)
+		}
+		time.Sleep(100 * time.Millisecond)
+	}
+}
+
+func uniformImage(img image.Image) bool {
+	b := img.Bounds()
+	first := img.At(b.Min.X, b.Min.Y)
+	for y := b.Min.Y; y < b.Max.Y; y += 4 {
+		for x := b.Min.X; x < b.Max.X; x += 4 {
+			if img.At(x, y) != first {
+				return false
+			}
+		}
+	}
+	return true
+}
+
+// TestNativeWebViewUnderModal checks that gallery modal layers hide the web
+// view: glass cannot see its page, so it would otherwise leave a hole.
+func TestNativeWebViewUnderModal(t *testing.T) {
+	if os.Getenv("ONEVRA_NATIVE_SMOKE") != "1" {
+		t.Skip("requires a desktop session")
+	}
+	g := &Gallery{}
+	var appShell *sidebar.Shell
+	mygo.RunOnMain(func() { appShell = g.New(); g.enterGallery() })
+	win := appShell.Window()
+	defer win.Destroy()
+	mygo.Theme.SetSource(mygo.ThemeLight)
+	mygo.RunOnMain(func() {
+		win.SetSize(820, 600)
+		for i, example := range mygoCatalog {
+			if example.name == "WebView" {
+				g.page = mygoPageStart + galleryPage(i)
+			}
+		}
+		win.Invalidate()
+	})
+	time.Sleep(800 * time.Millisecond)
+	for _, layer := range []string{"settings", "commands"} {
+		mygo.RunOnMain(func() {
+			g.settings.open, g.commands.open = layer == "settings", layer == "commands"
+			win.Invalidate()
+		})
+		time.Sleep(600 * time.Millisecond)
+		data, err := win.CapturePage()
+		if err != nil {
+			t.Fatal(err)
+		}
+		img, err := png.Decode(bytes.NewReader(data))
+		if err != nil {
+			t.Fatal(err)
+		}
+		// The content area right of the sidebar is otherwise opaque.
+		b := img.Bounds()
+		for y := b.Min.Y; y < b.Max.Y; y += 4 {
+			for x := b.Min.X + b.Dx()*3/10; x < b.Max.X; x += 4 {
+				if _, _, _, a := img.At(x, y).RGBA(); a != 0xffff {
+					t.Fatalf("%s: transparent content at %d,%d under the modal", layer, x, y)
+				}
+			}
+		}
+	}
+	mygo.RunOnMain(func() { g.settings.open, g.commands.open = false, false })
 }

@@ -28,6 +28,8 @@ gallery.a_small_mark_a_big_personality:
   other: 小小图标，鲜明个性。
 gallery.a_small_window_opened_from_the_tray:
   other: 从托盘打开的小窗口。
+gallery.a_web_page_inside_native_ui:
+  other: 原生界面中的网页
 gallery.about:
   other: 关于
 gallery.above:
@@ -280,6 +282,8 @@ gallery.component_tree:
   other: "树形视图"
 gallery.component_treevirtualized:
   other: "虚拟树形视图"
+gallery.component_webview:
+  other: "网页视图"
 gallery.components:
   other: 组件
 gallery.confirmation:
@@ -428,6 +432,14 @@ gallery.grayscale:
   other: 灰度
 gallery.green:
   other: 绿色
+gallery.native_ui_painted_after_the_web_view_shows_over_its_page:
+  other: 在网页视图之后绘制的原生界面会显示在页面上方。
+gallery.over_the_page:
+  other: 页面上方
+gallery.reload_page:
+  other: 重新加载页面
+gallery.the_system_web_engine_renders_this_page_native_popovers_dialogs_and:
+  other: 此页面由系统网页引擎渲染。原生弹出框、对话框和工具提示会绘制在它上方，Tab 键可以移入和移出页面。
 gallery.toggle_pixel_grid_background:
   other: "切换像素网格背景"
 gallery.pixel_grid_background:
@@ -936,6 +948,8 @@ gallery.tray_tooltip:
   other: "Onevra 组件库 — 托盘示例"
 gallery.tray_unavailable_s:
   other: 托盘不可用：%s
+gallery.type_into_the_page:
+  other: 在页面中输入
 gallery.unable_to_load_avatar_jpeg:
   other: 无法加载 avatar.jpeg
 gallery.unchecked:
@@ -958,6 +972,10 @@ gallery.view_mode:
   other: 视图模式
 gallery.volume:
   other: 音量
+gallery.web_view_unavailable:
+  other: 网页视图不可用
+gallery.web_views_need_a_native_window:
+  other: 网页视图需要原生窗口。
 gallery.welcome:
   other: 欢迎
 gallery.welcome_to_onevra:

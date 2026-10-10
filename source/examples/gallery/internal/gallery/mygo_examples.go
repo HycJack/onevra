@@ -14,6 +14,7 @@ import (
 type demoState struct {
 	glass           glassDemo
 	terminal        terminalDemo
+	webView         webViewDemo
 	text            string
 	buffer          *ui.TextBuffer
 	readOnly        bool

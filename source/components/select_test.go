@@ -1,6 +1,7 @@
 package components
 
 import (
+	"fmt"
 	"strings"
 	"testing"
 
@@ -254,5 +255,47 @@ func TestSelectKeyboard(t *testing.T) {
 	tt.Key(0, ui.KeyEscape)
 	if tt.HasText("item S") {
 		t.Error("Escape did not close the popup")
+	}
+}
+
+// TestSelectWheelScrollsPastHighlight checks that a long popup stays where the
+// wheel leaves it while the pointer keeps an option highlighted, and that
+// keyboard navigation still reveals the option it highlights.
+func TestSelectWheelScrollsPastHighlight(t *testing.T) {
+	options := make([]string, 60)
+	for i := range options {
+		options[i] = fmt.Sprintf("Option %02d", i)
+	}
+	selected := options[0]
+	tt := ui.NewTester(func(c *ui.Context) {
+		theme.Apply(c, theme.Light)
+		sel := Select(c, &selected)
+		sel.Trigger.Label("size").Children(func() { ui.Text(c, "Size").SingleLine() })
+		sel.Popup(func(panel ui.Element) {
+			ScrollView(c, ScrollViewOptions{}).MaxHeight(200).Children(func() {
+				for _, opt := range options {
+					sel.Item(opt).Children(func() { ui.Text(c, opt).SingleLine() })
+				}
+			})
+		})
+	}, 400, 600)
+	if err := tt.Click("size"); err != nil {
+		t.Fatal(err)
+	}
+	first, ok := tt.Find("Option 00")
+	if !ok {
+		t.Fatalf("popup did not open: %q", tt.Texts())
+	}
+	x, y := first.X+first.W/2, first.Y+first.H/2
+	tt.Move(x, y)
+	for range 30 {
+		tt.Scroll(x, y, 0, 120)
+	}
+	if last, ok := tt.Find("Option 59"); !ok || last.Y+last.H > first.Y+200 {
+		t.Fatalf("wheel did not keep the popup scrolled to the end: last=%v first=%v", last, first)
+	}
+	tt.Key(0, ui.KeyDown)
+	if next, ok := tt.Find("Option 01"); !ok || next.Y < first.Y-next.H || next.Y > first.Y+200 {
+		t.Errorf("Down highlighted an option out of view: %v; first was %v", next, first)
 	}
 }

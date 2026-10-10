@@ -75,6 +75,7 @@ var navigationIcons = map[string]func() *ui.SVG{
 	"Spacer":           lucide.AlignHorizontalSpaceAround,
 	"Divider":          lucide.SeparatorHorizontal,
 	"Terminal":         lucide.Terminal,
+	"WebView":          lucide.Globe,
 	"Glass":            lucide.GlassWater,
 }
 

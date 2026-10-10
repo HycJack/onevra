@@ -2,7 +2,7 @@
 
 package gallery
 
-const mygoScanVersion = "v0.3.8-0.20261010090026-0f79256101ac"
+const mygoScanVersion = "v0.4.0"
 
 var mygoDiscovered = []mygoComponent{
 	{Name: "Accordion", Source: "ui/api_gen.go"},
@@ -86,4 +86,5 @@ var mygoDiscovered = []mygoComponent{
 	{Name: "Toolbar", Source: "ui/api_gen.go"},
 	{Name: "Tree", Source: "ui/api_gen.go"},
 	{Name: "TreeItem", Source: "ui/api_gen.go"},
+	{Name: "WebView", Source: "ui/api_gen.go"},
 }

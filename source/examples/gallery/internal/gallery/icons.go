@@ -22,7 +22,7 @@ type iconEntry struct {
 func (g *Gallery) navigationItem(c *ui.Context, label string, icon *ui.SVG, page galleryPage) {
 	display := tr(c, label)
 	item := components.SidebarItem(c, display, icon, g.page == page).Key(page)
-	if example, upstream := mygoExampleFor(page); upstream && example.group != "Plugins" {
+	if example, upstream := mygoExampleFor(page); upstream && !mygoDirectUse(example) {
 		item.Children(func() {
 			ui.Spacer(c)
 			components.Text(c, tr(c, "gallery.bullet")).FontSize(c.Theme().Rem(1.4)).TextColor(c.Theme().TextMuted).SingleLine()

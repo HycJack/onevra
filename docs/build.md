@@ -140,7 +140,7 @@ ONEVRA_NATIVE_SMOKE=1 ONEVRA_SCREENSHOTS="$PWD/../dist/preview" \
   go test ./examples/gallery/internal/gallery -run '^TestNative(Gallery|MyGo|Controls|Terminal)$' -count=1 -v
 ```
 
-The tests open windows, capture appearance variants (including every Onevra control and MyGo example in light, dark and narrow layouts), exercise terminal input and cleanup, check that the settings dialog preserves window bounds, and close the windows. Omit `ONEVRA_SCREENSHOTS` to use temporary output.
+The tests open windows, capture appearance variants (including every Onevra control and MyGo example in light, dark and narrow layouts), exercise terminal input and cleanup, check that the settings dialog preserves window bounds, and close the windows. Window captures leave a hole where a MyGo web view shows, so the WebView example also writes the page's own capture. Omit `ONEVRA_SCREENSHOTS` to use temporary output.
 
 For command-palette captures, use the same environment with `-run '^TestNativeCommand(Expansion|InputSource)?$'`. The macOS input-source test requires ABC and another enabled input source, temporarily switches between them, and restores the original source; it checks automatic selection, restoration, manual overrides and retaining ABC on close. In Gallery, review Command+E (Ctrl+E on other platforms), typing and Chinese input-method composition, arrow navigation, single-click and Enter activation, Escape dismissal, restored focus, and opening Settings from a command. Check both interface languages and themes, narrow windows and screen-reader announcements; captures alone do not verify these interactions.
 

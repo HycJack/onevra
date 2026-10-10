@@ -1,0 +1,81 @@
+package gallery
+
+import (
+	"errors"
+	"fmt"
+	"strings"
+	"testing"
+
+	"github.com/egoist/mygo"
+	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/source/theme"
+)
+
+func webViewGallery() *Gallery {
+	g := &Gallery{}
+	for i, entry := range mygoCatalog {
+		if entry.name == "WebView" {
+			g.page = mygoPageStart + galleryPage(i)
+		}
+	}
+	return g
+}
+
+func TestWebViewHeadlessShowsPlaceholder(t *testing.T) {
+	g := webViewGallery()
+	defer g.Close()
+	if g.page == 0 {
+		t.Fatal("WebView missing from the catalog")
+	}
+	tt := ui.NewTester(g.View, 540, 850)
+	if !tt.HasText("Web views need a native window.") {
+		t.Fatalf("missing placeholder: %q", tt.Texts())
+	}
+}
+
+func TestWebViewCreatedOnce(t *testing.T) {
+	g := webViewGallery()
+	defer g.Close()
+	calls := 0
+	g.createWebView = func() (*mygo.WebView, error) {
+		calls++
+		return nil, errors.New("no web engine")
+	}
+	tt := ui.NewTester(g.View, 540, 850)
+	tt.Frame()
+	tt.Frame()
+	if calls != 1 {
+		t.Fatalf("created %d web views, want 1", calls)
+	}
+	if !tt.HasText("Web view unavailable") || !tt.HasText("no web engine") {
+		t.Fatalf("missing error: %q", tt.Texts())
+	}
+}
+
+func TestWebViewHTMLFollowsThemeAndLanguage(t *testing.T) {
+	pages := map[string]string{}
+	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+		for _, code := range []string{"en", "zh-Hans"} {
+			g := &Gallery{language: newTranslator(code, "")}
+			var page string
+			ui.NewTester(func(c *ui.Context) {
+				theme.Apply(c, mode)
+				g.withLanguage(c, func() { page = webViewHTML(c) })
+			}, 200, 200)
+			if !strings.Contains(page, `lang="`+code+`"`) {
+				t.Errorf("%s page lacks its language: %s", code, page)
+			}
+			pages[fmt.Sprint(mode, code)] = page
+		}
+	}
+	seen := map[string]bool{}
+	for _, page := range pages {
+		if seen[page] {
+			t.Fatal("theme or language did not change the page")
+		}
+		seen[page] = true
+	}
+	if !strings.Contains(pages[fmt.Sprint(theme.Light, "zh-Hans")], "原生界面中的网页") {
+		t.Error("Chinese page is not translated")
+	}
+}

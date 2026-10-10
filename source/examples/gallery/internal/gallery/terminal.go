@@ -88,5 +88,6 @@ func (g *Gallery) Close() {
 	g.tray.close()
 	for _, s := range g.mygoStates {
 		s.terminal.close()
+		s.webView.close()
 	}
 }

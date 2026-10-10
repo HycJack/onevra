@@ -28,6 +28,8 @@ gallery.a_small_mark_a_big_personality:
   other: A small mark. A big personality.
 gallery.a_small_window_opened_from_the_tray:
   other: A small window, opened from the tray.
+gallery.a_web_page_inside_native_ui:
+  other: A web page inside native UI
 gallery.about:
   other: About
 gallery.above:
@@ -280,6 +282,8 @@ gallery.component_tree:
   other: "Tree"
 gallery.component_treevirtualized:
   other: "TreeVirtualized"
+gallery.component_webview:
+  other: "WebView"
 gallery.components:
   other: Components
 gallery.confirmation:
@@ -428,6 +432,14 @@ gallery.grayscale:
   other: Grayscale
 gallery.green:
   other: Green
+gallery.native_ui_painted_after_the_web_view_shows_over_its_page:
+  other: Native UI painted after the web view shows over its page.
+gallery.over_the_page:
+  other: Over the page
+gallery.reload_page:
+  other: Reload page
+gallery.the_system_web_engine_renders_this_page_native_popovers_dialogs_and:
+  other: The system web engine renders this page. Native popovers, dialogs and tooltips draw over it, and Tab moves in and out of it.
 gallery.toggle_pixel_grid_background:
   other: "Toggle pixel grid background"
 gallery.pixel_grid_background:
@@ -936,6 +948,8 @@ gallery.tray_tooltip:
   other: "Onevra Gallery — Tray demo"
 gallery.tray_unavailable_s:
   other: 'Tray unavailable: %s'
+gallery.type_into_the_page:
+  other: Type into the page
 gallery.unable_to_load_avatar_jpeg:
   other: Unable to load avatar.jpeg
 gallery.unchecked:
@@ -958,6 +972,10 @@ gallery.view_mode:
   other: View mode
 gallery.volume:
   other: Volume
+gallery.web_view_unavailable:
+  other: Web view unavailable
+gallery.web_views_need_a_native_window:
+  other: Web views need a native window.
 gallery.welcome:
   other: Welcome
 gallery.welcome_to_onevra:

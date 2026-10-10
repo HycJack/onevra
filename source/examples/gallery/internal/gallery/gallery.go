@@ -32,11 +32,13 @@ type Gallery struct {
 	controlStates  map[string]*controlState
 	// Native startup supplies the factory; headless views never load libraries.
 	createTerminal func() (*terminal.Terminal, error)
+	createWebView  func() (*mygo.WebView, error)
 }
 
 // New creates the standalone shell demonstration.
 func (g *Gallery) New() *sidebar.Shell {
 	g.createTerminal = newShellTerminal
+	g.createWebView = g.newWebView
 	g.Shell = sidebar.NewShell(sidebar.ShellOptions{
 		Title:     "Onevra Gallery",
 		LeftWidth: 220, LeftMinWidth: 220, LeftMaxWidth: 520,
