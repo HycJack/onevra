@@ -5,7 +5,7 @@ go 1.27.1
 require (
 	github.com/alecthomas/chroma/v2 v2.27.0
 	github.com/ebitengine/purego v0.11.1
-	github.com/egoist/mygo v0.3.6
+	github.com/egoist/mygo v0.3.7
 	github.com/nicksnyder/go-i18n/v2 v2.6.1
 	github.com/tc-hib/winres v0.3.1
 	github.com/yuin/goldmark v1.7.16

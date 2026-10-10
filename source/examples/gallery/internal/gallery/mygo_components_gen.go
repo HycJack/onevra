@@ -2,7 +2,7 @@
 
 package gallery
 
-const mygoScanVersion = "v0.3.6"
+const mygoScanVersion = "v0.3.7"
 
 var mygoDiscovered = []mygoComponent{
 	{Name: "Accordion", Source: "ui/api_gen.go"},
