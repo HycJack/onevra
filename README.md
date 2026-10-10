@@ -11,7 +11,6 @@ Onevra is a Go component library for native desktop applications, built on [MyGo
 Building on MyGo's native UI capabilities, Onevra adds composed components for common application scenarios:
 
 - **Conversation interfaces**: bring message turns, tool activity, folded summaries and attachment input together into a complete chat interface.
-- **WebView hybrid rendering**: combine web content and native MyGo components in one interface, allowing buttons, overlays and dialogs to appear above browser content without being obscured by the WebView. Currently on the `neorio/webview` experimental branch, which requires a MyGo patch.
 - **Markdown rendering**: provide selectable document views with code highlighting, images and custom code-block content.
 - **Code highlighting**: provide read-only code views with light and dark themes, usable independently or within Markdown and conversations.
 
