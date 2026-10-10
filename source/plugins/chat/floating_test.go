@@ -59,6 +59,41 @@ func TestFloatingConversationClearanceAndJump(t *testing.T) {
 	}
 }
 
+func TestFloatingConversationWhiteGlassJump(t *testing.T) {
+	for _, theme := range []*ui.Theme{ui.LightTheme(), ui.DarkTheme()} {
+		t.Run(fmt.Sprintf("dark=%v", theme.Dark), func(t *testing.T) {
+			var layout FloatingConversationState
+			var state ConversationState
+			tt := ui.NewTester(func(c *ui.Context) {
+				c.SetTheme(theme)
+				FloatingConversation(c, &layout, &state, "Latest", func(c *ui.Context) {
+					ui.Box(c).Height(2000).FillWidth().Shrink(0).Background(ui.RGB(0, 0, 0))
+				}, nil)
+			}, 900, 600)
+			tt.Frame()
+			state.Scroll.Y = 0
+			tt.Frame()
+			jump, ok := tt.Find("Latest")
+			if !ok {
+				t.Fatal("missing jump control")
+			}
+			// Inside the glass, clear of the rim and arrow, even a black
+			// transcript should leave a bright neutral surface in both themes.
+			pixel := tt.Image().RGBAAt(int(jump.X+7), int(jump.Y+jump.H/2))
+			if pixel.R < 180 || pixel.R != pixel.G || pixel.G != pixel.B {
+				t.Fatalf("jump surface is not white glass: %v", pixel)
+			}
+			if err := tt.Click("Latest"); err != nil {
+				t.Fatal(err)
+			}
+			tt.Frame()
+			if !state.AtLatest() {
+				t.Fatal("glass jump did not resume following")
+			}
+		})
+	}
+}
+
 func TestFloatingConversationFooterFade(t *testing.T) {
 	for _, theme := range []*ui.Theme{ui.LightTheme(), ui.DarkTheme()} {
 		var layout FloatingConversationState
