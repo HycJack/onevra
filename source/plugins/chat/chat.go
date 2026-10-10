@@ -375,6 +375,19 @@ func overlayStrong(t *ui.Theme) ui.Color {
 	return t.Text.Alpha(.09)
 }
 
+// inverse resolves the theme's turned-over fill and its text, falling back to
+// Text and Background as MyGo does when a theme leaves them zero.
+func inverse(t *ui.Theme) (fill, text ui.Color) {
+	fill, text = t.Inverse, t.InverseText
+	if fill == ui.Transparent {
+		fill = t.Text
+	}
+	if text == ui.Transparent {
+		text = t.Background
+	}
+	return fill, text
+}
+
 func pauseConversation(c *ui.Context) {
 	scope := *conversationSlot(c)
 	if scope.state != nil {
@@ -555,7 +568,7 @@ func Composer(c *ui.Context, draft *string, options ComposerOptions) ComposerRes
 					result.Stop = stop.Clicked()
 				}
 				if !options.Running || !empty {
-					background, foreground := t.Inverse, t.InverseText
+					background, foreground := inverse(t)
 					if !canSend || result.Input.Composing() {
 						background, foreground = overlayStrong(t), tertiary(t)
 					}

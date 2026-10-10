@@ -217,6 +217,26 @@ func BenchmarkCompletedTurn(b *testing.B) {
 	}
 }
 
+// A theme that leaves Inverse zero, as Onevra's palettes do, must still
+// paint Send beside Stop rather than leave an invisible gap.
+func TestComposerSendVisibleWithoutInverse(t *testing.T) {
+	for _, running := range []bool{false, true} {
+		draft := "next"
+		tt := ui.NewTester(func(c *ui.Context) {
+			Composer(c, &draft, ComposerOptions{Label: "Message", SendLabel: "Send", StopLabel: "Stop", Running: running})
+		}, 400, 160)
+		tt.Frame()
+		r, ok := tt.Find("Send")
+		if !ok {
+			t.Fatalf("running=%v: Send missing", running)
+		}
+		// The light theme's Text fill is dark against the light card.
+		if px := tt.Image().RGBAAt(int(r.X+4), int(r.Y+r.H/2)); px.R > 128 {
+			t.Fatalf("running=%v: Send fill %v is not painted", running, px)
+		}
+	}
+}
+
 func TestComposerSubmitOnEnterAndSteering(t *testing.T) {
 	for _, glass := range []bool{false, true} {
 		t.Run(fmt.Sprintf("glass=%v", glass), func(t *testing.T) {
