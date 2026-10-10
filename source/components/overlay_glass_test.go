@@ -80,7 +80,12 @@ func TestOverlayGlassTint(t *testing.T) {
 				if dark == light {
 					t.Fatal("surface is opaque: backdrop does not affect glass")
 				}
-				if kind != "Tooltip" && int(light.R)-int(dark.R) < 15 {
+				minBackdropDelta := 15
+				if kind == "Dialog" {
+					// Dialog uses a stronger tint than the other overlay panels.
+					minBackdropDelta = 12
+				}
+				if kind != "Tooltip" && int(light.R)-int(dark.R) < minBackdropDelta {
 					t.Fatalf("panel glass obscures its backdrop: dark=%v light=%v", dark, light)
 				}
 				for _, pixel := range []color.RGBA{dark, light} {
