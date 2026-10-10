@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/egoist/mygo/transfer"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/components"
 	"github.com/oneo-me/onevra/icons/lucide"
@@ -496,6 +497,16 @@ type ComposerOptions struct {
 	Attachments, Footer View
 	// AcceptFiles makes the card a drop target for files from other apps.
 	AcceptFiles bool
+	// DropOptions additionally accepts native data such as images. The host
+	// prepares the returned Drop; the composer never reads files or stores data.
+	DropOptions transfer.DropOptions
+	// OnPaste runs for keyboard and menu paste, including non-text clipboard
+	// contents. Return true to consume it; false preserves normal text editing.
+	// Hosts may read the clipboard here, but must prepare attachments off-thread.
+	OnPaste func(text string) bool
+	// SendDisabled prevents sending while the host prepares attachments or is
+	// otherwise not ready. Editing and Stop remain available.
+	SendDisabled bool
 }
 
 type composerEnterKey struct{}
@@ -503,7 +514,8 @@ type composerEnterKey struct{}
 // ComposerResult contains frame-local actions. The application clears the
 // draft after accepting Send and owns request cancellation for Stop. Dropped
 // lists file paths dropped on the card since the last frame; reading or
-// attaching them remains application work.
+// attaching them remains application work. Drop contains host-selected native
+// data, while Dragging reports either kind of accepted drag over the card.
 type ComposerResult struct {
 	Root, Input ui.Element
 	// Card is the editor surface, excluding Footer. Hosts may style its
@@ -511,6 +523,8 @@ type ComposerResult struct {
 	Card       ui.Element
 	Send, Stop bool
 	Dropped    []string
+	Drop       *transfer.Drop
+	Dragging   bool
 }
 
 // Composer builds a multiline editor card with send/stop and an accessory row.
@@ -519,12 +533,13 @@ func Composer(c *ui.Context, draft *string, options ComposerOptions) ComposerRes
 	var result ComposerResult
 	t := c.Theme()
 	empty := strings.TrimSpace(*draft) == ""
+	canSend := !empty && !options.SendDisabled
 	result.Root = ui.Column(c).FillWidth().MinWidth(0).Shrink(0).Children(func() {
 		card := ui.Column(c).FillWidth().MinWidth(0).Padding(10, 0).Radius(13).Border(1, t.Border).Background(t.Surface).Children(func() {
 			if options.Attachments != nil {
 				ui.Row(c).Key("attachments").FillWidth().Wrap().Gap(6).Padding(0, 10, 6, 10).Children(func() { options.Attachments(c) })
 			}
-			result.Input = components.TextBox(c, draft, components.TextBoxOptions{Multiline: true}).FillWidth().Lines(1, 10).MinHeight(40).
+			result.Input = components.TextBox(c.Key("input"), draft, components.TextBoxOptions{Multiline: true}).OnPaste(options.OnPaste).FillWidth().Lines(1, 10).MinHeight(40).
 				Label(options.Label).Placeholder(options.Placeholder).Border(0, ui.Color{}).Background(ui.Color{}).Padding(2, 14, 0, 14).FontSize(13.5)
 			ui.Row(c).FillWidth().MinWidth(0).Margin(8, 0, 0, 0).Padding(0, 10).AlignItems(ui.Center).Gap(4).Children(func() {
 				ui.Row(c).Grow(1).MinWidth(0).AlignItems(ui.Center).Gap(4).Children(func() {
@@ -541,10 +556,10 @@ func Composer(c *ui.Context, draft *string, options ComposerOptions) ComposerRes
 				}
 				if !options.Running || !empty {
 					background, foreground := t.Inverse, t.InverseText
-					if empty || result.Input.Composing() {
+					if !canSend || result.Input.Composing() {
 						background, foreground = overlayStrong(t), tertiary(t)
 					}
-					ui.Box(c).Disabled(empty || result.Input.Composing()).Children(func() {
+					ui.Box(c).Disabled(!canSend || result.Input.Composing()).Children(func() {
 						if roundAction(c, options.SendLabel, lucide.ArrowUp, background, foreground).Clicked() {
 							result.Send = true
 						}
@@ -567,15 +582,22 @@ func Composer(c *ui.Context, draft *string, options ComposerOptions) ComposerRes
 		})
 		if *pending {
 			*pending = false
-			result.Send = result.Send || !empty && !composing
+			result.Send = result.Send || canSend && !composing
 		}
 		if options.AcceptFiles {
 			result.Dropped = card.DroppedFiles()
-			if card.FileDragOver() {
-				card.BorderColor(t.Accent.Alpha(.7)).Background(t.Surface.Mix(t.Text, .09))
-			}
+			result.Dragging = card.FileDragOver()
 		}
-		if result.Input.Focused() {
+		if len(options.DropOptions.Formats) > 0 {
+			if drop, ok := ui.DropData(card, options.DropOptions); ok {
+				result.Drop = &drop
+			}
+			_, over := ui.DataDragOver(card, options.DropOptions)
+			result.Dragging = result.Dragging || over
+		}
+		if result.Dragging {
+			card.BorderColor(t.Accent.Alpha(.7)).Background(t.Surface.Mix(t.Text, .09))
+		} else if result.Input.Focused() {
 			card.BorderColor(strongBorder(t))
 		}
 		if options.Footer != nil {

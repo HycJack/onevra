@@ -92,7 +92,7 @@ func GlassComposer(c *ui.Context, layout *FloatingConversationState, draft *stri
 	theme := c.Theme()
 	result := Composer(c, draft, options)
 	tint := theme.Surface.Alpha(.6)
-	if options.AcceptFiles && result.Card.FileDragOver() {
+	if result.Dragging {
 		tint = theme.Surface.Mix(theme.Text, .09).Alpha(.6)
 	}
 	result.Card.Material(glass.Glass{Style: glass.Regular, Tint: tint})
