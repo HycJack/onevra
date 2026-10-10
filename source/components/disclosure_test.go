@@ -139,6 +139,34 @@ func TestAccordionKeyboard(t *testing.T) {
 	}
 }
 
+func TestCollapsibleTrailing(t *testing.T) {
+	open := false
+	var root, trigger ui.Rect
+	tt := ui.NewTester(func(c *ui.Context) {
+		theme.Apply(c, theme.Light)
+		p := Collapsible(c, "Details", &open, CollapsibleOptions{Trailing: func() { Text(c, "42") }}, func() { Text(c, "Inside") })
+		p.Root.FillWidth().Draw(func(_ *ui.Painter, r ui.Rect) { root = r })
+		p.Trigger.DrawOver(func(_ *ui.Painter, r ui.Rect) { trigger = r })
+	}, 320, 240)
+	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
+	count, ok := tt.Find("42")
+	if !ok {
+		t.Fatal("trailing content missing")
+	}
+	if right := root.X + root.W - count.X - count.W; right > 1 || count.X < trigger.X+trigger.W {
+		t.Fatalf("trailing content not at the header's end: count=%v trigger=%v root=%v", count, trigger, root)
+	}
+	if mid, triggerMid := count.Y+count.H/2, trigger.Y+trigger.H/2; mid < triggerMid-1 || mid > triggerMid+1 {
+		t.Fatalf("trailing content not centered on the trigger: %v vs %v", mid, triggerMid)
+	}
+	if err := tt.Click("42"); err != nil || open {
+		t.Fatalf("trailing content toggled the disclosure: %v", err)
+	}
+	if err := tt.Click("Details"); err != nil || !open || !tt.HasText("Inside") {
+		t.Fatalf("trigger no longer toggles: %v", err)
+	}
+}
+
 func TestDisclosureAnimation(t *testing.T) {
 	open := false
 	var root ui.Rect

@@ -14,9 +14,12 @@ const (
 	ArrowLeft
 )
 
-// CollapsibleOptions configures the disclosure arrow. Its default is right.
+// CollapsibleOptions configures the disclosure arrow, whose default is right,
+// and optional trailing content, such as a count, built at the header's end
+// outside the trigger and vertically centered on it.
 type CollapsibleOptions struct {
 	ArrowPosition ArrowPosition
+	Trailing      func()
 }
 
 // DisclosureParts exposes the container and disclosure button for this frame.
@@ -34,18 +37,32 @@ func Collapsible(c *ui.Context, label string, open *bool, options CollapsibleOpt
 	t := c.Theme()
 	result := DisclosureParts{Root: ui.Column(c).Shrink(0)}
 	result.Root.Children(func() {
-		p := ui.CollapsibleBase(c, open)
-		result.Trigger = p.Trigger.AlignSelf(ui.Start).AlignItems(ui.Center).Gap(t.Space(1)).
-			Padding(t.Space(1), t.Space(2), t.Space(1), t.Space(0.5)).Radius(t.Radius)
-		result.Trigger.Children(func() {
-			if options.ArrowPosition == ArrowLeft {
-				disclosureArrow(c, 90*p.Progress())
-			}
-			Text(c, label).SingleLine()
-			if options.ArrowPosition != ArrowLeft {
-				disclosureArrow(c, 90*p.Progress())
-			}
-		})
+		var p ui.CollapsibleParts
+		trigger := func() {
+			p = ui.CollapsibleBase(c, open)
+			result.Trigger = p.Trigger.AlignSelf(ui.Start).AlignItems(ui.Center).Gap(t.Space(1)).
+				Padding(t.Space(1), t.Space(2), t.Space(1), t.Space(0.5)).Radius(t.Radius)
+			result.Trigger.Children(func() {
+				if options.ArrowPosition == ArrowLeft {
+					disclosureArrow(c, 90*p.Progress())
+				}
+				Text(c, label).SingleLine()
+				if options.ArrowPosition != ArrowLeft {
+					disclosureArrow(c, 90*p.Progress())
+				}
+			})
+		}
+		if options.Trailing == nil {
+			trigger()
+		} else {
+			// The trailing content sits beside the trigger, so it never toggles.
+			ui.Row(c).FillWidth().AlignItems(ui.Center).Gap(t.Space(2)).Children(func() {
+				trigger()
+				result.Trigger.AlignSelf(ui.Center).MinWidth(0)
+				ui.Spacer(c)
+				ui.Row(c).Shrink(0).AlignItems(ui.Center).Children(options.Trailing)
+			})
+		}
 		indent := t.Space(0.5)
 		if options.ArrowPosition == ArrowLeft {
 			indent = t.Space(5.5)
