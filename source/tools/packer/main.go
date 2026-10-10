@@ -25,7 +25,7 @@ type config struct {
 	Main         string   `yaml:"main"`
 	Out          string   `yaml:"out"`
 	Platforms    []string `yaml:"platforms"`    // Release targets; omitted means host OS/architecture.
-	OpenReleases bool     `yaml:"openReleases"` // Open the releases directory after a successful build; defaults to true.
+	OpenReleases bool     `yaml:"openReleases"` // Open the current version's release directory after a successful build; defaults to true.
 	MacOS        struct {
 		Icon                 string `yaml:"icon"` // ICNS file or an Icon Composer .icon directory.
 		MinimumSystemVersion string `yaml:"minimumSystemVersion"`
@@ -70,6 +70,12 @@ func run(ctx context.Context, args []string) error {
 	out := c.path(c.Out)
 	if mode == "build" {
 		out = c.releaseDir()
+		if err := os.RemoveAll(out); err != nil {
+			return fmt.Errorf("clear release directory: %w", err)
+		}
+		if err := os.MkdirAll(out, 0o755); err != nil {
+			return fmt.Errorf("create release directory: %w", err)
+		}
 		for _, t := range targets {
 			if _, err := build(ctx, c, out, true, t); err != nil {
 				return fmt.Errorf("%s: %w", t.key(), err)
@@ -79,7 +85,7 @@ func run(ctx context.Context, args []string) error {
 			}
 		}
 		if c.OpenReleases {
-			if err := openDirectory(ctx, filepath.Dir(out), runtime.GOOS); err != nil {
+			if err := openDirectory(ctx, out, runtime.GOOS); err != nil {
 				fmt.Fprintln(os.Stderr, "packer: warning: could not open releases directory:", err)
 			}
 		}

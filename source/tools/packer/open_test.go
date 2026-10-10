@@ -55,9 +55,35 @@ func TestBuildOpenReleases(t *testing.T) {
 			os.Remove(marker)
 			t.Setenv("PACKER_OPEN_EXIT", tc.exit)
 			put(t, filepath.Join(root, "packer.yaml"), "name: App\nidentifier: me.app\nout: release output\nplatforms: [linux/amd64, linux/arm64]\nmain: "+tc.main+"\n"+tc.setting)
+			releaseDir := filepath.Join(root, "release output", "releases", "0.0.0")
+			stale := filepath.Join(releaseDir, "old-target", "stale.zip")
+			put(t, stale, "stale archive")
+			retained := []string{
+				filepath.Join(root, "release output", "releases", "1.2.3", "previous.zip"),
+				filepath.Join(root, "release output", "App Dev", "keep"),
+			}
+			for _, path := range retained {
+				put(t, path, "keep")
+			}
 			err := run(context.Background(), []string{"build"})
 			if (err != nil) != tc.wantError {
 				t.Fatalf("build error = %v, wantError = %v", err, tc.wantError)
+			}
+			if _, err := os.Stat(stale); !os.IsNotExist(err) {
+				t.Fatalf("stale archive was not removed: %v", err)
+			}
+			for _, path := range retained {
+				if data, err := os.ReadFile(path); err != nil || string(data) != "keep" {
+					t.Fatalf("unrelated output changed: %s: %q, %v", path, data, err)
+				}
+			}
+			entries, err := os.ReadDir(releaseDir)
+			wantCount := 2
+			if tc.wantError {
+				wantCount = 0
+			}
+			if err != nil || len(entries) != wantCount {
+				t.Fatalf("release directory entries = %v, %v; want %d archives", entries, err, wantCount)
 			}
 			data, err := os.ReadFile(marker)
 			if !tc.wantOpen {
@@ -66,12 +92,12 @@ func TestBuildOpenReleases(t *testing.T) {
 				}
 				return
 			}
-			want := filepath.Join(root, "release output", "releases") + "\n"
+			want := releaseDir + "\n"
 			if err != nil || string(data) != want {
 				t.Fatalf("opener args = %q, %v; want one invocation with %q", data, err, want)
 			}
 			for _, arch := range []string{"amd64", "arm64"} {
-				archive := filepath.Join(strings.TrimSpace(want), "0.0.0", "app-linux-"+arch+"-0.0.0.tar.gz")
+				archive := filepath.Join(strings.TrimSpace(want), "app-linux-"+arch+"-0.0.0.tar.gz")
 				if _, err := os.Stat(archive); err != nil {
 					t.Fatal(err)
 				}
