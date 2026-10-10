@@ -1,6 +1,6 @@
 # Onevra architecture
 
-Onevra is an experimental, product-neutral Go component library built on MyGo. It provides reusable native UI compositions and Lucide SVG assets without introducing an application framework. The library is unpublished and its public API is not stable.
+Onevra is an experimental, product-neutral Go component library built on MyGo. It provides reusable native UI compositions and Lucide SVG assets without introducing an application framework. Its public API is not stable.
 
 ## System boundaries
 

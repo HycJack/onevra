@@ -1,8 +1,14 @@
 # Changelog
 
-User-facing updates for Onevra library consumers. No version has been published yet; the first planned release is 0.2026.1.
+User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
+
+## [0.2026.1] - 2026-10-10
+
+Initial experimental release. No application archives are included.
+
+Native verification is incomplete: Windows and Linux still require desktop review, and complete keyboard, input-method and accessibility acceptance is not established.
 
 - Add themed controls for editing, selection, navigation, virtualized collections and layout, with application-supplied localization.
 - Add composable popovers, dialogs and settings surfaces with application-owned state and actions.

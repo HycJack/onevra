@@ -40,7 +40,7 @@ go run ./examples/gallery
 
 ## 开发者入门
 
-发布前，使用包含你的应用模块和本仓库 `source/` 目录的本地 Go workspace，不要提交机器相关的工作区文件。**首个版本发布后**，可在应用模块中安装：
+在应用模块中安装 **0.2026.1**：
 
 ```sh
 go get github.com/oneo-me/onevra/source@v0.2026.1

@@ -40,7 +40,7 @@ Each template includes localization, preferences and its own packaging configura
 
 ## Getting started
 
-Until publication, use a local Go workspace containing your application's module and this repository's `source/` directory. Keep machine-specific workspace files out of commits. **After the first release**, install the library in your application module with:
+Install **0.2026.1** in your application module with:
 
 ```sh
 go get github.com/oneo-me/onevra/source@v0.2026.1
