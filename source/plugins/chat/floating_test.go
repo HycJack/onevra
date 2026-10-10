@@ -167,3 +167,39 @@ func TestGlassComposerPreservesThemeAndRootBackground(t *testing.T) {
 		}
 	}
 }
+
+func TestFloatingConversationHeaderClearance(t *testing.T) {
+	var layout FloatingConversationState
+	var state ConversationState
+	var first, header, composer ui.Rect
+	show := true
+	tt := ui.NewTester(func(c *ui.Context) {
+		options := FloatingConversationOptions{JumpLabel: "Latest", Content: func(c *ui.Context) {
+			first = components.Text(c, "First").Height(40).Shrink(0).Bounds()
+		}, Composer: func(c *ui.Context) {
+			composer = ui.Box(c).Height(60).FillWidth().Bounds()
+		}}
+		if show {
+			options.Header = func(c *ui.Context) {
+				header = GlassPanel(c, func(c *ui.Context) { components.Text(c, "Output") }).Bounds()
+			}
+		}
+		FloatingConversationWith(c, &layout, &state, options)
+	}, 900, 600)
+	tt.Frame()
+	tt.Frame()
+	if header.H <= 0 || first.Y < header.Y+header.H {
+		t.Fatalf("first turn under header: first=%+v header=%+v", first, header)
+	}
+	// The header shares the composer's width.
+	if header.W != composer.W || header.X != composer.X {
+		t.Fatalf("header width differs: header=%+v composer=%+v", header, composer)
+	}
+	top := first.Y
+	show = false
+	tt.Frame()
+	tt.Frame()
+	if layout.headerHeight != 0 || first.Y >= top {
+		t.Fatalf("header space kept: height=%v first=%+v", layout.headerHeight, first)
+	}
+}
