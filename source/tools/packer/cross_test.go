@@ -68,6 +68,7 @@ func TestCrossPackaging(t *testing.T) {
 	put(t, file, `name: "Cross App"
 identifier: "me.oneo.crossfixture"
 out: "dist"
+openReleases: false
 platforms: ["windows/amd64","windows/arm64","linux/amd64","linux/arm64"]`)
 	c, err := loadConfig(file)
 	if err != nil {

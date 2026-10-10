@@ -6,6 +6,31 @@ import (
 	"testing"
 )
 
+func TestOpenReleasesConfig(t *testing.T) {
+	file := filepath.Join(t.TempDir(), "packer.yaml")
+	for _, tc := range []struct {
+		setting string
+		want    bool
+	}{
+		{"", true},
+		{"openReleases: true\n", true},
+		{"openReleases: false\n", false},
+	} {
+		put(t, file, "name: App\nidentifier: me.app\n"+tc.setting)
+		c, err := loadConfig(file)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if c.OpenReleases != tc.want {
+			t.Errorf("%q: openReleases = %v, want %v", tc.setting, c.OpenReleases, tc.want)
+		}
+	}
+	put(t, file, "name: App\nidentifier: me.app\nopenReleases: [false]\n")
+	if _, err := loadConfig(file); err == nil {
+		t.Fatal("accepted a non-boolean openReleases value")
+	}
+}
+
 func TestRejectGenerationConfig(t *testing.T) {
 	file := filepath.Join(t.TempDir(), "packer.yaml")
 	for _, setting := range []string{

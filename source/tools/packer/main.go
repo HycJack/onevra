@@ -19,13 +19,14 @@ import (
 )
 
 type config struct {
-	Name       string   `yaml:"name"`
-	Identifier string   `yaml:"identifier"`
-	Version    string   `yaml:"version"`
-	Main       string   `yaml:"main"`
-	Out        string   `yaml:"out"`
-	Platforms  []string `yaml:"platforms"` // Release targets; omitted means host OS/architecture.
-	MacOS      struct {
+	Name         string   `yaml:"name"`
+	Identifier   string   `yaml:"identifier"`
+	Version      string   `yaml:"version"`
+	Main         string   `yaml:"main"`
+	Out          string   `yaml:"out"`
+	Platforms    []string `yaml:"platforms"`    // Release targets; omitted means host OS/architecture.
+	OpenReleases bool     `yaml:"openReleases"` // Open the releases directory after a successful build; defaults to true.
+	MacOS        struct {
 		Icon                 string `yaml:"icon"` // ICNS file or an Icon Composer .icon directory.
 		MinimumSystemVersion string `yaml:"minimumSystemVersion"`
 	} `yaml:"macos"`
@@ -77,6 +78,11 @@ func run(ctx context.Context, args []string) error {
 				fmt.Fprintln(os.Stderr, filepath.Join(out, c.archiveName(t)+suffix))
 			}
 		}
+		if c.OpenReleases {
+			if err := openDirectory(ctx, filepath.Dir(out), runtime.GOOS); err != nil {
+				fmt.Fprintln(os.Stderr, "packer: warning: could not open releases directory:", err)
+			}
+		}
 		return nil
 	}
 	dev := *c
@@ -108,7 +114,7 @@ func loadConfig(path string) (*config, error) {
 		return nil, err
 	}
 	defer f.Close()
-	c := &config{Version: "0.0.0", Main: ".", Out: "dist", root: filepath.Dir(path)}
+	c := &config{Version: "0.0.0", Main: ".", Out: "dist", OpenReleases: true, root: filepath.Dir(path)}
 	c.MacOS.MinimumSystemVersion = "13.0"
 	d := yaml.NewDecoder(f)
 	d.KnownFields(true) // Never silently ignore signing or resource settings.
