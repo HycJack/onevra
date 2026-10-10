@@ -661,9 +661,9 @@ gallery.password_changed:
 gallery.path:
   other: 路径
 gallery.pause_mobile_alerts_while_you_re_active_on_desktop:
-  other: 使用桌面端时暂停移动端通知。
+  other: 体验用于控制桌面端使用期间暂停移动端通知的开关。
 gallery.personal:
-  other: 个人
+  other: 示例
 gallery.personal_2:
   other: 个人
 gallery.play:
@@ -889,7 +889,7 @@ gallery.system:
 gallery.tags:
   other: 标签
 gallery.template_preview_changes_stay_in_this_session_no_notifications_are_sen:
-  other: 模板预览 · 更改仅在当前会话中保留，不会发送通知。
+  other: 通过通知设置示例体验分组表单。更改仅在当前会话中保留，不会发送通知。
 gallery.terminal_unavailable:
   other: 终端不可用
 gallery.text_and_an:

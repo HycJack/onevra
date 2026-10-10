@@ -661,9 +661,9 @@ gallery.password_changed:
 gallery.path:
   other: Path
 gallery.pause_mobile_alerts_while_you_re_active_on_desktop:
-  other: Pause mobile alerts while you’re active on desktop.
+  other: Try a switch for pausing mobile alerts while using the desktop app.
 gallery.personal:
-  other: PERSONAL
+  other: EXAMPLES
 gallery.personal_2:
   other: Personal
 gallery.play:
@@ -889,7 +889,7 @@ gallery.system:
 gallery.tags:
   other: Tags
 gallery.template_preview_changes_stay_in_this_session_no_notifications_are_sen:
-  other: Template preview · Changes stay in this session; no notifications are sent.
+  other: Explore grouped settings with this notification example. Changes last only for this session and do not send notifications.
 gallery.terminal_unavailable:
   other: Terminal unavailable
 gallery.text_and_an:

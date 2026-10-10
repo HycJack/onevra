@@ -40,8 +40,11 @@ func TestSettingsDialog(t *testing.T) {
 	if err := tt.Click("Settings"); err != nil {
 		t.Fatal(err)
 	}
-	if !g.settings.open || !tt.HasText("Smart notifications") {
+	if !g.settings.open || !tt.HasText("Language") {
 		t.Fatal("settings button did not open the dialog", tt.Texts())
+	}
+	if err := tt.Click("Notifications"); err != nil {
+		t.Fatal(err)
 	}
 	if err := tt.Click("Toggle smart notifications"); err != nil {
 		t.Fatal(err)

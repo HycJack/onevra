@@ -95,7 +95,6 @@ func (g *Gallery) settingsCategories() []components.SettingsCategory {
 		})
 	}
 	return []components.SettingsCategory{
-		notifications,
 		{ID: "general", Title: g.text("gallery.general"), Section: g.text("gallery.application"), Icon: lucide.Settings(),
 			Groups: []components.SettingsGroup{{ID: "language", Items: []components.SettingsItem{{
 				ID: "language", Title: g.text("gallery.language"), Description: g.text("gallery.applies_immediately_system_menus_keep_their_current_language"), Keywords: []string{"language", "English", "中文", g.text("gallery.follow_system")},
@@ -129,6 +128,7 @@ func (g *Gallery) settingsCategories() []components.SettingsCategory {
 				},
 			}}}},
 		},
+		notifications,
 	}
 }
 
