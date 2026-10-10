@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/theme"
+	"github.com/oneo-me/onevra/source/theme"
 )
 
 func TestPickerGlassSurfaces(t *testing.T) {

@@ -8,7 +8,7 @@ import (
 
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/icons/lucide"
+	"github.com/oneo-me/onevra/source/icons/lucide"
 	"go.yaml.in/yaml/v3"
 )
 

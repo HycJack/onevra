@@ -2,8 +2,8 @@ package gallery
 
 import (
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/components"
-	"github.com/oneo-me/onevra/icons/lucide"
+	"github.com/oneo-me/onevra/source/components"
+	"github.com/oneo-me/onevra/source/icons/lucide"
 )
 
 func controlTextBoxBuffer(c *ui.Context, s *controlState, variant string) {

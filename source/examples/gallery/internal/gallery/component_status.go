@@ -5,7 +5,7 @@ import (
 	"strings"
 
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/components"
+	"github.com/oneo-me/onevra/source/components"
 )
 
 const componentStatusPage galleryPage = shellPage + 1

@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/components"
+	"github.com/oneo-me/onevra/source/components"
 )
 
 type controlExample struct {

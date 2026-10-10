@@ -3,7 +3,7 @@ package gallery
 import (
 	"github.com/egoist/mygo/plugins/glass"
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/components"
+	"github.com/oneo-me/onevra/source/components"
 )
 
 // Positions belong to this demo page and survive navigation, not app restarts.

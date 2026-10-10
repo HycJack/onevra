@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/theme"
+	"github.com/oneo-me/onevra/source/theme"
 )
 
 // Exercise effective material changes, not host OS assumptions. This includes

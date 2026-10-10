@@ -27,7 +27,7 @@ The desktop, menu bar and hybrid starter applications are independent consumers 
 
 ## Repository landmarks
 
-There is one Go module under `source/`, with module path `github.com/oneo-me/onevra`:
+There is one Go module under `source/`, with module path `github.com/oneo-me/onevra/source`:
 
 - `source/shells/`: native window presentation styles, `sidebar` and `plain`.
 - `source/components/`: common controls built on MyGo's unstyled bases, usable independently of Shell.
@@ -37,7 +37,7 @@ There is one Go module under `source/`, with module path `github.com/oneo-me/one
 - `source/examples/gallery/`: standalone example, with presentation, native review tests and MyGo inventory tooling under its own `internal/` directory.
 - [Development guide](docs/build.md): build, verification and release procedures.
 
-No sibling application or shared workspace is required. The source subdirectory and current module path support local development; remote publication still requires a repository-layout or module-path decision.
+No sibling application or shared workspace is required. The module path includes `source` so the repository layout also works for remote consumers. Version tags include the same directory prefix; see [publication](docs/build.md#publication).
 
 ## Subjects
 

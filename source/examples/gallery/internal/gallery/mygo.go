@@ -2,7 +2,7 @@ package gallery
 
 import (
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/components"
+	"github.com/oneo-me/onevra/source/components"
 )
 
 const mygoPageStart galleryPage = notificationsPage + 1

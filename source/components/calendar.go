@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/icons/lucide"
+	"github.com/oneo-me/onevra/source/icons/lucide"
 )
 
 // CalendarControl exposes layout and frame-local date changes. Keep this handle

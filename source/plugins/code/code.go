@@ -11,7 +11,7 @@ import (
 	"github.com/alecthomas/chroma/v2"
 	"github.com/alecthomas/chroma/v2/lexers"
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/components"
+	"github.com/oneo-me/onevra/source/components"
 )
 
 // Highlighting limits bound lexer input and retained styling. Larger or more

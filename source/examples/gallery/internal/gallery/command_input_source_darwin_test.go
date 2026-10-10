@@ -9,9 +9,9 @@ import (
 	"github.com/ebitengine/purego/objc"
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/components"
-	"github.com/oneo-me/onevra/plugins/command"
-	"github.com/oneo-me/onevra/shells/sidebar"
+	"github.com/oneo-me/onevra/source/components"
+	"github.com/oneo-me/onevra/source/plugins/command"
+	"github.com/oneo-me/onevra/source/shells/sidebar"
 )
 
 func TestNativeCommandInputSource(t *testing.T) {

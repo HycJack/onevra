@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/egoist/mygo"
-	"github.com/oneo-me/onevra/shells/sidebar"
+	"github.com/oneo-me/onevra/source/shells/sidebar"
 )
 
 // Ordinary tests never open windows.

@@ -1,4 +1,4 @@
-module github.com/oneo-me/onevra
+module github.com/oneo-me/onevra/source
 
 go 1.27.1
 

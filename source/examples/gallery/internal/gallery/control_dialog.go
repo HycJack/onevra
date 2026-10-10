@@ -3,7 +3,7 @@ package gallery
 import (
 	"fmt"
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/components"
+	"github.com/oneo-me/onevra/source/components"
 )
 
 func controlDialog(c *ui.Context, s *controlState, variant string) {

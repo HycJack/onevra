@@ -4,8 +4,8 @@ import (
 	"sync"
 
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/components"
-	"github.com/oneo-me/onevra/plugins/code"
+	"github.com/oneo-me/onevra/source/components"
+	"github.com/oneo-me/onevra/source/plugins/code"
 )
 
 type codeSample struct {

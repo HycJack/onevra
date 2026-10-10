@@ -4,8 +4,8 @@ import (
 	"runtime"
 
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/components"
-	"github.com/oneo-me/onevra/plugins/command"
+	"github.com/oneo-me/onevra/source/components"
+	"github.com/oneo-me/onevra/source/plugins/command"
 )
 
 func ExampleCommandDialog() {

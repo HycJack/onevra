@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/theme"
+	"github.com/oneo-me/onevra/source/theme"
 )
 
 // Glass must sample the backdrop while remaining close to the original surface

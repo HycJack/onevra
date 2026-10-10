@@ -12,8 +12,8 @@ import (
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 
-	"github.com/oneo-me/onevra/shells/sidebar"
-	"github.com/oneo-me/onevra/theme"
+	"github.com/oneo-me/onevra/source/shells/sidebar"
+	"github.com/oneo-me/onevra/source/theme"
 )
 
 func TestNativeCode(t *testing.T) {

@@ -11,10 +11,10 @@ import (
 
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/components"
-	"github.com/oneo-me/onevra/plugins/command"
-	"github.com/oneo-me/onevra/shells/sidebar"
-	"github.com/oneo-me/onevra/theme"
+	"github.com/oneo-me/onevra/source/components"
+	"github.com/oneo-me/onevra/source/plugins/command"
+	"github.com/oneo-me/onevra/source/shells/sidebar"
+	"github.com/oneo-me/onevra/source/theme"
 )
 
 func TestNativeCommand(t *testing.T) {

@@ -2,7 +2,7 @@ package components
 
 import (
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/icons/lucide"
+	"github.com/oneo-me/onevra/source/icons/lucide"
 )
 
 // BreadcrumbsControl retains activation separately from Element styling.

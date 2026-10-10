@@ -1,23 +1,14 @@
 # Changelog
 
-User-facing updates for Onevra library consumers. No version has been published yet.
+User-facing updates for Onevra library consumers. No version has been published yet; the first planned release is 0.2026.1.
 
 ## [Unreleased]
 
+- Add themed controls for editing, selection, navigation, virtualized collections and layout, with application-supplied localization.
+- Add composable popovers, dialogs and settings surfaces with application-owned state and actions.
+- Add sidebar and single-content native window shells with light, dark and system appearance modes.
+- Add searchable command palettes with keyboard navigation and optional macOS input-source selection.
+- Add read-only syntax highlighting and selectable Markdown with application-supplied images and custom code-block views.
+- Add composable conversation views with activity groups, response folding and a message composer; applications own networking and asynchronous work.
+- Add Lucide icons usable independently or through the common Icon component.
 - Add standalone multilingual desktop, menu bar and hybrid application templates with configurable lifecycle behavior and persistent preferences.
-
-- Support MyGo 0.3 value-based Element handles for common controls, selection popups and Shell icon buttons; persistent identity uses MyGo Handle bindings.
-
-- Add themed controls for text composition and editing with string or indexed-buffer storage, numeric input with prefix scrubbing and optional step controls, selection with accessible switches that support hidden labels, date and time popups, RGB/HSB/HSL color editing with native format menus and copying with customizable popup swatches, ratings, status with ring and spoke loading indicators, navigation, virtualized list and grid collections, and layout, usable alongside MyGo widgets independently of Shell.
-- Add theme-tinted glass surfaces for text Tooltips, anchored Popovers and selection popups, plus composable layered glass Dialogs and result-bearing AlertDialogs with optional cancellation; dialogs inherit window dragging from Shell or a standalone host scope, with per-dialog overrides.
-- Add a single-content application Shell through `shells/plain` with a hidden title bar, automatic window-control clearance and live theme and caption localization.
-- Add Collapsible disclosures with a left or right arrow and optional trailing header content, such as a count, that does not toggle them.
-
-- Add a native sidebar-style application Shell through `shells/sidebar` with a collapsible, resizable sidebar, customizable sidebar-header, content-titlebar and toolbar actions, and replaceable page content; expose system materials on macOS and supported Windows systems with opaque theme backgrounds when unavailable.
-- Add reusable read-only syntax highlighting and selectable Markdown documents with highlighted code blocks, optional language headers and keyboard-reachable copying, application-supplied images and custom code-block views.
-- Add composable chat views with Waku-style turns: activity groups with expandable bounded details, prose steps, summary folding of completed turns and a live working row, bottom following, and a composer card with text-labeled Send and Stop buttons, Enter-to-send, Stop and Send while running, file and native-data drops, clipboard paste interception, removable image previews, attachment and accessory slots and a footer row; an optional floating layout pairs a white glass jump-to-bottom button with a glass composer that keeps the latest turn and footer readable without obscuring the host window's native material, and an optional floating glass header panel at the composer's width that the transcript keeps clear.
-- Support application-supplied component localization, calendar presentation and live Shell label updates without recreating windows.
-- Add reusable settings surfaces with application-defined controls, grouped categories, narrow layouts and cross-category search, embeddable in pages or dialogs.
-- Add searchable command palettes for embedded and dialog use, with grouped results, optional expansion after searching, keyboard navigation, optional macOS input-source switching with restoration, and application-owned actions.
-- Add built-in Onevra light and dark themes with warm neutrals and a shared terracotta accent that support system appearance or an application-selected mode and work with MyGo widgets.
-- Add Lucide assets through `icons/lucide` and a composable Icon component accepting named icon accessors or parsed SVGs.

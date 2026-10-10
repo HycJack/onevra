@@ -9,9 +9,9 @@ import (
 
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/plugins/chat"
-	"github.com/oneo-me/onevra/shells/sidebar"
-	"github.com/oneo-me/onevra/theme"
+	"github.com/oneo-me/onevra/source/plugins/chat"
+	"github.com/oneo-me/onevra/source/shells/sidebar"
+	"github.com/oneo-me/onevra/source/theme"
 )
 
 func TestNativeChat(t *testing.T) {

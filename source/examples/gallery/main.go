@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 
 	"github.com/egoist/mygo"
-	"github.com/oneo-me/onevra/examples/gallery/internal/gallery"
+	"github.com/oneo-me/onevra/source/examples/gallery/internal/gallery"
 )
 
 func main() {

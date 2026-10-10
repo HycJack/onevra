@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/icons/lucide"
-	"github.com/oneo-me/onevra/theme"
+	"github.com/oneo-me/onevra/source/icons/lucide"
+	"github.com/oneo-me/onevra/source/theme"
 )
 
 func TestTextBoxBufferEditing(t *testing.T) {

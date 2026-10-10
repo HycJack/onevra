@@ -6,8 +6,8 @@ import (
 
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/components"
-	"github.com/oneo-me/onevra/shells/plain"
+	"github.com/oneo-me/onevra/source/components"
+	"github.com/oneo-me/onevra/source/shells/plain"
 )
 
 // All application state and native callbacks are owned by the UI thread.

@@ -2,7 +2,7 @@
 
 Use Go 1.27.1 or later. Run Go commands from `source/`; dependencies are pinned in [go.mod](../source/go.mod). No sibling project or workspace file is required.
 
-Native windows require a desktop session. Linux also needs GTK 3, Pango and OpenGL system libraries. See the [MyGo native guides](https://github.com/egoist/mygo/tree/v0.2.12/docs/ui) for platform setup.
+Native windows require a desktop session. Linux also needs GTK 3, Pango and OpenGL system libraries. See the [MyGo native guides](https://github.com/egoist/mygo/tree/0f79256101ac/docs/ui) for platform setup.
 
 ## App bundles
 
@@ -37,7 +37,7 @@ Each target finishes compilation and packaging in staging before publication, wi
 
 [packer.yaml](../source/packer.yaml) owns application packaging configuration; Packer does not read `mygo.json` or import MyGo Go packages. macOS application metadata goes into Info.plist. Both Go compilation and dependency discovery use the selected target's `GOOS`/`GOARCH` with cgo disabled. For native dependencies, Packer uses `go list` to locate the selected application's imported packages and reads their `mygo-plugin.json` manifests as data. Versions, download URLs and SHA-256 hashes remain owned by the pinned upstream dependency, not duplicated in application configuration. Missing target builds, invalid manifests and conflicting library definitions fail the build. Unknown configuration fields also fail; the supported shape is defined in the [configuration type](../source/tools/packer/main.go).
 
-Cross-compilation requires a pure-Go-compatible application. Windows and Linux archives can be built on any supported host. macOS packaging requires a macOS host for Apple tools, even when only changing architectures. The gallery selects `darwin/arm64/dmg` to produce only a DMG. Selecting `darwin/arm64/zip` instead skips disk-image creation and Finder automation, but still requires macOS for icon compilation and signing. When enabled, release DMGs open in a drag-to-install layout with an Applications shortcut and require a logged-in desktop session and permission for the invoking terminal or IDE to control Finder (System Settings → Privacy & Security → Automation); Finder briefly opens the staging image to save its layout before compression. Without this permission, packaging fails rather than publishing an unstyled image. Requests for macOS on another host fail before any target builds. The scope stays small: no universal binaries, Windows installers, Linux desktop registration or distribution packages, resource mappings, frontend pipeline, Developer ID signing, notarization or publishing. macOS bundles are ad-hoc signed; Windows executables are not Authenticode-signed. The configured version is a local placeholder, not a library release. VS Code's [tasks](../.vscode/tasks.json) provide `run` and a default `build` task, both using Packer from `source/`.
+Cross-compilation requires a pure-Go-compatible application. Windows and Linux archives can be built on any supported host. macOS packaging requires a macOS host for Apple tools, even when only changing architectures. The gallery selects `darwin/arm64/dmg` to produce only a DMG. Selecting `darwin/arm64/zip` instead skips disk-image creation and Finder automation, but still requires macOS for icon compilation and signing. When enabled, release DMGs open in a drag-to-install layout with an Applications shortcut and require a logged-in desktop session and permission for the invoking terminal or IDE to control Finder (System Settings → Privacy & Security → Automation); Finder briefly opens the staging image to save its layout before compression. Without this permission, packaging fails rather than publishing an unstyled image. Requests for macOS on another host fail before any target builds. The scope stays small: no universal binaries, Windows installers, Linux desktop registration or distribution packages, resource mappings, frontend pipeline, Developer ID signing, notarization or publishing. macOS bundles are ad-hoc signed; Windows executables are not Authenticode-signed. The configured version matches the planned first library release; building archives does not publish the module. VS Code's [tasks](../.vscode/tasks.json) provide `run` and a default `build` task, both using Packer from `source/`.
 
 Icon sources live at the root of `resources/` beside `packer.yaml`. The default icon source names (including the entire `icon.icon` directory) and explicitly configured icon paths are excluded from payload copying on every platform; only the target's compiled or installed icon is shipped. Nested payload images such as `resources/images/avatar.jpeg` are unaffected. Packer discovers `icon.icon` or `icon.icns` for macOS, `icon.ico` for Windows, and `icon.png` or `icon.svg` for Linux, in that order of preference. Platform-specific `macos.icon`, `windows.icon` and `linux.icon` values can override discovery; `macos.minimumSystemVersion` also belongs in the platform section. Windows ICOs are embedded in the staged EXE, preserving existing resources and supplying a DPI-aware manifest if the application has none. Linux PNG/SVG icons are included beside the executable; the archive does not install a desktop entry. If no icon is configured or discovered for a target, it builds without a custom icon.
 
@@ -127,6 +127,8 @@ GOWORK=off go build -o ../dist/onevra-gallery ./examples/gallery
 (cd .. && git diff --check)
 ```
 
+The [CI workflow](../.github/workflows/ci.yml) runs formatting, module verification, tests, race checks, vet, builds and an independent consumer build on macOS, Windows and Linux. It does not publish or exercise desktop interaction. A successful cross-build or CI run is not native platform acceptance.
+
 The formatting check should produce no output. Use a `.exe` output suffix on Windows. `GOWORK=off` checks that the module works independently of external workspaces.
 
 ## Native review
@@ -162,8 +164,42 @@ The same invocation generates the gallery-only catalog directly from the upstrea
 
 ## Publication
 
-The library is currently local and unpublished. Consumers may use a local Go workspace containing their application and this repository's `source/` directory; do not commit machine-specific paths.
+The library is unpublished. Its module is `github.com/oneo-me/onevra/source`; the repository retains `source/` as the module root. Before publication, consumers can use a local Go workspace containing their application and this repository's `source/` directory. Keep machine-specific workspace and replacement paths out of commits.
 
-Before remote publication, resolve the module-path or repository-layout choice described in the [architecture overview](../ARCHITECTURE.md#repository-landmarks).
+### Versioning
 
-For an explicitly authorized release, review the shipping scope in [CHANGELOG.md](../CHANGELOG.md), move only shipping user-facing entries into the confirmed version, and retain `Unreleased` for pending changes. There is no release automation. Versioning, tagging, publishing and pushing require separate authorization.
+The first planned release is **0.2026.1**. Experimental releases use `0.YEAR.SEQUENCE`, with a sequence starting at 1 each year and increasing for every release, including fixes. For example, `0.2026.2` follows `0.2026.1`, and the first release of the next year is `0.2027.1`. Go treats these as semantic versions with major version zero; this calendar convention does not promise API stability or patch-level compatibility. Document consumer-impacting changes in the changelog. Reconsider the convention before declaring a stable major version.
+
+| Purpose | First release |
+| --- | --- |
+| Release title / application version | `0.2026.1` |
+| Go module version | `v0.2026.1` |
+| Git tag | `source/v0.2026.1` |
+| Consumer dependency | `github.com/oneo-me/onevra/source@v0.2026.1` |
+
+The `source/` tag prefix identifies the module subdirectory; it is not part of the version passed to `go get`. See the [Go module source rules](https://go.dev/doc/modules/managing-source). Do not move or reuse a published version tag; ship corrections as a new version.
+
+### Release preparation
+
+Before an authorized release:
+
+1. Run the development checks above with `GOWORK=off`; confirm `go mod tidy -diff` and `go mod verify` pass and dependencies can be downloaded without local replacements or private credentials.
+2. Review native behavior on the platforms being claimed, including keyboard navigation, input methods and accessibility. macOS native captures are available; Windows and Linux still require their own desktop review. Record gaps in the release description rather than implying acceptance from compilation.
+3. Review tracked files and the history being made public for credentials, private configuration and unintended assets. Retain the root [MIT license](../LICENSE), [adapted MyGo notices](../source/components/LICENSE.mygo) and [Lucide notices](../source/icons/lucide/LICENSE). Review the licenses of dependencies and any bundled native libraries when distributing application archives.
+4. Review the shipping scope in [CHANGELOG.md](../CHANGELOG.md), move only shipping entries from `Unreleased` into the confirmed version at release time, and retain `Unreleased` for pending changes. Until then, keep the first-release summary under `Unreleased` and both READMEs explicit that installation from a release is not yet available.
+5. Align Gallery's application version with `packer.yaml` when shipping Gallery alongside the module. Gallery archives are optional release attachments; the Go library is distributed as source and needs no application archive.
+
+### Authorized publication
+
+Commit, tag, push and publication require explicit authorization. CI performs checks only; there is no automated publishing workflow.
+
+After authorization, make the intended repository content public, push the reviewed release commit and its annotated `source/v0.2026.1` tag, and create a GitHub Release with the matching changelog and verified platform limitations. A GitHub Release is for release notes and optional Gallery downloads; Go resolves the module from the repository tag.
+
+Once the tag is public, run the following from a fresh consumer module without workspace overrides or local replacements:
+
+```sh
+GOWORK=off GOPROXY=https://proxy.golang.org go list -m github.com/oneo-me/onevra/source@v0.2026.1
+GOWORK=off go get github.com/oneo-me/onevra/source@v0.2026.1
+```
+
+Build the README example and check [pkg.go.dev](https://pkg.go.dev/github.com/oneo-me/onevra/source) for package documentation and license detection. Go includes the repository-root `LICENSE` in a subdirectory module archive when that directory has no license of its own. Verify the downloaded archive contains the license and required embedded assets. These public download and indexing checks cannot be completed before publication. See the [official publishing workflow](https://go.dev/doc/modules/publishing).

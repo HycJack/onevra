@@ -4,7 +4,7 @@ Onevra is an independent Go component library built on MyGo. Read [ARCHITECTURE.
 
 ## Boundaries
 
-- Keep Go source, tests, examples, module files and application packaging configuration in `source/`. Run Go commands from that module directory; keep documentation at the repository root and in `docs/`.
+- Keep Go source, tests, examples, module files and application packaging configuration in `source/`. Run Go commands from that module directory; keep documentation at the repository root and in `docs/`. The module path is `github.com/oneo-me/onevra/source`; follow the [publication versioning rules](docs/build.md#publication).
 
 - When Onevra implements a component, use that component instead of MyGo's equivalent styled widget in application and gallery UI. MyGo primitives and unstyled bases remain implementation building blocks; dedicated MyGo component demonstrations are the only styled-widget exception. Check `source/components/` and `source/shells/` before choosing a control.
 - Use all MyGo plugins directly, including Glass and future plugins; do not implement Onevra replacements.

@@ -2,7 +2,7 @@ package sidebar
 
 import (
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/components"
+	"github.com/oneo-me/onevra/source/components"
 )
 
 // IconButton creates an icon-only button with a tooltip and accessible

@@ -11,8 +11,8 @@ import (
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
-	"github.com/oneo-me/onevra/components"
-	"github.com/oneo-me/onevra/shells/sidebar"
+	"github.com/oneo-me/onevra/source/components"
+	"github.com/oneo-me/onevra/source/shells/sidebar"
 	"go.yaml.in/yaml/v3"
 	"golang.org/x/text/language"
 )
