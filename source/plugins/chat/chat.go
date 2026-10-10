@@ -548,7 +548,7 @@ func Composer(c *ui.Context, draft *string, options ComposerOptions) ComposerRes
 					}
 				})
 				if options.Running {
-					stop := roundAction(c, options.StopLabel, lucide.Square, overlayStrong(t), t.Text)
+					stop := pillAction(c, options.StopLabel, overlayStrong(t), t.Text)
 					if stop.Hovered() {
 						stop.Background(t.Danger.Alpha(.16))
 					}
@@ -560,7 +560,7 @@ func Composer(c *ui.Context, draft *string, options ComposerOptions) ComposerRes
 						background, foreground = overlayStrong(t), tertiary(t)
 					}
 					ui.Box(c).Disabled(!canSend || result.Input.Composing()).Children(func() {
-						if roundAction(c, options.SendLabel, lucide.ArrowUp, background, foreground).Clicked() {
+						if pillAction(c, options.SendLabel, background, foreground).Clicked() {
 							result.Send = true
 						}
 					})
@@ -608,15 +608,14 @@ func Composer(c *ui.Context, draft *string, options ComposerOptions) ComposerRes
 	return result
 }
 
-func roundAction(c *ui.Context, label string, icon func() *ui.SVG, background, foreground ui.Color) ui.Element {
-	b := ui.ButtonBase(c).Label(label).Size(26, 26).Shrink(0).Radius(13).Center().Background(background).TextColor(foreground)
+func pillAction(c *ui.Context, label string, background, foreground ui.Color) ui.Element {
+	b := ui.ButtonBase(c).Label(label).Height(26).Padding(0, 12).Shrink(0).Radius(13).Center().Background(background).TextColor(foreground)
 	if b.Pressed() {
 		b.Opacity(.8)
 	} else if b.Hovered() {
 		b.Opacity(.9)
 	}
-	b.Children(func() { components.Icon(c, icon).Size(15, 15) })
-	components.Tooltip(c, b, label)
+	b.Children(func() { components.Text(c, label).SingleLine().FontSize(12.5).FontWeight(600).TextColor(foreground) })
 	return b
 }
 
