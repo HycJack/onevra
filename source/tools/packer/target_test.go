@@ -80,6 +80,28 @@ func TestTargetEnvironmentAndFlags(t *testing.T) {
 	}
 }
 
+func TestProductionMarkerForAllTargets(t *testing.T) {
+	c := &config{Main: "."}
+	for _, platform := range []string{"darwin", "windows", "linux"} {
+		for _, arch := range []string{"arm64", "amd64"} {
+			t.Run(platform+"/"+arch, func(t *testing.T) {
+				for _, release := range []bool{false, true} {
+					args := c.buildArgs("app", release, target{platform, arch})
+					marked := false
+					for i, arg := range args {
+						if arg == "-ldflags" {
+							marked = strings.Contains(args[i+1], "-X github.com/egoist/mygo.production=1")
+						}
+					}
+					if marked != release {
+						t.Fatalf("production marker = %v, release = %v: %v", marked, release, args)
+					}
+				}
+			})
+		}
+	}
+}
+
 func TestArchiveFormatSelection(t *testing.T) {
 	for _, tc := range []struct {
 		name      string

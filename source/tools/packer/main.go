@@ -223,7 +223,7 @@ func (c *config) buildArgs(exe string, release bool, t target) []string {
 	var ldflags []string
 	if release {
 		args = append(args, "-trimpath")
-		ldflags = append(ldflags, "-s", "-w")
+		ldflags = append(ldflags, "-s", "-w", "-X", "github.com/egoist/mygo.production=1")
 	}
 	if t.OS == "windows" {
 		ldflags = append(ldflags, "-H=windowsgui")

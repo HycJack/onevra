@@ -97,7 +97,7 @@ func TestBuildModes(t *testing.T) {
 	c := &config{Name: "Test App", Identifier: "me.test", Version: "1.0", Main: "./cmd/app"}
 	fast := strings.Join(c.buildArgs("app", false, target{"darwin", "arm64"}), " ")
 	small := strings.Join(c.buildArgs("app", true, target{"darwin", "arm64"}), " ")
-	for _, flag := range []string{"-trimpath", "-s -w"} {
+	for _, flag := range []string{"-trimpath", "-s -w", "-X github.com/egoist/mygo.production=1"} {
 		if strings.Contains(fast, flag) || !strings.Contains(small, flag) {
 			t.Errorf("incorrect mode flags: run=%s build=%s", fast, small)
 		}
@@ -107,8 +107,8 @@ func TestBuildModes(t *testing.T) {
 			t.Errorf("run should use ordinary cached Go compilation: %s", fast)
 		}
 	}
-	if fast != "build -o app ./cmd/app" || small != "build -o app -trimpath -ldflags -s -w ./cmd/app" {
-		t.Fatalf("unexpected framework-specific build flags: run=%s build=%s", fast, small)
+	if fast != "build -o app ./cmd/app" || small != "build -o app -trimpath -ldflags -s -w -X github.com/egoist/mygo.production=1 ./cmd/app" {
+		t.Fatalf("unexpected build flags: run=%s build=%s", fast, small)
 	}
 }
 
