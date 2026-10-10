@@ -32,3 +32,7 @@ The 16 KiB overview and 24 KiB subject budgets are ceilings, not targets. Remove
 Follow [development checks](docs/build.md#development-checks): format, test, race-check, vet and build. Interface changes need target-platform native review, not just headless tests. Do not launch external terminals or Agents as a substitute.
 
 For documentation, verify size budgets, Subjects coverage, relative links and heading anchors, and changelog structure. Run `git diff --check` from the repository root. Do not commit, tag, publish or push without explicit authorization.
+
+## Release requests
+
+An explicit request to publish a named version authorizes the preparation, release commit, annotated tag and pushes described in [Authorized publication](docs/build.md#authorized-publication); execute that workflow without asking again for each step. Requests to prepare a release, edit documentation or record the release rules do not authorize publication. Pushing the release tag also authorizes the [tag-triggered workflow](.github/workflows/release.yml) to create its GitHub Release page. Application archives require separate inclusion in the requested scope.

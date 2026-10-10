@@ -12,7 +12,7 @@ Applications own business state, localized text, actions and page selection. The
 
 Components read the frame theme and style their own elements; they must not call `Context.SetTheme`, which also resets the window root's appearance. Only application-level theme installation owns that operation. Collection controls compose their own rows and component-level selection/navigation on MyGo's input and focus APIs. Virtualized collections reuse non-selecting MyGo list and grid containers for scrolling and layout, rather than copying its layout engine or overriding its styled row theme. Their application-owned state is defined in the [collection API](../../source/components/list.go). Public role, selection, level and active-descendant metadata describe the rows, but this composition does not claim full parity with MyGo's private collection accessibility actions; native assistive-technology review is still required.
 
-For basic usage, see the [README](../../README.md#basic-usage); public contracts and defaults belong to the [API source](../../source/shells/sidebar/shell.go).
+For basic usage, see the [README](../../README.md#getting-started); public contracts and defaults belong to the [API source](../../source/shells/sidebar/shell.go).
 
 ## Plugin composition
 

@@ -127,7 +127,7 @@ GOWORK=off go build -o ../dist/onevra-gallery ./examples/gallery
 (cd .. && git diff --check)
 ```
 
-The [CI workflow](../.github/workflows/ci.yml) runs formatting, module verification, tests, race checks, vet, builds and an independent consumer build on macOS, Windows and Linux. It does not publish or exercise desktop interaction. A successful cross-build or CI run is not native platform acceptance.
+Run checks locally before submitting changes. The only [GitHub Actions workflow](../.github/workflows/release.yml) creates a Release when a version tag is pushed; it runs no builds or tests. A successful cross-build is not native platform acceptance.
 
 The formatting check should produce no output. Use a `.exe` output suffix on Windows. `GOWORK=off` checks that the module works independently of external workspaces.
 
@@ -191,9 +191,16 @@ Before an authorized release:
 
 ### Authorized publication
 
-Commit, tag, push and publication require explicit authorization. CI performs checks only; there is no automated publishing workflow.
+A request such as “publish 0.2026.1” authorizes the complete module release workflow below, including the necessary release commit, tag and pushes. Do not ask separately for each authorized step. Preparing a release or recording these rules is not a request to publish. The [release workflow](../.github/workflows/release.yml) creates the GitHub Release page after the version tag is pushed.
 
-After authorization, make the intended repository content public, push the reviewed release commit and its annotated `source/v0.2026.1` tag, and create a GitHub Release with the matching changelog and verified platform limitations. A GitHub Release is for release notes and optional Gallery downloads; Go resolves the module from the repository tag.
+1. Complete release preparation, update the changelog and both READMEs to reflect the requested release, and verify the intended branch, commit scope and GitHub remote. Confirm the repository is publicly readable; changing repository visibility is a separate action requiring explicit authorization.
+2. Commit the reviewed release changes if needed, preserving unrelated work, and push the release commit to the intended branch. If the intended destination is ambiguous, resolve it before pushing.
+3. Create an annotated tag on that exact commit using `source/v<VERSION>` and push that specific tag. For `0.2026.1`, use `source/v0.2026.1`, never a root-level `v0.2026.1` or `source/0.2026.1`. Do not force-push or replace an existing version tag; if it already identifies the intended published commit, proceed to verification.
+4. Check that the tag-triggered GitHub Release workflow succeeds, verify public module retrieval and build an independent consumer as described below. Report the commit, tag, Release URL, download result and any remaining indexing or native-verification gaps.
+
+Use the requested version without `v` in human-facing titles and application metadata, and with `v` in Go module commands. The public source commit and tag are the module release; no package upload is needed. The tag push automatically creates the GitHub Release page. Distribute Gallery archives only when requested; they are not required for the module release.
+
+The workflow runs one Ubuntu job only for tags matching `source/v*`, validates `0.YEAR.SEQUENCE`, and uses the version without `v` as the Release title. It extracts notes from exactly one nonempty `## [VERSION]` section in the tagged commit's `CHANGELOG.md` (an optional date suffix is supported). Move shipping notes out of `Unreleased` before tagging; missing or empty version notes fail the job. Existing Releases are left unchanged on reruns. The workflow uses GitHub's built-in token with `contents: write`, needs no additional secret, and does not build or upload application archives. Ensure GitHub Actions is enabled and this workflow is included in the tagged commit. If creation fails after the tag is public, fix the cause and rerun the failed job without moving the tag; the Go module is already published independently of the Release page.
 
 Once the tag is public, run the following from a fresh consumer module without workspace overrides or local replacements:
 

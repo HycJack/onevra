@@ -1,0 +1,62 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'source/v*'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="$GITHUB_REF_NAME"
+          version="${tag#source/v}"
+          export RELEASE_VERSION="$version"
+          notes="$RUNNER_TEMP/onevra-release-notes.md"
+
+          python3 - <<'PY'
+          import os
+          import re
+          from pathlib import Path
+
+          version = os.environ["RELEASE_VERSION"]
+          if not re.fullmatch(r"0\.[0-9]{4}\.[1-9][0-9]*", version):
+              raise SystemExit("Expected a source/v0.YEAR.SEQUENCE tag.")
+          text = Path("CHANGELOG.md").read_text(encoding="utf-8")
+          heading = re.compile(r"^## \[" + re.escape(version) + r"\](?:[ \t]+-.*)?[ \t]*$", re.MULTILINE)
+          matches = list(heading.finditer(text))
+          if len(matches) != 1:
+              raise SystemExit(f"Expected exactly one CHANGELOG section for {version}.")
+          remainder = text[matches[0].end():]
+          notes = re.split(r"^## ", remainder, maxsplit=1, flags=re.MULTILINE)[0].strip()
+          if not notes:
+              raise SystemExit(f"CHANGELOG section for {version} is empty.")
+          Path(os.environ["RUNNER_TEMP"], "onevra-release-notes.md").write_text(notes + "\n", encoding="utf-8")
+          PY
+
+          if gh release view "$tag" --json url --jq .url; then
+            echo "Release already exists; leaving it unchanged."
+            exit 0
+          fi
+          gh release create "$tag" \
+            --verify-tag \
+            --title "$version" \
+            --notes-file "$notes"
