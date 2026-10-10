@@ -9,18 +9,12 @@ User-facing updates for Onevra library consumers.
 
 ## [0.2026.2] - 2026-10-11
 
-No application archives are included.
-
-Native verification is incomplete: Windows and Linux still require desktop review, and complete keyboard, input-method and accessibility acceptance is not established.
-
 - Let settings groups place application actions, such as a refresh button, at the end of their header row.
 - Require MyGo 0.4.0. Popover elements report Escape or outside-press dismissal through `Dismissed`, and Select popups now keep their wheel scroll position while revealing options reached with the keyboard.
 
 ## [0.2026.1] - 2026-10-10
 
-Initial experimental release. No application archives are included.
-
-Native verification is incomplete: Windows and Linux still require desktop review, and complete keyboard, input-method and accessibility acceptance is not established.
+Initial experimental release.
 
 - Add themed controls for editing, selection, navigation, virtualized collections and layout, with application-supplied localization.
 - Add composable popovers, dialogs and settings surfaces with application-owned state and actions.
