@@ -506,8 +506,11 @@ type composerEnterKey struct{}
 // attaching them remains application work.
 type ComposerResult struct {
 	Root, Input ui.Element
-	Send, Stop  bool
-	Dropped     []string
+	// Card is the editor surface, excluding Footer. Hosts may style its
+	// background or material without changing the frame theme.
+	Card       ui.Element
+	Send, Stop bool
+	Dropped    []string
 }
 
 // Composer builds a multiline editor card with send/stop and an accessory row.
@@ -549,6 +552,7 @@ func Composer(c *ui.Context, draft *string, options ComposerOptions) ComposerRes
 				}
 			})
 		})
+		result.Card = card
 		// The multiline editor inserts a newline for Enter before shortcuts
 		// see it, so take plain Enter as it arrives. Composition keeps its own
 		// Enter; Shift+Enter still reaches the editor.

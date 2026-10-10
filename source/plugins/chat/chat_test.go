@@ -154,33 +154,45 @@ func TestConversationFollowAndJump(t *testing.T) {
 }
 
 func TestConversationExpansionKeepsHeaderAndComposer(t *testing.T) {
-	var scroll ConversationState
-	var state TurnState
-	draft := ""
-	tt := ui.NewTester(func(c *ui.Context) {
-		ui.Column(c).Fill().Children(func() {
-			Conversation(c, &scroll, "Latest", func(c *ui.Context) {
-				Turn(c, &state, TurnOptions{ID: "turn", Summary: "Details", Status: Completed,
-					Steps: []Step{{ID: "large", Message: func(c *ui.Context) { ui.Box(c).Height(1500).Shrink(0) }}},
-					Final: func(c *ui.Context) { components.Text(c, "Answer") }})
-			})
-			Composer(c, &draft, ComposerOptions{Label: "Draft", SendLabel: "Send"})
+	for _, floating := range []bool{false, true} {
+		t.Run(fmt.Sprintf("floating=%v", floating), func(t *testing.T) {
+			var scroll ConversationState
+			var layout FloatingConversationState
+			var state TurnState
+			draft := ""
+			tt := ui.NewTester(func(c *ui.Context) {
+				content := func(c *ui.Context) {
+					Turn(c, &state, TurnOptions{ID: "turn", Summary: "Details", Status: Completed,
+						Steps: []Step{{ID: "large", Message: func(c *ui.Context) { ui.Box(c).Height(1500).Shrink(0) }}},
+						Final: func(c *ui.Context) { components.Text(c, "Answer") }})
+				}
+				ui.Column(c).Fill().Children(func() {
+					if floating {
+						FloatingConversation(c, &layout, &scroll, "Latest", content, func(c *ui.Context) {
+							GlassComposer(c, &layout, &draft, ComposerOptions{Label: "Draft", SendLabel: "Send"})
+						})
+					} else {
+						Conversation(c, &scroll, "Latest", content)
+						Composer(c, &draft, ComposerOptions{Label: "Draft", SendLabel: "Send"})
+					}
+				})
+			}, 360, 500)
+			before, _ := tt.Find("Details")
+			if err := tt.Click("Details"); err != nil {
+				t.Fatal(err)
+			}
+			after, _ := tt.Find("Details")
+			if before.Y != after.Y {
+				t.Fatalf("disclosure moved from %v to %v; scroll=%+v texts=%v", before.Y, after.Y, scroll.Scroll, tt.Texts())
+			}
+			send, ok := tt.Find("Send")
+			if !ok || send.Y+send.H > 500 {
+				t.Fatalf("composer pushed out of viewport: %+v", send)
+			}
+			if scroll.Scroll.MaxY <= 0 || scroll.AtLatest() {
+				t.Fatal("expansion did not pause follow")
+			}
 		})
-	}, 360, 500)
-	before, _ := tt.Find("Details")
-	if err := tt.Click("Details"); err != nil {
-		t.Fatal(err)
-	}
-	after, _ := tt.Find("Details")
-	if before.Y != after.Y {
-		t.Fatalf("disclosure moved from %v to %v; scroll=%+v texts=%v", before.Y, after.Y, scroll.Scroll, tt.Texts())
-	}
-	send, ok := tt.Find("Send")
-	if !ok || send.Y+send.H > 500 {
-		t.Fatalf("composer pushed out of viewport: %+v", send)
-	}
-	if scroll.Scroll.MaxY <= 0 || scroll.AtLatest() {
-		t.Fatal("expansion did not pause follow")
 	}
 }
 
@@ -206,55 +218,66 @@ func BenchmarkCompletedTurn(b *testing.B) {
 }
 
 func TestComposerSubmitOnEnterAndSteering(t *testing.T) {
-	draft := ""
-	sends, stops := 0, 0
-	running := false
-	tt := ui.NewTester(func(c *ui.Context) {
-		p := Composer(c, &draft, ComposerOptions{Label: "Message", SendLabel: "Send", StopLabel: "Stop",
-			Running: running})
-		if p.Send {
-			sends++
-		}
-		if p.Stop {
-			stops++
-		}
-	}, 400, 240)
-	tt.Click("Message")
-	tt.Key(0, ui.KeyEnter)
-	if sends != 0 {
-		t.Fatal("empty draft sent")
-	}
-	tt.Compose("ni", 2)
-	tt.Key(0, ui.KeyEnter)
-	if sends != 0 {
-		t.Fatal("composition sent")
-	}
-	tt.Type("你")
-	lines := strings.Count(draft, "\n")
-	tt.Key(ui.Shift, ui.KeyEnter)
-	tt.Type("b")
-	if sends != 0 || strings.Count(draft, "\n") != lines+1 {
-		t.Fatalf("shift+enter: sends=%d draft=%q", sends, draft)
-	}
-	before := draft
-	tt.Key(0, ui.KeyEnter)
-	if sends != 1 || draft != before {
-		t.Fatalf("enter: sends=%d draft=%q", sends, draft)
-	}
-	running = true
-	tt.Frame()
-	if !tt.HasText("Stop") && tt.Click("Stop") != nil {
-		t.Fatal("stop missing")
-	}
-	if err := tt.Click("Send"); err != nil || sends != 2 {
-		t.Fatalf("steer send unavailable: %v %d", err, sends)
-	}
-	draft = ""
-	tt.Frame()
-	if _, ok := tt.Find("Send"); ok {
-		t.Fatal("send shown for an empty draft while running")
-	}
-	if err := tt.Click("Stop"); err != nil || stops != 1 {
-		t.Fatal("stop failed")
+	for _, glass := range []bool{false, true} {
+		t.Run(fmt.Sprintf("glass=%v", glass), func(t *testing.T) {
+			composer := Composer
+			if glass {
+				composer = func(c *ui.Context, draft *string, options ComposerOptions) ComposerResult {
+					return GlassComposer(c, nil, draft, options)
+				}
+			}
+			draft := ""
+			sends, stops := 0, 0
+			running := false
+			tt := ui.NewTester(func(c *ui.Context) {
+				p := composer(c, &draft, ComposerOptions{Label: "Message", SendLabel: "Send", StopLabel: "Stop",
+					Running: running})
+				if p.Send {
+					sends++
+				}
+				if p.Stop {
+					stops++
+				}
+			}, 400, 240)
+			tt.Click("Message")
+			tt.Key(0, ui.KeyEnter)
+			if sends != 0 {
+				t.Fatal("empty draft sent")
+			}
+			tt.Compose("ni", 2)
+			tt.Key(0, ui.KeyEnter)
+			if sends != 0 {
+				t.Fatal("composition sent")
+			}
+			tt.Type("你")
+			lines := strings.Count(draft, "\n")
+			tt.Key(ui.Shift, ui.KeyEnter)
+			tt.Type("b")
+			if sends != 0 || strings.Count(draft, "\n") != lines+1 {
+				t.Fatalf("shift+enter: sends=%d draft=%q", sends, draft)
+			}
+			before := draft
+			tt.Key(0, ui.KeyEnter)
+			if sends != 1 || draft != before {
+				t.Fatalf("enter: sends=%d draft=%q", sends, draft)
+			}
+			running = true
+			tt.Frame()
+			if !tt.HasText("Stop") && tt.Click("Stop") != nil {
+				t.Fatal("stop missing")
+			}
+			if err := tt.Click("Send"); err != nil || sends != 2 {
+				t.Fatalf("steer send unavailable: %v %d", err, sends)
+			}
+			draft = ""
+			tt.Frame()
+			if _, ok := tt.Find("Send"); ok {
+				t.Fatal("send shown for an empty draft while running")
+			}
+			if err := tt.Click("Stop"); err != nil || stops != 1 {
+				t.Fatal("stop failed")
+			}
+
+		})
 	}
 }

@@ -30,6 +30,7 @@ type chatDemoTurn struct {
 
 type chatDemoState struct {
 	conversation  chat.ConversationState
+	layout        chat.FloatingConversationState
 	turns         []*chatDemoTurn
 	draft         string
 	model, effort string
@@ -76,7 +77,7 @@ func controlChat(c *ui.Context, state *controlState, _ string) {
 		ui.Row(c).FillWidth().Shrink(0).Wrap().AlignItems(ui.Center).Gap(t.Space(2)).Padding(0, t.Space(4)).Children(func() {
 			components.Text(c, tr(c, "gallery.chat")).Bold().Grow(1)
 		})
-		chat.Conversation(c, &s.conversation, tr(c, "gallery.chat_latest"), func(c *ui.Context) {
+		chat.FloatingConversation(c, &s.layout, &s.conversation, tr(c, "gallery.chat_latest"), func(c *ui.Context) {
 			for _, turn := range s.turns {
 				toolA, toolB := chat.Running, chat.Running
 				if turn.step >= 3 {
@@ -139,9 +140,8 @@ func controlChat(c *ui.Context, state *controlState, _ string) {
 					}, HoldOpen: !s.conversation.AtLatest(),
 				})
 			}
-		})
-		ui.Column(c).FillWidth().Shrink(0).MinWidth(0).Padding(0, t.Space(4), t.Space(4)).Children(func() {
-			chat.Composer(c, &s.draft, chat.ComposerOptions{
+		}, func(c *ui.Context) {
+			chat.GlassComposer(c, &s.layout, &s.draft, chat.ComposerOptions{
 				Label: tr(c, "gallery.chat_message"), Placeholder: tr(c, "gallery.chat_placeholder"),
 				SendLabel: tr(c, "gallery.chat_send"), StopLabel: tr(c, "gallery.chat_stop"),
 				Accessory: func(c *ui.Context) { chatDemoToolbar(c, s) },
