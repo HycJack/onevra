@@ -552,8 +552,12 @@ func Composer(c *ui.Context, draft *string, options ComposerOptions) ComposerRes
 			if options.Attachments != nil {
 				ui.Row(c).Key("attachments").FillWidth().Wrap().Gap(6).Padding(0, 10, 6, 10).Children(func() { options.Attachments(c) })
 			}
-			result.Input = components.TextBox(c.Key("input"), draft, components.TextBoxOptions{Multiline: true}).OnPaste(options.OnPaste).FillWidth().Lines(1, 10).MinHeight(40).
+			result.Input = components.TextBox(c.Key("input"), draft, components.TextBoxOptions{Multiline: true}).FillWidth().Lines(1, 10).MinHeight(40).
 				Label(options.Label).Placeholder(options.Placeholder).Border(0, ui.Color{}).Background(ui.Color{}).Padding(2, 14, 0, 14).FontSize(13.5)
+			// MyGo's OnPaste wraps fn without a nil check, so attach only a real hook.
+			if options.OnPaste != nil {
+				result.Input.OnPaste(options.OnPaste)
+			}
 			ui.Row(c).FillWidth().MinWidth(0).Margin(8, 0, 0, 0).Padding(0, 10).AlignItems(ui.Center).Gap(4).Children(func() {
 				ui.Row(c).Grow(1).MinWidth(0).AlignItems(ui.Center).Gap(4).Children(func() {
 					if options.Accessory != nil {

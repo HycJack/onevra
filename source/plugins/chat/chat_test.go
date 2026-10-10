@@ -237,6 +237,21 @@ func TestComposerSendVisibleWithoutInverse(t *testing.T) {
 	}
 }
 
+// OnPaste is optional: pasting text without a hook inserts it normally.
+func TestComposerPasteWithoutHook(t *testing.T) {
+	draft := ""
+	tt := ui.NewTester(func(c *ui.Context) {
+		Composer(c, &draft, ComposerOptions{Label: "Message", SendLabel: "Send", StopLabel: "Stop"})
+	}, 400, 160)
+	tt.Click("Message")
+	tt.SetClipboard("pasted")
+	tt.Command("paste")
+	tt.Frame()
+	if draft != "pasted" {
+		t.Fatalf("draft = %q", draft)
+	}
+}
+
 func TestComposerSubmitOnEnterAndSteering(t *testing.T) {
 	for _, glass := range []bool{false, true} {
 		t.Run(fmt.Sprintf("glass=%v", glass), func(t *testing.T) {

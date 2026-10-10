@@ -5,6 +5,7 @@ User-facing updates for Onevra library consumers.
 ## [Unreleased]
 
 - Paint the composer's Send button in themes that leave `Inverse` unset, including Onevra's palettes; it previously reserved space beside Stop without being drawn.
+- Stop the composer from crashing on paste when no `OnPaste` hook is supplied.
 
 ## [0.2026.2] - 2026-10-11
 
