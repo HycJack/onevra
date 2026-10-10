@@ -29,6 +29,10 @@ type ShellOptions struct {
 	// a title, breadcrumbs or actions; nil leaves it blank. Shell clips it to
 	// the room after the sidebar control and hides it on replacement pages.
 	ContentTitle func(*ui.Context)
+	// LeftHeader builds trailing actions beside the sidebar toggle, within the
+	// expanded sidebar's header. It is clipped to the available safe area and
+	// omitted while collapsed, animating, or showing a replacement page.
+	LeftHeader func(*ui.Context)
 	// LeftToolbar builds a fixed bottom toolbar beneath Left; nil omits it.
 	// Use IconButton for actions and ui.Spacer for trailing alignment.
 	LeftToolbar func(*ui.Context)
@@ -309,6 +313,14 @@ func (s *Shell) build(c *ui.Context) {
 				// Align the title with the main surface, but keep it beyond the
 				// leading toggle when the sidebar is narrow or collapsed.
 				titleInset := max(8, leftWidth*leftProgress+16-leftInset-max(32, c.Theme().Rem(2)))
+				if s.options.LeftHeader != nil && s.leftOpen && leftProgress == 1 && titleInset > 24 {
+					ui.Row(c).Key("left-header").Width(titleInset - 24).Shrink(0).FillHeight().
+						AlignItems(ui.Center).Clip().Children(func() {
+						ui.Spacer(c)
+						s.options.LeftHeader(c)
+					})
+					titleInset = 24
+				}
 				ui.Row(c).Grow(1).MinWidth(0).FillHeight().Clip().Padding(0, 8, 0, titleInset).Children(func() {
 					if s.options.ContentTitle != nil {
 						s.options.ContentTitle(c)
