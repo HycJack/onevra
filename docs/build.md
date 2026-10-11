@@ -51,6 +51,26 @@ On macOS, the gallery's Terminal page requires macOS 13 or later. Packer verifie
 
 For an unpackaged run on any supported desktop, use `go run ./examples/gallery -theme dark`.
 
+### Additional macOS metadata
+
+Use `macos.infoPlist` for application-owned Info.plist entries, including permission usage descriptions:
+
+```yaml
+macos:
+  minimumSystemVersion: "13.0"
+  infoPlist:
+    NSMicrophoneUsageDescription: >-
+      Records your voice when you start recording.
+```
+
+Both `run` and `build` merge these entries before signing. The development bundle retains its separate name and identifier; retained release apps, ZIPs and DMGs use the same signed bundle.
+
+The mapping accepts strings, booleans, 64-bit signed or unsigned integers, finite double-precision reals, arrays and string-keyed dictionaries, including nested combinations. Types are preserved: `1` is an integer, `1.0` is a real, and `"1"` is a string. Omit the mapping or use `{}` for no extensions. Nulls, duplicate or non-string keys, dates, binary values, custom YAML tags, aliases and merge keys are rejected. Quote date-like text when it should be a string. Strings and keys must be valid XML text.
+
+Packer reserves its generated bundle metadata, including names, identifier, versions, executable, minimum system version and icon fields. Configure those through the existing fields instead. Extension keys that conflict with generated bundle or icon-compiler metadata fail even if their values match; dictionaries are not merged into protected entries. Known conflicts and invalid values fail during configuration loading, with a key path and line number. Additional icon-compiler conflicts fail after icon compilation, before Go compilation. Unknown fields outside `infoPlist` remain errors, and configuration validation applies on every target; the entries are only emitted on macOS. See the [configuration](../source/tools/packer/main.go) and [metadata validation](../source/tools/packer/plist.go) for the supported contract.
+
+A usage description explains an application's request; it does not grant system authorization. The application still owns permission requests and their lifecycle. Packer does not add entitlements or request microphone or accessibility access.
+
 ### Application-owned native libraries
 
 Place compiled libraries in a `runtimes/` directory beside `packer.yaml`, grouped by `GOOS/GOARCH`. No YAML declaration is needed:
@@ -68,7 +88,7 @@ Packer copies the files directly inside the selected target's directory, retaini
 
 Both `run` and `build` use this convention and sign staged macOS copies before signing the app and creating archives; source files are not modified. Runtime files supplement plugin manifests, not override them. Keep these libraries separate from `resources/`, which is copied as application payload, and compile them with the application's own toolchain before invoking Packer.
 
-The application owns architecture compatibility, library discovery and transitive dependencies. Packer does not compile native sources, inspect or rewrite loader paths, or recursively collect linked libraries; explicitly include any non-system dependencies and link them for the packaged layout. Copying a library does not add permission descriptions or entitlements, such as those needed for microphone access.
+The application owns architecture compatibility, library discovery and transitive dependencies. Packer does not compile native sources, inspect or rewrite loader paths, or recursively collect linked libraries; explicitly include any non-system dependencies and link them for the packaged layout. Copying a library does not add permission descriptions; declare those separately through [macOS metadata](#additional-macos-metadata).
 
 ## Starter applications
 

@@ -28,8 +28,9 @@ type config struct {
 	OpenReleases     bool     `yaml:"openReleases"`     // Open the current version's release directory after a successful build; defaults to true.
 	KeepUncompressed bool     `yaml:"keepUncompressed"` // Retain the release app for the host OS/architecture beside its archives; defaults to true.
 	MacOS            struct {
-		Icon                 string `yaml:"icon"` // ICNS file or an Icon Composer .icon directory.
-		MinimumSystemVersion string `yaml:"minimumSystemVersion"`
+		Icon                 string    `yaml:"icon"` // ICNS file or an Icon Composer .icon directory.
+		MinimumSystemVersion string    `yaml:"minimumSystemVersion"`
+		InfoPlist            yaml.Node `yaml:"infoPlist"` // Additional typed metadata; generated bundle and icon keys are reserved.
 	} `yaml:"macos"`
 	Windows struct {
 		Icon string `yaml:"icon"` // ICO embedded into the executable.
@@ -149,6 +150,9 @@ func loadConfig(path string) (*config, error) {
 		return nil, err
 	}
 	if err := c.validateIcons(); err != nil {
+		return nil, err
+	}
+	if _, err := c.macOSInfo(nil); err != nil {
 		return nil, err
 	}
 	return c, nil

@@ -73,7 +73,8 @@ identifier: me.oneo.localfixture
 out: dist
 openReleases: false
 platforms: [darwin/%s/zip]
-`, runtime.GOARCH))
+macos:%s
+`, runtime.GOARCH, testInfoPlistConfig))
 	c, err := loadConfig(file)
 	if err != nil {
 		t.Fatal(err)
@@ -91,6 +92,7 @@ platforms: [darwin/%s/zip]
 	}
 	devApp := filepath.Join(c.path(c.Out), c.Name+" Dev.app")
 	for _, app := range []string{filepath.Join(c.releaseDir(), c.Name+".app"), filepath.Join(extracted, c.Name+".app"), devApp} {
+		assertUsageDescription(t, app)
 		bundled := filepath.Join(app, "Contents", "Frameworks", "libaudio.dylib")
 		for _, path := range []string{bundled, app} {
 			if _, err := command(ctx, "codesign", "--verify", "--deep", "--strict", path); err != nil {
@@ -100,6 +102,9 @@ platforms: [darwin/%s/zip]
 		if _, err := command(ctx, loader, bundled); err != nil {
 			t.Fatalf("load bundled Swift library: %v", err)
 		}
+	}
+	if _, err := command(ctx, "diff", "-r", filepath.Join(c.releaseDir(), c.Name+".app"), filepath.Join(extracted, c.Name+".app")); err != nil {
+		t.Fatalf("retained native app differs from ZIP: %v", err)
 	}
 	if data, err := os.ReadFile(library); err != nil || !bytes.Equal(data, original) {
 		t.Fatalf("packaging changed the application-owned library: %v", err)

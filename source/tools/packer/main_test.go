@@ -154,7 +154,7 @@ func main() { if path := os.Getenv("PACKER_TEST_MARKER"); path != "" { if err :=
 identifier: "me.oneo.fixture"
 out: "dist"
 macos:
-  icon: "icon.icns"`)
+  icon: "icon.icns"`+testInfoPlistConfig)
 	put(t, filepath.Join(root, "icon.icns"), string(testICNS(t)))
 	c, err := loadConfig(file)
 	if err != nil {
@@ -182,6 +182,15 @@ macos:
 		t.Fatal(err)
 	}
 	app := filepath.Join(extracted, c.Name+".app")
+	for _, bundle := range []string{retainedApp, app} {
+		assertUsageDescription(t, bundle)
+		if _, err := command(ctx, "codesign", "--verify", "--deep", "--strict", bundle); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if _, err := command(ctx, "diff", "-r", retainedApp, app); err != nil {
+		t.Fatalf("retained app differs from ZIP: %v", err)
+	}
 	if data, err := os.ReadFile(filepath.Join(app, "Contents", "Resources", "nested", "payload.txt")); err != nil || string(data) != "bundled payload" {
 		t.Fatalf("archive payload: %q, %v", data, err)
 	}
@@ -261,6 +270,10 @@ end run`, mount, c.Name+".app")
 	}
 	if _, err := command(ctx, "codesign", "--verify", "--deep", "--strict", filepath.Join(mount, c.Name+".app")); err != nil {
 		t.Fatal(err)
+	}
+	assertUsageDescription(t, filepath.Join(mount, c.Name+".app"))
+	if _, err := command(ctx, "diff", "-r", retainedApp, filepath.Join(mount, c.Name+".app")); err != nil {
+		t.Fatalf("retained app differs from DMG: %v", err)
 	}
 	t.Run("dmg-only", func(t *testing.T) {
 		only := *c
@@ -348,6 +361,10 @@ end run`, mount, c.Name+".app")
 		t.Fatal("run did not launch the configured application")
 	}
 	devApp := filepath.Join(c.path(c.Out), c.Name+" Dev.app")
+	assertUsageDescription(t, devApp)
+	if _, err := command(ctx, "codesign", "--verify", "--deep", "--strict", devApp); err != nil {
+		t.Fatal(err)
+	}
 	data, err = command(ctx, "plutil", "-convert", "json", "-o", "-", filepath.Join(devApp, "Contents", "Info.plist"))
 	if err != nil {
 		t.Fatal(err)
@@ -364,6 +381,7 @@ end run`, mount, c.Name+".app")
 	if err != nil {
 		t.Fatal(err)
 	}
+	assertUsageDescription(t, composerApp)
 	data, err = command(ctx, "plutil", "-convert", "json", "-o", "-", filepath.Join(composerApp, "Contents", "Info.plist"))
 	if err != nil {
 		t.Fatal(err)

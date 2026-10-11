@@ -59,6 +59,8 @@ macos:
 
 Formats are `dmg` or `zip` on macOS, `zip` on Windows and `tar.gz` on Linux; without one, macOS produces both DMG and ZIP. `openReleases: false` keeps a build from opening the release folder, as CI and headless sessions need. `keepUncompressed: false` keeps only archives. The supported fields are the `config` type in `tools/packer/main.go` of the Onevra module.
 
+Declare macOS usage descriptions and other application-owned metadata in `macos.infoPlist`; Packer writes it before signing in both modes. Generated bundle and icon fields are protected. The mapping preserves scalar and nested collection types; see the [metadata contract](https://github.com/oneo-me/onevra/blob/main/docs/build.md#additional-macos-metadata) for accepted values and conflicts. Applications still own runtime authorization; adding a usage description does not grant permission.
+
 ## Commands
 
 Install once, then run beside `packer.yaml`:

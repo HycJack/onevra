@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Add typed macOS Info.plist extensions through Packer configuration, including usage descriptions in development and release bundles before signing.
+
 - Fix the floating conversation's scroll-to-latest button to follow the theme background and text colors in dark mode.
 
 ## [0.2026.5] - 2026-10-11

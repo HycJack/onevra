@@ -42,11 +42,12 @@ func build(ctx context.Context, c *config, out string, production bool, t target
 	if err != nil {
 		return "", err
 	}
-	if err := copyResources(c.path("resources"), resources, c.iconSources()...); err != nil {
+	info, err = c.macOSInfo(info)
+	if err != nil {
 		return "", err
 	}
-	for k, v := range c.bundleInfo() {
-		info[k] = v
+	if err := copyResources(c.path("resources"), resources, c.iconSources()...); err != nil {
+		return "", err
 	}
 	if err := writePlist(ctx, filepath.Join(contents, "Info.plist"), info); err != nil {
 		return "", err
