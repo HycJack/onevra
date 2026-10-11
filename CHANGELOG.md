@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Add ordinary and virtualized tables with macOS-style alternating row stripes and neutral, hover-free row selection. Users can sort by sortable columns, resize and reorder columns from the header; applications retain the sort order, persistable column layout and row data, and columns wider than a virtualized table scroll sideways with their header.
+
 - Let Packer automatically include native libraries from target-specific `runtimes/` directories in development apps and release archives, with macOS signing.
 
 - Let applications place compact controls immediately before Send or Stop through the composer's trailing slot.

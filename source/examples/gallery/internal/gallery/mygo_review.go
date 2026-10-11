@@ -46,7 +46,7 @@ var mygoHandled = map[string]mygoDecision{
 	"Fieldset":         {Reason: "No Onevra Fieldset component is needed"},
 	"FindBar":          {Reason: "No Onevra FindBar component is needed"},
 	"Toolbar":          {Reason: "No Onevra Toolbar component is needed"},
-	"Table":            {Reason: "No Onevra Table component is needed"},
+	"Table":            {Replacement: "components.TableVirtualized", Reason: "Onevra ordinary or virtualized table with neutral selection, no hover face and application-owned sorting"},
 	"OutlineTable":     {Reason: "No Onevra OutlineTable component is needed"},
 	"TokenField":       {Reason: "No Onevra TokenField component is needed"},
 	"Scroll":           {Replacement: "components.ScrollView", Reason: "Unified scroll container with vertical scrolling by default"},

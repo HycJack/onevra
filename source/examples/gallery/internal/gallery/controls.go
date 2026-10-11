@@ -18,6 +18,9 @@ type controlState struct {
 	chat                   *chatDemoState
 	dialogOpen, nestedOpen bool
 	tree                   components.TreeVirtualizedState[string]
+	table                  components.TableVirtualizedState
+	tableSort              ui.SortOrder
+	tableRows              []int
 	list                   components.ListState
 	grid                   components.GridState
 	on                     bool
@@ -81,6 +84,7 @@ var controlCatalog = []controlExample{
 	{"List", "List", "Content display", []string{"Default"}, controlList},
 	{"GridView", "GridView", "Content display", []string{"Default"}, controlGridView},
 	{"Tree", "Tree", "Content display", []string{"Tree", "TreeVirtualized"}, controlTree},
+	{"Table", "Table", "Content display", []string{"Table", "TableVirtualized"}, controlTable},
 	{"Sidebar", "Sidebar", "Actions & navigation", []string{"Default"}, controlSidebar},
 	{"PixelGrid", "PixelGrid", "Layout & containers", []string{"Uniform", "Major lines"}, controlPixelGrid},
 	{"Split", "Split panes", "Layout & containers", []string{"Horizontal", "Vertical"}, controlSplit},
@@ -163,7 +167,7 @@ func (g *Gallery) controlsLocalized(c *ui.Context, example controlExample) {
 				})
 				return
 			}
-			if example.name == "Button" || example.name == "Selection" || example.name == "Progress" || example.name == "Tree" {
+			if example.name == "Button" || example.name == "Selection" || example.name == "Progress" || example.name == "Tree" || example.name == "Table" {
 				for _, variant := range example.variants {
 					g.controlSection(c, variant, func() {
 						example.build(c, g.controlState(example.name, variant), variant)

@@ -64,7 +64,7 @@ Use Onevra's control whenever one exists; it replaces MyGo's styled widget of th
 | Checkbox, switch, radio, toggle | `components.Checkbox`, `Switch`, `Radio`, `ToggleButton` |
 | Select, combobox, autocomplete | `components.Select` (searchable), `components.NativeSelect` |
 | Number, slider, date, time, color | `NumberInput`, `Slider`, `Calendar`/`CalendarPicker`, `TimePicker`, `ColorPicker`/`ColorView` |
-| Scroll, list, grid, tree, outline | `ScrollView`, `List`, `GridView`, `Tree`, `TreeVirtualized` |
+| Scroll, list, grid, tree, outline, table | `ScrollView`, `List`, `GridView`, `Tree`, `TreeVirtualized`, `Table`, `TableVirtualized` |
 | Tabs, accordion, collapsible, split, breadcrumbs, sidebar | The Onevra component of the same name |
 | Modal, alert, popover, tooltip | `Dialog`, `AlertDialog`, `Popover`, `Tooltip` |
 | Progress, spinner, badge, rating, icon, image | The Onevra component of the same name; icons from `icons/lucide` |
@@ -75,7 +75,7 @@ Use MyGo directly for:
 - Layout primitives: `ui.Box`, `Column`, `Row`, `Spacer`, `Grid`, `Overlay`, and `ui.Textf` for formatted display text.
 - Native menus and context menus, `Flyout`, `WebView`, and every MyGo plugin, including Glass. Do not write Onevra-style replacements.
 - MyGo's unstyled bases when building a new reusable control.
-- A MyGo widget with no Onevra equivalent. Onevra intentionally omits Toast, Divider, Avatar, Meter, Form, Field, Toolbar, Table, Segmented and TokenField: prefer contextual feedback over toasts and compose dividers from Box or borders before reaching for the upstream widget.
+- A MyGo widget with no Onevra equivalent. Onevra intentionally omits Toast, Divider, Avatar, Meter, Form, Field, Toolbar, OutlineTable, Segmented and TokenField: prefer contextual feedback over toasts and compose dividers from Box or borders before reaching for the upstream widget.
 
 The authoritative replacement and exclusion map, with reasons, is `examples/gallery/internal/gallery/mygo_review.go` in the Onevra module.
 

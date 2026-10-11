@@ -77,6 +77,10 @@ func captureCatalog(t *testing.T, controls bool) {
 					s.tree.Open.Add("source")
 					s.index = 1
 				}
+				if controls && example.name == "Table" {
+					g.controlState("Table", "Table").choice = "main.go"
+					g.controlState("Table", "TableVirtualized").index = 1
+				}
 				win.Invalidate()
 			})
 			if example.name == "Terminal" {
@@ -96,7 +100,7 @@ func captureCatalog(t *testing.T, controls bool) {
 			if err != nil || img.Bounds().Dx() < mode.width {
 				t.Fatalf("invalid capture for %s/%s: %v", mode.name, example.name, err)
 			}
-			if controls && runtime.GOOS == "darwin" && mode.name != "narrow" && (example.name == "List" || example.name == "Tree") {
+			if controls && runtime.GOOS == "darwin" && mode.name != "narrow" && (example.name == "List" || example.name == "Tree" || example.name == "Table") {
 				// Content captures omit the native material, but their alpha
 				// must still expose it below an otherwise empty sidebar pixel.
 				_, _, _, alpha := img.At(4, img.Bounds().Dy()/2).RGBA()

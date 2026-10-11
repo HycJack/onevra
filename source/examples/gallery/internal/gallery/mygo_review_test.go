@@ -115,7 +115,7 @@ func TestToggleDecisions(t *testing.T) {
 }
 
 func TestExcludedComponents(t *testing.T) {
-	for _, name := range []string{"Toast", "Divider", "CheckboxGroup", "RadioGroup", "Segmented", "Avatar", "Meter", "BackButton", "ForwardButton", "Form", "Field", "Fieldset", "FindBar", "Toolbar", "Table", "OutlineTable", "TokenField"} {
+	for _, name := range []string{"Toast", "Divider", "CheckboxGroup", "RadioGroup", "Segmented", "Avatar", "Meter", "BackButton", "ForwardButton", "Form", "Field", "Fieldset", "FindBar", "Toolbar", "OutlineTable", "TokenField"} {
 		decision, ok := mygoHandled[name]
 		if !ok || decision.Replacement != "" || decision.Reason == "" {
 			t.Fatalf("missing exclusion for %s", name)
@@ -143,7 +143,7 @@ func TestMyGoReviewLog(t *testing.T) {
 	if !strings.Contains(output, mygoScanVersion) || !strings.Contains(output, "mygo_review.go") {
 		t.Fatal(output)
 	}
-	for _, name := range []string{"Toast", "Tooltip", "Divider", "Button", "PrimaryButton", "Link", "MenuButton", "Toggle", "ToggleGroup", "CheckboxGroup", "RadioGroup", "Segmented", "Box", "Combobox", "Autocomplete", "Avatar", "Meter", "BackButton", "ForwardButton", "Form", "Field", "Fieldset", "FindBar", "Toolbar", "Table", "OutlineTable", "TokenField"} {
+	for _, name := range []string{"Toast", "Tooltip", "Divider", "Button", "PrimaryButton", "Link", "MenuButton", "Toggle", "ToggleGroup", "CheckboxGroup", "RadioGroup", "Segmented", "Box", "Combobox", "Autocomplete", "Avatar", "Meter", "BackButton", "ForwardButton", "Form", "Field", "Fieldset", "FindBar", "Toolbar", "OutlineTable", "TokenField"} {
 		if strings.Contains(output, "pending: "+name+" (") {
 			t.Fatalf("unexpected reminder: %s", name)
 		}
