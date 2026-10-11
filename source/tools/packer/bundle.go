@@ -71,12 +71,8 @@ func build(ctx context.Context, c *config, out string, production bool, t target
 		if err := archive(ctx, c, stage, app, t); err != nil {
 			return "", err
 		}
-		base := c.archiveName(t)
-		var names []string
-		for _, suffix := range c.archiveSuffixes(t) {
-			names = append(names, base+suffix)
-		}
-		if err := publishArchives(artifacts, out, names); err != nil {
+		names := c.releaseNames(t)
+		if err := publishArtifacts(artifacts, out, names); err != nil {
 			return "", err
 		}
 		return filepath.Join(out, names[0]), nil

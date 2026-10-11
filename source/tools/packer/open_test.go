@@ -79,11 +79,14 @@ func TestBuildOpenReleases(t *testing.T) {
 			}
 			entries, err := os.ReadDir(releaseDir)
 			wantCount := 2
+			if runtime.GOOS == "linux" && (runtime.GOARCH == "amd64" || runtime.GOARCH == "arm64") {
+				wantCount++
+			}
 			if tc.wantError {
 				wantCount = 0
 			}
 			if err != nil || len(entries) != wantCount {
-				t.Fatalf("release directory entries = %v, %v; want %d archives", entries, err, wantCount)
+				t.Fatalf("release directory entries = %v, %v; want %d artifacts", entries, err, wantCount)
 			}
 			data, err := os.ReadFile(marker)
 			if !tc.wantOpen {

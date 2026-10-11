@@ -19,14 +19,15 @@ import (
 )
 
 type config struct {
-	Name         string   `yaml:"name"`
-	Identifier   string   `yaml:"identifier"`
-	Version      string   `yaml:"version"`
-	Main         string   `yaml:"main"`
-	Out          string   `yaml:"out"`
-	Platforms    []string `yaml:"platforms"`    // Release targets; omitted means host OS/architecture.
-	OpenReleases bool     `yaml:"openReleases"` // Open the current version's release directory after a successful build; defaults to true.
-	MacOS        struct {
+	Name             string   `yaml:"name"`
+	Identifier       string   `yaml:"identifier"`
+	Version          string   `yaml:"version"`
+	Main             string   `yaml:"main"`
+	Out              string   `yaml:"out"`
+	Platforms        []string `yaml:"platforms"`        // Release targets; omitted means host OS/architecture.
+	OpenReleases     bool     `yaml:"openReleases"`     // Open the current version's release directory after a successful build; defaults to true.
+	KeepUncompressed bool     `yaml:"keepUncompressed"` // Retain the release app for the host OS/architecture beside its archives; defaults to true.
+	MacOS            struct {
 		Icon                 string `yaml:"icon"` // ICNS file or an Icon Composer .icon directory.
 		MinimumSystemVersion string `yaml:"minimumSystemVersion"`
 	} `yaml:"macos"`
@@ -80,8 +81,8 @@ func run(ctx context.Context, args []string) error {
 			if _, err := build(ctx, c, out, true, t); err != nil {
 				return fmt.Errorf("%s: %w", t.key(), err)
 			}
-			for _, suffix := range c.archiveSuffixes(t) {
-				fmt.Fprintln(os.Stderr, filepath.Join(out, c.archiveName(t)+suffix))
+			for _, name := range c.releaseNames(t) {
+				fmt.Fprintln(os.Stderr, filepath.Join(out, name))
 			}
 		}
 		if c.OpenReleases {
@@ -120,7 +121,7 @@ func loadConfig(path string) (*config, error) {
 		return nil, err
 	}
 	defer f.Close()
-	c := &config{Version: "0.0.0", Main: ".", Out: "dist", OpenReleases: true, root: filepath.Dir(path)}
+	c := &config{Version: "0.0.0", Main: ".", Out: "dist", OpenReleases: true, KeepUncompressed: true, root: filepath.Dir(path)}
 	c.MacOS.MinimumSystemVersion = "13.0"
 	d := yaml.NewDecoder(f)
 	d.KnownFields(true) // Never silently ignore signing or resource settings.

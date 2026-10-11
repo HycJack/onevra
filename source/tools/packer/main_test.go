@@ -169,8 +169,12 @@ macos:
 		t.Fatalf("unexpected archive path: %s", dmg)
 	}
 	published, err := os.ReadDir(c.releaseDir())
-	if err != nil || len(published) != 2 {
-		t.Fatalf("release should retain only two archives: %v, %v", published, err)
+	if err != nil || len(published) != 3 {
+		t.Fatalf("release should retain two archives and the host app: %v, %v", published, err)
+	}
+	retainedApp := filepath.Join(c.releaseDir(), c.Name+".app")
+	if _, err := command(ctx, "codesign", "--verify", "--deep", "--strict", retainedApp); err != nil {
+		t.Fatalf("retained app signature: %v", err)
 	}
 	base := strings.TrimSuffix(dmg, ".dmg")
 	extracted := filepath.Join(root, "extracted")
@@ -260,6 +264,7 @@ end run`, mount, c.Name+".app")
 	}
 	t.Run("dmg-only", func(t *testing.T) {
 		only := *c
+		only.KeepUncompressed = false
 		only.Platforms = []string{"darwin/" + runtime.GOARCH + "/dmg"}
 		out := filepath.Join(root, "dmg-only")
 		if _, err := build(ctx, &only, out, true, hostTarget()); err != nil {
@@ -270,8 +275,71 @@ end run`, mount, c.Name+".app")
 			t.Fatalf("expected only DMG: %v, %v", entries, err)
 		}
 	})
+	t.Run("zip-retention", func(t *testing.T) {
+		original, err := os.ReadFile(file)
+		if err != nil {
+			t.Fatal(err)
+		}
+		t.Cleanup(func() { put(t, file, string(original)) })
+		t.Chdir(root)
+		host := "darwin/" + runtime.GOARCH + "/zip"
+		other := "darwin/amd64/zip"
+		if runtime.GOARCH == "amd64" {
+			other = "darwin/arm64/zip"
+		}
+		for _, tc := range []struct {
+			name, setting, platforms string
+			wantApp                  bool
+			wantCount                int
+		}{
+			{"default", "", host + ", " + other, true, 3},
+			{"disabled", "keepUncompressed: false\n", host, false, 1},
+			{"foreign only", "", other, false, 1},
+		} {
+			t.Run(tc.name, func(t *testing.T) {
+				put(t, file, "name: Test & App\nidentifier: me.oneo.fixture\nout: zip-output\nopenReleases: false\nplatforms: ["+tc.platforms+"]\n"+tc.setting)
+				if err := run(ctx, []string{"build"}); err != nil {
+					t.Fatal(err)
+				}
+				out := filepath.Join(root, "zip-output", "releases", "0.0.0")
+				entries, err := os.ReadDir(out)
+				if err != nil || len(entries) != tc.wantCount {
+					t.Fatalf("unexpected output: %v, %v", entries, err)
+				}
+				app := filepath.Join(out, c.Name+".app")
+				if !tc.wantApp {
+					if _, err := os.Stat(app); !os.IsNotExist(err) {
+						t.Fatalf("unexpected retained app: %v", err)
+					}
+					return
+				}
+				// The second architecture must not replace the retained host app.
+				unpacked := filepath.Join(t.TempDir(), "unpacked")
+				if _, err := command(ctx, "ditto", "-x", "-k", filepath.Join(out, c.archiveName(hostTarget())+".zip"), unpacked); err != nil {
+					t.Fatal(err)
+				}
+				got, err := os.ReadFile(c.executable(app, hostTarget()))
+				if err != nil {
+					t.Fatal(err)
+				}
+				want, err := os.ReadFile(c.executable(filepath.Join(unpacked, c.Name+".app"), hostTarget()))
+				if err != nil || string(got) != string(want) {
+					t.Fatalf("retained app differs from host archive: %v", err)
+				}
+			})
+		}
+	})
 	marker := filepath.Join(root, "launch marker")
 	t.Setenv("PACKER_TEST_MARKER", marker)
+	if err := exec.Command(c.executable(retainedApp, hostTarget())).Run(); err != nil {
+		t.Fatalf("retained release app could not run: %v", err)
+	}
+	if data, _ := os.ReadFile(marker); string(data) != "ran" {
+		t.Fatal("retained release app did not write the launch marker")
+	}
+	if err := os.Remove(marker); err != nil {
+		t.Fatal(err)
+	}
 	t.Chdir(root)
 	if err := run(ctx, []string{"run"}); err != nil {
 		t.Fatal(err)

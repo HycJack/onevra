@@ -88,6 +88,16 @@ platforms: ["windows/amd64","windows/arm64","linux/amd64","linux/arm64"]`)
 			}
 			executable := filepath.Base(c.executable("unused", target))
 			data := entries[prefix+executable]
+			if target == hostTarget() {
+				retained, err := os.ReadFile(c.executable(filepath.Join(c.releaseDir(), c.Name), target))
+				if err != nil || !bytes.Equal(retained, data) {
+					t.Fatalf("retained app differs from the host archive: %v", err)
+				}
+				payload, err := os.ReadFile(filepath.Join(c.releaseDir(), c.Name, files[target.key()].Name))
+				if err != nil || string(payload) != "/"+target.key() {
+					t.Fatalf("retained native payload = %q, %v", payload, err)
+				}
+			}
 			if target.OS == "windows" {
 				f, err := pe.NewFile(bytes.NewReader(data))
 				if err != nil {
@@ -143,12 +153,42 @@ platforms: ["windows/amd64","windows/arm64","linux/amd64","linux/arm64"]`)
 		})
 	}
 	entries, err := os.ReadDir(c.releaseDir())
-	if err != nil || len(entries) != 4 {
-		t.Fatalf("expected four archives in the version directory: %v, %v", entries, err)
+	wantCount := len(targets)
+	for _, target := range targets {
+		if target == hostTarget() {
+			wantCount++
+		}
+	}
+	if err != nil || len(entries) != wantCount {
+		t.Fatalf("unexpected release artifacts: %v, %v; want %d", entries, err, wantCount)
+	}
+	for _, entry := range entries {
+		if entry.IsDir() && (entry.Name() != c.Name || wantCount == len(targets)) {
+			t.Fatalf("release retained an unexpected directory: %s", entry.Name())
+		}
+	}
+	// Turning retention off also removes the previous host app on the next build.
+	f, err := os.OpenFile(file, os.O_APPEND|os.O_WRONLY, 0)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := fmt.Fprintln(f, "\nkeepUncompressed: false"); err != nil {
+		f.Close()
+		t.Fatal(err)
+	}
+	if err := f.Close(); err != nil {
+		t.Fatal(err)
+	}
+	if err := run(context.Background(), []string{"build"}); err != nil {
+		t.Fatal(err)
+	}
+	entries, err = os.ReadDir(c.releaseDir())
+	if err != nil || len(entries) != len(targets) {
+		t.Fatalf("expected only archives with retention disabled: %v, %v", entries, err)
 	}
 	for _, entry := range entries {
 		if entry.IsDir() {
-			t.Fatal("release retained a staged app directory")
+			t.Fatalf("retention disabled but directory remains: %s", entry.Name())
 		}
 	}
 }

@@ -31,6 +31,31 @@ func TestOpenReleasesConfig(t *testing.T) {
 	}
 }
 
+func TestKeepUncompressedConfig(t *testing.T) {
+	file := filepath.Join(t.TempDir(), "packer.yaml")
+	for _, tc := range []struct {
+		setting string
+		want    bool
+	}{
+		{"", true},
+		{"keepUncompressed: true\n", true},
+		{"keepUncompressed: false\n", false},
+	} {
+		put(t, file, "name: App\nidentifier: me.app\n"+tc.setting)
+		c, err := loadConfig(file)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if c.KeepUncompressed != tc.want {
+			t.Errorf("%q: keepUncompressed = %v, want %v", tc.setting, c.KeepUncompressed, tc.want)
+		}
+	}
+	put(t, file, "name: App\nidentifier: me.app\nkeepUncompressed: [false]\n")
+	if _, err := loadConfig(file); err == nil {
+		t.Fatal("accepted a non-boolean keepUncompressed value")
+	}
+}
+
 func TestRejectGenerationConfig(t *testing.T) {
 	file := filepath.Join(t.TempDir(), "packer.yaml")
 	for _, setting := range []string{

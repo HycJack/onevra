@@ -63,7 +63,7 @@ func buildPortable(ctx context.Context, c *config, out, stage string, release bo
 		if err := portableArchive(ctx, app, filepath.Join(artifacts, name), t.OS == "windows"); err != nil {
 			return "", err
 		}
-		if err := publishArchives(artifacts, out, []string{name}); err != nil {
+		if err := publishArtifacts(artifacts, out, c.releaseNames(t)); err != nil {
 			return "", err
 		}
 		return filepath.Join(out, name), nil
