@@ -564,7 +564,7 @@ func Composer(c *ui.Context, draft *string, options ComposerOptions) ComposerRes
 						options.Accessory(c)
 					}
 				})
-				if options.Running {
+				if options.Running && empty {
 					stop := pillAction(c, options.StopLabel, overlayStrong(t), t.Text)
 					if stop.Hovered() {
 						stop.Background(t.Danger.Alpha(.16))
@@ -573,10 +573,10 @@ func Composer(c *ui.Context, draft *string, options ComposerOptions) ComposerRes
 				}
 				if !options.Running || !empty {
 					background, foreground := inverse(t)
-					if !canSend || result.Input.Composing() {
+					if !canSend {
 						background, foreground = overlayStrong(t), tertiary(t)
 					}
-					ui.Box(c).Disabled(!canSend || result.Input.Composing()).Children(func() {
+					ui.Box(c).Disabled(!canSend).Children(func() {
 						if pillAction(c, options.SendLabel, background, foreground).Clicked() {
 							result.Send = true
 						}

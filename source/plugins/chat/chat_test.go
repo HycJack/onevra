@@ -218,7 +218,7 @@ func BenchmarkCompletedTurn(b *testing.B) {
 }
 
 // A theme that leaves Inverse zero, as Onevra's palettes do, must still
-// paint Send beside Stop rather than leave an invisible gap.
+// paint Send rather than leave an invisible gap.
 func TestComposerSendVisibleWithoutInverse(t *testing.T) {
 	for _, running := range []bool{false, true} {
 		draft := "next"
@@ -249,6 +249,57 @@ func TestComposerPasteWithoutHook(t *testing.T) {
 	tt.Frame()
 	if draft != "pasted" {
 		t.Fatalf("draft = %q", draft)
+	}
+}
+
+func TestComposerSendDuringComposition(t *testing.T) {
+	for _, glass := range []bool{false, true} {
+		for _, running := range []bool{false, true} {
+			for _, disabled := range []bool{false, true} {
+				t.Run(fmt.Sprintf("glass=%v/running=%v/disabled=%v", glass, running, disabled), func(t *testing.T) {
+					draft := "ready"
+					sends := 0
+					var composing bool
+					tt := ui.NewTester(func(c *ui.Context) {
+						options := ComposerOptions{Label: "Message", SendLabel: "Send", StopLabel: "Stop", Running: running, SendDisabled: disabled}
+						var result ComposerResult
+						if glass {
+							result = GlassComposer(c, nil, &draft, options)
+						} else {
+							result = Composer(c, &draft, options)
+						}
+						composing = result.Input.Composing()
+						if result.Send {
+							sends++
+						}
+					}, 400, 240)
+					if err := tt.Click("Message"); err != nil {
+						t.Fatal(err)
+					}
+					tt.Compose("ni", 2)
+					if !composing {
+						t.Fatal("input is not composing")
+					}
+					tt.Key(0, ui.KeyEnter)
+					if sends != 0 {
+						t.Fatal("candidate-selection Enter sent the draft")
+					}
+					if _, ok := tt.Find("Stop"); ok {
+						t.Fatal("stop shown beside send")
+					}
+					if err := tt.Click("Send"); err != nil {
+						t.Fatal(err)
+					}
+					want := 1
+					if disabled {
+						want = 0
+					}
+					if sends != want {
+						t.Fatalf("sends = %d, want %d", sends, want)
+					}
+				})
+			}
+		}
 	}
 }
 
@@ -298,13 +349,13 @@ func TestComposerSubmitOnEnterAndSteering(t *testing.T) {
 			}
 			running = true
 			tt.Frame()
-			if !tt.HasText("Stop") && tt.Click("Stop") != nil {
-				t.Fatal("stop missing")
+			if _, ok := tt.Find("Stop"); ok {
+				t.Fatal("stop shown beside send for a nonempty draft")
 			}
 			if err := tt.Click("Send"); err != nil || sends != 2 {
 				t.Fatalf("steer send unavailable: %v %d", err, sends)
 			}
-			draft = ""
+			draft = " \n\t"
 			tt.Frame()
 			if _, ok := tt.Find("Send"); ok {
 				t.Fatal("send shown for an empty draft while running")

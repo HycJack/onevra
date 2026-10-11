@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Keep the composer's Send button available during input-method composition, while preserving Enter for candidate selection; a nonempty draft now replaces Stop with Send during a running request.
+
 - Lead sidebar items and settings categories with an image, such as a project logo, through `SidebarImageItem` and `SettingsCategory.Image`; the image fits the icon square without cropping.
 
 ## [0.2026.4] - 2026-10-11
