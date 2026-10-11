@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+## [0.2026.3] - 2026-10-11
+
 - Require MyGo 0.4.1, including corrected Linux outer-window and content bounds.
 - Paint the composer's Send button in themes that leave `Inverse` unset, including Onevra's palettes; it previously reserved space beside Stop without being drawn.
 - Stop the composer from crashing on paste when no `OnPaste` hook is supplied.
