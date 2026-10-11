@@ -24,6 +24,7 @@ Update documentation in the same change only when its reader-needed facts change
 - ARCHITECTURE.md and docs/ explain system boundaries, core flows, design rationale and important constraints. Keep property definitions, defaults and local implementation details in code; do not duplicate them in prose or create a document per task.
 - skills/onevra/ guides Agents building applications on Onevra. Update it when basic usage, component replacement decisions, testing conventions or Packer requirements change; keep it concise and link to the module source for details.
 - CHANGELOG.md records only completed outcomes visible to library consumers under Unreleased. Describe supported usage or public-contract changes, not internal refactors, source layout, tests or tooling. Consolidate evolving unreleased work; do not present an unreleased experiment as a removed released feature.
+- Keep adjacent changelog bullets together without blank lines; retain blank lines around headings.
 - Update summaries, changelog entries and release notes describe only what was added, changed or removed. Unless the user explicitly requests it, omit Verification sections and all testing or validation details, including commands, results and verification gaps. Required checks still run as part of the work.
 
 Keep documentation and code on the same branch and reconcile definitions during merges. Each explanation has one owning location; link rather than repeat it.
