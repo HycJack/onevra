@@ -551,7 +551,8 @@ func Composer(c *ui.Context, draft *string, options ComposerOptions) ComposerRes
 	empty := strings.TrimSpace(*draft) == ""
 	canSend := !empty && !options.SendDisabled
 	result.Root = ui.Column(c).FillWidth().MinWidth(0).Shrink(0).Children(func() {
-		card := ui.Column(c).FillWidth().MinWidth(0).Padding(10, 0).Radius(13).Border(1, t.Border).Background(t.Surface).Children(func() {
+		card := ui.Column(c).FillWidth().MinWidth(0).Padding(10, 0).Radius(13).Border(1, t.Border).Background(t.Surface).
+			Shadow(0, 2, 8, 0, ui.RGBA(0, 0, 0, .04)).Children(func() {
 			if options.Attachments != nil {
 				ui.Row(c).Key("attachments").FillWidth().Wrap().Gap(6).Padding(0, 10, 6, 10).Children(func() { options.Attachments(c) })
 			}
