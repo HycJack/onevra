@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Let Packer automatically include native libraries from target-specific `runtimes/` directories in development apps and release archives, with macOS signing.
+
 - Let applications place compact controls immediately before Send or Stop through the composer's trailing slot.
 
 - Keep a small gap between conversation scrollbars and the floating composer as its height changes, without shortening the transcript viewport.

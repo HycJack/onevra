@@ -48,7 +48,9 @@ func TestCrossPackaging(t *testing.T) {
 		}
 		body := "/" + target.key()
 		files[target.key()] = nativeFile{Name: name, URL: server.URL + body, SHA256: fmt.Sprintf("%x", sha256.Sum256([]byte(body)))}
+		put(t, filepath.Join(root, "runtimes", target.OS, target.Arch, "local-"+name), "local-"+target.key())
 	}
+	put(t, filepath.Join(root, "runtimes", "darwin"), "other targets must not be scanned")
 	manifest, err := json.Marshal(map[string]any{"libraries": []any{map[string]any{"name": "fixture", "files": files}}})
 	if err != nil {
 		t.Fatal(err)
@@ -85,6 +87,10 @@ platforms: ["windows/amd64","windows/arm64","linux/amd64","linux/arm64"]`)
 			prefix := c.Name + "/"
 			if string(entries[prefix+"data/payload.txt"]) != "payload" || string(entries[prefix+files[target.key()].Name]) != "/"+target.key() {
 				t.Fatalf("missing payload or wrong native target: %v", entries)
+			}
+			localName := "local-" + files[target.key()].Name
+			if string(entries[prefix+localName]) != "local-"+target.key() {
+				t.Fatalf("missing local library or wrong target: %q", entries[prefix+localName])
 			}
 			executable := filepath.Base(c.executable("unused", target))
 			data := entries[prefix+executable]
@@ -124,6 +130,9 @@ platforms: ["windows/amd64","windows/arm64","linux/amd64","linux/arm64"]`)
 				app, err := build(context.Background(), c, t.TempDir(), false, target)
 				if err != nil {
 					t.Fatal(err)
+				}
+				if data, err := os.ReadFile(filepath.Join(app, localName)); err != nil || string(data) != "local-"+target.key() {
+					t.Fatalf("development local library: %q, %v", data, err)
 				}
 				dev, err := pe.Open(c.executable(app, target))
 				if err != nil {

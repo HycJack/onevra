@@ -22,19 +22,36 @@ type nativeFile struct {
 	SHA256 string `json:"sha256"`
 }
 
-// Discover manifests in the selected application's dependency graph without
-// importing plugin packages into Packer or running their code.
+// Bundle application-owned files alongside dependency-manifest libraries,
+// without importing plugin packages into Packer or running their code.
 func bundleNatives(ctx context.Context, c *config, destination string, t target) error {
+	local, err := c.runtimeFiles(t)
+	if err != nil {
+		return err
+	}
 	files, err := c.nativeFiles(ctx, t)
-	if err != nil || len(files) == 0 {
+	if err != nil || len(files)+len(local) == 0 {
+		return err
+	}
+	var names []string
+	for _, f := range files {
+		names = append(names, f.Name)
+	}
+	for _, path := range local {
+		names = append(names, filepath.Base(path))
+	}
+	if err := checkNativeNames(destination, names); err != nil {
 		return err
 	}
 	if err := os.MkdirAll(destination, 0o755); err != nil {
 		return err
 	}
-	cache, err := os.UserCacheDir()
-	if err != nil {
-		return err
+	var cache string
+	if len(files) > 0 {
+		cache, err = os.UserCacheDir()
+		if err != nil {
+			return err
+		}
 	}
 	for _, f := range files {
 		data, err := nativeBytes(ctx, cache, f)
@@ -53,9 +70,16 @@ func bundleNatives(ctx context.Context, c *config, destination string, t target)
 		if err != nil {
 			return err
 		}
-		// Sign macOS copies only; the shared cache retains its pinned hash.
-		if t.OS == "darwin" {
-			if _, err := command(ctx, "codesign", "--force", "--sign", "-", dst); err != nil {
+	}
+	for _, path := range local {
+		if err := copyResourceFile(path, filepath.Join(destination, filepath.Base(path))); err != nil {
+			return fmt.Errorf("copy native library %s: %w", path, err)
+		}
+	}
+	// Sign staged macOS copies only; local outputs and the pinned cache stay intact.
+	if t.OS == "darwin" {
+		for _, name := range names {
+			if _, err := command(ctx, "codesign", "--force", "--sign", "-", filepath.Join(destination, name)); err != nil {
 				return err
 			}
 		}
