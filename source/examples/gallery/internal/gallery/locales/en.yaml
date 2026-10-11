@@ -1113,10 +1113,6 @@ gallery.chat_worked:
   other: "Worked for %dm %ds"
 gallery.chat_working:
   other: "%s · %dm %ds"
-gallery.chat_copy_answer:
-  other: "Copy answer"
-gallery.chat_copied:
-  other: "Copied"
 gallery.chat_remove_attachment:
   other: "Remove attachment"
 gallery.chat_demo_context:

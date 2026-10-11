@@ -3,11 +3,13 @@ package chat
 import (
 	"fmt"
 	"image/color"
+	"math"
 	"strings"
 	"testing"
 
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
+	"github.com/oneo-me/onevra/source/theme"
 )
 
 func TestFloatingConversationClearanceAndJump(t *testing.T) {
@@ -59,13 +61,13 @@ func TestFloatingConversationClearanceAndJump(t *testing.T) {
 	}
 }
 
-func TestFloatingConversationWhiteGlassJump(t *testing.T) {
-	for _, theme := range []*ui.Theme{ui.LightTheme(), ui.DarkTheme()} {
-		t.Run(fmt.Sprintf("dark=%v", theme.Dark), func(t *testing.T) {
+func TestFloatingConversationThemedGlassJump(t *testing.T) {
+	for _, palette := range []*ui.Theme{theme.LightPalette(), theme.DarkPalette()} {
+		t.Run(fmt.Sprintf("dark=%v", palette.Dark), func(t *testing.T) {
 			var layout FloatingConversationState
 			var state ConversationState
 			tt := ui.NewTester(func(c *ui.Context) {
-				c.SetTheme(theme)
+				c.SetTheme(palette)
 				FloatingConversation(c, &layout, &state, "Latest", func(c *ui.Context) {
 					ui.Box(c).Height(2000).FillWidth().Shrink(0).Background(ui.RGB(0, 0, 0))
 				}, nil)
@@ -77,11 +79,19 @@ func TestFloatingConversationWhiteGlassJump(t *testing.T) {
 			if !ok {
 				t.Fatal("missing jump control")
 			}
-			// Inside the glass, clear of the rim and arrow, even a black
-			// transcript should leave a bright neutral surface in both themes.
-			pixel := tt.Image().RGBAAt(int(jump.X+7), int(jump.Y+jump.H/2))
-			if pixel.R < 180 || pixel.R != pixel.G || pixel.G != pixel.B {
-				t.Fatalf("jump surface is not white glass: %v", pixel)
+			for _, hovered := range []bool{false, true} {
+				if hovered {
+					tt.Move(jump.X+jump.W/2, jump.Y+jump.H/2)
+				}
+				// Sample clear of the rim and arrow. The translucent glass
+				// should stay close to the theme background over the transcript.
+				pixel := tt.Image().RGBAAt(int(jump.X+7), int(jump.Y+jump.H/2))
+				bg := palette.Background
+				if math.Abs(float64(pixel.R)-float64(bg.R)) > 60 ||
+					math.Abs(float64(pixel.G)-float64(bg.G)) > 60 ||
+					math.Abs(float64(pixel.B)-float64(bg.B)) > 60 {
+					t.Fatalf("hovered=%v: jump surface %v does not follow background %v", hovered, pixel, bg)
+				}
 			}
 			if err := tt.Click("Latest"); err != nil {
 				t.Fatal(err)

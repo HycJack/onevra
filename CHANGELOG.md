@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Fix the floating conversation's scroll-to-latest button to follow the theme background and text colors in dark mode.
+
 ## [0.2026.5] - 2026-10-11
 
 - Require MyGo 0.4.2 and let spoke-style spinners honor custom text colors while retaining their muted default.

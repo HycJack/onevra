@@ -46,10 +46,6 @@ func TestChatResultAndComposerActions(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	click("Copy answer")
-	if tt.Clipboard() != chatDemoAnswer {
-		t.Fatal("copy included hidden execution or artifacts")
-	}
 	click("Review")
 	if !s.chat.turns[0].showReview || !tt.HasText("Sample change preview") {
 		t.Fatal("review action missing")

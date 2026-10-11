@@ -83,13 +83,12 @@ func FloatingConversationWith(c *ui.Context, layout *FloatingConversationState, 
 		if !follow {
 			b := components.Button(c, "", components.ButtonGhost).Label(jumpLabel).Absolute().Attach(ui.AnchorBottom, ui.AnchorBottom).
 				Bottom(height+12).Size(32, 32).Padding(0).Radius(16)
-			// Keep this small floating control milky white in either theme,
-			// with a dark arrow for contrast rather than the secondary gray fill.
-			tint := ui.RGB(255, 255, 255).Alpha(.75)
+			t := c.Theme()
+			tint := t.Background.Alpha(.75)
 			if b.Hovered() {
-				tint = ui.RGB(255, 255, 255).Alpha(.85)
+				tint = t.Background.Alpha(.85)
 			}
-			b.Border(0, ui.Transparent).TextColor(ui.RGB(48, 48, 48)).
+			b.Border(0, ui.Transparent).TextColor(t.Text).
 				Material(glass.Glass{Style: glass.Regular, Tint: tint, Interactive: true})
 			b.Children(func() { components.Icon(c, lucide.ArrowDown).Size(16, 16) })
 			components.Tooltip(c, b, jumpLabel)

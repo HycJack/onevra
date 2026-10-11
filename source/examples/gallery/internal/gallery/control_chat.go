@@ -14,18 +14,18 @@ import (
 const chatDemoAnswer = "The review is complete.\n\n- **Two tools** ran concurrently and completed in a different order.\n- Execution details remain available above.\n- The final answer stays visible after the process folds.\n\n```go\n// Keep parsed documents outside the frame builder.\ndocument.Render(c)\n```"
 
 type chatDemoTurn struct {
-	id, prompt         string
-	state              chat.TurnState
-	status             chat.Status
-	step               int
-	answer             *markdown.MarkdownDocument
-	started, ended     time.Time
-	activities         [3]chat.ActivityState
-	group              chat.GroupState
-	summary            chat.SummaryState
-	review             *markdown.MarkdownDocument
-	showReview, copied bool
-	attached           bool
+	id, prompt     string
+	state          chat.TurnState
+	status         chat.Status
+	step           int
+	answer         *markdown.MarkdownDocument
+	started, ended time.Time
+	activities     [3]chat.ActivityState
+	group          chat.GroupState
+	summary        chat.SummaryState
+	review         *markdown.MarkdownDocument
+	showReview     bool
+	attached       bool
 }
 
 type chatDemoState struct {
@@ -125,19 +125,8 @@ func controlChat(c *ui.Context, state *controlState, _ string) {
 						components.Text(c, turn.prompt).Selectable()
 					},
 					Final: final, Steps: steps, Working: chatTurnSummary(c, turn),
-					Footer: func(c *ui.Context) { chatDemoResults(c, turn) },
-					Actions: func(c *ui.Context) {
-						if turn.answer != nil {
-							label := tr(c, "gallery.chat_copy_answer")
-							if turn.copied {
-								label = tr(c, "gallery.chat_copied")
-							}
-							if chat.IconAction(c, label, lucide.Copy).Clicked() {
-								c.WriteClipboard(chatDemoAnswer)
-								turn.copied = true
-							}
-						}
-					}, HoldOpen: !s.conversation.AtLatest(),
+					Footer:   func(c *ui.Context) { chatDemoResults(c, turn) },
+					HoldOpen: !s.conversation.AtLatest(),
 				})
 			}
 		}, func(c *ui.Context) {

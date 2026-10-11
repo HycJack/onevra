@@ -1113,10 +1113,6 @@ gallery.chat_worked:
   other: "用时 %d 分 %d 秒"
 gallery.chat_working:
   other: "%s · %d 分 %d 秒"
-gallery.chat_copy_answer:
-  other: "复制答复"
-gallery.chat_copied:
-  other: "已复制"
 gallery.chat_remove_attachment:
   other: "移除附件"
 gallery.chat_demo_context:
