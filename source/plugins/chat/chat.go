@@ -506,6 +506,9 @@ type ComposerOptions struct {
 	Running                                  bool
 	// Accessory holds controls in the card's bottom row, such as model chips.
 	Accessory View
+	// Trailing holds compact controls immediately before Send or Stop, with
+	// an 8-point gap. Unlike Accessory, this slot does not shrink.
+	Trailing View
 	// Attachments appears above the editor; Footer below the card.
 	Attachments, Footer View
 	// AcceptFiles makes the card a drop target for files from other apps.
@@ -558,12 +561,15 @@ func Composer(c *ui.Context, draft *string, options ComposerOptions) ComposerRes
 			if options.OnPaste != nil {
 				result.Input.OnPaste(options.OnPaste)
 			}
-			ui.Row(c).FillWidth().MinWidth(0).Margin(8, 0, 0, 0).Padding(0, 10).AlignItems(ui.Center).Gap(4).Children(func() {
+			ui.Row(c).FillWidth().MinWidth(0).Margin(8, 0, 0, 0).Padding(0, 10).AlignItems(ui.Center).Gap(8).Children(func() {
 				ui.Row(c).Grow(1).MinWidth(0).AlignItems(ui.Center).Gap(4).Children(func() {
 					if options.Accessory != nil {
 						options.Accessory(c)
 					}
 				})
+				if options.Trailing != nil {
+					ui.Row(c).Key("trailing").Shrink(0).AlignItems(ui.Center).Gap(8).Children(func() { options.Trailing(c) })
+				}
 				if options.Running && empty {
 					stop := pillAction(c, options.StopLabel, overlayStrong(t), t.Text)
 					if stop.Hovered() {

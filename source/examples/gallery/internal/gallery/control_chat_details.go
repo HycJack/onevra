@@ -5,7 +5,6 @@ import (
 
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
-	"github.com/oneo-me/onevra/source/icons/lucide"
 	"github.com/oneo-me/onevra/source/plugins/chat"
 )
 
@@ -53,9 +52,6 @@ func chatDemoResults(c *ui.Context, turn *chatDemoTurn) {
 }
 
 func chatDemoToolbar(c *ui.Context, s *chatDemoState) {
-	if chat.IconAction(c, tr(c, "gallery.chat_attach"), lucide.Paperclip).Clicked() {
-		s.attachment = true
-	}
 	ui.Box(c).Key("model").Children(func() {
 		selectModel := components.Select(c, &s.model)
 		selectModel.Trigger.Label(tr(c, "gallery.chat_model")).Children(func() { components.Text(c, s.model).SingleLine() })

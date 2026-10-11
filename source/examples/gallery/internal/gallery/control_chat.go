@@ -145,6 +145,11 @@ func controlChat(c *ui.Context, state *controlState, _ string) {
 				Label: tr(c, "gallery.chat_message"), Placeholder: tr(c, "gallery.chat_placeholder"),
 				SendLabel: tr(c, "gallery.chat_send"), StopLabel: tr(c, "gallery.chat_stop"),
 				Accessory: func(c *ui.Context) { chatDemoToolbar(c, s) },
+				Trailing: func(c *ui.Context) {
+					if chat.IconAction(c, tr(c, "gallery.chat_attach"), lucide.Paperclip).Clicked() {
+						s.attachment = true
+					}
+				},
 				Attachments: func(c *ui.Context) {
 					if s.attachment {
 						components.Text(c, "context.md").TextColor(t.TextMuted)
