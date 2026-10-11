@@ -75,7 +75,7 @@ var controlCatalog = []controlExample{
 	{"NumberInput", "NumberInput", "Selection & values", []string{"Integer", "Decimal", "Scrub", "Without stepper"}, controlNumberInput},
 	{"Slider", "Sliders", "Selection & values", []string{"Default", "Step", "Range", "Stepped range"}, controlSlider},
 	{"Progress", "Progress", "Feedback & overlays", []string{"Progress", "ProgressRing"}, controlProgress},
-	{"Spinner", "Spinner", "Feedback & overlays", []string{"Ring", "Spokes"}, controlSpinner},
+	{"Spinner", "Spinner", "Feedback & overlays", []string{"Ring", "Spokes", "Tinted"}, controlSpinner},
 	{"Tabs", "Tabs", "Actions & navigation", []string{"Default"}, controlTabs},
 	{"Accordion", "Accordion", "Layout & containers", []string{"Default"}, controlAccordion},
 	{"Collapsible", "Collapsible", "Layout & containers", []string{"Right arrow", "Left arrow"}, controlCollapsible},

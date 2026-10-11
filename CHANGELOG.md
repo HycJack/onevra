@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Require MyGo 0.4.2 and let spoke-style spinners honor custom text colors while retaining their muted default.
+
 - Add ordinary and virtualized tables with macOS-style alternating row stripes and neutral, hover-free row selection. Users can sort by sortable columns, resize and reorder columns from the header; applications retain the sort order, persistable column layout and row data, and columns wider than a virtualized table scroll sideways with their header.
 
 - Let Packer automatically include native libraries from target-specific `runtimes/` directories in development apps and release archives, with macOS signing.

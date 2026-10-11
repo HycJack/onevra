@@ -8,10 +8,13 @@ import (
 
 func controlSpinner(c *ui.Context, _ *controlState, variant string) {
 	style := components.SpinnerRing
-	if variant == "Spokes" {
+	if variant == "Spokes" || variant == "Tinted" {
 		style = components.SpinnerSpokes
 	}
-	components.Spinner(c, style).Label(fmt.Sprintf(tr(c, "gallery.s_loading"), tr(c, variant)))
+	e := components.Spinner(c, style).Label(fmt.Sprintf(tr(c, "gallery.s_loading"), tr(c, variant)))
+	if variant == "Tinted" {
+		e.TextColor(c.Theme().Accent)
+	}
 }
 
 func controlProgress(c *ui.Context, s *controlState, variant string) {
