@@ -113,7 +113,7 @@ func controlChat(c *ui.Context, state *controlState, _ string) {
 				var final chat.View
 				if turn.answer != nil {
 					final = func(c *ui.Context) {
-						turn.answer.Render(c, markdown.MarkdownOptions{CopyCodeLabel: tr(c, "gallery.copy_code"), CodeHeaders: true}).FillWidth()
+						turn.answer.Render(c, markdown.MarkdownOptions{CopyCodeLabel: tr(c, "gallery.copy_code")}).FillWidth()
 					}
 				}
 				chat.Turn(c, &turn.state, chat.TurnOptions{
