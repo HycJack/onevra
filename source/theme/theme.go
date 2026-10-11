@@ -40,7 +40,7 @@ func LightPalette() *ui.Theme {
 	t.SurfacePressed = ui.Hex("#d9d7d2")
 	t.Border = ui.Hex("#deded5")
 	t.Text = ui.Hex("#33332f")
-	t.TextMuted = ui.Hex("#67675f")
+	t.TextMuted = ui.Hex("#72726a")
 	t.Accent = accent
 	t.AccentHover = accent.Mix(black, 0.12)
 	t.AccentPressed = accent.Mix(black, 0.25)
