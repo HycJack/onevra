@@ -2,7 +2,7 @@
 
 **English** | [简体中文](README.zh-CN.md)
 
-Onevra is a Go component library for native desktop applications, built on [MyGo](https://github.com/egoist/mygo). It provides themed controls, window shells, Lucide icons and reusable plugins. The name combines `One` from **ONEO** with the coined ending `vra`.
+Onevra is a Go component library for native desktop applications, built on [MyGo](https://github.com/egoist/mygo). It provides themed controls, window shells, Lucide icons and complex components. The name combines `One` from **ONEO** with the coined ending `vra`.
 
 ![Onevra Gallery main interface with navigation and interactive component examples](docs/images/gallery.png)
 
@@ -127,7 +127,7 @@ components.Checkbox(c, &agreed, "I agree")
 components.Switch(c, &wifi, "Wi-Fi")
 ```
 
-Components work independently of Shell when the host applies Onevra's theme. See the [component contract](source/components/doc.go) and [theme usage](source/theme/doc.go). Separate [plugins](docs/architecture/components.md#plugin-composition) provide charts, command palettes, syntax highlighting, Markdown and conversation views.
+Components work independently of Shell when the host applies Onevra's theme. See the [component contract](source/components/doc.go) and [theme usage](source/theme/doc.go). Complex components each have a separate package under `components/`: `chart`, `command`, `code`, `markdown` and `chat`. See [complex component composition](docs/architecture/components.md#complex-component-composition).
 
 ## Contributing
 

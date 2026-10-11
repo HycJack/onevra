@@ -5,8 +5,8 @@ import (
 
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
+	"github.com/oneo-me/onevra/source/components/command"
 	"github.com/oneo-me/onevra/source/icons/lucide"
-	"github.com/oneo-me/onevra/source/plugins/command"
 )
 
 type commandState struct {
@@ -27,7 +27,7 @@ func (g *Gallery) openCommands() {
 	g.commands.open = true
 }
 
-// Commands is an application-owned integration of the public command plugin.
+// Commands is an application-owned integration of the public command component.
 // Shortcuts are scoped to this window and wait behind other modal surfaces.
 func (g *Gallery) Commands(c *ui.Context) {
 	mods, _ := commandShortcut()

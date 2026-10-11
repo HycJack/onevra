@@ -4,7 +4,7 @@ import (
 	"testing"
 
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/source/plugins/chat"
+	"github.com/oneo-me/onevra/source/components/chat"
 )
 
 func TestChatStaticPreview(t *testing.T) {

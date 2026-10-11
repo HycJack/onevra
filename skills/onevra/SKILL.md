@@ -5,7 +5,7 @@ description: Build, test and package native Go desktop applications with Onevra 
 
 # Onevra
 
-Onevra (`github.com/oneo-me/onevra/source`) is a product-neutral component library built on MyGo. MyGo owns rendering, layout, input, windows and plugins; Onevra supplies themed controls, window shells, Lucide icons, complex plugins and the Packer packaging tool. The application owns business state, localized text, persistence and asynchronous work.
+Onevra (`github.com/oneo-me/onevra/source`) is a product-neutral component library built on MyGo. MyGo owns rendering, layout, input, windows and plugins; Onevra supplies themed controls, window shells, Lucide icons, complex components and the Packer packaging tool. The application owns business state, localized text, persistence and asynchronous work.
 
 Before using an API, read its public signature in the version-matched module source rather than guessing:
 
@@ -50,11 +50,11 @@ func main() {
 - Element handles are valid only for the current build pass. Bind a `ui.Handle` for identity or geometry across frames.
 - Shells apply Onevra's theme. Without a Shell, call `theme.Apply(c, mode)` at the top of the root builder. Components never call `Context.SetTheme`.
 - Pass translated labels explicitly and wrap content in `components.WithLocalization` for component-owned labels. Keep keys and stored values independent of translated text.
-- Complex views are in `plugins/chart`, `plugins/command`, `plugins/code`, `plugins/markdown` and `plugins/chat`. Keep their documents and results in retained state, prepared outside builders.
+- Complex views each have their own package in `components/chart`, `components/command`, `components/code`, `components/markdown` and `components/chat`. Keep their documents and results in retained state, prepared outside builders.
 
 ## Choosing controls
 
-Use Onevra's control whenever one exists; it replaces MyGo's styled widget of the same purpose. Check `components/`, `shells/` and `plugins/` in the Onevra module before choosing a control.
+Use Onevra's control whenever one exists; it replaces MyGo's styled widget of the same purpose. Check `components/` (including its subpackages) and `shells/` in the Onevra module before choosing a control.
 
 | Need | Use |
 | --- | --- |
@@ -68,7 +68,7 @@ Use Onevra's control whenever one exists; it replaces MyGo's styled widget of th
 | Tabs, accordion, collapsible, split, breadcrumbs, sidebar | The Onevra component of the same name |
 | Modal, alert, popover, tooltip | `Dialog`, `AlertDialog`, `Popover`, `Tooltip` |
 | Progress, spinner, badge, rating, icon, image | The Onevra component of the same name; icons from `icons/lucide` |
-| Categorical charts and donuts | `plugins/chart`: `Bar`, `Line`, `Area`, `StackedBar`, `Donut`; see the [usage example](../../source/plugins/chart/example_test.go) |
+| Categorical charts and donuts | `components/chart`: `Bar`, `Line`, `Area`, `StackedBar`, `Donut`; see the [usage example](../../source/components/chart/example_test.go) |
 | Settings surface | `components.Settings` |
 
 Use MyGo directly for:

@@ -20,7 +20,7 @@ Each new application version opens a standalone welcome entrance as a full-windo
 
 ### Navigation and previews
 
-The grouped sidebar contains Welcome, Component status, the Lucide library, desktop integrations, plugins and component pages. Components share purpose-based groups regardless of implementation; a trailing dot marks upstream widgets awaiting an Onevra decision. Plugins and explicitly retained direct-use APIs have no dot. Named routes remain stable when catalog order changes.
+The grouped sidebar contains Welcome, Component status, the Lucide library, desktop integrations, MyGo plugins and component pages. Components share purpose-based groups regardless of implementation; a trailing dot marks upstream widgets awaiting an Onevra decision. MyGo plugins and explicitly retained direct-use APIs have no dot. Named routes remain stable when catalog order changes.
 
 Welcome has interactive samples isolated from individual demonstrations. Review pages share a fixed pixel-grid background that Settings can disable, while Welcome and Terminal keep dedicated backgrounds. Examples remain interactive and use independent state per variant. MyGo pages show controls without source listings or tutorial prose. Supporting controls use Onevra equivalents whenever available.
 
@@ -28,7 +28,7 @@ Onevra previews omit disabled variants. Text and Collapsible variants stack; Nat
 
 ### Commands and settings
 
-Command+E on macOS, Ctrl+E elsewhere, and the sidebar search button open the public command plugin. It searches localized page names and English aliases, navigates to pages and opens Settings. Opening clears the query; activation closes the palette. Shortcuts remain window-local and wait behind modal surfaces.
+Command+E on macOS, Ctrl+E elsewhere, and the sidebar search button open the public command component. It searches localized page names and English aliases, navigates to pages and opens Settings. Opening clears the query; activation closes the palette. Shortcuts remain window-local and wait behind modal surfaces.
 
 Settings controls whether results appear immediately or after a search. On macOS, optional ABC selection applies while searching and restores the preceding input source on dismissal, preserving a different source manually chosen while open. Search state stays in memory.
 
@@ -38,15 +38,15 @@ The settings toolbar action opens a Onevra Dialog over the current page. macOS S
 
 | Page | Integration boundary |
 | --- | --- |
-| Plugins / Code | Retained read-only highlighting, selectable samples and application-owned copying |
-| Plugins / Markdown | Cached [fixture](../../source/resources/markdown.md), bundled images and interactive custom code blocks |
-| Plugins / Chat | Static conversation, folding, bounded details and composer controls; no model or file access |
+| Content display / Code | Retained read-only highlighting, selectable samples and application-owned copying |
+| Content display / Markdown | Cached [fixture](../../source/resources/markdown.md), bundled images and interactive custom code blocks |
+| Content display / Chat | Static conversation, folding, bounded details and composer controls; no model or file access |
 | Plugins / Terminal | MyGo shell session, retained across navigation and closed with Gallery |
-| Charts / Bar, Line, Area, Stacked bar, Donut | Separate public chart-plugin pages with per-page state, data updates, legends, empty states and selection |
+| Charts / Bar, Line, Area, Stacked bar, Donut | Separate public chart-component pages with per-page state, data updates, legends, empty states and selection |
 | Layout & containers / Transforms | Editable Onevra controls and anchored popovers under composed transforms, plus a perspective card |
 | Layout & containers / Motion | Retargetable spring presets, replayable keyframes and animated poses |
 
-The [chart examples](../../source/examples/gallery/internal/gallery/control_chart.go) use Onevra's public [chart plugin](components.md#charts), with an independent navigation entry for each view and localized application-owned data. The [motion examples](../../source/examples/gallery/internal/gallery/mygo_motion.go) use MyGo's animation methods directly. Neither creates native resources, background loops or timers; animation lifetime follows the built elements and MyGo's reduced-motion preference.
+The [chart examples](../../source/examples/gallery/internal/gallery/control_chart.go) use Onevra's public [chart component](components.md#charts), with an independent navigation entry for each view and localized application-owned data. The [motion examples](../../source/examples/gallery/internal/gallery/mygo_motion.go) use MyGo's animation methods directly. Neither creates native resources, background loops or timers; animation lifetime follows the built elements and MyGo's reduced-motion preference.
 
 Terminal starts the user's default login shell on first entry. MyGo owns shell selection, the pseudo-terminal, emulation and input. Gallery owns asynchronous native-library loading and the retained session; headless views never start a shell. Packaging and the bundled-library path adapter belong to Gallery, not the library. See [app bundles](../build.md#app-bundles).
 
@@ -78,7 +78,7 @@ The read-only Component status page and startup reminders share [code-owned deci
 
 Generation scans exported free functions taking a context first in MyGo's top-level `ui` package, across platform files and including generic constructors. It omits Base constructors and tests. Generated names and locations are checked in, so running Gallery needs neither a toolchain nor a module cache.
 
-The hand-built catalog and reviewed-subpackage map supplement the scanner for methods, `ui/chart`, and plugins. Native menus, every MyGo plugin, transforms and motion remain direct-use APIs. Standard charts use Onevra's chart plugin over upstream primitives; the decision map records that boundary. MyGo's browser target has no Gallery route: Gallery and Packer are desktop applications, and browser packaging is outside their current scope.
+The hand-built catalog and reviewed-subpackage map supplement the scanner for methods, `ui/chart`, and plugins. Native menus, every MyGo plugin, transforms and motion remain direct-use APIs. Standard charts use Onevra's chart component over upstream primitives; the decision map records that boundary. MyGo's browser target has no Gallery route: Gallery and Packer are desktop applications, and browser packaging is outside their current scope.
 
 After every MyGo upgrade, run `GOWORK=off go generate ./examples/gallery/internal/gallery` from `source/` and review the diff. Ordinary running, building and [Packer](../build.md#app-bundles) use the checked-in snapshot. A generation run cannot establish coverage of new methods or subpackages; review release notes and public signatures too.
 

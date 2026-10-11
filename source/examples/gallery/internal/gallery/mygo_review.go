@@ -7,15 +7,16 @@ import (
 //go:generate go run ../cmd/mygocomponents
 
 type mygoDecision struct {
-	Replacement string // Empty means excluded, not awaiting implementation.
-	Reason      string
+	Replacement     string // Empty means excluded, not awaiting implementation.
+	ReplacementName string // Optional display name for a component package.
+	Reason          string
 }
 
 // Record decisions here, never in the generated inventory. Both replacement and
 // exclusion decisions hide upstream examples and suppress pending reminders.
 // To exclude a component, add {Reason: "why this component is not needed"}.
 var mygoHandled = map[string]mygoDecision{
-	"Charts":           {Replacement: "plugins/chart", Reason: "Onevra categorical bar, line, area, stacked bar and donut views compose ui/chart scales, marks, paths and selection; continuous axes and specialized charts remain upstream primitives"},
+	"Charts":           {Replacement: "components/chart", ReplacementName: "Charts", Reason: "Onevra categorical bar, line, area, stacked bar and donut views compose ui/chart scales, marks, paths and selection; continuous axes and specialized charts remain upstream primitives"},
 	"TimeInput":        {Replacement: "components.TimePicker", Reason: "Clock-icon trigger with hour and minute popup columns"},
 	"Calendar":         {Replacement: "components.Calendar", Reason: "Fixed-size calendar view, also used inside CalendarPicker"},
 	"DateInput":        {Replacement: "components.CalendarPicker", Reason: "Leading-icon date trigger opening Onevra Calendar"},
@@ -147,9 +148,9 @@ const (
 
 type mygoReviewEntry struct {
 	mygoComponent
-	Status              mygoStatus
-	Replacement, Reason string
-	HasExample          bool
+	Status                               mygoStatus
+	Replacement, ReplacementName, Reason string
+	HasExample                           bool
 }
 
 // The catalog supplements discovery with method-based UI and plugins. An API
@@ -203,6 +204,7 @@ func mygoReviewEntries(discovered []mygoComponent, examples []mygoExample, decis
 		}
 		if decision, handled := decisions[name]; handled {
 			entry.Status, entry.Replacement, entry.Reason, entry.HasExample = mygoExcluded, decision.Replacement, decision.Reason, false
+			entry.ReplacementName = decision.ReplacementName
 			if decision.Replacement != "" {
 				entry.Status = mygoReplaced
 			}

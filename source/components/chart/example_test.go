@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/source/plugins/chart"
+	"github.com/oneo-me/onevra/source/components/chart"
 	"github.com/oneo-me/onevra/source/theme"
 )
 

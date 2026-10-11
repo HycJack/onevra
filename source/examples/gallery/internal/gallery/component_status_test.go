@@ -121,7 +121,17 @@ func TestComponentStatusCards(t *testing.T) {
 	if len(cards) != 40 {
 		t.Fatalf("got %d replacement cards", len(cards))
 	}
+	foundCharts := false
 	for _, card := range cards {
+		if strings.ContainsAny(card.Name, "/.") {
+			t.Fatalf("replacement card exposes a package path: %+v", card)
+		}
+		if card.Name == "Charts" {
+			foundCharts = true
+			if !reflect.DeepEqual(card.Replaces, []string{"Charts"}) {
+				t.Fatalf("chart replacement not grouped: %+v", card)
+			}
+		}
 		if card.Name == "Button" && !reflect.DeepEqual(card.Replaces, []string{"Button", "Link", "MenuButton", "PrimaryButton"}) {
 			t.Fatalf("button variants not grouped: %+v", card)
 		}
@@ -134,6 +144,9 @@ func TestComponentStatusCards(t *testing.T) {
 		if card.Name == "Select" && !reflect.DeepEqual(card.Replaces, []string{"Autocomplete", "Combobox", "Select"}) {
 			t.Fatalf("Select replacements not grouped: %+v", card)
 		}
+	}
+	if !foundCharts {
+		t.Fatal("missing Charts replacement")
 	}
 	foundSplit := false
 	for _, card := range cards {
@@ -184,7 +197,7 @@ func TestComponentStatusPage(t *testing.T) {
 					t.Fatalf("%s appears after Not needed", status)
 				}
 			}
-			for _, label := range []string{"Replaced by Onevra", "Button", "Button, Link, MenuButton, PrimaryButton", "Use MyGo directly", "Box", "Row", "Column", "Spacer", "Grid", "Overlay"} {
+			for _, label := range []string{"Replaced by Onevra", "Charts", "Button", "Button, Link, MenuButton, PrimaryButton", "Use MyGo directly", "Box", "Row", "Column", "Spacer", "Grid", "Overlay"} {
 				if !tt.HasText(label) {
 					t.Fatalf("width=%d dark=%t missing %q", width, dark, label)
 				}

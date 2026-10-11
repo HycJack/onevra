@@ -5,7 +5,7 @@ import (
 
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
-	"github.com/oneo-me/onevra/source/plugins/code"
+	"github.com/oneo-me/onevra/source/components/code"
 )
 
 type codeSample struct {

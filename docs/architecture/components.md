@@ -26,41 +26,41 @@ Double-click column fitting and pinned section headers are not provided. Public 
 
 For basic usage, see the [README](../../README.md#getting-started); public contracts and defaults belong to the [API source](../../source/shells/sidebar/shell.go).
 
-## Plugin composition
+## Complex component composition
 
-Complex components live in independent packages under `source/plugins/<name>/`, with their implementation, tests and package documentation kept together. Plugins may compose common controls; the common components package must not depend on plugins. MyGo plugins continue to be used directly.
+Complex components each live in an independent package under `source/components/<name>/`, with implementation, tests and package documentation kept together. These subpackages may compose common controls; the root `components` package must not depend on them. MyGo plugins continue to be used directly.
 
 ### Charts
 
-The [chart plugin](../../source/plugins/chart/chart.go) composes categorical bars, lines, areas, stacked bars and donuts from MyGo's scales, paths, marks and selection. Onevra supplies muted theme colors, light grids, gradients, adaptive category labels, legends and selection details. The views use ordinary element layout and own no windows or background work.
+The [chart component](../../source/components/chart/chart.go) composes categorical bars, lines, areas, stacked bars and donuts from MyGo's scales, paths, marks and selection. Onevra supplies muted theme colors, light grids, gradients, adaptive category labels, legends and selection details. The views use ordinary element layout and own no windows or background work.
 
-Applications retain data and optional interaction state, provide stable series or slice identities, and supply localized labels and value formatting. Cartesian legends toggle series; donut legends select slices. Keyboard and pointer selection expose formatted values to assistive technology. Empty and detail slots let applications supply content without adding business-specific variants. See the [runnable usage example](../../source/plugins/chart/example_test.go) and API comments for data and state contracts.
+Applications retain data and optional interaction state, provide stable series or slice identities, and supply localized labels and value formatting. Cartesian legends toggle series; donut legends select slices. Keyboard and pointer selection expose formatted values to assistive technology. Empty and detail slots let applications supply content without adding business-specific variants. See the [runnable usage example](../../source/components/chart/example_test.go) and API comments for data and state contracts.
 
 Numeric updates transition together through MyGo's animation channel, including Cartesian domains and donut boundaries. Retargeting continues from the current picture; Reduced Motion skips the transition. Data-shape changes appear immediately, and selection details report the latest application values.
 
-These views target bounded categorical datasets. Preparation and path construction remain proportional to the supplied data; applications own aggregation or sampling. Continuous/time axes, zooming and specialized charts can compose upstream primitives. The plugin reuses MyGo's Cartesian selection, with a coordinate adaptation for transformed plots in 0.4.3; radial selection composes MyGo's shortcuts and slice hit testing.
+These views target bounded categorical datasets. Preparation and path construction remain proportional to the supplied data; applications own aggregation or sampling. Continuous/time axes, zooming and specialized charts can compose upstream primitives. The component reuses MyGo's Cartesian selection, with a coordinate adaptation for transformed plots in 0.4.3; radial selection composes MyGo's shortcuts and slice hit testing.
 
 ### Commands
 
-The [command plugin](../../source/plugins/command/command.go) provides an embeddable palette and a Dialog composition. Applications retain query and active-command state, supply stable command identities and localized metadata, register window shortcuts, and handle activation. Hosts can show results immediately or start with a compact search field that expands after a committed query and collapses when cleared. Local metadata filtering is optional; asynchronous search, stale-result rejection, command execution and history remain application-owned. Loading and errors replace actionable results.
+The [command component](../../source/components/command/command.go) provides an embeddable palette and a Dialog composition. Applications retain query and active-command state, supply stable command identities and localized metadata, register window shortcuts, and handle activation. Hosts can show results immediately or start with a compact search field that expands after a committed query and collapses when cleared. Local metadata filtering is optional; asynchronous search, stale-result rejection, command execution and history remain application-owned. Loading and errors replace actionable results.
 
-Search keeps keyboard focus while arrows move the active result through Onevra's non-selecting List; MyGo owns virtual layout and text editing. The dialog lets the modal scope establish initial focus so the overlay retains its original opener for restoration. Composition-aware dismissal prevents Escape ending an input-method composition from also closing the dialog. Public accessibility metadata exposes the active command, but native assistive-technology review remains necessary. See the [compilable usage example](../../source/plugins/command/example_test.go).
+Search keeps keyboard focus while arrows move the active result through Onevra's non-selecting List; MyGo owns virtual layout and text editing. The dialog lets the modal scope establish initial focus so the overlay retains its original opener for restoration. Composition-aware dismissal prevents Escape ending an input-method composition from also closing the dialog. Public accessibility metadata exposes the active command, but native assistive-technology review remains necessary. See the [compilable usage example](../../source/components/command/example_test.go).
 
 On macOS, palettes can optionally select an already enabled keyboard input source through the existing MyGo responder’s [AppKit input context](https://developer.apple.com/documentation/appkit/nstextinputcontext/selectedkeyboardinputsource). This small native adapter fills an upstream API gap without intercepting events or implementing text input. Selection waits for search focus and committed composition, runs once per opening, and normally restores the preceding source on dismissal if the active context and selected source still match.
 
 Hosts may retain the selected source instead. Unavailable sources leave search usable and expose an error through retained state. Embedded hosts release the session when removing the palette; all hosts release it before window destruction.
 
-See the [input-source lifecycle API](../../source/plugins/command/input_source.go).
+See the [input-source lifecycle API](../../source/components/command/input_source.go).
 
 ### Read-only code
 
-The [code plugin](../../source/plugins/code/code.go) tokenizes explicitly named languages with Chroma and renders retained spans through Onevra RichText and MyGo's text engine. Applications retain immutable documents outside frame builders; parsing can run in application-owned background work. Theme changes select prepared palettes without re-tokenization. Adjacent tokens sharing an appearance are merged, and a code block remains one text node rather than a UI element per token. Unknown languages, failed lexers and inputs exceeding highlighting limits retain their complete plain text.
+The [code component](../../source/components/code/code.go) tokenizes explicitly named languages with Chroma and renders retained spans through Onevra RichText and MyGo's text engine. Applications retain immutable documents outside frame builders; parsing can run in application-owned background work. Theme changes select prepared palettes without re-tokenization. Adjacent tokens sharing an appearance are merged, and a code block remains one text node rather than a UI element per token. Unknown languages, failed lexers and inputs exceeding highlighting limits retain their complete plain text.
 
 This path targets code snippets and Markdown blocks. It preserves MyGo selection across the document, so it does not virtualize individual lines. Highlighting limits bound lexer input and styling, not the layout cost of arbitrarily large files or a hard regex execution deadline. Large-file viewers need a separate viewport strategy and an explicit whole-document selection contract.
 
 ### Markdown
 
-[Markdown plugin](../../source/plugins/markdown/doc.go) parses CommonMark and GFM syntax into Onevra text and MyGo layout primitives. MyGo owns a single selection across the rendered document, including default code blocks. Parsing prepares fenced-code highlighting through the code plugin; indented code remains plain text.
+[Markdown component](../../source/components/markdown/doc.go) parses CommonMark and GFM syntax into Onevra text and MyGo layout primitives. MyGo owns a single selection across the rendered document, including default code blocks. Parsing prepares fenced-code highlighting through the code component; indented code remains plain text.
 
 Hosts retain parsed documents between source changes and provide ordinary scrolling so offscreen paragraphs remain selectable. Raw HTML stays literal. Standalone image paragraphs display application-supplied decoded bitmaps, shrinking to fit the document width; missing images and inline images retain alternative text.
 
@@ -72,7 +72,7 @@ Applications also own link activation; the component never opens destinations au
 
 ### Conversations
 
-The [chat plugin](../../source/plugins/chat/chat.go) composes conversation scrolling, turns, activity groups and a multiline composer whose proportions follow Waku's transcript. Applications own ordered steps with stable identities, stream updates, localized labels and summaries, retained Markdown documents and request lifecycles. A turn shows the prompt, then intermediate prose and activity groups, then an explicit final response; a completed tool never implicitly completes its turn. Builders run synchronously and perform no network or file work.
+The [chat component](../../source/components/chat/chat.go) composes conversation scrolling, turns, activity groups and a multiline composer whose proportions follow Waku's transcript. Applications own ordered steps with stable identities, stream updates, localized labels and summaries, retained Markdown documents and request lifecycles. A turn shows the prompt, then intermediate prose and activity groups, then an explicit final response; a completed tool never implicitly completes its turn. Builders run synchronously and perform no network or file work.
 
 An activity group opens while it is the live tail of a running turn and closes once it settles, unless the user chose otherwise. Each activity is a compact row with an optional bounded detail viewport, prose or monospace, that keeps its own disclosure and scroll state. Successful turns with a final response fold their steps behind a centered summary row without building hidden content; running turns end with a pulsing working row.
 
@@ -82,7 +82,7 @@ MyGo owns keyboard disclosure semantics, input methods and scrolling. Enter send
 
 Composition does not disable the Send button; Enter still belongs to the input method. The card accepts dropped file paths or host-selected native data formats without preparing them. A paste callback lets hosts attach clipboard content while preserving normal text editing when declined.
 
-Decoded image preview tiles have optional removal actions; slots hold attachments, accessory controls, non-shrinking trailing controls beside Send or Stop, and a footer row. Hosts can disable sending while preparing attachments, without blocking editing. Applications accept the draft and perform cancellation themselves; model choice, permission policy and artifact data are not embedded in the plugin.
+Decoded image preview tiles have optional removal actions; slots hold attachments, accessory controls, non-shrinking trailing controls beside Send or Stop, and a footer row. Hosts can disable sending while preparing attachments, without blocking editing. Applications accept the draft and perform cancellation themselves; model choice, permission policy and artifact data are not embedded in the component.
 
 The conversation follows the bottom until the user scrolls away, with a jump control to resume. An optional floating layout lets the transcript scroll behind a glass composer while reserving clearance for the latest turn and fading to an opaque footer for readability. The composer applies MyGo's glass material only to its card, preserving the host's theme and root transparency.
 

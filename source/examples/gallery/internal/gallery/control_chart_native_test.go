@@ -10,7 +10,7 @@ import (
 	"time"
 
 	"github.com/egoist/mygo"
-	"github.com/oneo-me/onevra/source/plugins/chart"
+	"github.com/oneo-me/onevra/source/components/chart"
 	"github.com/oneo-me/onevra/source/shells/sidebar"
 	"github.com/oneo-me/onevra/source/theme"
 )

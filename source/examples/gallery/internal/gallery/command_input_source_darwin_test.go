@@ -10,7 +10,7 @@ import (
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
-	"github.com/oneo-me/onevra/source/plugins/command"
+	"github.com/oneo-me/onevra/source/components/command"
 	"github.com/oneo-me/onevra/source/shells/sidebar"
 )
 

@@ -10,7 +10,7 @@ import (
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
-	"github.com/oneo-me/onevra/source/plugins/markdown"
+	"github.com/oneo-me/onevra/source/components/markdown"
 )
 
 // Cache source parsing independently of frames, including resource errors.

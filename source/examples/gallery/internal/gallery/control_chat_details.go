@@ -5,7 +5,7 @@ import (
 
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
-	"github.com/oneo-me/onevra/source/plugins/chat"
+	"github.com/oneo-me/onevra/source/components/chat"
 )
 
 func chatTurnSummary(c *ui.Context, turn *chatDemoTurn) string {

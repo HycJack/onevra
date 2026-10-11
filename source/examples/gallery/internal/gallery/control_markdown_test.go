@@ -40,7 +40,7 @@ func TestMarkdownPreviewHasOnlyDocument(t *testing.T) {
 		if text == "Markdown" {
 			headings++
 		}
-		if text == "Default" || text == "Plugins / Markdown" {
+		if text == "Default" || text == "Content display / Markdown" {
 			t.Fatalf("extra gallery content: %q", text)
 		}
 	}

@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Breaking: import command, code, markdown and chat from `components/<name>` instead of `plugins/<name>`.
+
 - Add themed bar, line, area, stacked bar and donut charts with smooth updates, interactive legends, keyboard selection and custom empty/detail content.
 
 - Require MyGo 0.4.3 and keep table resizing, range sliders, color picking, split limits and tab indicators aligned under transforms.

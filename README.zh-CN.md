@@ -2,7 +2,7 @@
 
 [English](README.md) | **简体中文**
 
-Onevra 是基于 [MyGo](https://github.com/egoist/mygo) 的原生桌面 Go 组件库，提供主题控件、窗口 Shell、Lucide 图标和可复用插件。名字由 **ONEO** 中的 `One` 与自造词尾 `vra` 组合而成。
+Onevra 是基于 [MyGo](https://github.com/egoist/mygo) 的原生桌面 Go 组件库，提供主题控件、窗口 Shell、Lucide 图标和复杂组件。名字由 **ONEO** 中的 `One` 与自造词尾 `vra` 组合而成。
 
 ![Onevra Gallery 主界面，包含侧边导航和可交互组件示例](docs/images/gallery.png)
 
@@ -127,7 +127,7 @@ components.Checkbox(c, &agreed, "I agree")
 components.Switch(c, &wifi, "Wi-Fi")
 ```
 
-宿主应用 Onevra 主题后，组件也可脱离 Shell 独立使用。参见[组件契约](source/components/doc.go)和[主题用法](source/theme/doc.go)。独立的[插件](docs/architecture/components.md#plugin-composition)提供图表、命令面板、语法高亮、Markdown 和会话视图。
+宿主应用 Onevra 主题后，组件也可脱离 Shell 独立使用。参见[组件契约](source/components/doc.go)和[主题用法](source/theme/doc.go)。复杂组件各自在 `components/` 下保留独立包：`chart`、`command`、`code`、`markdown` 和 `chat`。详见[复杂组件组合](docs/architecture/components.md#complex-component-composition)。
 
 ## 参与开发
 

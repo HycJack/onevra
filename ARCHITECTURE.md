@@ -4,7 +4,7 @@ Onevra is an experimental, product-neutral Go component library built on MyGo. I
 
 ## System boundaries
 
-- MyGo owns rendering, layout, input, native controls and desktop integration. The command plugin has a narrow AppKit adapter for optional input-source selection, which upstream does not expose; see [plugin composition](docs/architecture/components.md#plugin-composition).
+- MyGo owns rendering, layout, input, native controls and desktop integration. The command component has a narrow AppKit adapter for optional input-source selection, which upstream does not expose; see [complex component composition](docs/architecture/components.md#complex-component-composition).
 - Onevra composes MyGo primitives, rather than wrapping every upstream API or maintaining a parallel UI system.
 - Applications own business state, localized text, persistence, background work and application lifetime.
 - Components use Onevra's built-in light and dark themes, applied per frame through MyGo's theme mechanism without mutating global appearance. MyGo and the operating system own native window behavior; Shell composes caption buttons on Windows.
@@ -34,8 +34,7 @@ They use MyGo directly for single-instance activation, Dock visibility and tray 
 There is one Go module under `source/`, with module path `github.com/oneo-me/onevra/source`:
 
 - `source/shells/`: native window presentation styles, `sidebar` and `plain`.
-- `source/components/`: common controls built on MyGo's unstyled bases, usable independently of Shell.
-- `source/plugins/`: independent packages for complex components, including charts, command palettes, read-only syntax highlighting, selectable Markdown with custom code-block views and composable conversations; see [plugin composition](docs/architecture/components.md#plugin-composition).
+- `source/components/`: common controls and independent subpackages for complex components, usable without Shell; see [complex component composition](docs/architecture/components.md#complex-component-composition).
 - `source/icons/lucide/`: public icon assets and upstream provenance.
 - `source/tools/`: Packer, the minimal desktop app runner/packager, and library maintenance commands such as the Lucide importer; these share the Go module but are not runtime library dependencies.
 - `source/examples/gallery/`: standalone example, with presentation, native review tests and MyGo inventory tooling under its own `internal/` directory.

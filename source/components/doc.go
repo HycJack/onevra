@@ -12,6 +12,10 @@
 // style's opacity treatment. The shells/sidebar package installs the theme before content
 // builds; without Shell, callers can apply it through the theme package.
 //
+// Complex components live in independent subpackages: chart, command, code,
+// markdown and chat. These may compose common controls; this package does not
+// depend on its subpackages.
+//
 // The package covers everyday controls, not MyGo's full catalog. For anything
 // else, compose MyGo's styled widgets or its bases directly. Import components
 // alongside MyGo's ui package; neither requires an import alias.
