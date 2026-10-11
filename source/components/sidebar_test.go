@@ -2,6 +2,8 @@ package components
 
 import (
 	"bytes"
+	"image"
+	"image/color"
 	"testing"
 
 	"github.com/egoist/mygo/ui"
@@ -88,5 +90,46 @@ func TestSidebarKeyboardAndDisabled(t *testing.T) {
 		if disabled && selected != -1 {
 			t.Fatal("disabled sidebar accepted input")
 		}
+	}
+}
+
+// solidBitmap is a w×h image of one color.
+func solidBitmap(w, h int, color color.RGBA) *ui.Bitmap {
+	img := image.NewRGBA(image.Rect(0, 0, w, h))
+	for i := 0; i < len(img.Pix); i += 4 {
+		img.Pix[i], img.Pix[i+1], img.Pix[i+2], img.Pix[i+3] = color.R, color.G, color.B, color.A
+	}
+	return ui.NewBitmap(img)
+}
+
+func TestSidebarImageItem(t *testing.T) {
+	red := color.RGBA{R: 255, A: 255}
+	// A wide image must fit the icon square whole: full width, letterboxed.
+	wide := solidBitmap(80, 40, red)
+	var size, inset float32
+	tt := ui.NewTester(func(c *ui.Context) {
+		theme.Apply(c, theme.Light)
+		size, inset = c.Theme().Space(4.5), c.Theme().Space(2)
+		Sidebar(c).Children(func() {
+			SidebarItem(c, "Icon", lucide.House(), false)
+			SidebarImageItem(c, "Image", wide, false)
+			SidebarImageItem(c, "Empty", nil, false)
+		})
+	}, 220, 200)
+	icon, _ := tt.Find("Icon")
+	item, ok := tt.Find("Image")
+	if !ok || item.H != icon.H {
+		t.Fatalf("image item = %v, want the height of %v", item, icon)
+	}
+	x, y := item.X+inset, item.Y+item.H/2
+	isRed := func(x, y float32) bool { return tt.Image().RGBAAt(int(x), int(y)) == red }
+	if !isRed(x+size*.25, y) || !isRed(x+size*.75, y) {
+		t.Fatal("image does not fill the icon square's width")
+	}
+	if isRed(x+size/2, y-size*.4) || isRed(x+size/2, y+size*.4) {
+		t.Fatal("wide image was cropped or stretched instead of fitted")
+	}
+	if _, ok := tt.Find("Empty"); !ok {
+		t.Fatal("missing item without an image")
 	}
 }

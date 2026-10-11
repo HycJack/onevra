@@ -436,6 +436,8 @@ gallery.native_ui_painted_after_the_web_view_shows_over_its_page:
   other: 在网页视图之后绘制的原生界面会显示在页面上方。
 gallery.over_the_page:
   other: 页面上方
+gallery.profile:
+  other: 个人资料
 gallery.reload_page:
   other: 重新加载页面
 gallery.the_system_web_engine_renders_this_page_native_popovers_dialogs_and:

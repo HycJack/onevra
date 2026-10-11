@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Lead sidebar items and settings categories with an image, such as a project logo, through `SidebarImageItem` and `SettingsCategory.Image`; the image fits the icon square without cropping.
+
 ## [0.2026.4] - 2026-10-11
 
 - Let sidebar shells start hidden with `ShellOptions.Hidden`, so applications can prepare their window before showing or focusing it.

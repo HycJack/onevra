@@ -16,9 +16,11 @@ type SettingsState struct {
 
 // SettingsCategory describes a navigation destination. IDs must be nonempty and
 // unique among siblings; keep them stable across localization and rebuilds.
+// Image, such as a project logo, replaces Icon in the navigation when set.
 type SettingsCategory struct {
 	ID, Title, Section, Description string
 	Icon                            *ui.SVG
+	Image                           ui.ImageSource
 	Groups                          []SettingsGroup
 }
 
@@ -160,7 +162,13 @@ func Settings(c *ui.Context, state *SettingsState, categories []SettingsCategory
 							items := func() {
 								for i := start; i < end; i++ {
 									category := categories[i]
-									if SidebarItem(c, category.Title, category.Icon, selected == i).Key(category.ID).Clicked() {
+									var item ui.Element
+									if category.Image != nil {
+										item = SidebarImageItem(c, category.Title, category.Image, selected == i)
+									} else {
+										item = SidebarItem(c, category.Title, category.Icon, selected == i)
+									}
+									if item.Key(category.ID).Clicked() {
 										state.Category = category.ID
 										selected = i
 										state.Query = ""

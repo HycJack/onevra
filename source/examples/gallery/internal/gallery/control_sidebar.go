@@ -20,6 +20,15 @@ func controlSidebar(c *ui.Context, s *controlState, _ string) {
 			if components.SidebarItem(c, tr(c, "gallery.preferences"), nil, s.index == 2).Key("preferences").Clicked() {
 				s.index = 2
 			}
+			// A missing avatar leaves the item without an icon.
+			avatar, _ := galleryImage()
+			var image ui.ImageSource
+			if avatar != nil {
+				image = avatar
+			}
+			if components.SidebarImageItem(c, tr(c, "gallery.profile"), image, s.index == 3).Key("profile").Clicked() {
+				s.index = 3
+			}
 		})
 	})
 }

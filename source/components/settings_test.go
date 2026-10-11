@@ -1,11 +1,13 @@
 package components
 
 import (
+	"image/color"
 	"reflect"
 	"slices"
 	"testing"
 
 	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/source/icons/lucide"
 	"github.com/oneo-me/onevra/source/theme"
 )
 
@@ -226,5 +228,33 @@ func TestSettingsDescriptionContent(t *testing.T) {
 	tt.Frame()
 	if !tt.HasText("3 devices") {
 		t.Fatal("content missing from search results", tt.Texts())
+	}
+}
+
+func TestSettingsCategoryImage(t *testing.T) {
+	red := color.RGBA{R: 255, A: 255}
+	catalog := []SettingsCategory{
+		{ID: "general", Title: "General", Icon: lucide.Settings()},
+		{ID: "project", Title: "Project", Icon: lucide.Folder(), Image: solidBitmap(16, 16, red)},
+	}
+	state := SettingsState{}
+	tt := ui.NewTester(func(c *ui.Context) {
+		theme.Apply(c, theme.Light)
+		Settings(c, &state, catalog, SettingsOptions{})
+	}, 800, 600)
+	general, _ := tt.Find("General")
+	project, ok := tt.Find("Project")
+	if !ok || project.H != general.H {
+		t.Fatalf("project category = %v, want the height of %v", project, general)
+	}
+	found := false
+	for x := project.X; x < project.X+project.H && !found; x++ {
+		found = tt.Image().RGBAAt(int(x), int(project.Y+project.H/2)) == red
+	}
+	if !found {
+		t.Fatal("category image replaced by its icon")
+	}
+	if err := tt.Click("Project"); err != nil || state.Category != "project" {
+		t.Fatalf("navigation to the image category: %v %+v", err, state)
 	}
 }
