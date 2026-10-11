@@ -6,6 +6,8 @@ User-facing updates for Onevra library consumers.
 
 - Let applications place compact controls immediately before Send or Stop through the composer's trailing slot.
 
+- Keep a small gap between conversation scrollbars and the floating composer as its height changes, without shortening the transcript viewport.
+
 - Let conversation headers overlay messages without shifting the transcript and customize their top spacing, including docking flush to the viewport.
 
 - Keep the composer's Send button available during input-method composition, while preserving Enter for candidate selection; a nonempty draft now replaces Stop with Send during a running request.

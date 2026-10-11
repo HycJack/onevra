@@ -60,7 +60,10 @@ func FloatingConversationWith(c *ui.Context, layout *FloatingConversationState, 
 		if follow {
 			state.JumpToLatest()
 		}
-		viewport := components.ScrollView(c, components.ScrollViewOptions{}).Key("transcript").FillWidth().Grow(1).MinHeight(0).TrackScroll(&state.Scroll)
+		// Leave a small gap above the floating composer without shortening
+		// the transcript viewport that scrolls behind it.
+		viewport := components.ScrollView(c, components.ScrollViewOptions{}).Key("transcript").FillWidth().Grow(1).MinHeight(0).
+			ScrollbarInsets(0, 0, height+8, 0).TrackScroll(&state.Scroll)
 		viewport.Children(func() {
 			ui.Column(c).FillWidth().MinWidth(0).Shrink(0).AlignItems(ui.Center).Padding(22+layout.headerHeight, 20, 0, 20).Children(func() {
 				ui.Column(c).FillWidth().MaxWidth(ContentWidth).MinWidth(0).Gap(48).Children(func() {
