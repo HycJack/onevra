@@ -1135,3 +1135,13 @@ gallery.chat_effort:
   other: "思考强度"
 gallery.chat_think:
   other: "思考"
+gallery.flyout_editor:
+  other: 打开编辑器
+gallery.flyout_popover:
+  other: 系统弹出窗口
+gallery.flyout_description:
+  other: 由父窗口拥有、可延伸至窗口外的弹出窗口。
+gallery.flyout_dismiss:
+  other: 按 Escape 或点击外部关闭。
+gallery.component_flyout:
+  other: 浮出窗口

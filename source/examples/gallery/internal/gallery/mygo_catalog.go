@@ -47,6 +47,7 @@ var mygoExamples = []mygoExample{
 	{"Badge", "Feedback & overlays", exampleBadge},
 	{"Image", "Content display", exampleImage},
 	{"RichText", "Content display", exampleRichText},
+	{"Flyout", "Feedback & overlays", exampleFlyout},
 	{"WebView", "Content display", exampleWebView},
 	{"Box", "Layout & containers", exampleBox},
 	{"Row", "Layout & containers", exampleRow},

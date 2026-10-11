@@ -1135,3 +1135,13 @@ gallery.chat_effort:
   other: "Reasoning effort"
 gallery.chat_think:
   other: "Think"
+gallery.flyout_editor:
+  other: Open editor
+gallery.flyout_popover:
+  other: System popover
+gallery.flyout_description:
+  other: A parent-owned popup that can extend beyond the window.
+gallery.flyout_dismiss:
+  other: Press Escape or click outside to dismiss.
+gallery.component_flyout:
+  other: Flyout

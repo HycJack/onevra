@@ -109,6 +109,7 @@ var mygoPrimitives = map[string]bool{
 // Like plugins, these APIs host native content Onevra does not style, and keep a
 // demonstration of direct use.
 var mygoDirectExamples = map[string]string{
+	"Flyout":  "Use MyGo parent-owned native popup windows directly; applications own content and lifetime",
 	"WebView": "Use MyGo web views directly; applications own their pages and windows",
 }
 
