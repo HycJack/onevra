@@ -2,6 +2,7 @@ package components
 
 import (
 	"reflect"
+	"slices"
 	"testing"
 
 	"github.com/egoist/mygo/ui"
@@ -197,5 +198,33 @@ func TestSettingsGroupActions(t *testing.T) {
 		if tt.HasText("Refresh") {
 			t.Fatal("actions shown outside their category", tt.Texts())
 		}
+	}
+}
+
+func TestSettingsDescriptionContent(t *testing.T) {
+	state := SettingsState{}
+	catalog := settingsFixture()
+	clicks := 0
+	catalog[0].Groups[0].Items[0].DescriptionContent = func(c *ui.Context) {
+		ui.Text(c, "New sign-in · ")
+		if Button(c, "3 devices", ButtonLink).Clicked() {
+			clicks++
+		}
+	}
+	tt := ui.NewTester(func(c *ui.Context) { Settings(c, &state, catalog, SettingsOptions{}) }, 800, 600)
+	tt.Frame()
+	title, ok := tt.Find("Alerts")
+	link, found := tt.Find("3 devices")
+	if !ok || !found || link.Y <= title.Y || !slices.Contains(tt.Texts(), "New sign-in · 3 devices") || slices.Contains(tt.Texts(), "New sign-in") {
+		t.Fatalf("content not below the title in place of the description: %+v %+v %v", title, link, tt.Texts())
+	}
+	if err := tt.Click("3 devices"); err != nil || clicks != 1 {
+		t.Fatalf("link not clicked: %v %d", err, clicks)
+	}
+	// Search still matches Description and shows the content.
+	state.Query = "sign-in"
+	tt.Frame()
+	if !tt.HasText("3 devices") {
+		t.Fatal("content missing from search results", tt.Texts())
 	}
 }

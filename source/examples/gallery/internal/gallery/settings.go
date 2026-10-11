@@ -76,6 +76,17 @@ func (g *Gallery) settingsCategories() []components.SettingsCategory {
 			ID: "smart",
 			Items: []components.SettingsItem{{
 				ID: "smart", Title: g.text("gallery.smart_notifications"), Description: g.text("gallery.pause_mobile_alerts_while_you_re_active_on_desktop"),
+				// The description ends with an inline link that toggles the switch.
+				DescriptionContent: func(c *ui.Context) {
+					ui.Text(c, g.text("gallery.pause_mobile_alerts_while_you_re_active_on_desktop")+" ")
+					action := "gallery.turn_on"
+					if g.settings.smart {
+						action = "gallery.turn_off"
+					}
+					if components.Button(c, g.text(action), components.ButtonLink).Clicked() {
+						g.settings.smart = !g.settings.smart
+					}
+				},
 				Build: func(c *ui.Context) {
 					components.Switch(c, &g.settings.smart, g.text("gallery.toggle_smart_notifications"), components.SwitchOptions{HideLabel: true})
 				},

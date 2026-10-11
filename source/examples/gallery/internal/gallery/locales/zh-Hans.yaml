@@ -742,6 +742,10 @@ gallery.relax:
   other: 放松
 gallery.replaced_by_onevra:
   other: 已由 Onevra 替代
+gallery.turn_on:
+  other: 开启
+gallery.turn_off:
+  other: 关闭
 gallery.reset_defaults:
   other: 恢复默认
 gallery.reset_position:

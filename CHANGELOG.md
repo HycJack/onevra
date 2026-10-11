@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Let settings rows compose their description from inline text and links, such as a count that opens a popover, with `SettingsItem.DescriptionContent`; search still matches `Description`.
+
 ## [0.2026.3] - 2026-10-11
 
 - Require MyGo 0.4.1, including corrected Linux outer-window and content bounds.

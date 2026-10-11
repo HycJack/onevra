@@ -742,6 +742,10 @@ gallery.relax:
   other: Relax
 gallery.replaced_by_onevra:
   other: Replaced by Onevra
+gallery.turn_on:
+  other: Turn on
+gallery.turn_off:
+  other: Turn off
 gallery.reset_defaults:
   other: Reset to defaults
 gallery.reset_position:

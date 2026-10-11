@@ -52,6 +52,14 @@ func TestSettingsDialog(t *testing.T) {
 	if g.settings.smart {
 		t.Fatal("switch did not update template state")
 	}
+	tt.Frame()
+	if err := tt.Click("Turn on"); err != nil || !g.settings.smart {
+		t.Fatalf("description link did not update template state: %v", err)
+	}
+	tt.Frame()
+	if err := tt.Click("Turn off"); err != nil || g.settings.smart {
+		t.Fatalf("description link did not update template state: %v", err)
+	}
 	g.settings.view.Query = "New sign-in"
 	tt.Frame()
 	if err := tt.Click("New sign-in delivery"); err != nil {

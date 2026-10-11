@@ -37,10 +37,17 @@ type SettingsGroup struct {
 // thread only when visible. Applications own values, accessible control labels,
 // persistence and effects; Build must not start background work during rendering.
 // IDs must be nonempty and unique within the group.
+//
+// DescriptionContent optionally replaces Description's text with inline text
+// elements, such as Text and a ButtonLink, built into the description's
+// paragraph and styled like it. Only text elements belong in it; like Build,
+// it runs only when visible. Description is still what search matches, so
+// give it the same words.
 type SettingsItem struct {
 	ID, Title, Description string
 	Keywords               []string
 	Build                  func(c *ui.Context)
+	DescriptionContent     func(c *ui.Context)
 }
 
 // SettingsOptions controls presentation without imposing a window or dialog.
@@ -245,7 +252,10 @@ func Settings(c *ui.Context, state *SettingsState, categories []SettingsCategory
 						row.Key(struct{ Category, Group, Item string }{category.ID, group.ID, item.ID}).FillWidth().MinWidth(0).Gap(t.Space(3)).Children(func() {
 							ui.Column(c).FillWidth().Shrink(1).MinWidth(0).Gap(t.Space(1)).Children(func() {
 								Text(c, item.Title).Wrap()
-								if item.Description != "" {
+								switch {
+								case item.DescriptionContent != nil:
+									ui.RichText(c).FillWidth().TextColor(t.TextMuted).FontSize(t.Rem(.875)).Wrap().Children(func() { item.DescriptionContent(c) })
+								case item.Description != "":
 									Text(c, item.Description).TextColor(t.TextMuted).FontSize(t.Rem(.875)).Wrap()
 								}
 							})
