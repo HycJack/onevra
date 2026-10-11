@@ -27,17 +27,20 @@ func FloatingConversation(c *ui.Context, layout *FloatingConversationState, stat
 
 // FloatingConversationOptions supplies FloatingConversation's views. Header
 // floats over the top of the transcript at the composer's width, such as a
-// GlassPanel with live status; the transcript reserves its height so the first
-// turn stays unobscured. Leave Header nil to reclaim the space.
+// GlassPanel with live status. By default the transcript reserves its height
+// so the first turn stays unobscured. Leave Header nil to reclaim the space.
 type FloatingConversationOptions struct {
 	JumpLabel                 string
 	Header, Content, Composer View
+	// HeaderOverlay lets Header cover the transcript without reserving space,
+	// keeping message positions unchanged when it appears, resizes or hides.
+	HeaderOverlay bool
 }
 
 // FloatingConversationWith is FloatingConversation with an optional Header.
 func FloatingConversationWith(c *ui.Context, layout *FloatingConversationState, state *ConversationState, options FloatingConversationOptions) ui.Element {
 	jumpLabel, content, composer := options.JumpLabel, options.Content, options.Composer
-	if options.Header == nil {
+	if options.Header == nil || options.HeaderOverlay {
 		layout.headerHeight = 0
 	}
 	return ui.Column(c).FillWidth().Grow(1).MinHeight(0).MinWidth(0).Clip().Children(func() {
@@ -112,7 +115,7 @@ func FloatingConversationWith(c *ui.Context, layout *FloatingConversationState, 
 		if options.Header != nil {
 			ui.Row(c).Key("floating-header").Absolute().Attach(ui.AnchorTop, ui.AnchorTop).
 				FillWidth().Justify(ui.Center).Padding(8, 20, 0, 20).Draw(func(_ *ui.Painter, r ui.Rect) {
-				if layout.headerHeight != r.H {
+				if !options.HeaderOverlay && layout.headerHeight != r.H {
 					layout.headerHeight = r.H
 					c.Invalidate()
 				}

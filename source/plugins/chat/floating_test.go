@@ -172,9 +172,9 @@ func TestFloatingConversationHeaderClearance(t *testing.T) {
 	var layout FloatingConversationState
 	var state ConversationState
 	var first, header, composer ui.Rect
-	show := true
+	show, overlay := true, false
 	tt := ui.NewTester(func(c *ui.Context) {
-		options := FloatingConversationOptions{JumpLabel: "Latest", Content: func(c *ui.Context) {
+		options := FloatingConversationOptions{JumpLabel: "Latest", HeaderOverlay: overlay, Content: func(c *ui.Context) {
 			first = components.Text(c, "First").Height(40).Shrink(0).Bounds()
 		}, Composer: func(c *ui.Context) {
 			composer = ui.Box(c).Height(60).FillWidth().Bounds()
@@ -201,5 +201,94 @@ func TestFloatingConversationHeaderClearance(t *testing.T) {
 	tt.Frame()
 	if layout.headerHeight != 0 || first.Y >= top {
 		t.Fatalf("header space kept: height=%v first=%+v", layout.headerHeight, first)
+	}
+	withoutHeader := first
+	show = true
+	tt.Frame()
+	tt.Frame()
+	if first.Y != top {
+		t.Fatalf("header clearance not restored: first=%+v top=%v", first, top)
+	}
+	overlay = true
+	tt.Frame()
+	tt.Frame()
+	if layout.headerHeight != 0 || first != withoutHeader {
+		t.Fatalf("overlay kept stale clearance: height=%v first=%+v want=%+v", layout.headerHeight, first, withoutHeader)
+	}
+}
+
+func TestFloatingConversationHeaderOverlayKeepsTranscriptStill(t *testing.T) {
+	for _, width := range []int{900, 360} {
+		for _, position := range []string{"short", "latest", "reading"} {
+			t.Run(fmt.Sprintf("width=%d/%s", width, position), func(t *testing.T) {
+				var layout FloatingConversationState
+				var state ConversationState
+				var headerHeight float32
+				tt := ui.NewTester(func(c *ui.Context) {
+					options := FloatingConversationOptions{JumpLabel: "Latest", HeaderOverlay: true,
+						Content: func(c *ui.Context) {
+							components.Text(c, "First").Height(40).Shrink(0)
+							if position != "short" {
+								ui.Box(c).Height(1500).Shrink(0)
+							}
+							components.Text(c, "Last").Height(40).Shrink(0)
+						}, Composer: func(c *ui.Context) {
+							ui.Box(c).Label("Composer").Height(60).FillWidth()
+						}}
+					if headerHeight > 0 {
+						options.Header = func(c *ui.Context) {
+							GlassPanel(c, nil).Label("Header").Height(headerHeight)
+						}
+					}
+					FloatingConversationWith(c, &layout, &state, options).Label("Viewport")
+				}, width, 600)
+				tt.Frame()
+				if position == "reading" {
+					state.Scroll.Y = 200
+					tt.Frame()
+				}
+				bounds := func(label string) ui.Rect {
+					t.Helper()
+					r, ok := tt.Find(label)
+					if !ok {
+						t.Fatalf("missing %s", label)
+					}
+					return r
+				}
+				before := map[string]ui.Rect{}
+				for _, label := range []string{"First", "Last", "Composer", "Viewport"} {
+					before[label] = bounds(label)
+				}
+				y, maxY := state.Scroll.Y, state.Scroll.MaxY
+				for _, height := range []float32{32, 108, 48, 0, 80, 0} {
+					headerHeight = height
+					for range 2 {
+						tt.Frame()
+						for label, want := range before {
+							if got := bounds(label); got != want {
+								t.Fatalf("header height %v moved %s: got=%+v want=%+v", height, label, got, want)
+							}
+						}
+						if layout.headerHeight != 0 || state.Scroll.Y != y || state.Scroll.MaxY != maxY {
+							t.Fatalf("overlay changed clearance or scroll: height=%v scroll=%+v want=%v/%v", layout.headerHeight, state.Scroll, y, maxY)
+						}
+					}
+					if height == 0 {
+						if _, ok := tt.Find("Header"); ok {
+							t.Fatal("hidden header still present")
+						}
+						continue
+					}
+					header := bounds("Header")
+					composer := before["Composer"]
+					if header.Y != 8 || header.H != height || header.X != composer.X || header.W != composer.W {
+						t.Fatalf("incorrect header geometry: header=%+v composer=%+v height=%v", header, composer, height)
+					}
+					if position == "short" && header.Y+header.H <= before["First"].Y {
+						t.Fatal("header does not overlap the first message")
+					}
+				}
+			})
+		}
 	}
 }
