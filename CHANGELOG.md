@@ -4,17 +4,17 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+## [0.2026.5] - 2026-10-11
+
 - Require MyGo 0.4.2 and let spoke-style spinners honor custom text colors while retaining their muted default.
 
-- Add ordinary and virtualized tables with macOS-style alternating row stripes and neutral, hover-free row selection. Users can sort by sortable columns, resize and reorder columns from the header; applications retain the sort order, persistable column layout and row data, and columns wider than a virtualized table scroll sideways with their header.
+- Add ordinary and virtualized tables with alternating row stripes, row selection, column sorting, resizing and reordering. Applications own row data, sort order and persistable column layout; virtualized tables support horizontal scrolling.
 
-- Let Packer automatically include native libraries from target-specific `runtimes/` directories in development apps and release archives, with macOS signing.
+- Let Packer include native libraries from target-specific `runtimes/` directories with macOS signing, and retain the uncompressed host application beside release archives by default.
 
 - Let applications place compact controls immediately before Send or Stop through the composer's trailing slot.
 
-- Keep a small gap between conversation scrollbars and the floating composer as its height changes, without shortening the transcript viewport.
-
-- Let conversation headers overlay messages without shifting the transcript and customize their top spacing, including docking flush to the viewport.
+- Let conversation headers overlay messages with customizable top spacing, and keep scrollbars clear of the floating composer as its height changes.
 
 - Keep the composer's Send button available during input-method composition, while preserving Enter for candidate selection; a nonempty draft now replaces Stop with Send during a running request.
 
