@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+## [0.2026.6] - 2026-10-12
+
 - Breaking: import command, code, markdown and chat from `components/<name>` instead of `plugins/<name>`.
 
 - Add themed bar, line, area, stacked bar and donut charts with smooth updates, interactive legends, keyboard selection and custom empty/detail content.
