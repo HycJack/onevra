@@ -217,6 +217,55 @@ func TestFloatingConversationHeaderClearance(t *testing.T) {
 	}
 }
 
+func TestFloatingConversationHeaderTopInset(t *testing.T) {
+	for _, overlay := range []bool{false, true} {
+		t.Run(fmt.Sprintf("overlay=%v", overlay), func(t *testing.T) {
+			var layout FloatingConversationState
+			var state ConversationState
+			var inset *float32
+			tt := ui.NewTester(func(c *ui.Context) {
+				ui.Column(c).Fill().Padding(30, 0, 0, 0).Children(func() {
+					FloatingConversationWith(c, &layout, &state, FloatingConversationOptions{
+						HeaderOverlay: overlay, HeaderTopInset: inset,
+						Header:   func(c *ui.Context) { GlassPanel(c, nil).Label("Header").Height(32) },
+						Content:  func(c *ui.Context) { components.Text(c, "First").Height(40) },
+						Composer: func(c *ui.Context) { ui.Box(c).Label("Composer").Height(60).FillWidth() },
+					}).Label("Viewport")
+				})
+			}, 900, 600)
+			bounds := func(label string) ui.Rect {
+				t.Helper()
+				r, ok := tt.Find(label)
+				if !ok {
+					t.Fatalf("missing %s", label)
+				}
+				return r
+			}
+			zero, custom, negative := float32(0), float32(24), float32(-8)
+			for _, tc := range []struct {
+				inset *float32
+				want  float32
+			}{{nil, 8}, {&zero, 0}, {&custom, 24}, {&negative, 0}, {nil, 8}} {
+				inset = tc.inset
+				tt.Frame()
+				tt.Frame()
+				header, viewport, composer := bounds("Header"), bounds("Viewport"), bounds("Composer")
+				if header.Y != viewport.Y+tc.want || header.X != composer.X || header.W != composer.W {
+					t.Fatalf("inset %v: header=%+v viewport=%+v composer=%+v", tc.want, header, viewport, composer)
+				}
+				clearance := float32(0)
+				if !overlay {
+					clearance = header.H + tc.want
+				}
+				first := bounds("First")
+				if layout.headerHeight != clearance || first.Y != viewport.Y+22+clearance {
+					t.Fatalf("inset %v: clearance=%v want=%v first=%+v", tc.want, layout.headerHeight, clearance, first)
+				}
+			}
+		})
+	}
+}
+
 func TestFloatingConversationHeaderOverlayKeepsTranscriptStill(t *testing.T) {
 	for _, width := range []int{900, 360} {
 		for _, position := range []string{"short", "latest", "reading"} {

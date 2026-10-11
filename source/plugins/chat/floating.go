@@ -35,6 +35,10 @@ type FloatingConversationOptions struct {
 	// HeaderOverlay lets Header cover the transcript without reserving space,
 	// keeping message positions unchanged when it appears, resizes or hides.
 	HeaderOverlay bool
+	// HeaderTopInset overrides the gap above Header. Nil keeps the default
+	// 8-pixel inset; an explicit zero docks it to the top of the viewport.
+	// Negative values are treated as zero.
+	HeaderTopInset *float32
 }
 
 // FloatingConversationWith is FloatingConversation with an optional Header.
@@ -113,8 +117,12 @@ func FloatingConversationWith(c *ui.Context, layout *FloatingConversationState, 
 			})
 		})
 		if options.Header != nil {
+			topInset := float32(8)
+			if options.HeaderTopInset != nil {
+				topInset = max(0, *options.HeaderTopInset)
+			}
 			ui.Row(c).Key("floating-header").Absolute().Attach(ui.AnchorTop, ui.AnchorTop).
-				FillWidth().Justify(ui.Center).Padding(8, 20, 0, 20).Draw(func(_ *ui.Painter, r ui.Rect) {
+				FillWidth().Justify(ui.Center).Padding(topInset, 20, 0, 20).Draw(func(_ *ui.Painter, r ui.Rect) {
 				if !options.HeaderOverlay && layout.headerHeight != r.H {
 					layout.headerHeight = r.H
 					c.Invalidate()
