@@ -32,7 +32,7 @@ func SidebarSection(c *ui.Context, label string, fn func()) ui.Element {
 // with Enter or Space, not tree-style arrow navigation. Key can distinguish
 // items with identical labels. A nil icon leaves no icon space.
 func SidebarItem(c *ui.Context, label string, icon *ui.SVG, selected bool) ui.Element {
-	return sidebarItem(c, label, selected, func(size float32) {
+	return SidebarItemWithLeading(c, label, selected, func(c *ui.Context, size float32) {
 		if icon != nil {
 			Icon(c, icon).Size(size, size).TextColor(c.Theme().Accent)
 		}
@@ -44,14 +44,20 @@ func SidebarItem(c *ui.Context, label string, icon *ui.SVG, selected bool) ui.El
 // within the icon's square without cropping and has slightly rounded corners.
 // A nil image leaves no icon space.
 func SidebarImageItem(c *ui.Context, label string, image ui.ImageSource, selected bool) ui.Element {
-	return sidebarItem(c, label, selected, func(size float32) {
+	return SidebarItemWithLeading(c, label, selected, func(c *ui.Context, size float32) {
 		if image != nil {
 			ui.Image(c, image).Size(size, size).Fit(ui.Contain).Radius(size * .2).Shrink(0)
 		}
 	})
 }
 
-func sidebarItem(c *ui.Context, label string, selected bool, leading func(size float32)) ui.Element {
+// SidebarItemWithLeading is a SidebarItem with an application-built leading
+// slot, for example an image, monogram or status mark. A nil builder leaves no
+// leading space. The builder receives the theme-scaled standard icon size as a
+// suggestion and owns its content's size and appearance. Keep it non-interactive
+// so the navigation button remains the only focus and activation target.
+// It runs synchronously on the UI thread and must not start I/O or background work.
+func SidebarItemWithLeading(c *ui.Context, label string, selected bool, leading func(c *ui.Context, size float32)) ui.Element {
 	t := c.Theme()
 	b := ui.ButtonBase(c).Key(label).Label(label).FillWidth().Justify(ui.Start).
 		Padding(t.Space(1.75), t.Space(2)).Gap(t.Space(2)).Radius(t.Radius).
@@ -60,7 +66,9 @@ func sidebarItem(c *ui.Context, label string, selected bool, leading func(size f
 		b.Background(t.Text.Alpha(.1))
 	}
 	b.Children(func() {
-		leading(t.Space(4.5))
+		if leading != nil {
+			leading(c, t.Space(4.5))
+		}
 		Text(c, label).SingleLine()
 	})
 	return dimmed(b)

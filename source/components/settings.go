@@ -21,7 +21,11 @@ type SettingsCategory struct {
 	ID, Title, Section, Description string
 	Icon                            *ui.SVG
 	Image                           ui.ImageSource
-	Groups                          []SettingsGroup
+	// Leading replaces Image and Icon with application-built, non-interactive
+	// sidebar content. It follows SidebarItemWithLeading's builder contract
+	// and is not built in the narrow category selector or during metadata search.
+	Leading func(c *ui.Context, size float32)
+	Groups  []SettingsGroup
 }
 
 // SettingsGroup groups related items. Title may be empty for an unheaded group.
@@ -163,7 +167,9 @@ func Settings(c *ui.Context, state *SettingsState, categories []SettingsCategory
 								for i := start; i < end; i++ {
 									category := categories[i]
 									var item ui.Element
-									if category.Image != nil {
+									if category.Leading != nil {
+										item = SidebarItemWithLeading(c, category.Title, selected == i, category.Leading)
+									} else if category.Image != nil {
 										item = SidebarImageItem(c, category.Title, category.Image, selected == i)
 									} else {
 										item = SidebarItem(c, category.Title, category.Icon, selected == i)
