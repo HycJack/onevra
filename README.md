@@ -127,7 +127,7 @@ components.Checkbox(c, &agreed, "I agree")
 components.Switch(c, &wifi, "Wi-Fi")
 ```
 
-Components work independently of Shell when the host applies Onevra's theme. See the [component contract](source/components/doc.go) and [theme usage](source/theme/doc.go). Separate [plugins](docs/architecture/components.md#plugin-composition) provide command palettes, syntax highlighting, Markdown and conversation views.
+Components work independently of Shell when the host applies Onevra's theme. See the [component contract](source/components/doc.go) and [theme usage](source/theme/doc.go). Separate [plugins](docs/architecture/components.md#plugin-composition) provide charts, command palettes, syntax highlighting, Markdown and conversation views.
 
 ## Contributing
 

@@ -1147,3 +1147,99 @@ gallery.flyout_dismiss:
   other: Press Escape or click outside to dismiss.
 gallery.component_flyout:
   other: Flyout
+gallery.charts:
+  other: "Charts"
+gallery.motion:
+  other: "Motion"
+gallery.springs:
+  other: "Springs"
+gallery.keyframes:
+  other: "Keyframes"
+gallery.animated_pose:
+  other: "Animated pose"
+gallery.transforms:
+  other: "Transforms"
+gallery.editable_controls:
+  other: "Editable controls"
+gallery.perspective:
+  other: "Perspective"
+gallery.chart_update:
+  other: "Update data"
+gallery.chart_mon:
+  other: "Mon"
+gallery.chart_tue:
+  other: "Tue"
+gallery.chart_wed:
+  other: "Wed"
+gallery.chart_thu:
+  other: "Thu"
+gallery.chart_selection:
+  other: "Chart selection"
+gallery.chart_daily:
+  other: "Daily values"
+gallery.chart_keys:
+  other: "Point at the chart, or focus it and use the arrow keys."
+gallery.motion_replay:
+  other: "Replay sequence"
+gallery.motion_tile:
+  other: "Animated tile"
+gallery.motion_lift:
+  other: "Keep raised"
+gallery.motion_hover:
+  other: "Hover to lift"
+gallery.motion_reverse:
+  other: "Reverse direction"
+gallery.motion_smooth:
+  other: "Smooth"
+gallery.motion_snappy:
+  other: "Snappy"
+gallery.motion_bouncy:
+  other: "Bouncy"
+gallery.transform_flip:
+  other: "Flip card"
+gallery.transform_front:
+  other: "Front"
+gallery.transform_back:
+  other: "Back"
+gallery.transform_angle:
+  other: "Rotation angle"
+gallery.transform_scale:
+  other: "Scale down"
+gallery.transform_note:
+  other: "Transformed note"
+gallery.bar_chart:
+  other: "Bar chart"
+gallery.line_chart:
+  other: "Line chart"
+gallery.area_chart:
+  other: "Area chart"
+gallery.stacked_bar_chart:
+  other: "Stacked bar chart"
+gallery.donut_chart:
+  other: "Donut chart"
+gallery.chart_intro:
+  other: "Soft colors, subtle grids and details on selection. Use the legend to explore the data."
+gallery.chart_empty:
+  other: "Show empty state"
+gallery.chart_restore:
+  other: "Restore data"
+gallery.chart_no_data:
+  other: "No visible data"
+gallery.chart_fri:
+  other: "Fri"
+gallery.chart_sat:
+  other: "Sat"
+gallery.chart_current:
+  other: "Current period"
+gallery.chart_previous:
+  other: "Previous period"
+gallery.chart_distribution:
+  other: "Time distribution"
+gallery.chart_design:
+  other: "Design"
+gallery.chart_development:
+  other: "Development"
+gallery.chart_research:
+  other: "Research"
+gallery.chart_planning:
+  other: "Planning"

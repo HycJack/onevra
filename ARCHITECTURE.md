@@ -17,13 +17,17 @@ Application / standalone gallery
   └─ MyGo directly
 ```
 
-Shell styles live in independent subpackages under `shells/`; `sidebar` provides the sidebar-and-content layout, while `plain` provides a single content region below a draggable window-control area. Both hide the default window title bar. An application creates its Shell after MyGo is ready and supplies synchronous UI-thread content builders. Shell configures and creates a MyGo window, installs its content container; Sidebar Shell also supports an application-supplied replacement page. It exposes the native window handle for application-owned events and lifecycle handling. Layout and appearance ownership are described in [Components](docs/architecture/components.md).
+Shell styles live in independent subpackages under `shells/`; `sidebar` provides the sidebar-and-content layout, while `plain` provides a single content region below a draggable window-control area. Both hide the default window title bar. An application creates its Shell after MyGo is ready and supplies synchronous UI-thread content builders.
+
+Shell configures and creates a MyGo window, installs its content container; Sidebar Shell also supports an application-supplied replacement page. It exposes the native window handle for application-owned events and lifecycle handling. Layout and appearance ownership are described in [Components](docs/architecture/components.md).
 
 The `icons/lucide` package supplies lazily parsed, shared MyGo SVGs independently of UI components. The `components.Icon` component accepts these named accessors or parsed SVGs while MyGo owns rendering, sizing, color and accessibility. Generated named accessors have no full-library runtime registry or eager parsing, so ordinary consumers need not retain every icon. Upstream resources and licenses are pinned and checked in; a Lucide checkout is only needed for [maintainer updates](docs/build.md#updating-lucide-icons), not consumer builds.
 
 The gallery is an independent consumer of the public API, not a dependency of the library. It keeps interactive demonstration values in memory, owns its presentation-state persistence and provides a place to review native behavior. See [Gallery](docs/architecture/gallery.md) for storage and verification.
 
-The desktop, menu bar and hybrid starter applications are independent consumers under `source/examples/`. Each keeps its own lifecycle, preferences, embedded translations and packaging configuration so it can be copied without importing another example. Their small application helpers are intentionally local, not a shared application framework. They use MyGo directly for single-instance activation, Dock visibility and tray integration, and compose Onevra controls for their content. Settings is an application action: desktop and hybrid host it in a Dialog, while the menu bar example needs no main window and uses a settings window. See [starter applications](docs/build.md#starter-applications) for running, copying and native review.
+The desktop, menu bar and hybrid starter applications are independent consumers under `source/examples/`. Each keeps its own lifecycle, preferences, embedded translations and packaging configuration so it can be copied without importing another example. Their small application helpers are intentionally local, not a shared application framework.
+
+They use MyGo directly for single-instance activation, Dock visibility and tray integration, and compose Onevra controls for their content. Settings is an application action: desktop and hybrid host it in a Dialog, while the menu bar example needs no main window and uses a settings window. See [starter applications](docs/build.md#starter-applications) for running, copying and native review.
 
 ## Repository landmarks
 
@@ -31,7 +35,7 @@ There is one Go module under `source/`, with module path `github.com/oneo-me/one
 
 - `source/shells/`: native window presentation styles, `sidebar` and `plain`.
 - `source/components/`: common controls built on MyGo's unstyled bases, usable independently of Shell.
-- `source/plugins/`: independent packages for complex components, including command palettes, read-only syntax highlighting, selectable Markdown with custom code-block views and composable conversations; see [plugin composition](docs/architecture/components.md#plugin-composition).
+- `source/plugins/`: independent packages for complex components, including charts, command palettes, read-only syntax highlighting, selectable Markdown with custom code-block views and composable conversations; see [plugin composition](docs/architecture/components.md#plugin-composition).
 - `source/icons/lucide/`: public icon assets and upstream provenance.
 - `source/tools/`: Packer, the minimal desktop app runner/packager, and library maintenance commands such as the Lucide importer; these share the Go module but are not runtime library dependencies.
 - `source/examples/gallery/`: standalone example, with presentation, native review tests and MyGo inventory tooling under its own `internal/` directory.

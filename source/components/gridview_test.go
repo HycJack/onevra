@@ -179,3 +179,23 @@ func TestGridViewContentSizeAndEmpty(t *testing.T) {
 		t.Fatal("empty grid accepted selection")
 	}
 }
+
+func TestGridViewRotatedKeyboardRows(t *testing.T) {
+	selected := 1
+	state := GridState{Selected: &selected}
+	tt := ui.NewTester(func(c *ui.Context) {
+		ui.Column(c).Padding(40).Rotate(12).Scale(.9, .9).Children(func() {
+			GridView(c, &state, 20, 80, 40, func(i int) {
+				Text(c, fmt.Sprintf("Item %d", i))
+			}).Size(300, 180).AutoFocus()
+		})
+	}, 450, 350)
+	tt.Key(0, ui.KeyDown)
+	if selected != 4 {
+		t.Fatalf("Down in rotated grid selected %d, want 4", selected)
+	}
+	tt.Key(0, ui.KeyUp)
+	if selected != 1 {
+		t.Fatalf("Up in rotated grid selected %d, want 1", selected)
+	}
+}

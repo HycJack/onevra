@@ -16,6 +16,7 @@ type controlExample struct {
 // Control examples keep their state separate from the upstream widget catalog.
 type controlState struct {
 	chat                   *chatDemoState
+	chart                  *chartDemoState
 	dialogOpen, nestedOpen bool
 	tree                   components.TreeVirtualizedState[string]
 	table                  components.TableVirtualizedState
@@ -49,6 +50,11 @@ var textBoxBufferControlCatalog = []controlExample{
 }
 
 var controlCatalog = []controlExample{
+	{"Bar chart", "Bar chart", "Charts", []string{"Default"}, controlBarChart},
+	{"Line chart", "Line chart", "Charts", []string{"Default"}, controlLineChart},
+	{"Area chart", "Area chart", "Charts", []string{"Default"}, controlAreaChart},
+	{"Stacked bar chart", "Stacked bar chart", "Charts", []string{"Default"}, controlStackedBarChart},
+	{"Donut chart", "Donut chart", "Charts", []string{"Default"}, controlDonutChart},
 	{"TimePicker", "TimePicker", "Date & time", []string{"Default"}, controlTimePicker},
 	{"Calendar", "Calendar", "Date & time", []string{"Default"}, controlCalendar},
 	{"CalendarPicker", "CalendarPicker", "Date & time", []string{"Default"}, controlCalendarPicker},
@@ -199,7 +205,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 			for _, variant := range example.variants {
 				cell := ui.Column(c).Key(variant).MinWidth(0).MaxWidthPercent(100).Gap(12)
 				switch example.name {
-				case "Text", "GridView", "Markdown", "Code":
+				case "Text", "GridView", "Markdown", "Code", "Bar chart", "Line chart", "Area chart", "Stacked bar chart", "Donut chart":
 					cell.FillWidth()
 				case "TextBox", "TextBox (multiline)", "TextBoxBuffer", "TextBoxBuffer (multiline)", "NumberInput", "Slider", "Sidebar", "List", "Split", "ScrollView", "Progress", "Accordion", "Collapsible", "PixelGrid":
 					cell.Width(240)
@@ -217,7 +223,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 
 func (g *Gallery) controlSection(c *ui.Context, name string, build func()) {
 	ui.Column(c).Key(name).FillWidth().MinWidth(0).Gap(12).Children(func() {
-		components.Text(c, name).Bold().TextColor(c.Theme().Text)
+		components.Text(c, tr(c, name)).Bold().TextColor(c.Theme().Text)
 		build()
 	})
 }

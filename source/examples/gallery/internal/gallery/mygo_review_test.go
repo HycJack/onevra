@@ -164,6 +164,9 @@ func TestMyGoReviewLog(t *testing.T) {
 	for _, example := range mygoExamples {
 		seen[example.name] = true
 	}
+	for name := range mygoSubpackages {
+		seen[name] = true
+	}
 	for name := range mygoHandled {
 		if !seen[name] {
 			t.Fatalf("missing scanned component: %s", name)

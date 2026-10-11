@@ -12,6 +12,7 @@ import (
 
 // demoState is owned by one page, survives navigation, and is never persisted.
 type demoState struct {
+	variant         string
 	flyout          flyoutDemo
 	glass           glassDemo
 	terminal        terminalDemo

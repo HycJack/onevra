@@ -116,6 +116,8 @@ func pageFromKey(key string) galleryPage {
 	}
 	// Restore the grouped page for selections saved before the merge.
 	switch key {
+	case "mygo/Charts":
+		key = "controls/Bar chart"
 	case "controls/TextField", "controls/TextArea", "controls/TextBox (multiline)":
 		key = "controls/TextBox"
 	case "controls/Checkbox", "controls/Switch", "controls/Radio":

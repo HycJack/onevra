@@ -15,6 +15,7 @@ type mygoDecision struct {
 // exclusion decisions hide upstream examples and suppress pending reminders.
 // To exclude a component, add {Reason: "why this component is not needed"}.
 var mygoHandled = map[string]mygoDecision{
+	"Charts":           {Replacement: "plugins/chart", Reason: "Onevra categorical bar, line, area, stacked bar and donut views compose ui/chart scales, marks, paths and selection; continuous axes and specialized charts remain upstream primitives"},
 	"TimeInput":        {Replacement: "components.TimePicker", Reason: "Clock-icon trigger with hour and minute popup columns"},
 	"Calendar":         {Replacement: "components.Calendar", Reason: "Fixed-size calendar view, also used inside CalendarPicker"},
 	"DateInput":        {Replacement: "components.CalendarPicker", Reason: "Leading-icon date trigger opening Onevra Calendar"},
@@ -106,11 +107,13 @@ var mygoPrimitives = map[string]bool{
 	"FocusedValue": true,
 }
 
-// Like plugins, these APIs host native content Onevra does not style, and keep a
-// demonstration of direct use.
+// Native hosts and rendering primitives keep demonstrations of direct use.
+// Subpackages and element methods supplement the free-function scanner here.
 var mygoDirectExamples = map[string]string{
-	"Flyout":  "Use MyGo parent-owned native popup windows directly; applications own content and lifetime",
-	"WebView": "Use MyGo web views directly; applications own their pages and windows",
+	"Transforms": "Use MyGo element transforms directly so drawing, input, accessibility and overlays share coordinates",
+	"Motion":     "Use MyGo animation methods directly for scheduling, interruption and reduced motion; no Onevra animation runtime",
+	"Flyout":     "Use MyGo parent-owned native popup windows directly; applications own content and lifetime",
+	"WebView":    "Use MyGo web views directly; applications own their pages and windows",
 }
 
 // mygoDirectUse reports examples of MyGo APIs used directly, which the sidebar
@@ -126,6 +129,9 @@ var mygoNativeMenus = map[string]string{
 	"ContextMenu": "ui/menu.go",
 	"Menu":        "ui/menu.go",
 }
+
+// Reviewed subpackages outside the top-level styled-widget scanner.
+var mygoSubpackages = map[string]string{"Charts": "ui/chart"}
 
 type mygoComponent struct{ Name, Source string }
 
@@ -168,7 +174,11 @@ func mygoReviewEntries(discovered []mygoComponent, examples []mygoExample, decis
 	}
 	for name := range decisions {
 		if _, ok := found[name]; !ok {
-			found[name] = mygoComponent{name, "Not found in current inventory"}
+			source := mygoSubpackages[name]
+			if source == "" {
+				source = "Not found in current inventory"
+			}
+			found[name] = mygoComponent{name, source}
 		}
 	}
 	entries := make([]mygoReviewEntry, 0, len(found))

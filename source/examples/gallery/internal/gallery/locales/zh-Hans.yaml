@@ -1147,3 +1147,99 @@ gallery.flyout_dismiss:
   other: 按 Escape 或点击外部关闭。
 gallery.component_flyout:
   other: 浮出窗口
+gallery.charts:
+  other: "图表"
+gallery.motion:
+  other: "动画"
+gallery.springs:
+  other: "弹簧动画"
+gallery.keyframes:
+  other: "关键帧"
+gallery.animated_pose:
+  other: "姿态动画"
+gallery.transforms:
+  other: "变换"
+gallery.editable_controls:
+  other: "可编辑控件"
+gallery.perspective:
+  other: "透视"
+gallery.chart_update:
+  other: "更新数据"
+gallery.chart_mon:
+  other: "周一"
+gallery.chart_tue:
+  other: "周二"
+gallery.chart_wed:
+  other: "周三"
+gallery.chart_thu:
+  other: "周四"
+gallery.chart_selection:
+  other: "图表选择"
+gallery.chart_daily:
+  other: "每日数值"
+gallery.chart_keys:
+  other: "将指针移到图表上，或聚焦后使用方向键。"
+gallery.motion_replay:
+  other: "重播动画"
+gallery.motion_tile:
+  other: "动画方块"
+gallery.motion_lift:
+  other: "保持抬起"
+gallery.motion_hover:
+  other: "悬停抬起"
+gallery.motion_reverse:
+  other: "反转方向"
+gallery.motion_smooth:
+  other: "平滑"
+gallery.motion_snappy:
+  other: "轻快"
+gallery.motion_bouncy:
+  other: "弹跳"
+gallery.transform_flip:
+  other: "翻转卡片"
+gallery.transform_front:
+  other: "正面"
+gallery.transform_back:
+  other: "背面"
+gallery.transform_angle:
+  other: "旋转角度"
+gallery.transform_scale:
+  other: "缩小"
+gallery.transform_note:
+  other: "变换后的便笺"
+gallery.bar_chart:
+  other: "柱状图"
+gallery.line_chart:
+  other: "折线图"
+gallery.area_chart:
+  other: "面积图"
+gallery.stacked_bar_chart:
+  other: "堆叠柱状图"
+gallery.donut_chart:
+  other: "环形图"
+gallery.chart_intro:
+  other: "柔和配色、轻量网格与选中详情。通过图例探索数据。"
+gallery.chart_empty:
+  other: "显示空状态"
+gallery.chart_restore:
+  other: "恢复数据"
+gallery.chart_no_data:
+  other: "暂无可见数据"
+gallery.chart_fri:
+  other: "周五"
+gallery.chart_sat:
+  other: "周六"
+gallery.chart_current:
+  other: "本期"
+gallery.chart_previous:
+  other: "上期"
+gallery.chart_distribution:
+  other: "时间分布"
+gallery.chart_design:
+  other: "设计"
+gallery.chart_development:
+  other: "开发"
+gallery.chart_research:
+  other: "研究"
+gallery.chart_planning:
+  other: "规划"

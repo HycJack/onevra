@@ -4,6 +4,10 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Add themed bar, line, area, stacked bar and donut charts with smooth updates, interactive legends, keyboard selection and custom empty/detail content.
+
+- Require MyGo 0.4.3 and keep table resizing, range sliders, color picking, split limits and tab indicators aligned under transforms.
+
 - Add typed macOS Info.plist extensions through Packer configuration, including usage descriptions in development and release bundles before signing.
 
 - Fix the floating conversation's scroll-to-latest button to follow the theme background and text colors in dark mode.

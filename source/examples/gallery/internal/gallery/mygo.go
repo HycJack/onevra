@@ -12,7 +12,7 @@ type mygoExample struct {
 	build       func(*ui.Context, *demoState)
 }
 
-var mygoGroups = []string{"Content display", "Feedback & overlays"}
+var mygoGroups = []string{"Content display", "Feedback & overlays", "Layout & containers"}
 
 var demoImage = ui.MustParseSVG([]byte(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 100"><rect width="180" height="100" rx="12" fill="#dbeafe"/><circle cx="140" cy="28" r="15" fill="#fbbf24"/><path d="M0 100L55 25L110 100Z" fill="#2563eb"/><path d="M65 100L120 45L180 100Z" fill="#059669"/></svg>`))
 
@@ -27,6 +27,10 @@ func mygoExampleFor(page galleryPage) (mygoExample, bool) {
 // Variants are starting states, not frozen mockups: enabled controls remain interactive.
 func mygoVariants(name string) []string {
 	switch name {
+	case "Motion":
+		return []string{"Springs", "Keyframes", "Animated pose"}
+	case "Transforms":
+		return []string{"Editable controls", "Perspective"}
 	case "Toggle", "ToggleGroup", "Checkbox", "Switch":
 		return []string{"Off", "On", "Disabled"}
 	case "CheckboxGroup":
@@ -62,6 +66,10 @@ func (g *Gallery) mygoState(name, variant string, first bool) *demoState {
 		return s
 	}
 	s := newDemoState()
+	s.variant = variant
+	if name == "Transforms" {
+		s.value = 8
+	}
 	s.flyout.gallery = g
 	switch variant {
 	case "Empty":

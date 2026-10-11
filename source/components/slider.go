@@ -251,7 +251,7 @@ func sliderRange(c *ui.Context, s *SliderControl, low, high *float64, lo, hi, st
 	})
 	if held && !e.IsDisabled() {
 		x, _, _ := e.PointerPosition()
-		width := e.Bounds().W - thumb
+		width := e.LayoutBounds().W - thumb
 		if width > 0 {
 			v := lo + float64(max(float32(0), min(float32(1), (x-thumb/2)/width)))*(hi-lo)
 			if *dragging < 0 {

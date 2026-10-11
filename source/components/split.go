@@ -85,13 +85,13 @@ func Split(c *ui.Context, size *float32, first, second func(), options ...SplitO
 	s := &SplitControl{Element: ui.Box(c).Column().MinWidth(0).MinHeight(0)}
 	s.Element.Children(func() {
 		in := ui.Box(c).Key("panes").Grow(1).MinWidth(0).MinHeight(0).AlignItems(ui.Stretch).Clip()
-		total := in.Bounds().W
+		total := in.LayoutBounds().W
 		in.Row()
 		if vertical {
 			in.Column()
-			total = in.Bounds().H
+			total = in.LayoutBounds().H
 		}
-		// Bounds describes the previous layout. Request one follow-up frame
+		// LayoutBounds describes the previous layout. Request one follow-up frame
 		// when this container changes size, even without further user input.
 		in.Draw(func(_ *ui.Painter, r ui.Rect) {
 			actual := r.W

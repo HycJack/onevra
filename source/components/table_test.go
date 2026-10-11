@@ -248,3 +248,38 @@ func TestTableVirtualizedBuildsOnlyVisibleRows(t *testing.T) {
 		t.Fatalf("header %v and cell %v did not scroll together", head, cell)
 	}
 }
+
+func TestTableScaledHeaderGeometry(t *testing.T) {
+	for _, virtual := range []bool{false, true} {
+		for _, scale := range []float32{.75, 1.5} {
+			t.Run(fmt.Sprintf("virtual=%v/scale=%v", virtual, scale), func(t *testing.T) {
+				var state TableVirtualizedState
+				tt := ui.NewTester(func(c *ui.Context) {
+					ui.Column(c).Scale(scale, scale).TransformOrigin(0, 0).Children(func() {
+						if virtual {
+							TableVirtualized(c, &state, tableTestColumns(), 2, func(row, col int) { Text(c, fmt.Sprint(row, col)) }).Size(400, 200)
+						} else {
+							Table(c, &state.TableState, tableTestColumns(), func() {}).Width(400)
+						}
+					})
+				}, 660, 350)
+				y := float32(16) * scale
+				tt.Press(226*scale, y)
+				tt.Move(276*scale, y)
+				tt.Release(276*scale, y)
+				if w := state.Columns.Widths["Name"]; w < 279.9 || w > 280.1 {
+					t.Fatalf("scaled resize width = %v, want 280", w)
+				}
+				kind, _ := tt.Find("Kind")
+				x := kind.X + 4*scale
+				tt.Press(x, y)
+				// Cross Size's layout midpoint (45), but not 1.5x its visual midpoint.
+				tt.Move(x-55*scale, y)
+				tt.Release(x-55*scale, y)
+				if len(state.Columns.Order) != 3 || state.Columns.Order[1] != "Kind" {
+					t.Fatalf("scaled reorder = %v", state.Columns.Order)
+				}
+			})
+		}
+	}
+}

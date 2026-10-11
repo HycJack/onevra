@@ -127,7 +127,7 @@ components.Checkbox(c, &agreed, "I agree")
 components.Switch(c, &wifi, "Wi-Fi")
 ```
 
-宿主应用 Onevra 主题后，组件也可脱离 Shell 独立使用。参见[组件契约](source/components/doc.go)和[主题用法](source/theme/doc.go)。独立的[插件](docs/architecture/components.md#plugin-composition)提供命令面板、语法高亮、Markdown 和会话视图。
+宿主应用 Onevra 主题后，组件也可脱离 Shell 独立使用。参见[组件契约](source/components/doc.go)和[主题用法](source/theme/doc.go)。独立的[插件](docs/architecture/components.md#plugin-composition)提供图表、命令面板、语法高亮、Markdown 和会话视图。
 
 ## 参与开发
 

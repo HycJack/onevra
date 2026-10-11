@@ -24,7 +24,7 @@ func componentStatusCards(entries []mygoReviewEntry, status mygoStatus) []compon
 		}
 		name := entry.Name
 		if status == mygoReplaced {
-			owner, _, _ := strings.Cut(entry.Replacement, "/")
+			owner, _, _ := strings.Cut(entry.Replacement, " / ")
 			name = strings.TrimPrefix(strings.TrimSpace(owner), "components.")
 			grouped[name] = append(grouped[name], entry.Name)
 		} else {

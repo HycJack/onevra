@@ -155,7 +155,7 @@ func ColorView(c *ui.Context, value *ui.Color) *ColorControl {
 		if !plane.IsDisabled() {
 			if held {
 				px, py, _ := plane.PointerPosition()
-				r := plane.Bounds()
+				r := plane.LayoutBounds()
 				if r.W > 0 && r.H > 0 {
 					x.s = float64(px / r.W)
 					x.v = 1 - float64(py/r.H)

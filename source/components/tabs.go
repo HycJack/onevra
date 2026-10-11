@@ -43,7 +43,7 @@ func Tabs(c *ui.Context, selected *int, labels ...string) ui.TabsParts {
 		tabs.List.DrawOver(func(p *ui.Painter, r ui.Rect) {
 			// Read current layout during painting, and animate list-relative
 			// geometry so moving the entire control does not move its underline.
-			bounds := active.Bounds()
+			bounds := active.LayoutBounds()
 			in, h := t.Space(1.5), t.Space(0.5)
 			x := tabs.List.Animate("indicator-x", bounds.X-r.X+in, tabsIndicatorDuration)
 			w := tabs.List.Animate("indicator-width", max(0, bounds.W-2*in), tabsIndicatorDuration)

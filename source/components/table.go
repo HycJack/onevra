@@ -213,12 +213,12 @@ func (l *tableColumns) headerInput(c *ui.Context, heads []ui.Element, k int, col
 			// the pointer; later columns or sideways scrolling absorb the rest.
 			for m, j := range l.order[:k] {
 				if _, ok := l.width(&l.columns[j]); !ok {
-					l.setWidth(&l.columns[j], heads[m].Bounds().W)
+					l.setWidth(&l.columns[j], heads[m].LayoutBounds().W)
 				}
 			}
 			w, ok := l.width(col)
 			if !ok {
-				w = h.Bounds().W
+				w = h.LayoutBounds().W
 			}
 			l.setWidth(col, w+dx)
 		}
@@ -243,11 +243,11 @@ func (l *tableColumns) move(heads []ui.Element) {
 	to := at
 	switch {
 	case s.drag.dx > 0 && at+1 < len(l.order):
-		if next := heads[at+1].Bounds(); next.W > 0 && s.drag.dx > next.W/2 {
+		if next := heads[at+1].LayoutBounds(); next.W > 0 && s.drag.dx > next.W/2 {
 			to = at + 1
 		}
 	case s.drag.dx < 0 && at > 0:
-		if prev := heads[at-1].Bounds(); prev.W > 0 && -s.drag.dx > prev.W/2 {
+		if prev := heads[at-1].LayoutBounds(); prev.W > 0 && -s.drag.dx > prev.W/2 {
 			to = at - 1
 		}
 	}
@@ -255,9 +255,9 @@ func (l *tableColumns) move(heads []ui.Element) {
 		return
 	}
 	if to > at {
-		s.drag.dx -= heads[to].Bounds().W
+		s.drag.dx -= heads[to].LayoutBounds().W
 	} else {
-		s.drag.dx += heads[to].Bounds().W
+		s.drag.dx += heads[to].LayoutBounds().W
 	}
 	ids := make([]string, len(l.order))
 	for k, j := range l.order {
