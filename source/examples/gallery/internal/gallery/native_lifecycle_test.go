@@ -20,7 +20,7 @@ func TestNativeCloseDuringFrame(t *testing.T) {
 	returned := make(chan struct{}, 1)
 	var win *mygo.Window
 	mygo.RunOnMain(func() {
-		s := sidebar.NewShell(sidebar.ShellOptions{})
+		s := sidebar.NewShell(sidebar.ShellOptions{Hidden: nativeBackground()})
 		win = s.Window()
 		win.OnClosed(func() { closed <- struct{}{} })
 		s.SetPage(func(c *ui.Context) {

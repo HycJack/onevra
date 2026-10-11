@@ -37,7 +37,7 @@ func TestNativeCommand(t *testing.T) {
 				if width == 360 {
 					g.chooseLanguage("zh-Hans")
 				}
-				shell = sidebar.NewShell(sidebar.ShellOptions{Title: "Command palette review", Width: width, Height: 600,
+				shell = sidebar.NewShell(sidebar.ShellOptions{Hidden: nativeBackground(), Title: "Command palette review", Width: width, Height: 600,
 					MinWidth: 280, MinHeight: 400, LeftCollapsed: width == 360, Appearance: mode, Left: g.Left, Content: g.View})
 			})
 			win := shell.Window()
@@ -102,7 +102,7 @@ func TestNativeCommandExpansion(t *testing.T) {
 		state, open := command.State{}, true
 		var shell *sidebar.Shell
 		mygo.RunOnMain(func() {
-			shell = sidebar.NewShell(sidebar.ShellOptions{Title: "Command expansion review", Width: 820, Height: 600,
+			shell = sidebar.NewShell(sidebar.ShellOptions{Hidden: nativeBackground(), Title: "Command expansion review", Width: 820, Height: 600,
 				LeftCollapsed: true, Appearance: mode, Content: func(c *ui.Context) {
 					command.CommandDialog(c, &open, &state, []command.Item{{ID: "settings", Title: "Settings"}},
 						command.Options{ExpandOnSearch: true}, components.DialogOptions{})

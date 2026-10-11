@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Let sidebar shells start hidden with `ShellOptions.Hidden`, so applications can prepare their window before showing or focusing it.
+
 - Let settings rows compose their description from inline text and links, such as a count that opens a popover, with `SettingsItem.DescriptionContent`; search still matches `Description`.
 
 ## [0.2026.3] - 2026-10-11

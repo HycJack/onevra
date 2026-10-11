@@ -37,10 +37,15 @@ type Gallery struct {
 
 // New creates the standalone shell demonstration.
 func (g *Gallery) New() *sidebar.Shell {
+	return g.newWindow(false)
+}
+
+func (g *Gallery) newWindow(hidden bool) *sidebar.Shell {
 	g.createTerminal = newShellTerminal
 	g.createWebView = g.newWebView
 	g.Shell = sidebar.NewShell(sidebar.ShellOptions{
 		Title:     "Onevra Gallery",
+		Hidden:    hidden,
 		LeftWidth: 220, LeftMinWidth: 220, LeftMaxWidth: 520,
 		Left: g.Left, Content: g.View, LeftToolbar: g.LeftToolbar,
 		ContentTitle: g.Titlebar,

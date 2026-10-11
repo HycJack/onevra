@@ -56,6 +56,9 @@ func TestDockMenuActions(t *testing.T) {
 }
 
 func TestNativeDockMenu(t *testing.T) {
+	if os.Getenv("ONEVRA_NATIVE_FOREGROUND") != "1" {
+		t.Skip("requires ONEVRA_NATIVE_FOREGROUND=1")
+	}
 	if os.Getenv("ONEVRA_NATIVE_SMOKE") != "1" || runtime.GOOS != "darwin" {
 		t.Skip("requires a macOS desktop session")
 	}

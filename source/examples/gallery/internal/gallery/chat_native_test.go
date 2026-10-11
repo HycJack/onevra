@@ -41,7 +41,7 @@ func TestNativeChat(t *testing.T) {
 					if width == 760 {
 						height = 1000
 					}
-					shell = sidebar.NewShell(sidebar.ShellOptions{
+					shell = sidebar.NewShell(sidebar.ShellOptions{Hidden: nativeBackground(),
 						Title: "Chat review", Width: width, Height: height, MinWidth: 280, MinHeight: 400,
 						LeftCollapsed: true, Appearance: mode,
 						Content: func(c *ui.Context) {

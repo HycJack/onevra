@@ -16,6 +16,9 @@ import (
 // Content builders run synchronously on the UI thread.
 type ShellOptions struct {
 	Title string
+	// Hidden creates the window without showing or focusing it. Applications
+	// can later call Window().Show or Window().ShowInactive.
+	Hidden bool
 	// Window dimensions and constraints are outer DIPs. Non-positive width and
 	// height default to 820 and 600, respectively, for both initial and minimum
 	// sizes. Explicit positive values override each default independently.
@@ -135,7 +138,7 @@ func newShell(options ShellOptions) *Shell {
 func (s *Shell) nativeOptions() mygo.WindowOptions {
 	o := s.options
 	return mygo.WindowOptions{
-		Title: o.Title, Width: o.Width, Height: o.Height,
+		Hidden: o.Hidden, Title: o.Title, Width: o.Width, Height: o.Height,
 		MinWidth: o.MinWidth, MinHeight: o.MinHeight,
 		TitleBarStyle:        mygo.TitleBarHidden,
 		Frameless:            runtime.GOOS == "windows",

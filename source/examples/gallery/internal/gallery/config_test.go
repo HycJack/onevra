@@ -76,7 +76,7 @@ func TestNativeThemeMenu(t *testing.T) {
 	tt := ui.NewTester(func(c *ui.Context) { ui.Toolbar(c, func() { g.LeftToolbar(c) }).FillWidth() }, 220, 240)
 	theme, ok := tt.Find("Theme")
 	settings, settingsOK := tt.Find("Settings")
-	if !ok || !settingsOK || theme.X >= settings.X || theme.W != settings.W {
+	if !ok || !settingsOK || settings.X >= theme.X || theme.W != settings.W {
 		t.Fatalf("toolbar layout: %v, %v", theme, settings)
 	}
 	for _, option := range []struct {

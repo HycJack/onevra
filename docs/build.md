@@ -89,7 +89,7 @@ To start a project, copy one complete example directory, including `locales/` an
 For native lifecycle checks and settings captures, run from `source/` in a desktop session:
 
 ```sh
-ONEVRA_NATIVE_SMOKE=1 ONEVRA_SCREENSHOTS="$PWD/../dist/template-preview" \
+ONEVRA_NATIVE_SMOKE=1 ONEVRA_NATIVE_FOREGROUND=1 ONEVRA_SCREENSHOTS="$PWD/../dist/template-preview" \
   GOWORK=off go test -p 1 ./examples/desktop ./examples/menubar ./examples/hybrid \
   -run '^TestNative' -count=1 -timeout 45s
 ```
@@ -102,13 +102,13 @@ Run Gallery normally and select **Desktop / Tray**, then **Enable tray**. On mac
 
 Linux needs `libayatana-appindicator3` and a desktop supporting AppIndicator. AppIndicator provides menu actions, not direct click events, so use **Open notes**. The panel centers when the platform cannot report tray bounds. The tray icon is generated in memory and needs no additional packaged resource.
 
-From `source/`, run `ONEVRA_NATIVE_SMOKE=1 GOWORK=off go test ./examples/gallery/internal/gallery -run '^TestNativeTray$' -count=1 -timeout 30s` in a desktop session for the lifecycle smoke check. It checks enable/disable, show/hide, close-to-hide and cleanup, not pointer interaction or appearance. Manually verify repeated left-click toggling, right-click menu dismissal followed by another left-click, menu actions, Escape, click-away dismissal, retained text, keyboard focus, both system themes, display edges and multiple displays. Windows and Linux require separate native review.
+From `source/`, run `ONEVRA_NATIVE_SMOKE=1 ONEVRA_NATIVE_FOREGROUND=1 GOWORK=off go test ./examples/gallery/internal/gallery -run '^TestNativeTray$' -count=1 -timeout 30s` in a desktop session for the lifecycle smoke check. It checks enable/disable, show/hide, close-to-hide and cleanup, not pointer interaction or appearance. Manually verify repeated left-click toggling, right-click menu dismissal followed by another left-click, menu actions, Escape, click-away dismissal, retained text, keyboard focus, both system themes, display edges and multiple displays. Windows and Linux require separate native review.
 
 ## Dock menu example
 
 On macOS, select **Desktop / Dock menu** in Gallery and click **Enable Dock menu**. Right-click the application's Dock icon to find Show Gallery, Open Welcome and Open Settings above the standard macOS items. Disable Dock menu removes the demo shortcuts; closing Gallery also restores the previous menu. Windows and Linux show a platform explanation rather than an enable action.
 
-From `source/`, run `ONEVRA_NATIVE_SMOKE=1 GOWORK=off go test ./examples/gallery/internal/gallery -run '^TestNativeDockMenu$' -count=1 -timeout 30s` in a macOS desktop session. This checks menu installation, callback behavior and cleanup, not Dock pointer interaction. Manually verify the actual Dock menu, all three shortcuts with Gallery visible, hidden or minimized, the Settings dialog, and removal of the custom items without changing standard macOS actions. A packaged Gallery run is recommended to review the Dock icon's application identity.
+From `source/`, run `ONEVRA_NATIVE_SMOKE=1 ONEVRA_NATIVE_FOREGROUND=1 GOWORK=off go test ./examples/gallery/internal/gallery -run '^TestNativeDockMenu$' -count=1 -timeout 30s` in a macOS desktop session. This checks menu installation, callback behavior and cleanup, not Dock pointer interaction. Manually verify the actual Dock menu, all three shortcuts with Gallery visible, hidden or minimized, the Settings dialog, and removal of the custom items without changing standard macOS actions. A packaged Gallery run is recommended to review the Dock icon's application identity.
 
 ## Notification example
 
@@ -137,14 +137,14 @@ From `source/`, in a macOS desktop session:
 
 ```sh
 ONEVRA_NATIVE_SMOKE=1 ONEVRA_SCREENSHOTS="$PWD/../dist/preview" \
-  go test ./examples/gallery/internal/gallery -run '^TestNative(Gallery|MyGo|Controls|Terminal)$' -count=1 -v
+  GOWORK=off go test ./examples/gallery/internal/gallery -run '^TestNative' -count=1 -timeout 5m -v
 ```
 
-The tests open windows, capture appearance variants (including every Onevra control and MyGo example in light, dark and narrow layouts), exercise terminal input and cleanup, check that the settings dialog preserves window bounds, and close the windows. Window captures leave a hole where a MyGo web view shows, so the WebView example also writes the page's own capture. Omit `ONEVRA_SCREENSHOTS` to use temporary output.
+On macOS, these tests create hidden windows without activating the test application or adding a Dock icon. They capture appearance variants (including every Onevra control and MyGo example in light, dark and narrow layouts), exercise terminal input and cleanup, check that the settings dialog preserves window bounds, and destroy the windows. Other platforms still use visible windows. Tests for tray, Dock, flyouts, input sources, application-menu activation and visible state restoration are skipped unless `ONEVRA_NATIVE_FOREGROUND=1` is also set; that switch also makes the capture windows visible for manual review. Starter lifecycle tests require the same foreground opt-in. Window captures leave a hole where a MyGo web view shows, so the WebView example also writes the page's own capture. Omit `ONEVRA_SCREENSHOTS` to use temporary output.
 
-For Flyout captures and parent-window cleanup checks, use the same environment with `-run '^TestNativeFlyout$'`. Review both the editor and system-popover entry points, Escape and outside-press dismissal, placement near display edges, and note retention after reopening.
+For Flyout captures and parent-window cleanup checks, add `ONEVRA_NATIVE_FOREGROUND=1` and use `-run '^TestNativeFlyout$'`. Review both the editor and system-popover entry points, Escape and outside-press dismissal, placement near display edges, and note retention after reopening.
 
-For command-palette captures, use the same environment with `-run '^TestNativeCommand(Expansion|InputSource)?$'`. The macOS input-source test requires ABC and another enabled input source, temporarily switches between them, and restores the original source; it checks automatic selection, restoration, manual overrides and retaining ABC on close. In Gallery, review Command+E (Ctrl+E on other platforms), typing and Chinese input-method composition, arrow navigation, single-click and Enter activation, Escape dismissal, restored focus, and opening Settings from a command. Check both interface languages and themes, narrow windows and screen-reader announcements; captures alone do not verify these interactions.
+For command-palette captures, use the same environment with `-run '^TestNativeCommand(Expansion|InputSource)?$'`. The macOS input-source test additionally requires `ONEVRA_NATIVE_FOREGROUND=1`, ABC and another enabled input source, temporarily switches between them, and restores the original source; it checks automatic selection, restoration, manual overrides and retaining ABC on close. In Gallery, review Command+E (Ctrl+E on other platforms), typing and Chinese input-method composition, arrow navigation, single-click and Enter activation, Escape dismissal, restored focus, and opening Settings from a command. Check both interface languages and themes, narrow windows and screen-reader announcements; captures alone do not verify these interactions.
 
 For packaging changes, run `ONEVRA_PACKER_SMOKE=1 GOWORK=off go test ./tools/packer -run '^Test(Native|Cross)Packaging$' -count=1 -v`. Cross tests inspect Windows PE headers, embedded ICO/manifest resources, Linux ELF headers, executable permissions and target-specific native payloads for both architectures; they do not execute foreign binaries. The native packaging test uses the real Apple tools on macOS and skips elsewhere. This checks prebuilt ICNS packaging and Icon Composer compilation, payload copying, bundle metadata, signing, versioned release archive outputs, DMG integrity and the retained development bundle using an independent Go fixture. To verify the terminal library from a built bundle, set `ONEVRA_GALLERY_BUNDLE` to an absolute path to a development app or an extracted release app and run `go test ./examples/gallery -run '^TestBundledTerminalLoad$' -count=1 -v`. This loads a relocated copy from Frameworks rather than the cache. Also run the packaged gallery in a desktop session; archive checks do not establish Finder or Dock appearance.
 

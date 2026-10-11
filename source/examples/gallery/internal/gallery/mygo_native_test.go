@@ -36,7 +36,7 @@ func captureCatalog(t *testing.T, controls bool) {
 	}
 	g := &Gallery{}
 	var appShell *sidebar.Shell
-	mygo.RunOnMain(func() { appShell = g.New(); g.enterGallery() })
+	mygo.RunOnMain(func() { appShell = g.newWindow(nativeBackground()); g.enterGallery() })
 	win := appShell.Window()
 	defer win.Destroy()
 	// Only native captures relax the default minimum to exercise narrow layouts.
@@ -165,7 +165,7 @@ func TestNativeWebViewUnderModal(t *testing.T) {
 	}
 	g := &Gallery{}
 	var appShell *sidebar.Shell
-	mygo.RunOnMain(func() { appShell = g.New(); g.enterGallery() })
+	mygo.RunOnMain(func() { appShell = g.newWindow(nativeBackground()); g.enterGallery() })
 	win := appShell.Window()
 	defer win.Destroy()
 	mygo.Theme.SetSource(mygo.ThemeLight)

@@ -32,7 +32,7 @@ func TestNativeCode(t *testing.T) {
 		for _, width := range []int{640, 320} {
 			var shell *sidebar.Shell
 			mygo.RunOnMain(func() {
-				shell = sidebar.NewShell(sidebar.ShellOptions{
+				shell = sidebar.NewShell(sidebar.ShellOptions{Hidden: nativeBackground(),
 					Title: "Code review", Width: width, Height: 820, MinWidth: 280, MinHeight: 400,
 					LeftCollapsed: true, Appearance: mode,
 					Content: func(c *ui.Context) {

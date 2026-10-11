@@ -32,11 +32,22 @@ func TestMain(m *testing.M) {
 		os.Exit(1)
 	}
 	mygo.App.SetName("Onevra smoke")
+	if nativeBackground() {
+		mygo.App.SetActivationPolicy(mygo.ActivationPolicyAccessory)
+	}
 	mygo.App.SetPath(mygo.PathUserData, dir)
 	// Tests own separate windows; only the end of m.Run should quit the app.
 	mygo.App.OnWindowAllClosed(func() {})
 	result := make(chan int, 1)
-	mygo.App.WhenReady(func() { go func() { result <- m.Run(); mygo.App.Quit() }() })
+	mygo.App.WhenReady(func() {
+		go func() {
+			stopFrames := startNativeFrames()
+			code := m.Run()
+			stopFrames()
+			result <- code
+			mygo.App.Quit()
+		}()
+	})
 	if err := mygo.App.Run(); err != nil {
 		os.RemoveAll(dir)
 		fmt.Fprintln(os.Stderr, err)
@@ -53,7 +64,7 @@ func TestNativeGallery(t *testing.T) {
 	}
 	g := &Gallery{}
 	var appShell *sidebar.Shell
-	mygo.RunOnMain(func() { appShell = g.New() })
+	mygo.RunOnMain(func() { appShell = g.newWindow(nativeBackground()) })
 	win := appShell.Window()
 	defer win.Destroy()
 	if win.Page() != nil || win.Title() != "Onevra Gallery" {
@@ -65,7 +76,7 @@ func TestNativeGallery(t *testing.T) {
 	// Only native captures relax the default minimum to exercise narrow layouts.
 	mygo.RunOnMain(func() { win.SetMinimumSize(360, 480) })
 	var blank *mygo.Window
-	mygo.RunOnMain(func() { blank = sidebar.NewShell(sidebar.ShellOptions{}).Window() })
+	mygo.RunOnMain(func() { blank = sidebar.NewShell(sidebar.ShellOptions{Hidden: nativeBackground()}).Window() })
 	if blank.Page() != nil {
 		t.Error("nil content created a web page")
 	}

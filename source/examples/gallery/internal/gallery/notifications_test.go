@@ -44,7 +44,7 @@ func TestNativeNotifications(t *testing.T) {
 		t.Fatal(err)
 	}
 	g := &Gallery{page: notificationsPage}
-	mygo.RunOnMain(func() { g.New(); g.enterGallery() })
+	mygo.RunOnMain(func() { g.newWindow(nativeBackground()); g.enterGallery() })
 	win := g.Shell.Window()
 	defer win.Destroy()
 	for _, tc := range []struct {

@@ -109,6 +109,9 @@ func TestStateRoutes(t *testing.T) {
 }
 
 func TestNativeState(t *testing.T) {
+	if os.Getenv("ONEVRA_NATIVE_FOREGROUND") != "1" {
+		t.Skip("requires ONEVRA_NATIVE_FOREGROUND=1")
+	}
 	if os.Getenv("ONEVRA_NATIVE_SMOKE") != "1" {
 		t.Skip("requires a desktop session")
 	}

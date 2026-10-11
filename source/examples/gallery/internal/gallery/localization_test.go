@@ -210,7 +210,7 @@ func TestNativeLanguages(t *testing.T) {
 		t.Skip("requires desktop session")
 	}
 	g := &Gallery{}
-	mygo.RunOnMain(func() { g.New() })
+	mygo.RunOnMain(func() { g.newWindow(nativeBackground()) })
 	win := g.Shell.Window()
 	defer win.Destroy()
 	dir := os.Getenv("ONEVRA_SCREENSHOTS")

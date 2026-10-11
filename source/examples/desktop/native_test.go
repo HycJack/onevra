@@ -12,7 +12,7 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	if os.Getenv("ONEVRA_NATIVE_SMOKE") != "1" {
+	if os.Getenv("ONEVRA_NATIVE_SMOKE") != "1" || os.Getenv("ONEVRA_NATIVE_FOREGROUND") != "1" {
 		os.Exit(m.Run())
 	}
 	dir, err := os.MkdirTemp("", "onevra-"+appKind+"-")
@@ -34,8 +34,8 @@ func TestMain(m *testing.M) {
 }
 
 func TestNativeLifecycle(t *testing.T) {
-	if os.Getenv("ONEVRA_NATIVE_SMOKE") != "1" {
-		t.Skip("requires a desktop session")
+	if os.Getenv("ONEVRA_NATIVE_SMOKE") != "1" || os.Getenv("ONEVRA_NATIVE_FOREGROUND") != "1" {
+		t.Skip("requires ONEVRA_NATIVE_SMOKE=1 and ONEVRA_NATIVE_FOREGROUND=1")
 	}
 	a := &application{config: defaultConfig(), path: filepath.Join(t.TempDir(), "config.yaml")}
 	var capture *mygo.Window
@@ -148,8 +148,8 @@ func TestNativeLifecycle(t *testing.T) {
 }
 
 func TestNativeBackgroundStartup(t *testing.T) {
-	if os.Getenv("ONEVRA_NATIVE_SMOKE") != "1" {
-		t.Skip("requires a desktop session")
+	if os.Getenv("ONEVRA_NATIVE_SMOKE") != "1" || os.Getenv("ONEVRA_NATIVE_FOREGROUND") != "1" {
+		t.Skip("requires ONEVRA_NATIVE_SMOKE=1 and ONEVRA_NATIVE_FOREGROUND=1")
 	}
 	if appKind == "desktop" {
 		t.Skip("desktop always starts with its main window")
