@@ -147,17 +147,16 @@ func Slider(c *ui.Context, value *float64, lo, hi float64, options ...SliderOpti
 	return s
 }
 
-// Keep press geometry shared by sliders and color channels; MyGo owns the
-// glass rendering and backdrop sampling.
 func sliderKnobRect(t *ui.Theme, x, y, held float32) ui.Rect {
 	grow := 1 + 0.35*held
 	w, h := t.Space(5)*grow, t.Space(4)*grow
 	return ui.Rect{X: x - w/2, Y: y - h/2, W: w, H: h}
 }
 
+// MyGo owns the glass rendering and backdrop sampling.
 func paintSliderKnob(p *ui.Painter, t *ui.Theme, k ui.Rect, held float32, focus bool) {
 	face, drop := ui.RGB(255, 255, 255), ui.RGBA(0, 0, 0, .14)
-	rad := k.H / 2
+	rad := min(k.W, k.H) / 2
 	if held > 0 {
 		p.Shadow(k, rad, 0, 8, 14, -3, drop.Alpha(held))
 	}

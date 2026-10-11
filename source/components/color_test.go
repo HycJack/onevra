@@ -258,13 +258,13 @@ func TestColorChannelEndpoints(t *testing.T) {
 		t.Fatal("channel missing")
 	}
 	// The hit bounds now include the overhang; the visible track stays aligned
-	// with its parent, inset by half the thumb width inside the hit bounds.
+	// with its parent, inset inside the generous hit bounds.
 	for _, end := range []float64{0, 1} {
 		value = end
 		tt.Frame()
-		x := r.X + 6
+		x := r.X + 8
 		if end == 1 {
-			x = r.X + r.W - 6
+			x = r.X + r.W - 8
 		}
 		pixel := tt.Image().RGBAAt(int(x), int(r.Y+r.H/2))
 		if pixel.A == 0 {

@@ -114,7 +114,7 @@ func ColorView(c *ui.Context, value *ui.Color) *ColorControl {
 		panic("components.ColorView: nil color")
 	}
 	t := c.Theme()
-	out := &ColorControl{Element: ui.Column(c).Width(t.Space(72)).MaxWidthPercent(100).MinWidth(0).Gap(t.Space(3)).Role(ui.RoleGroup)}
+	out := &ColorControl{Element: ui.Column(c).Width(t.Space(64)).MaxWidthPercent(100).MinWidth(0).Gap(t.Space(2)).Role(ui.RoleGroup)}
 	st := ui.Local(out.Element, "color-view", func() colorViewState {
 		s := colorViewState{hsv: colorToHSV(value.SRGB())}
 		s.hsl = s.hsv.hsl()
@@ -135,7 +135,7 @@ func ColorView(c *ui.Context, value *ui.Color) *ColorControl {
 		st.sync(*value)
 	}
 	out.Children(func() {
-		plane := ui.Box(c).FillWidth().Height(t.Space(50)).Radius(t.Radius).Focusable().FocusRing(false).Role(ui.RoleSlider).Label(words.SaturationBrightness).Cursor(ui.CursorCrosshair)
+		plane := ui.Box(c).FillWidth().Height(t.Space(40)).Radius(t.Radius).Focusable().FocusRing(false).Role(ui.RoleSlider).Label(words.SaturationBrightness).Cursor(ui.CursorCrosshair)
 		_, _, held := plane.Dragged()
 		var knob ui.Element
 		plane.Children(func() {
@@ -150,7 +150,7 @@ func ColorView(c *ui.Context, value *ui.Color) *ColorControl {
 			target = 1
 		}
 		press := plane.Animate(0, target, 150*time.Millisecond)
-		diameter := t.Space(4.5) * (1 + .35*press)
+		diameter := t.Space(4.5) * (1 + .15*press)
 		x := st.hsv
 		if !plane.IsDisabled() {
 			if held {
@@ -242,7 +242,7 @@ func ColorView(c *ui.Context, value *ui.Color) *ColorControl {
 			})
 		})
 		field := func(i int, label string) { colorField(c, st, value, i, label, set) }
-		ui.Row(c).FillWidth().Gap(t.Space(3)).Children(func() {
+		ui.Row(c).FillWidth().Gap(t.Space(2)).Children(func() {
 			labels := [3]string{"R", "G", "B"}
 			if st.format == colorHSBA {
 				labels = [3]string{"H", "S", "B"}
@@ -254,7 +254,7 @@ func ColorView(c *ui.Context, value *ui.Color) *ColorControl {
 				field(i, label)
 			}
 		})
-		ui.Row(c).FillWidth().Gap(t.Space(3)).Children(func() { field(3, "#"); field(4, "A") })
+		ui.Row(c).FillWidth().Gap(t.Space(2)).Children(func() { field(3, "#"); field(4, "A") })
 	})
 	dimmed(out.Element)
 	return out
@@ -265,10 +265,8 @@ func paintColorPlaneKnob(p *ui.Painter, k ui.Rect, held float32) {
 	if held > 0 {
 		glass.Paint(p, k, rad, glass.Glass{Style: glass.Clear})
 	}
-	if held < 1 {
-		p.Stroke(k, ui.RGBA(0, 0, 0, .4*(1-held)), rad, 3)
-		p.Stroke(k, ui.RGBA(255, 255, 255, 1-held), rad, 2)
-	}
+	p.Stroke(k, ui.RGBA(0, 0, 0, .4), rad, 3-held)
+	p.Stroke(k, ui.RGBA(255, 255, 255, 1-.15*held), rad, 2-held)
 }
 
 func colorChannel(c *ui.Context, value *float64, hi float64, label string, paint func(*ui.Painter, ui.Rect)) ui.Element {
@@ -276,8 +274,8 @@ func colorChannel(c *ui.Context, value *float64, hi float64, label string, paint
 	d := t.Space(5)
 	var e ui.Element
 	ui.Box(c).FillWidth().Height(d).Children(func() {
-		// Expand input bounds by half a thumb while leaving the visible track
-		// aligned with the color plane. SliderBase maps its padded content box.
+		// Keep a generous hit area around the narrow thumb while aligning the
+		// visible track with the plane. SliderBase maps its padded content box.
 		e = ui.SliderBase(c, value, 0, hi).Absolute().Left(-d / 2).Right(-d / 2).
 			Height(d).PaddingX(d / 2).Label(label).FocusRing(false)
 	})
@@ -294,7 +292,15 @@ func colorChannel(c *ui.Context, value *float64, hi float64, label string, paint
 		bar := ui.Rect{X: r.X + d/2, Y: r.Y + d*.2, W: max(0, r.W-d), H: d * .6}
 		p.Clip(bar, bar.H/2, func() { paint(p, bar) })
 		x, y := bar.X+bar.W*fraction, r.Y+d/2
-		paintSliderKnob(p, t, sliderKnobRect(t, x, y, glass), glass, e.FocusVisible())
+		grow := 1 + .35*glass
+		w, h := t.Space(1.5)*grow, t.Space(4)*grow
+		knob := ui.Rect{X: x - w/2, Y: y - h/2, W: w, H: h}
+		paintSliderKnob(p, t, knob, glass, e.FocusVisible())
+		if glass > 0 {
+			rad := min(w, h) / 2
+			p.Stroke(knob, ui.RGBA(0, 0, 0, .4*glass), rad, 2)
+			p.Stroke(knob, ui.RGBA(255, 255, 255, .85*glass), rad, 1)
+		}
 	})
 	return e
 }
@@ -331,7 +337,7 @@ func ColorPicker(c *ui.Context, value *ui.Color) *ColorControl {
 		ui.Box(c).Fill().Radius(t.Radius / 2).Clip().Draw(func(p *ui.Painter, r ui.Rect) { paintColorChecks(p, r, t.Space(1.5)); p.Fill(r, *value, 0) })
 	})
 	Popover(c, out.Element, open, func(panel ui.Element) {
-		panel.MaxWidthPercent(100)
+		panel.Padding(t.Space(3)).MaxWidthPercent(100)
 		view := ColorView(c, value)
 		out.changed = view.Changed()
 	})
