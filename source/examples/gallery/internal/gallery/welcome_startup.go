@@ -11,7 +11,7 @@ import (
 )
 
 // Keep the application version aligned with packer.yaml; a test checks both.
-const galleryVersion = "0.2026.6"
+const galleryVersion = "0.2026.7"
 
 // welcomeCounts summarizes the catalog: component pages and their sections.
 func welcomeCounts() (pages, sections int) {
