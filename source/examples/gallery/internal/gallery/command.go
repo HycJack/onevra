@@ -38,7 +38,9 @@ func (g *Gallery) Commands(c *ui.Context) {
 		command.CommandDialog(c, &g.commands.open, &g.commands.palette, nil, command.Options{}, components.DialogOptions{})
 		return
 	}
-	items := []command.Item{{ID: "settings", Title: tr(c, "gallery.settings"), Group: tr(c, "gallery.actions_navigation"), Icon: lucide.Settings(), Keywords: []string{"settings", "preferences"}}}
+	// Trailing content marks the application-level command among pages.
+	items := []command.Item{{ID: "settings", Title: tr(c, "gallery.settings"), Group: tr(c, "gallery.actions_navigation"), Icon: lucide.Settings(), Keywords: []string{"settings", "preferences"},
+		Trailing: func(c *ui.Context) { components.Badge(c, tr(c, "gallery.application")).AlignSelf(ui.Center) }}}
 	for _, group := range navigationCatalog() {
 		for _, entry := range group.entries {
 			items = append(items, command.Item{

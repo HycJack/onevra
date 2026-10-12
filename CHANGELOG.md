@@ -4,6 +4,7 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Add `Leading` and `Trailing` content slots to command items, for images or other custom content beside the title.
 - Require MyGo 0.4.5, which paints text selections above text and span backgrounds in text boxes, code and other selectable text.
 
 ## [0.2026.6] - 2026-10-12

@@ -262,3 +262,26 @@ func TestExpandOnSearch(t *testing.T) {
 		})
 	}
 }
+
+func TestItemSlots(t *testing.T) {
+	state := State{}
+	var leadingSize float32
+	items := []Item{{ID: "task", Title: "Task", Shortcut: "⌘T",
+		Leading: func(c *ui.Context, size float32) {
+			leadingSize = size
+			components.Text(c, "Leading content")
+		},
+		Trailing: func(c *ui.Context) { components.Text(c, "Trailing content") },
+	}}
+	tt := ui.NewTester(func(c *ui.Context) {
+		ui.Column(c).Size(400, 250).Children(func() { CommandPalette(c, &state, items, Options{}) })
+	}, 400, 250)
+	if !tt.HasText("Leading content") || !tt.HasText("Trailing content") || !tt.HasText("⌘T") || leadingSize <= 0 {
+		t.Fatalf("slots were not built: leading size %v", leadingSize)
+	}
+	state.Query = "content"
+	tt.Frame()
+	if tt.HasText("Task") {
+		t.Fatal("slot content took part in filtering")
+	}
+}

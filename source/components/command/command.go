@@ -19,7 +19,12 @@ type Item struct {
 	ID, Title, Description, Group, Shortcut string
 	Keywords                                []string
 	Icon                                    *ui.SVG
-	Disabled                                bool
+	// Leading replaces Icon with non-interactive content of the given size,
+	// such as an image. Trailing adds non-interactive content before Shortcut.
+	// Neither slot takes part in filtering.
+	Leading  func(c *ui.Context, size float32)
+	Trailing func(c *ui.Context)
+	Disabled bool
 }
 
 // State is retained by the host for one palette; do not copy it after use.
@@ -258,7 +263,9 @@ func CommandPalette(c *ui.Context, s *State, items []Item, options Options) ui.E
 				}
 				row.OnClick(func() { s.refocus = true; activate(item.ID) })
 				row.Children(func() {
-					if item.Icon != nil {
+					if item.Leading != nil {
+						item.Leading(c, t.Space(5))
+					} else if item.Icon != nil {
 						components.Icon(c, item.Icon).Size(t.Space(5), t.Space(5)).Shrink(0)
 					}
 					ui.Column(c).Grow(1).MinWidth(0).Children(func() {
@@ -271,6 +278,9 @@ func CommandPalette(c *ui.Context, s *State, items []Item, options Options) ui.E
 							components.Text(c, item.Description).TextColor(t.TextMuted).FontSize(t.Rem(.85)).SingleLine()
 						}
 					})
+					if item.Trailing != nil {
+						item.Trailing(c)
+					}
 					if item.Shortcut != "" {
 						components.Text(c, item.Shortcut).TextColor(t.TextMuted).FontSize(t.Rem(.8)).Shrink(0).SingleLine()
 					}
