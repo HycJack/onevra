@@ -16,7 +16,7 @@ Applications own business state, localized text, actions and page selection. The
 
 Content builders and Shell state changes run synchronously on the UI thread; builders must not launch repeated background work during rendering. MyGo's value-based Element handles belong to the current build pass, not application state. Use a bound MyGo Handle for identity or geometry queries between builds.
 
-Shell owns only presentation state, does not persist it, and uses MyGo's rendering, layout and input systems.
+Shell owns only presentation state, does not persist it, and uses MyGo's rendering, layout and input systems. An application-chosen `StateKey` passes through to MyGo, which owns capturing, restoring and storing window geometry; sidebar width, expansion and pages remain application state.
 
 Components read the frame theme and style their own elements; they must not call `Context.SetTheme`, which also resets the window root's appearance. Only application-level theme installation owns that operation. Collection controls compose their own rows and component-level selection/navigation on MyGo's input and focus APIs.
 

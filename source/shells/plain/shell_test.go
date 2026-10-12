@@ -33,6 +33,12 @@ func TestNativeConfiguration(t *testing.T) {
 	if o.TrafficLightPosition == nil || *o.TrafficLightPosition != (mygo.Point{X: 16, Y: 16}) {
 		t.Fatal("missing traffic light placement")
 	}
+	if o.StateKey != "" {
+		t.Fatalf("unrequested state key: %q", o.StateKey)
+	}
+	if o := newShell(ShellOptions{StateKey: "settings"}).nativeOptions(); o.StateKey != "settings" {
+		t.Fatalf("state key: %q", o.StateKey)
+	}
 }
 
 func TestContentAndDialogClearance(t *testing.T) {

@@ -24,6 +24,11 @@ type ShellOptions struct {
 	// sizes. Explicit positive values override each default independently.
 	// Initial dimensions are raised to the corresponding minimum if needed.
 	Width, Height, MinWidth, MinHeight int
+	// StateKey, when non-empty, has MyGo remember the window's bounds and
+	// maximized or full-screen state under this key and restore them at
+	// creation. MyGo stores them in its user-data directory, or in the store
+	// set with mygo.App.SetWindowStateStore. Use a distinct key per window kind.
+	StateKey string
 	// Left and Content build full-height regions behind the floating header.
 	// Use HeaderHeight(c) as top padding to keep controls below it while
 	// allowing a region's background to extend to the top. Nil leaves it empty.
@@ -83,7 +88,8 @@ type shellWindow interface {
 // NewShell creates a native window and installs the page container.
 // It requests a titlebar material on macOS and Mica with custom caption buttons
 // on Windows. If no material is effective, it draws an opaque theme background.
-// Other platforms retain their native controls. It does not persist state.
+// Other platforms retain their native controls. It persists no state itself;
+// StateKey delegates window geometry to MyGo.
 func NewShell(options ShellOptions) *Shell {
 	s := newShell(options)
 	s.window = mygo.NewWindow(s.nativeOptions())
@@ -139,7 +145,7 @@ func (s *Shell) nativeOptions() mygo.WindowOptions {
 	o := s.options
 	return mygo.WindowOptions{
 		Hidden: o.Hidden, Title: o.Title, Width: o.Width, Height: o.Height,
-		MinWidth: o.MinWidth, MinHeight: o.MinHeight,
+		MinWidth: o.MinWidth, MinHeight: o.MinHeight, StateKey: o.StateKey,
 		TitleBarStyle:        mygo.TitleBarHidden,
 		Frameless:            runtime.GOOS == "windows",
 		TrafficLightPosition: &mygo.Point{X: 16, Y: 16},

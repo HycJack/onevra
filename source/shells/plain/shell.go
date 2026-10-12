@@ -18,6 +18,11 @@ type ShellOptions struct {
 	Title string
 	// Dimensions are outer DIPs. Defaults are 760x560 with a 360x300 minimum.
 	Width, Height, MinWidth, MinHeight int
+	// StateKey, when non-empty, has MyGo remember the window's bounds and
+	// maximized or full-screen state under this key and restore them at
+	// creation. MyGo stores them in its user-data directory, or in the store
+	// set with mygo.App.SetWindowStateStore. Use a distinct key per window kind.
+	StateKey string
 	// Hidden allows the application to install lifecycle handlers before showing.
 	Hidden bool
 	// Content is automatically inset below the draggable window-control area.
@@ -47,7 +52,8 @@ type windowHost interface {
 
 // NewShell hides the standard title bar, retaining native macOS/Linux window
 // controls and composing Onevra caption buttons on Windows. It does not show a
-// title or add navigation, persistence, or application lifecycle policies.
+// title or add navigation, persistence, or application lifecycle policies;
+// StateKey delegates window geometry to MyGo.
 func NewShell(options ShellOptions) *Shell {
 	s := newShell(options)
 	s.window = mygo.NewWindow(s.nativeOptions())
@@ -79,7 +85,7 @@ func newShell(o ShellOptions) *Shell {
 func (s *Shell) nativeOptions() mygo.WindowOptions {
 	o := s.options
 	return mygo.WindowOptions{
-		Title: o.Title, Width: o.Width, Height: o.Height, MinWidth: o.MinWidth, MinHeight: o.MinHeight, Hidden: o.Hidden,
+		Title: o.Title, Width: o.Width, Height: o.Height, MinWidth: o.MinWidth, MinHeight: o.MinHeight, Hidden: o.Hidden, StateKey: o.StateKey,
 		TitleBarStyle: mygo.TitleBarHidden, Frameless: runtime.GOOS == "windows",
 		TrafficLightPosition: &mygo.Point{X: 16, Y: 16}, Content: ui.View(s.view),
 	}
