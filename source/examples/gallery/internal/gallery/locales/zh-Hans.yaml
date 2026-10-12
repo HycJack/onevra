@@ -1157,6 +1157,8 @@ gallery.keyframes:
   other: "关键帧"
 gallery.animated_pose:
   other: "姿态动画"
+gallery.draggable:
+  other: "拖拽"
 gallery.transforms:
   other: "变换"
 gallery.editable_controls:
@@ -1187,6 +1189,10 @@ gallery.motion_lift:
   other: "保持抬起"
 gallery.motion_hover:
   other: "悬停抬起"
+gallery.motion_reset:
+  other: "复位"
+gallery.motion_throw:
+  other: "拖动或甩到任一端"
 gallery.motion_reverse:
   other: "反转方向"
 gallery.motion_smooth:

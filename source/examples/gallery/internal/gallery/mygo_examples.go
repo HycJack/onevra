@@ -25,6 +25,7 @@ type demoState struct {
 	index, count    int
 	value, high     float64
 	size            float32
+	offset          ui.Point
 	tags            []string
 	day             time.Time
 	color           ui.Color

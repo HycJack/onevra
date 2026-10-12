@@ -32,6 +32,23 @@ func exampleMotion(c *ui.Context, s *demoState) {
 			}
 			card.AnimatePose(pose, ui.Snappy)
 		})
+	case "Draggable":
+		if components.Button(c, tr(c, "gallery.motion_reset"), components.ButtonOutline).Clicked() {
+			s.offset = ui.Point{}
+		}
+		ui.Box(c).FillWidth().Height(100).Padding(20).Children(func() {
+			card := ui.Box(c).Size(90, 60).Radius(10).Background(t.Accent).Label(tr(c, "gallery.motion_throw"))
+			card.Draggable(&s.offset, ui.DraggableOptions{
+				Axis:   ui.Horizontal,
+				Bounds: &ui.Rect{W: 120},
+				Snap:   ui.Nearest(ui.Point{}, ui.Point{X: 120}),
+			})
+			lift := ui.Pose{}
+			if card.Dragging() {
+				lift = ui.Pose{Scale: 1.05}
+			}
+			card.AnimatePose(lift, ui.Snappy)
+		})
 	default:
 		if components.Button(c, tr(c, "gallery.motion_reverse"), components.ButtonOutline).Clicked() {
 			s.on = !s.on

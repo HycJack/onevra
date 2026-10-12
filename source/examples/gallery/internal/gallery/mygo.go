@@ -28,7 +28,7 @@ func mygoExampleFor(page galleryPage) (mygoExample, bool) {
 func mygoVariants(name string) []string {
 	switch name {
 	case "Motion":
-		return []string{"Springs", "Keyframes", "Animated pose"}
+		return []string{"Springs", "Keyframes", "Animated pose", "Draggable"}
 	case "Transforms":
 		return []string{"Editable controls", "Perspective"}
 	case "Toggle", "ToggleGroup", "Checkbox", "Switch":

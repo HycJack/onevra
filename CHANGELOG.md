@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Require MyGo 0.4.5, which paints text selections above text and span backgrounds in text boxes, code and other selectable text.
+
 ## [0.2026.6] - 2026-10-12
 
 - Breaking: import command, code, markdown and chat from `components/<name>` instead of `plugins/<name>`.

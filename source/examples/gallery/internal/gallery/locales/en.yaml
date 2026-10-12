@@ -1157,6 +1157,8 @@ gallery.keyframes:
   other: "Keyframes"
 gallery.animated_pose:
   other: "Animated pose"
+gallery.draggable:
+  other: "Draggable"
 gallery.transforms:
   other: "Transforms"
 gallery.editable_controls:
@@ -1187,6 +1189,10 @@ gallery.motion_lift:
   other: "Keep raised"
 gallery.motion_hover:
   other: "Hover to lift"
+gallery.motion_reset:
+  other: "Reset position"
+gallery.motion_throw:
+  other: "Throw to either end"
 gallery.motion_reverse:
   other: "Reverse direction"
 gallery.motion_smooth:
