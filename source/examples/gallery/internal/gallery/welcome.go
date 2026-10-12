@@ -11,6 +11,9 @@ import (
 	"github.com/oneo-me/onevra/source/icons/lucide"
 )
 
+// Keep the application version aligned with packer.yaml; a test checks both.
+const galleryVersion = "0.2026.7"
+
 const (
 	repositoryURL   = "https://github.com/oneo-me/onevra"
 	repositoryLabel = "github.com/oneo-me/onevra"

@@ -376,8 +376,6 @@ gallery.end:
   other: End
 gallery.enter_a_name:
   other: Enter a name
-gallery.enter_gallery:
-  other: Enter gallery
 gallery.escape_closing_the_notes_window_or_clicking_away_hides_it_notes_stay_i:
   other: Escape, closing the notes window or clicking away hides it. Notes stay in memory; closing Gallery removes the tray.
 gallery.expanded:
@@ -930,22 +928,8 @@ gallery.welcome:
   other: Welcome
 gallery.welcome_entrance_summary:
   other: A living collection of native desktop components. Try them, theme them and see how they feel.
-gallery.welcome_feature_icons_d:
-  other: '%d Lucide icons, ready to use'
-gallery.welcome_feature_pages_d:
-  other: '%d pages of live, interactive components'
-gallery.welcome_feature_themes:
-  other: Light and dark themes, in English and Chinese
 gallery.welcome_search_everything:
   other: Search everything
-gallery.welcome_search_hint:
-  other: Search anytime
-gallery.welcome_showcase_progress:
-  other: Sample progress
-gallery.welcome_tagline:
-  other: Native components for Go
-gallery.welcome_to_onevra:
-  other: Welcome to Onevra
 gallery.with:
   other: ' with '
 gallery.without_stepper:

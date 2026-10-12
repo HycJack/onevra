@@ -38,7 +38,6 @@ func (g *Gallery) ApplicationMenu() *mygo.Menu {
 // Application and Dock menus target their owner, not a possibly unrelated
 // focused window. Repeated activation keeps the existing settings state.
 func (g *Gallery) openSettingsFromMenu() {
-	g.enterGallery()
 	g.settings.open = true
 	g.showFromDock()
 }

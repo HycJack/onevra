@@ -61,7 +61,6 @@ func (g *Gallery) Commands(c *ui.Context) {
 			ResultsLabel: tr(c, "gallery.commands"), EmptyText: tr(c, "gallery.no_matching_commands"),
 			OnActivate: func(id string) {
 				g.commands.open = false
-				g.enterGallery()
 				if id == "settings" {
 					g.settings.open = true
 				} else {

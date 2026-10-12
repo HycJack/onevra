@@ -7,40 +7,30 @@ import (
 )
 
 func TestCommandShortcutAndNavigation(t *testing.T) {
-	for _, startup := range []bool{false, true} {
-		g := &Gallery{}
-		tt := ui.NewTester(func(c *ui.Context) {
-			if startup {
-				g.WelcomePage(c)
-			} else {
-				g.View(c)
-			}
-		}, 820, 600)
-		mods, _ := commandShortcut()
-		tt.Key(mods, ui.KeyE)
-		if !g.commands.open || !tt.Focused("Command palette") {
-			t.Fatal("opening shortcut did not focus command search")
-		}
-		tt.Type("TextBox")
-		tt.Key(0, ui.KeyEnter)
-		if g.commands.open || pageKey(g.page) != "controls/TextBox" {
-			t.Fatalf("command navigation: %s", pageKey(g.page))
-		}
-		tt.Key(mods, ui.KeyE)
-		if g.commands.palette.Query != "" {
-			t.Fatal("gallery did not reset search on reopening")
-		}
-		tt.Type("settings")
-		tt.Key(0, ui.KeyEnter)
-		if !g.settings.open || g.commands.open {
-			t.Fatal("settings command did not hand over dialog")
-		}
-		if !startup {
-			tt.Key(mods, ui.KeyE)
-			if g.commands.open {
-				t.Fatal("shortcut escaped settings modal")
-			}
-		}
+	g := &Gallery{}
+	tt := ui.NewTester(g.View, 820, 600)
+	mods, _ := commandShortcut()
+	tt.Key(mods, ui.KeyE)
+	if !g.commands.open || !tt.Focused("Command palette") {
+		t.Fatal("opening shortcut did not focus command search")
+	}
+	tt.Type("TextBox")
+	tt.Key(0, ui.KeyEnter)
+	if g.commands.open || pageKey(g.page) != "controls/TextBox" {
+		t.Fatalf("command navigation: %s", pageKey(g.page))
+	}
+	tt.Key(mods, ui.KeyE)
+	if g.commands.palette.Query != "" {
+		t.Fatal("gallery did not reset search on reopening")
+	}
+	tt.Type("settings")
+	tt.Key(0, ui.KeyEnter)
+	if !g.settings.open || g.commands.open {
+		t.Fatal("settings command did not hand over dialog")
+	}
+	tt.Key(mods, ui.KeyE)
+	if g.commands.open {
+		t.Fatal("shortcut escaped settings modal")
 	}
 }
 

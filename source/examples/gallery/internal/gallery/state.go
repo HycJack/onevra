@@ -17,7 +17,6 @@ type State struct {
 	SidebarWidth     float32      `yaml:"sidebar_width,omitempty"`
 	SidebarCollapsed bool         `yaml:"sidebar_collapsed"`
 	SelectedItem     string       `yaml:"selected_item,omitempty"`
-	WelcomeVersion   string       `yaml:"welcome_version,omitempty"`
 }
 
 type WindowState struct {
@@ -175,19 +174,6 @@ func pageFromKey(key string) galleryPage {
 	return lucidePage
 }
 
-// recordWelcomeVersion returns whether this version needs its startup welcome.
-// Save immediately, preserving the previous main-page presentation state.
-func recordWelcomeVersion(path string, state *State, version string) bool {
-	if state.WelcomeVersion == version {
-		return false
-	}
-	state.WelcomeVersion = version
-	if err := SaveState(path, *state); err != nil {
-		log.Printf("Save gallery welcome version: %v", err)
-	}
-	return true
-}
-
 // NewPersistent is the application-owned startup path. New remains disk-free for
 // isolated demonstrations and tests. Normal close and application quit save state.
 func (g *Gallery) NewPersistent(path string) *sidebar.Shell {
@@ -201,9 +187,6 @@ func (g *Gallery) NewPersistent(path string) *sidebar.Shell {
 	mygo.App.SetWindowStateStore(windowStateStore{path, &state})
 	g.stateKey = mainWindowStateKey
 	s := g.New()
-	if !recordWelcomeVersion(path, &state, galleryVersion) {
-		g.enterGallery()
-	}
 	s.SetLeftExpanded(!state.SidebarCollapsed)
 	w := s.Window()
 	if state.SidebarWidth > 0 {

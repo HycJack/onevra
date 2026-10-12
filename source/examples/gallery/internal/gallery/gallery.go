@@ -57,7 +57,6 @@ func (g *Gallery) newWindow(hidden bool) *sidebar.Shell {
 		ContentTitle: g.Titlebar,
 	})
 	g.updateLanguageWindows()
-	g.Shell.SetPage(g.WelcomePage)
 	g.Shell.Window().OnClose(func(*mygo.CloseEvent) { g.commands.palette.ReleaseInputSource() })
 	g.Shell.Window().OnClosed(g.Close)
 	return g.Shell

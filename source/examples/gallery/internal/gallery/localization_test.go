@@ -236,7 +236,6 @@ func TestNativeLanguages(t *testing.T) {
 			win.SetSize(tc.width, 600)
 			g.chooseLanguage(tc.language)
 			if tc.settings {
-				g.enterGallery()
 				g.settings.open = true
 				g.settings.view.Category = "general"
 				if tc.name == "zh-notifications-light" {

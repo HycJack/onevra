@@ -4,7 +4,6 @@ import (
 	"time"
 
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/source/components"
 )
 
 // Brand colors follow the application icon rather than the interface theme.
@@ -29,14 +28,6 @@ func welcomeBrandMark(c *ui.Context, size float32) ui.Element {
 			ui.Box(c).FillWidth().Grow(1).Radius(panel * .22).Background(brandMint)
 		})
 	})
-}
-
-// welcomeInk is the deep brand tone, lightened where it would vanish on a dark background.
-func welcomeInk(t *ui.Theme) ui.Color {
-	if t.Dark {
-		return brandMint
-	}
-	return brandDeep
 }
 
 type welcomeGlow struct {
@@ -65,17 +56,6 @@ func welcomeBackdrop(c *ui.Context, content ui.Element, glows ...welcomeGlow) ui
 		})
 }
 
-// welcomeOrbits strokes faint concentric rings around a point of r.
-func welcomeOrbits(p *ui.Painter, r ui.Rect, x, y, step float32, rings int, color ui.Color) {
-	p.Clip(r, 0, func() {
-		for i := 1; i <= rings; i++ {
-			var orbit ui.Path
-			orbit.Circle(r.X+x, r.Y+y, step*float32(i))
-			p.StrokePath(&orbit, 1, color.Alpha(.12-float32(i)*.015))
-		}
-	})
-}
-
 // welcomeEnter fades and lifts an element into place once, staggered by
 // order. MyGo completes it at once while the desktop asks for less motion.
 func welcomeEnter(c *ui.Context, e ui.Element, order int) ui.Element {
@@ -83,21 +63,4 @@ func welcomeEnter(c *ui.Context, e ui.Element, order int) ui.Element {
 		{Value: 1}, {At: 560 * time.Millisecond, Value: 0, Ease: ui.EaseOut},
 	}, ui.KeyframeOptions{Delay: time.Duration(order) * 70 * time.Millisecond})
 	return e.Opacity(1-v).Translate(0, v*c.Theme().Space(3))
-}
-
-// welcomeIconTile is a tinted square holding one icon.
-func welcomeIconTile(c *ui.Context, icon func() *ui.SVG, color ui.Color, size float32) ui.Element {
-	return ui.Box(c).Size(size, size).Shrink(0).Radius(size * .3).Center().
-		Background(color.Alpha(.12)).TextColor(color).Children(func() {
-		components.Icon(c, icon).Size(size*.5, size*.5)
-	})
-}
-
-// welcomeKeycap shows a keyboard shortcut as a small raised key.
-func welcomeKeycap(c *ui.Context, label string) ui.Element {
-	t := c.Theme()
-	return components.Text(c, label).SingleLine().Unselectable().Shrink(0).
-		FontSize(t.Rem(.75)).FontWeight(600).TextColor(t.TextMuted).
-		Padding(t.Space(.5), t.Space(1.5)).Radius(t.Space(1.5)).
-		Background(t.Surface).Border(1, t.Border).Shadow(0, 1, 0, 0, t.Border)
 }

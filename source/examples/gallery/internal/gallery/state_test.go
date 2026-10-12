@@ -27,29 +27,6 @@ func TestGalleryVersionMatchesPackaging(t *testing.T) {
 	}
 }
 
-func TestWelcomeVersionStorage(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "state.yaml")
-	state := State{SelectedItem: "controls/Button", SidebarWidth: 310, SidebarCollapsed: true}
-	for _, step := range []struct {
-		version string
-		show    bool
-	}{
-		{"1.0", true}, {"1.0", false}, {"1.1", true}, {"1.1", false}, {"1.0", true},
-	} {
-		if got := recordWelcomeVersion(path, &state, step.version); got != step.show {
-			t.Fatalf("version %s: show = %v", step.version, got)
-		}
-		loaded, err := LoadState(path)
-		if err != nil || loaded != state || loaded.WelcomeVersion != step.version {
-			t.Fatalf("immediate persistence: %+v, %v", loaded, err)
-		}
-		if loaded.SelectedItem != "controls/Button" || loaded.SidebarWidth != 310 || !loaded.SidebarCollapsed {
-			t.Fatal("welcome changed the saved main interface")
-		}
-		state = loaded
-	}
-}
-
 func TestStateStorage(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "config", "state.yaml")
 	if state, err := LoadState(path); err != nil || state != (State{}) {
@@ -156,7 +133,7 @@ func TestNativeState(t *testing.T) {
 			s.SetLeftExpanded(!collapsed)
 			g.page = controlPageStart()
 			b := s.Window().Bounds()
-			want = State{Window: &WindowState{X: b.X, Y: b.Y, Width: b.Width, Height: b.Height}, SidebarWidth: 315.5, SidebarCollapsed: collapsed, SelectedItem: pageKey(g.page), WelcomeVersion: galleryVersion}
+			want = State{Window: &WindowState{X: b.X, Y: b.Y, Width: b.Width, Height: b.Height}, SidebarWidth: 315.5, SidebarCollapsed: collapsed, SelectedItem: pageKey(g.page)}
 			s.Window().Close()
 		})
 		got, err := LoadState(path)

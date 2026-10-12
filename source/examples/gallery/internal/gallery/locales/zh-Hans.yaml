@@ -376,8 +376,6 @@ gallery.end:
   other: 结束
 gallery.enter_a_name:
   other: 输入名称
-gallery.enter_gallery:
-  other: 进入组件库
 gallery.escape_closing_the_notes_window_or_clicking_away_hides_it_notes_stay_i:
   other: 按 Escape、关闭笔记窗口或点击其他位置可隐藏窗口。笔记仅保留在内存中；关闭 Gallery 会移除托盘。
 gallery.expanded:
@@ -930,22 +928,8 @@ gallery.welcome:
   other: 欢迎
 gallery.welcome_entrance_summary:
   other: 一套鲜活的原生桌面组件。上手试试，切换主题，感受它们的质感。
-gallery.welcome_feature_icons_d:
-  other: '%d 个开箱即用的 Lucide 图标'
-gallery.welcome_feature_pages_d:
-  other: '%d 个可交互的组件页面'
-gallery.welcome_feature_themes:
-  other: 浅色与深色主题，支持中文与英文
 gallery.welcome_search_everything:
   other: 搜索全部
-gallery.welcome_search_hint:
-  other: 随时搜索
-gallery.welcome_showcase_progress:
-  other: 示例进度
-gallery.welcome_tagline:
-  other: 面向 Go 的原生界面组件
-gallery.welcome_to_onevra:
-  other: 欢迎使用 Onevra
 gallery.with:
   other: 搭配
 gallery.without_stepper:

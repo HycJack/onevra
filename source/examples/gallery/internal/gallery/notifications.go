@@ -52,7 +52,6 @@ func (g *Gallery) sendNotification() {
 		d.status = "gallery.notification_clicked"
 		g.page = notificationsPage
 		g.settings.open = false
-		g.enterGallery()
 		g.showFromDock()
 		g.Shell.Window().Invalidate()
 	})

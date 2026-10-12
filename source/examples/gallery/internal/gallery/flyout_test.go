@@ -40,7 +40,7 @@ func TestNativeFlyout(t *testing.T) {
 		t.Skip("requires a desktop session")
 	}
 	g := &Gallery{}
-	mygo.RunOnMain(func() { g.New(); g.enterGallery() })
+	mygo.RunOnMain(func() { g.New() })
 	parent := g.Shell.Window()
 	defer parent.Destroy()
 	dir := os.Getenv("ONEVRA_SCREENSHOTS")
