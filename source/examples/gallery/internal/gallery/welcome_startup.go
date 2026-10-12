@@ -9,7 +9,7 @@ import (
 )
 
 // Keep the application version aligned with packer.yaml; a test checks both.
-const galleryVersion = "0.2026.1"
+const galleryVersion = "0.2026.6"
 
 // WelcomePage is a standalone startup entrance, not a component demonstration.
 func (g *Gallery) WelcomePage(c *ui.Context) {
