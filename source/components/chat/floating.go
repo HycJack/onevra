@@ -39,11 +39,16 @@ type FloatingConversationOptions struct {
 	// 8-pixel inset; an explicit zero docks it to the top of the viewport.
 	// Negative values are treated as zero.
 	HeaderTopInset *float32
+	// TopInset reserves space above the transcript and its scrollbar, such as
+	// for a floating window header. Messages scroll beneath it, while Header
+	// and the first turn start below it. Negative values are treated as zero.
+	TopInset float32
 }
 
 // FloatingConversationWith is FloatingConversation with an optional Header.
 func FloatingConversationWith(c *ui.Context, layout *FloatingConversationState, state *ConversationState, options FloatingConversationOptions) ui.Element {
 	jumpLabel, content, composer := options.JumpLabel, options.Content, options.Composer
+	inset := max(0, options.TopInset)
 	if options.Header == nil || options.HeaderOverlay {
 		layout.headerHeight = 0
 	}
@@ -63,9 +68,10 @@ func FloatingConversationWith(c *ui.Context, layout *FloatingConversationState, 
 		// Leave a small gap above the floating composer without shortening
 		// the transcript viewport that scrolls behind it.
 		viewport := components.ScrollView(c, components.ScrollViewOptions{}).Key("transcript").FillWidth().Grow(1).MinHeight(0).
-			ScrollbarInsets(0, 0, height+8, 0).TrackScroll(&state.Scroll)
+			ScrollbarInsets(inset, 0, height+8, 0).TrackScroll(&state.Scroll)
 		viewport.Children(func() {
-			ui.Column(c).FillWidth().MinWidth(0).Shrink(0).AlignItems(ui.Center).Padding(22+layout.headerHeight, 20, 0, 20).Children(func() {
+			// A measured Header's height already includes the top inset.
+			ui.Column(c).FillWidth().MinWidth(0).Shrink(0).AlignItems(ui.Center).Padding(22+max(inset, layout.headerHeight), 20, 0, 20).Children(func() {
 				ui.Column(c).FillWidth().MaxWidth(ContentWidth).MinWidth(0).Gap(48).Children(func() {
 					slot := conversationSlot(c)
 					saved := *slot
@@ -123,6 +129,7 @@ func FloatingConversationWith(c *ui.Context, layout *FloatingConversationState, 
 			if options.HeaderTopInset != nil {
 				topInset = max(0, *options.HeaderTopInset)
 			}
+			topInset += inset
 			ui.Row(c).Key("floating-header").Absolute().Attach(ui.AnchorTop, ui.AnchorTop).
 				FillWidth().Justify(ui.Center).Padding(topInset, 20, 0, 20).Draw(func(_ *ui.Painter, r ui.Rect) {
 				if !options.HeaderOverlay && layout.headerHeight != r.H {

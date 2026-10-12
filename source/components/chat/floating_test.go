@@ -351,3 +351,69 @@ func TestFloatingConversationHeaderOverlayKeepsTranscriptStill(t *testing.T) {
 		}
 	}
 }
+
+func TestFloatingConversationTopInset(t *testing.T) {
+	for _, header := range []string{"none", "overlay", "reserved"} {
+		t.Run(header, func(t *testing.T) {
+			var layout FloatingConversationState
+			var state ConversationState
+			theme := ui.LightTheme()
+			// Isolate the scrollbar pixels from the content and glass.
+			theme.Scrollbar = ui.RGB(240, 30, 70)
+			options := FloatingConversationOptions{
+				TopInset: 48, HeaderOverlay: header == "overlay", HeaderTopInset: new(float32),
+				Content: func(c *ui.Context) {
+					components.Text(c, "First").Height(40)
+					ui.Box(c).Height(1800).Shrink(0)
+				},
+				Composer: func(c *ui.Context) { ui.Box(c).Label("Composer").Height(60).FillWidth() },
+			}
+			if header != "none" {
+				options.Header = func(c *ui.Context) { GlassPanel(c, nil).Label("Header").Height(32) }
+			}
+			tt := ui.NewTester(func(c *ui.Context) {
+				c.SetTheme(theme)
+				FloatingConversationWith(c, &layout, &state, options).Label("Viewport")
+			}, 900, 600)
+			tt.Frame()
+			tt.Frame()
+			// Read from the top rather than following the latest turn.
+			state.Scroll.Y = 0
+			tt.Frame()
+			x := float32(900 - 6)
+			tt.Move(x, 300)
+			viewport, _ := tt.Find("Viewport")
+			first, _ := tt.Find("First")
+			want := viewport.Y + 22 + 48
+			if header == "reserved" {
+				want += 32
+			}
+			if viewport.Y != 0 || viewport.H != 600 || first.Y != want {
+				t.Fatalf("viewport=%+v first=%+v want first at %v", viewport, first, want)
+			}
+			if header != "none" {
+				if r, _ := tt.Find("Header"); r.Y != 48 {
+					t.Fatalf("header=%+v does not start below the inset", r)
+				}
+			}
+			top := -1
+			img := tt.Image()
+			for y := 0; y < 600; y++ {
+				pixel := img.RGBAAt(int(x), y)
+				if pixel.R == 240 && pixel.G == 30 && pixel.B == 70 {
+					top = y
+					break
+				}
+			}
+			if top < 48 || top > 52 {
+				t.Fatalf("scrollbar top=%d does not start below the inset", top)
+			}
+			// Scrolled content passes beneath the inset rather than being clipped.
+			state.Scroll.Y = 100
+			tt.Frame()
+			if first, _ = tt.Find("First"); first.Y >= 48 {
+				t.Fatalf("scrolled first=%+v did not move beneath the inset", first)
+			}
+		})
+	}
+}
