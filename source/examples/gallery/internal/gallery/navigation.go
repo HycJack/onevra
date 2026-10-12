@@ -26,9 +26,12 @@ func navigationCatalog() []navigationGroup {
 	}
 	add("Overview", []navigationEntry{{"Welcome", welcomePage}, {"Component status", componentStatusPage}})
 	add("Icon library", []navigationEntry{{"Lucide", lucidePage}})
-	add("Desktop", []navigationEntry{{"Tray", trayPage}, {"Dock menu", dockPage}, {"System notifications", notificationsPage}})
-	for _, group := range navigationGroups {
+	desktop := []navigationEntry{{"Tray", trayPage}, {"Dock menu", dockPage}, {"System notifications", notificationsPage}}
+	for _, group := range append([]string{"Desktop"}, navigationGroups...) {
 		var entries []navigationEntry
+		if group == "Desktop" {
+			entries = desktop
+		}
 		for i, example := range controlCatalog {
 			if example.group == group {
 				entries = append(entries, navigationEntry{example.label, controlPageStart() + galleryPage(i)})

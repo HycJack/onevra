@@ -5,7 +5,6 @@ import (
 	"log"
 	"os"
 	"path/filepath"
-	"time"
 
 	"github.com/egoist/mygo"
 	"github.com/oneo-me/onevra/source/shells/sidebar"
@@ -22,10 +21,39 @@ type State struct {
 }
 
 type WindowState struct {
-	X      int `yaml:"x"`
-	Y      int `yaml:"y"`
-	Width  int `yaml:"width"`
-	Height int `yaml:"height"`
+	X          int  `yaml:"x"`
+	Y          int  `yaml:"y"`
+	Width      int  `yaml:"width"`
+	Height     int  `yaml:"height"`
+	Maximized  bool `yaml:"maximized,omitempty"`
+	FullScreen bool `yaml:"full_screen,omitempty"`
+}
+
+const mainWindowStateKey = "main"
+
+// windowStateStore keeps MyGo's state of the main window in state.yaml.
+// MyGo calls it on the main thread, as are the gallery's own saves.
+type windowStateStore struct {
+	path  string
+	state *State
+}
+
+func (s windowStateStore) LoadWindowStates() (map[string]mygo.WindowState, error) {
+	w := s.state.Window
+	if w == nil {
+		return nil, nil
+	}
+	return map[string]mygo.WindowState{mainWindowStateKey: mygo.WindowState(*w)}, nil
+}
+
+func (s windowStateStore) SaveWindowStates(states map[string]mygo.WindowState) error {
+	w, ok := states[mainWindowStateKey]
+	if !ok {
+		return nil
+	}
+	state := WindowState(w)
+	s.state.Window = &state
+	return SaveState(s.path, *s.state)
 }
 
 func LoadState(path string) (State, error) {
@@ -168,6 +196,10 @@ func (g *Gallery) NewPersistent(path string) *sidebar.Shell {
 		log.Printf("Load gallery state: %v", err)
 	}
 	g.page = pageFromKey(state.SelectedItem)
+	// MyGo captures, restores and saves the window's geometry through the
+	// store, which shares this state so either save writes the whole file.
+	mygo.App.SetWindowStateStore(windowStateStore{path, &state})
+	g.stateKey = mainWindowStateKey
 	s := g.New()
 	if !recordWelcomeVersion(path, &state, galleryVersion) {
 		g.enterGallery()
@@ -177,56 +209,12 @@ func (g *Gallery) NewPersistent(path string) *sidebar.Shell {
 	if state.SidebarWidth > 0 {
 		s.SetLeftWidth(state.SidebarWidth)
 	}
-	if b := state.Window; b != nil && b.Width > 0 && b.Height > 0 {
-		bounds := mygo.Rectangle{X: b.X, Y: b.Y, Width: max(820, b.Width), Height: max(600, b.Height)}
-		area := mygo.Screen.DisplayMatching(bounds).WorkArea
-		if area.Width > 0 && area.Height > 0 {
-			bounds.Width = max(820, min(bounds.Width, area.Width))
-			bounds.Height = max(600, min(bounds.Height, area.Height))
-			bounds.X = max(area.X, min(bounds.X, area.X+area.Width-bounds.Width))
-			bounds.Y = max(area.Y, min(bounds.Y, area.Y+area.Height-bounds.Height))
-		}
-		w.SetBounds(bounds)
-	}
-	capture := func() {
-		if w.IsMinimized() || w.IsMaximized() || w.IsFullScreen() {
-			return
-		}
-		b := w.Bounds()
-		if b.Width > 0 && b.Height > 0 {
-			state.Window = &WindowState{b.X, b.Y, b.Width, b.Height}
-		}
-	}
-	capture()
-	var timer *time.Timer
-	closed := false
-	changed := func() {
-		if timer != nil {
-			timer.Stop()
-		}
-		timer = time.AfterFunc(300*time.Millisecond, func() {
-			mygo.RunOnMain(func() {
-				if !closed {
-					capture()
-				}
-			})
-		})
-	}
-	w.OnMove(changed)
-	w.OnResize(changed)
 	w.OnClose(func(*mygo.CloseEvent) {
-		capture()
 		state.SidebarWidth = s.LeftWidth()
 		state.SidebarCollapsed = !s.LeftExpanded()
 		state.SelectedItem = pageKey(g.page)
 		if err := SaveState(path, state); err != nil {
 			log.Printf("Save gallery state: %v", err)
-		}
-	})
-	w.OnClosed(func() {
-		closed = true
-		if timer != nil {
-			timer.Stop()
 		}
 	})
 	return s

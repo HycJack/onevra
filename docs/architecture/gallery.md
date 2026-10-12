@@ -10,17 +10,17 @@ The [entry point](../../source/examples/gallery/main.go) owns startup, appearanc
 
 Production startup stores application data under `~/.oneo/onevra`. The disk-free `Gallery.New` path keeps examples and native tests isolated from real settings.
 
-- `state.yaml` retains window geometry, sidebar width and expansion, the named navigation route and the last shown application version.
+- `state.yaml` retains window geometry, sidebar width and expansion, the named navigation route and the last shown application version. Window geometry, including maximized and full-screen state, goes through MyGo's window-state store; Gallery only maps it into this file.
 - `config.yaml` retains appearance, language, command-palette preferences and the page-grid preference. Changes apply and save immediately.
 - Interactive example values remain in memory, isolated between pages and variants. User content is never persisted.
 
-Unknown routes and unreadable files fall back to defaults; read and save errors are logged. Restored windows are constrained to connected displays where minimum sizes allow. Only YAML filenames are read; older JSON files may be renamed because JSON is valid YAML. An explicit `-theme` launch argument temporarily overrides the saved appearance without rewriting it.
+Unknown routes and unreadable files fall back to defaults; read and save errors are logged. MyGo centers a restored window that would not show on any connected display. Only YAML filenames are read; older JSON files may be renamed because JSON is valid YAML. An explicit `-theme` launch argument temporarily overrides the saved appearance without rewriting it.
 
 Each new application version opens a standalone welcome entrance as a full-window Shell replacement page. Enter gallery restores saved navigation and sidebar state. The shown version saves immediately; failed saves may show the entrance again. The disk-free path always shows it for review. Gallery's application version stays aligned with `packer.yaml`.
 
 ### Navigation and previews
 
-The grouped sidebar contains Welcome, Component status, the Lucide library, desktop integrations, MyGo plugins and component pages. Components share purpose-based groups regardless of implementation; a trailing dot marks upstream widgets awaiting an Onevra decision. MyGo plugins and explicitly retained direct-use APIs have no dot. Named routes remain stable when catalog order changes.
+The grouped sidebar contains Welcome, Component status, the Lucide library, desktop integrations including MyGo audio, MyGo plugins and component pages. Components share purpose-based groups regardless of implementation; a trailing dot marks upstream widgets awaiting an Onevra decision. MyGo plugins and explicitly retained direct-use APIs have no dot. Named routes remain stable when catalog order changes.
 
 Welcome is a promotional page: the product name, repository link, command search and the Gallery version, over a faint tilted field of Lucide icons. The field paints a small cached icon sample directly and passes the pointer through. The repository link opens through MyGo's shell integration; headless views never open URLs. Both welcome surfaces play a brief entrance animation that MyGo completes immediately under reduced motion. Review pages share a fixed pixel-grid background that Settings can disable, while Welcome and Terminal keep dedicated backgrounds. Examples remain interactive and use independent state per variant. MyGo pages show controls without source listings or tutorial prose. Supporting controls use Onevra equivalents whenever available.
 
@@ -58,7 +58,8 @@ Terminal starts the user's default login shell on first entry. MyGo owns shell s
 | Desktop / System notifications | Explicit send action requests delivery; replacement or shutdown withdraws the demo notification |
 | Desktop / Dock menu | macOS-only explicit installation; disable or shutdown restores the previous menu unless another owner replaced it |
 | Feedback & overlays / Flyout | Actions open parent-owned native windows; MyGo owns placement, dismissal and parent lifetime |
-| Content display / WebView | Gallery retains the native view and hides it under modal layers |
+| Content display / WebView | Gallery retains the native view, refills its background with the current theme and hides it under modal layers |
+| Desktop / Audio | Sounds are synthesized in memory on first use; Gallery close stops the loop. Headless views never open an audio device |
 
 The tray survives page navigation. Its auxiliary window hides on close or blur, retaining the note across hide/show and disable/enable cycles. The main window keeps normal close-to-quit behavior. Notification clicks restore Gallery to their page. Dock actions target their owning Gallery independently of the focused window. Flyout editor and system-popover variants retain their note in application memory.
 
@@ -78,7 +79,7 @@ The read-only Component status page and startup reminders share [code-owned deci
 
 Generation scans exported free functions taking a context first in MyGo's top-level `ui` package, across platform files and including generic constructors. It omits Base constructors and tests. Generated names and locations are checked in, so running Gallery needs neither a toolchain nor a module cache.
 
-The hand-built catalog and reviewed-subpackage map supplement the scanner for methods, `ui/chart`, and plugins. Native menus, every MyGo plugin, transforms and motion remain direct-use APIs. Standard charts use Onevra's chart component over upstream primitives; the decision map records that boundary. MyGo's browser target has no Gallery route: Gallery and Packer are desktop applications, and browser packaging is outside their current scope.
+The hand-built catalog and reviewed-subpackage map supplement the scanner for methods, `ui/chart`, and plugins. Native menus, every MyGo plugin, audio, transforms and motion remain direct-use APIs. Standard charts use Onevra's chart component over upstream primitives; the decision map records that boundary. MyGo's browser target has no Gallery route: Gallery and Packer are desktop applications, and browser packaging is outside their current scope.
 
 After every MyGo upgrade, run `GOWORK=off go generate ./examples/gallery/internal/gallery` from `source/` and review the diff. Ordinary running, building and [Packer](../build.md#app-bundles) use the checked-in snapshot. A generation run cannot establish coverage of new methods or subpackages; review release notes and public signatures too.
 

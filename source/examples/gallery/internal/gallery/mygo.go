@@ -70,6 +70,9 @@ func (g *Gallery) mygoState(name, variant string, first bool) *demoState {
 	if name == "Transforms" {
 		s.value = 8
 	}
+	if name == "Audio" {
+		s.audio.output, s.audio.volume = g.audioOutput, .8
+	}
 	s.flyout.gallery = g
 	switch variant {
 	case "Empty":

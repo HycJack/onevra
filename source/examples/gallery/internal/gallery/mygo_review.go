@@ -115,6 +115,7 @@ var mygoDirectExamples = map[string]string{
 	"Motion":     "Use MyGo animation methods directly for scheduling, interruption and reduced motion; no Onevra animation runtime",
 	"Flyout":     "Use MyGo parent-owned native popup windows directly; applications own content and lifetime",
 	"WebView":    "Use MyGo web views directly; applications own their pages and windows",
+	"Audio":      "Use MyGo audio directly for decoding, mixing and device output; applications own sounds and player lifetime",
 }
 
 // mygoDirectUse reports examples of MyGo APIs used directly, which the sidebar

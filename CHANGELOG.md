@@ -6,7 +6,8 @@ User-facing updates for Onevra library consumers.
 
 - Add `Leading` and `Trailing` content slots to command items, for images or other custom content beside the title.
 - Add `TopInset` to floating conversations, so transcripts scroll beneath a floating window header while their scrollbar, Header and first turn start below it.
-- Require MyGo 0.4.5, which paints text selections above text and span backgrounds in text boxes, code and other selectable text.
+- Add `StateKey` to sidebar and plain Shell options, so MyGo remembers and restores a window's bounds and maximized or full-screen state, in its own file or a store set with `mygo.App.SetWindowStateStore`.
+- Require MyGo 0.4.6, which paints text selections above text and span backgrounds in text boxes, code and other selectable text.
 
 ## [0.2026.6] - 2026-10-12
 

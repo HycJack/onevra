@@ -32,7 +32,10 @@ type Gallery struct {
 	// Native startup supplies the factory; headless views never load libraries.
 	createTerminal func() (*terminal.Terminal, error)
 	createWebView  func() (*mygo.WebView, error)
-	openURL        func(string) error
+	audioOutput    bool
+	// stateKey asks MyGo to remember the window; empty keeps it disk-free.
+	stateKey string
+	openURL  func(string) error
 }
 
 // New creates the standalone shell demonstration.
@@ -43,10 +46,12 @@ func (g *Gallery) New() *sidebar.Shell {
 func (g *Gallery) newWindow(hidden bool) *sidebar.Shell {
 	g.createTerminal = newShellTerminal
 	g.createWebView = g.newWebView
+	g.audioOutput = true
 	g.openURL = mygo.Shell.OpenExternal
 	g.Shell = sidebar.NewShell(sidebar.ShellOptions{
 		Title:     "Onevra Gallery",
 		Hidden:    hidden,
+		StateKey:  g.stateKey,
 		LeftWidth: 220, LeftMinWidth: 220, LeftMaxWidth: 520,
 		Left: g.Left, Content: g.View, LeftToolbar: g.LeftToolbar,
 		ContentTitle: g.Titlebar,

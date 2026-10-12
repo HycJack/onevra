@@ -1205,3 +1205,15 @@ gallery.chart_research:
   other: "研究"
 gallery.chart_planning:
   other: "规划"
+gallery.audio:
+  other: "音频"
+gallery.audio_notes:
+  other: "弹奏音符"
+gallery.audio_play_loop:
+  other: "播放循环"
+gallery.audio_pause_loop:
+  other: "暂停循环"
+gallery.audio_pan:
+  other: "声像"
+gallery.audio_unavailable:
+  other: "音频输出不可用：%v"

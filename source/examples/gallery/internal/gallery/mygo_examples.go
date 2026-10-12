@@ -17,6 +17,7 @@ type demoState struct {
 	glass           glassDemo
 	terminal        terminalDemo
 	webView         webViewDemo
+	audio           audioDemo
 	text            string
 	buffer          *ui.TextBuffer
 	readOnly        bool

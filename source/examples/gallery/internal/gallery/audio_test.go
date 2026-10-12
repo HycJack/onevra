@@ -1,0 +1,59 @@
+package gallery
+
+import "testing"
+
+func TestAudioControlsWithoutOutput(t *testing.T) {
+	for _, lang := range []string{"en", "zh-Hans"} {
+		for _, width := range []int{280, 540} {
+			g, s, tt := featureTester("Audio", "Default", lang, width)
+			if s.audio.output || s.audio.volume != .8 {
+				t.Fatalf("headless audio state: %+v", s.audio)
+			}
+			for _, note := range audioNotes {
+				if err := tt.Click(note.name); err != nil {
+					t.Fatal(err)
+				}
+			}
+			if s.audio.played != len(audioNotes) || s.audio.pluck != nil {
+				t.Fatalf("headless notes: played %d, synthesized %v", s.audio.played, s.audio.pluck != nil)
+			}
+			if err := tt.Click(g.text("gallery.audio_play_loop")); err != nil {
+				t.Fatal(err)
+			}
+			if !s.audio.looping || s.audio.loop != nil {
+				t.Fatalf("loop toggled without a player: %+v", s.audio)
+			}
+			if _, ok := tt.Find(g.text("gallery.audio_pause_loop")); !ok {
+				t.Fatal("missing pause action")
+			}
+			pan, ok := tt.Find(g.text("gallery.audio_pan"))
+			if !ok {
+				t.Fatal("missing pan label")
+			}
+			// Press near the end of the slider that follows the label.
+			x, y := pan.X+min(float32(width)-32, 400)*.95, pan.Y+pan.H/2
+			tt.Press(x, y)
+			tt.Release(x, y)
+			if s.audio.pan <= 0 {
+				t.Fatalf("pan did not move right: %v", s.audio.pan)
+			}
+			s.audio.close()
+			if s.audio.looping {
+				t.Fatal("close kept the loop playing")
+			}
+		}
+	}
+}
+
+func TestAudioSamplesLoopWithoutSeam(t *testing.T) {
+	pad := padSamples()
+	if d := pad[len(pad)-1] - pad[0]; d > .01 || d < -.01 {
+		t.Fatalf("loop seam jumps by %v", d)
+	}
+	pluck := pluckSamples()
+	if pluck[0] != 0 || abs32(pluck[len(pluck)-1]) > .01 {
+		t.Fatalf("pluck clicks: starts %v, ends %v", pluck[0], pluck[len(pluck)-1])
+	}
+}
+
+func abs32(v float32) float32 { return max(v, -v) }

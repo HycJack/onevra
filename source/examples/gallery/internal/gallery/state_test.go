@@ -55,7 +55,7 @@ func TestStateStorage(t *testing.T) {
 	if state, err := LoadState(path); err != nil || state != (State{}) {
 		t.Fatalf("missing: %+v %v", state, err)
 	}
-	want := State{Window: &WindowState{-900, 0, 1000, 700}, SidebarWidth: 312.5, SelectedItem: "controls/Button"}
+	want := State{Window: &WindowState{X: -900, Width: 1000, Height: 700, Maximized: true}, SidebarWidth: 312.5, SelectedItem: "controls/Button"}
 	for _, width := range []float32{312.5, 400} {
 		want.SidebarWidth = width
 		want.SidebarCollapsed = width == 400
@@ -79,6 +79,30 @@ func TestStateStorage(t *testing.T) {
 	}
 	if err := SaveState(filepath.Join(path, "state.yaml"), want); err == nil {
 		t.Fatal("expected write failure")
+	}
+}
+
+func TestWindowStateStore(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "state.yaml")
+	state := State{SidebarWidth: 300, SelectedItem: "controls/Button"}
+	store := windowStateStore{path, &state}
+	if states, err := store.LoadWindowStates(); states != nil || err != nil {
+		t.Fatalf("no saved window: %v %v", states, err)
+	}
+	saved := mygo.WindowState{X: 40, Y: 50, Width: 900, Height: 640, FullScreen: true}
+	if err := store.SaveWindowStates(map[string]mygo.WindowState{"other": {Width: 1}, mainWindowStateKey: saved}); err != nil {
+		t.Fatal(err)
+	}
+	got, err := LoadState(path)
+	if err != nil || got.Window == nil || mygo.WindowState(*got.Window) != saved || got.SidebarWidth != 300 || got.SelectedItem != "controls/Button" {
+		t.Fatalf("saved state: %+v %v", got, err)
+	}
+	states, err := windowStateStore{path, &got}.LoadWindowStates()
+	if err != nil || len(states) != 1 || states[mainWindowStateKey] != saved {
+		t.Fatalf("restored states: %v %v", states, err)
+	}
+	if err := store.SaveWindowStates(map[string]mygo.WindowState{}); err != nil || state.Window == nil {
+		t.Fatalf("missing main state cleared the saved window: %v", err)
 	}
 }
 
@@ -115,14 +139,16 @@ func TestNativeState(t *testing.T) {
 	if os.Getenv("ONEVRA_NATIVE_SMOKE") != "1" {
 		t.Skip("requires a desktop session")
 	}
-	for _, collapsed := range []bool{true, false} {
+	// MyGo loads window states once per process and saves only changes, so
+	// each iteration uses different bounds.
+	for i, collapsed := range []bool{true, false} {
 		path := filepath.Join(t.TempDir(), "state.yaml")
 		var want State
 		mygo.RunOnMain(func() {
 			g := &Gallery{}
 			s := g.NewPersistent(path)
-			s.Window().SetSize(940, 680)
-			s.Window().SetPosition(100, 100)
+			s.Window().SetSize(940+40*i, 680+20*i)
+			s.Window().SetPosition(100+10*i, 100)
 			if !s.LeftExpanded() {
 				t.Error("missing state should start expanded")
 			}
@@ -130,7 +156,7 @@ func TestNativeState(t *testing.T) {
 			s.SetLeftExpanded(!collapsed)
 			g.page = controlPageStart()
 			b := s.Window().Bounds()
-			want = State{Window: &WindowState{b.X, b.Y, b.Width, b.Height}, SidebarWidth: 315.5, SidebarCollapsed: collapsed, SelectedItem: pageKey(g.page), WelcomeVersion: galleryVersion}
+			want = State{Window: &WindowState{X: b.X, Y: b.Y, Width: b.Width, Height: b.Height}, SidebarWidth: 315.5, SidebarCollapsed: collapsed, SelectedItem: pageKey(g.page), WelcomeVersion: galleryVersion}
 			s.Window().Close()
 		})
 		got, err := LoadState(path)

@@ -89,6 +89,7 @@ func (g *Gallery) Close() {
 	for _, s := range g.mygoStates {
 		s.terminal.close()
 		s.webView.close()
+		s.audio.close()
 		s.flyout.close()
 	}
 }

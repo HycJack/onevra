@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"html/template"
+	"log"
 
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
@@ -99,6 +100,10 @@ func exampleWebView(c *ui.Context, s *demoState) {
 	}
 	if html := webViewHTML(c); d.loaded != html {
 		d.loaded = html
+		// Fill with the new theme until the reloaded page paints, not white.
+		if err := d.view.SetBackgroundColor(string(cssColor(t.Background))); err != nil {
+			log.Printf("Set web view background: %v", err)
+		}
 		d.view.Page().LoadHTML(html, "")
 	}
 	ui.Row(c).Gap(t.Space(2)).AlignItems(ui.Center).Children(func() {

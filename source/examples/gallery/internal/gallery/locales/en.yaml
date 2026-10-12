@@ -1205,3 +1205,15 @@ gallery.chart_research:
   other: "Research"
 gallery.chart_planning:
   other: "Planning"
+gallery.audio:
+  other: "Audio"
+gallery.audio_notes:
+  other: "Play a note"
+gallery.audio_play_loop:
+  other: "Play loop"
+gallery.audio_pause_loop:
+  other: "Pause loop"
+gallery.audio_pan:
+  other: "Pan"
+gallery.audio_unavailable:
+  other: "Audio output unavailable: %v"
