@@ -4,7 +4,7 @@
 
 Onevra 是基于 [MyGo](https://github.com/egoist/mygo) 的原生桌面 Go 组件库，提供主题控件、窗口 Shell、Lucide 图标和复杂组件。名字由 **ONEO** 中的 `One` 与自造词尾 `vra` 组合而成。
 
-![Onevra Gallery 主界面，包含侧边导航和可交互组件示例](docs/images/gallery.png)
+![Onevra Gallery 主界面，包含侧边导航和欢迎页](docs/images/gallery.png)
 
 ## 补充组件
 

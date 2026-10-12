@@ -4,7 +4,7 @@
 
 Onevra is a Go component library for native desktop applications, built on [MyGo](https://github.com/egoist/mygo). It provides themed controls, window shells, Lucide icons and complex components. The name combines `One` from **ONEO** with the coined ending `vra`.
 
-![Onevra Gallery main interface with navigation and interactive component examples](docs/images/gallery.png)
+![Onevra Gallery main interface with sidebar navigation and the Welcome page](docs/images/gallery.png)
 
 ## Additional components
 
