@@ -4,12 +4,6 @@ gallery.0f_0f:
   other: '%.0f – %.0f'
 gallery.12:
   other: "12"
-gallery.a_collection_of_native_components_ready_to_explore:
-  other: A collection of native components, ready to explore.
-gallery.a_few_familiar_pieces_brought_together_go_ahead_make_them_yours:
-  other: A few familiar pieces, brought together. Go ahead, make them yours.
-gallery.a_fresh_start_in_a_few_small_steps:
-  other: A fresh start, in a few small steps.
 gallery.a_heading:
   other: A heading
 gallery.a_helpful_description_of_this_action:
@@ -18,14 +12,10 @@ gallery.a_note_is_shared_with_you:
   other: A note is shared with you.
 gallery.a_page_in_a_dialog:
   other: A page in a dialog
-gallery.a_quieter_corner_just_for_you:
-  other: A quieter corner, just for you.
 gallery.a_sidebar_and_content_one_native_window:
   other: A sidebar and content, one native window.
 gallery.a_single_line_label:
   other: A single-line label
-gallery.a_small_mark_a_big_personality:
-  other: A small mark. A big personality.
 gallery.a_small_window_opened_from_the_tray:
   other: A small window, opened from the tray.
 gallery.a_web_page_inside_native_ui:
@@ -74,8 +64,6 @@ gallery.author_avatar_s:
   other: Author avatar — %s
 gallery.awaiting_review:
   other: Awaiting review
-gallery.back_in_the_mix:
-  other: Back in the mix.
 gallery.below:
   other: Below
 gallery.blue:
@@ -312,8 +300,6 @@ gallery.count_increased:
   other: Count increased
 gallery.cover:
   other: Cover
-gallery.create_preview:
-  other: Create preview
 gallery.d_5:
   other: '%d / 5'
 gallery.d_kb:
@@ -396,8 +382,6 @@ gallery.escape_closing_the_notes_window_or_clicking_away_hides_it_notes_stay_i:
   other: Escape, closing the notes window or clicking away hides it. Notes stay in memory; closing Gallery removes the tray.
 gallery.expanded:
   other: Expanded
-gallery.explore_lucide:
-  other: Explore Lucide
 gallery.file:
   other: File
 gallery.file_d:
@@ -406,16 +390,10 @@ gallery.files:
   other: Files
 gallery.filled:
   other: Filled
-gallery.find_your_balance:
-  other: Find your balance
 gallery.fingerprint:
   other: Fingerprint
 gallery.first:
   other: First
-gallery.focus:
-  other: Focus
-gallery.focus_intensity:
-  other: Focus intensity
 gallery.follow_system:
   other: Follow system
 gallery.gallery_tray_notes:
@@ -424,8 +402,6 @@ gallery.general:
   other: General
 gallery.ghost:
   other: Ghost
-gallery.give_it_a_name:
-  other: Give it a name
 gallery.glass_canvas:
   other: Glass canvas
 gallery.grayscale:
@@ -486,10 +462,6 @@ gallery.important_workspace_settings_are_updated:
   other: Important workspace settings are updated.
 gallery.in_app:
   other: In-app
-gallery.in_the_zone:
-  other: In the zone
-gallery.include_a_little_inspiration:
-  other: Include a little inspiration
 gallery.increment:
   other: "Increment"
 gallery.indeterminate:
@@ -506,16 +478,12 @@ gallery.insets:
   other: Insets
 gallery.integer:
   other: Integer
-gallery.intensity:
-  other: Intensity
 gallery.italic:
   other: Italic
 gallery.item_d:
   other: Item %d
 gallery.items:
   other: Items
-gallery.just_a_demo_your_ideas_stay_here:
-  other: Just a demo. Your ideas stay here.
 gallery.kept_in_memory_until_you_quit_escape_hides_this_window:
   other: Kept in memory until you quit. Escape hides this window.
 gallery.kind:
@@ -538,8 +506,6 @@ gallery.left_click_the_tray_icon_to_toggle_the_notes_window_right_click_for_it:
   other: Left-click the tray icon to toggle the notes window. Right-click for its native menu.
 gallery.left_pane:
   other: Left pane
-gallery.less_noise_a_little_more_flow:
-  other: Less noise. A little more flow.
 gallery.light:
   other: Light
 gallery.lightness_percent:
@@ -566,8 +532,6 @@ gallery.lucide_icons:
   other: Lucide icons
 gallery.major_lines:
   other: Major lines
-gallery.make_space_for:
-  other: Make space for
 gallery.markdown_load_error:
   other: "Unable to load markdown.md"
 gallery.maximize_window:
@@ -578,8 +542,6 @@ gallery.media_text:
   other: Media & text
 gallery.medium:
   other: Medium
-gallery.meet_the_lucide_icon_collection:
-  other: Meet the Lucide icon collection.
 gallery.member_removed:
   other: Member removed
 gallery.mentions:
@@ -680,20 +642,12 @@ gallery.personal:
   other: EXAMPLES
 gallery.personal_2:
   other: Personal
-gallery.play:
-  other: Play
 gallery.plugins:
   other: Plugins
 gallery.popover_content:
   other: Popover content
 gallery.preferences:
   other: Preferences
-gallery.preview_category:
-  other: Preview category
-gallery.preview_intensity:
-  other: Preview intensity
-gallery.preview_name:
-  other: Preview name
 gallery.previous_month:
   other: Previous month
 gallery.previous_year:
@@ -722,8 +676,6 @@ gallery.quantity:
   other: Quantity
 gallery.quantity_0f:
   other: 'Quantity: %.0f'
-gallery.quiet_mode:
-  other: Quiet mode
 gallery.quit:
   other: Quit
 gallery.range:
@@ -734,14 +686,10 @@ gallery.rating:
   other: Rating
 gallery.read_only:
   other: Read only
-gallery.ready_to_explore_s:
-  other: 'Ready to explore: %s'
 gallery.red:
   other: Red
 gallery.regular:
   other: Regular
-gallery.relax:
-  other: Relax
 gallery.replaced_by_onevra:
   other: Replaced by Onevra
 gallery.turn_on:
@@ -770,8 +718,6 @@ gallery.ring:
   other: Ring
 gallery.role_or_permission_changed:
   other: Role or permission changed
-gallery.room_to_breathe:
-  other: Room to breathe
 gallery.rounded:
   other: Rounded
 gallery.row_d:
@@ -882,8 +828,6 @@ gallery.someone_joins_the_workspace:
   other: Someone joins the workspace.
 gallery.someone_mentions_you_in_a_conversation:
   other: Someone mentions you in a conversation.
-gallery.something_wonderful:
-  other: Something wonderful…
 gallery.sound:
   other: Sound
 gallery.split_panes:
@@ -984,14 +928,28 @@ gallery.web_views_need_a_native_window:
   other: Web views need a native window.
 gallery.welcome:
   other: Welcome
+gallery.welcome_entrance_summary:
+  other: A living collection of native desktop components. Try them, theme them and see how they feel.
+gallery.welcome_feature_icons_d:
+  other: '%d Lucide icons, ready to use'
+gallery.welcome_feature_pages_d:
+  other: '%d pages of live, interactive components'
+gallery.welcome_feature_themes:
+  other: Light and dark themes, in English and Chinese
+gallery.welcome_search_everything:
+  other: Search everything
+gallery.welcome_search_hint:
+  other: Search anytime
+gallery.welcome_showcase_progress:
+  other: Sample progress
+gallery.welcome_tagline:
+  other: Native components for Go
 gallery.welcome_to_onevra:
   other: Welcome to Onevra
 gallery.with:
   other: ' with '
 gallery.without_stepper:
   other: Without stepper
-gallery.work:
-  other: Work
 gallery.workspace_settings_changed:
   other: Workspace settings changed
 gallery.workspace_updates:
@@ -1012,8 +970,6 @@ gallery.your_account_is_accessed_from_a_new_device:
   other: Your account is accessed from a new device.
 gallery.your_name:
   other: Your name
-gallery.your_next_idea:
-  other: Your next idea
 gallery.your_password_is_updated:
   other: Your password is updated.
 gallery.toggle_smart_notifications:

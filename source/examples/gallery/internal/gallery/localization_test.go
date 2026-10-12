@@ -124,9 +124,6 @@ func TestLanguageCatalogs(t *testing.T) {
 
 func TestLanguageSwitchRetainsState(t *testing.T) {
 	g := &Gallery{page: welcomePage, config: Config{Theme: mygo.ThemeDark}, configPath: filepath.Join(t.TempDir(), "config.yaml")}
-	g.welcome.initialize()
-	g.welcome.name = "My own 中文 draft"
-	g.welcome.mode = 1
 	state := g.controlState("Select", "Selected")
 	tt := ui.NewTester(g.Welcome, 820, 900)
 	if !tt.HasText("Small components. Real possibilities.") {
@@ -137,7 +134,7 @@ func TestLanguageSwitchRetainsState(t *testing.T) {
 	if !tt.HasText("小组件，无限可能。") {
 		t.Fatal(tt.Texts())
 	}
-	if g.welcome.name != "My own 中文 draft" || g.welcome.mode != 1 || state != g.controlState("Select", "Selected") || state.choice != "Large" {
+	if state != g.controlState("Select", "Selected") || state.choice != "Large" {
 		t.Fatal("state changed")
 	}
 	saved, err := LoadConfig(g.configPath)
@@ -151,7 +148,7 @@ func TestLanguageSwitchRetainsState(t *testing.T) {
 	}
 	g.chooseLanguage("en")
 	tt.Frame()
-	if !tt.HasText("Small components. Real possibilities.") || g.welcome.name != "My own 中文 draft" {
+	if !tt.HasText("Small components. Real possibilities.") {
 		t.Fatal("switch back")
 	}
 }

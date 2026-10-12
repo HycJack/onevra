@@ -16,7 +16,6 @@ import (
 type Gallery struct {
 	commands       commandState
 	settings       settingsState
-	welcome        welcomeState
 	tray           trayDemo
 	dock           dockDemo
 	notification   notificationDemo
@@ -33,6 +32,7 @@ type Gallery struct {
 	// Native startup supplies the factory; headless views never load libraries.
 	createTerminal func() (*terminal.Terminal, error)
 	createWebView  func() (*mygo.WebView, error)
+	openURL        func(string) error
 }
 
 // New creates the standalone shell demonstration.
@@ -43,6 +43,7 @@ func (g *Gallery) New() *sidebar.Shell {
 func (g *Gallery) newWindow(hidden bool) *sidebar.Shell {
 	g.createTerminal = newShellTerminal
 	g.createWebView = g.newWebView
+	g.openURL = mygo.Shell.OpenExternal
 	g.Shell = sidebar.NewShell(sidebar.ShellOptions{
 		Title:     "Onevra Gallery",
 		Hidden:    hidden,
@@ -195,7 +196,12 @@ func (g *Gallery) viewLocalized(c *ui.Context) {
 	if g.page == welcomePage {
 		welcomeBackground(c, content)
 	}
-	content.Children(func() { g.body(c) })
+	content.Children(func() {
+		if g.page == welcomePage {
+			welcomeIconField(c)
+		}
+		g.body(c)
+	})
 	g.Settings(c)
 	g.Commands(c)
 }

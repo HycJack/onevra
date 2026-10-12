@@ -4,12 +4,6 @@ gallery.0f_0f:
   other: '%.0f – %.0f'
 gallery.12:
   other: "12"
-gallery.a_collection_of_native_components_ready_to_explore:
-  other: 探索丰富的原生界面组件。
-gallery.a_few_familiar_pieces_brought_together_go_ahead_make_them_yours:
-  other: 将熟悉的组件组合起来，试着打造你的界面。
-gallery.a_fresh_start_in_a_few_small_steps:
-  other: 简单几步，开启新的篇章。
 gallery.a_heading:
   other: 一个标题
 gallery.a_helpful_description_of_this_action:
@@ -18,14 +12,10 @@ gallery.a_note_is_shared_with_you:
   other: 有人与你分享笔记。
 gallery.a_page_in_a_dialog:
   other: 对话框中的页面
-gallery.a_quieter_corner_just_for_you:
-  other: 属于你的一处安静角落。
 gallery.a_sidebar_and_content_one_native_window:
   other: 一个原生窗口，包含侧边栏与内容区域。
 gallery.a_single_line_label:
   other: 单行标签
-gallery.a_small_mark_a_big_personality:
-  other: 小小图标，鲜明个性。
 gallery.a_small_window_opened_from_the_tray:
   other: 从托盘打开的小窗口。
 gallery.a_web_page_inside_native_ui:
@@ -74,8 +64,6 @@ gallery.author_avatar_s:
   other: 作者头像 — %s
 gallery.awaiting_review:
   other: 待审查
-gallery.back_in_the_mix:
-  other: 重新加入热闹。
 gallery.below:
   other: 下方
 gallery.blue:
@@ -312,8 +300,6 @@ gallery.count_increased:
   other: 计数已增加
 gallery.cover:
   other: 填满裁剪
-gallery.create_preview:
-  other: 创建预览
 gallery.d_5:
   other: '%d / 5'
 gallery.d_kb:
@@ -396,8 +382,6 @@ gallery.escape_closing_the_notes_window_or_clicking_away_hides_it_notes_stay_i:
   other: 按 Escape、关闭笔记窗口或点击其他位置可隐藏窗口。笔记仅保留在内存中；关闭 Gallery 会移除托盘。
 gallery.expanded:
   other: 已展开
-gallery.explore_lucide:
-  other: 探索 Lucide
 gallery.file:
   other: 文件
 gallery.file_d:
@@ -406,16 +390,10 @@ gallery.files:
   other: 文件
 gallery.filled:
   other: 已填写
-gallery.find_your_balance:
-  other: 找到你的节奏
 gallery.fingerprint:
   other: 指纹
 gallery.first:
   other: 第一项
-gallery.focus:
-  other: 专注
-gallery.focus_intensity:
-  other: 专注强度
 gallery.follow_system:
   other: 跟随系统
 gallery.gallery_tray_notes:
@@ -424,8 +402,6 @@ gallery.general:
   other: 通用
 gallery.ghost:
   other: 透明
-gallery.give_it_a_name:
-  other: 给它起个名字
 gallery.glass_canvas:
   other: 玻璃画布
 gallery.grayscale:
@@ -486,10 +462,6 @@ gallery.important_workspace_settings_are_updated:
   other: 重要的工作区设置已更新。
 gallery.in_app:
   other: 应用内
-gallery.in_the_zone:
-  other: 进入状态
-gallery.include_a_little_inspiration:
-  other: 加入一点灵感
 gallery.increment:
   other: "增加"
 gallery.indeterminate:
@@ -506,16 +478,12 @@ gallery.insets:
   other: 内边距
 gallery.integer:
   other: 整数
-gallery.intensity:
-  other: 强度
 gallery.italic:
   other: 斜体
 gallery.item_d:
   other: 项目 %d
 gallery.items:
   other: 项目
-gallery.just_a_demo_your_ideas_stay_here:
-  other: 仅供演示，你的想法只保留在这里。
 gallery.kept_in_memory_until_you_quit_escape_hides_this_window:
   other: 退出前保留在内存中。按 Escape 可隐藏窗口。
 gallery.kind:
@@ -538,8 +506,6 @@ gallery.left_click_the_tray_icon_to_toggle_the_notes_window_right_click_for_it:
   other: 左键点击托盘图标可显示或隐藏笔记窗口，右键点击可打开原生菜单。
 gallery.left_pane:
   other: 左侧区域
-gallery.less_noise_a_little_more_flow:
-  other: 少一些干扰，多一些流畅。
 gallery.light:
   other: 浅色
 gallery.lightness_percent:
@@ -566,8 +532,6 @@ gallery.lucide_icons:
   other: Lucide 图标
 gallery.major_lines:
   other: 主网格线
-gallery.make_space_for:
-  other: 选择用途
 gallery.markdown_load_error:
   other: "无法加载 markdown.md"
 gallery.maximize_window:
@@ -578,8 +542,6 @@ gallery.media_text:
   other: 媒体与文本
 gallery.medium:
   other: 中
-gallery.meet_the_lucide_icon_collection:
-  other: 探索 Lucide 图标集。
 gallery.member_removed:
   other: 成员被移除
 gallery.mentions:
@@ -680,20 +642,12 @@ gallery.personal:
   other: 示例
 gallery.personal_2:
   other: 个人
-gallery.play:
-  other: 娱乐
 gallery.plugins:
   other: 插件
 gallery.popover_content:
   other: 弹出层内容
 gallery.preferences:
   other: 偏好设置
-gallery.preview_category:
-  other: 预览类别
-gallery.preview_intensity:
-  other: 预览强度
-gallery.preview_name:
-  other: 预览名称
 gallery.previous_month:
   other: 上个月
 gallery.previous_year:
@@ -722,8 +676,6 @@ gallery.quantity:
   other: 数量
 gallery.quantity_0f:
   other: 数量：%.0f
-gallery.quiet_mode:
-  other: 安静模式
 gallery.quit:
   other: 退出
 gallery.range:
@@ -734,14 +686,10 @@ gallery.rating:
   other: "评分"
 gallery.read_only:
   other: 只读
-gallery.ready_to_explore_s:
-  other: 准备探索：%s
 gallery.red:
   other: 红色
 gallery.regular:
   other: 常规
-gallery.relax:
-  other: 放松
 gallery.replaced_by_onevra:
   other: 已由 Onevra 替代
 gallery.turn_on:
@@ -770,8 +718,6 @@ gallery.ring:
   other: 圆环
 gallery.role_or_permission_changed:
   other: 角色或权限变更
-gallery.room_to_breathe:
-  other: 留点空间
 gallery.rounded:
   other: 圆角
 gallery.row_d:
@@ -882,8 +828,6 @@ gallery.someone_joins_the_workspace:
   other: 有人加入工作区。
 gallery.someone_mentions_you_in_a_conversation:
   other: 有人在对话中提及你。
-gallery.something_wonderful:
-  other: 一些美好的想法…
 gallery.sound:
   other: 声音
 gallery.split_panes:
@@ -984,14 +928,28 @@ gallery.web_views_need_a_native_window:
   other: 网页视图需要原生窗口。
 gallery.welcome:
   other: 欢迎
+gallery.welcome_entrance_summary:
+  other: 一套鲜活的原生桌面组件。上手试试，切换主题，感受它们的质感。
+gallery.welcome_feature_icons_d:
+  other: '%d 个开箱即用的 Lucide 图标'
+gallery.welcome_feature_pages_d:
+  other: '%d 个可交互的组件页面'
+gallery.welcome_feature_themes:
+  other: 浅色与深色主题，支持中文与英文
+gallery.welcome_search_everything:
+  other: 搜索全部
+gallery.welcome_search_hint:
+  other: 随时搜索
+gallery.welcome_showcase_progress:
+  other: 示例进度
+gallery.welcome_tagline:
+  other: 面向 Go 的原生界面组件
 gallery.welcome_to_onevra:
   other: 欢迎使用 Onevra
 gallery.with:
   other: 搭配
 gallery.without_stepper:
   other: 无步进按钮
-gallery.work:
-  other: 工作
 gallery.workspace_settings_changed:
   other: 工作区设置变更
 gallery.workspace_updates:
@@ -1012,8 +970,6 @@ gallery.your_account_is_accessed_from_a_new_device:
   other: 新设备登录了你的账户。
 gallery.your_name:
   other: 你的名字
-gallery.your_next_idea:
-  other: 你的下一个想法
 gallery.your_password_is_updated:
   other: 你的密码已更新。
 gallery.toggle_smart_notifications:
