@@ -111,13 +111,14 @@ var mygoPrimitives = map[string]bool{
 // Native hosts and rendering primitives keep demonstrations of direct use.
 // Subpackages and element methods supplement the free-function scanner here.
 var mygoDirectExamples = map[string]string{
-	"Transforms": "Use MyGo element transforms directly so drawing, input, accessibility and overlays share coordinates",
-	"Motion":     "Use MyGo animation methods directly for scheduling, interruption and reduced motion; no Onevra animation runtime",
-	"Flyout":     "Use MyGo parent-owned native popup windows directly; applications own content and lifetime",
-	"WebView":    "Use MyGo web views directly; applications own their pages and windows",
-	"Audio":      "Use MyGo audio directly for decoding, mixing and device output; applications own sounds and player lifetime",
-	"Canvas":     "Use MyGo painters, offscreen canvases, bitmap regions and pixelated bitmaps directly; no Onevra drawing layer",
-	"Game loop":  "Use the MyGo game plugin directly for fixed-step loops, cameras and gamepads; no Onevra game runtime",
+	"Transforms":   "Use MyGo element transforms directly so drawing, input, accessibility and overlays share coordinates",
+	"Motion":       "Use MyGo animation methods directly for scheduling, interruption and reduced motion; no Onevra animation runtime",
+	"Flyout":       "Use MyGo parent-owned native popup windows directly; applications own content and lifetime",
+	"WebView":      "Use MyGo web views directly; applications own their pages and windows",
+	"Audio":        "Use MyGo audio directly for decoding, mixing and device output; applications own sounds and player lifetime",
+	"Canvas":       "Use MyGo painters, offscreen canvases, bitmap regions and pixelated bitmaps directly; no Onevra drawing layer",
+	"Game loop":    "Use the MyGo game plugin directly for fixed-step loops, cameras and gamepads; no Onevra game runtime",
+	"Lawn defense": "A small game on the MyGo game plugin and offscreen canvas, with Onevra controls for its status; no Onevra game runtime",
 }
 
 // mygoDirectUse reports examples of MyGo APIs used directly, which the sidebar

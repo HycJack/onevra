@@ -10,7 +10,7 @@ var navigationGroups = []string{
 // newestPages are the routes added most recently; the sidebar highlights
 // them. When pages are next added, replace this list with theirs.
 var newestPages = map[string]bool{
-	"mygo/Code editor": true, "mygo/Diff viewer": true, "mygo/Canvas": true, "mygo/Game loop": true,
+	"mygo/Lawn defense": true,
 }
 
 type navigationEntry struct {

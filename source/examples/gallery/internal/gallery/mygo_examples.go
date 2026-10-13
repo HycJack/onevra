@@ -21,6 +21,7 @@ type demoState struct {
 	audio           audioDemo
 	canvas          canvasDemo
 	game            gameDemo
+	lawn            lawnDemo
 	code            *editor.State
 	diff            *editor.DiffState
 	text            string

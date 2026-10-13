@@ -55,6 +55,7 @@ var mygoExamples = []mygoExample{
 	{"Diff viewer", "Code & diffs", exampleDiffViewer},
 	{"Canvas", "Games", exampleCanvas},
 	{"Game loop", "Games", exampleGame},
+	{"Lawn defense", "Games", exampleLawn},
 	{"Box", "Layout & containers", exampleBox},
 	{"Row", "Layout & containers", exampleRow},
 	{"Column", "Layout & containers", exampleColumn},

@@ -154,7 +154,7 @@ func TestNewMyGoReviewEntries(t *testing.T) {
 }
 
 func TestCodeAndGameGroups(t *testing.T) {
-	want := map[string][]string{"Code & diffs": {"Code", "Code editor", "Diff viewer"}, "Games": {"Canvas", "Game loop"}}
+	want := map[string][]string{"Code & diffs": {"Code", "Code editor", "Diff viewer"}, "Games": {"Canvas", "Game loop", "Lawn defense"}}
 	for _, group := range navigationCatalog() {
 		if entries, ok := want[group.label]; ok {
 			var got []string
@@ -208,8 +208,7 @@ func TestNewestPagesHighlighted(t *testing.T) {
 }
 
 func TestNewestBadgeCentered(t *testing.T) {
-	// Canvas has no upstream marker; Code editor has one before the badge.
-	for _, key := range []string{"mygo/Canvas", "mygo/Code editor"} {
+	for key := range newestPages {
 		g := &Gallery{}
 		page := pageFromKey(key)
 		label := strings.TrimPrefix(key, "mygo/")

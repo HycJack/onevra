@@ -1285,3 +1285,21 @@ gallery.game_hint:
   other: "Click the scene, then move with WASD, the arrow keys or a gamepad's left stick."
 gallery.game_scene:
   other: "Game scene"
+gallery.component_lawn_defense:
+  other: "Lawn defense"
+gallery.lawn_hint:
+  other: "Collect falling suns, pick a seed packet or press 1–3, then plant it on the lawn. Sunflowers make sun, peashooters fire along their row and wall-nuts hold zombies back. Right-click or Escape drops the seed; R restarts."
+gallery.lawn_scene:
+  other: "Lawn"
+gallery.lawn_playing:
+  other: "Defend the lawn"
+gallery.lawn_paused:
+  other: "Paused: click the lawn to continue"
+gallery.lawn_lost:
+  other: "The zombies ate your brains!"
+gallery.lawn_won:
+  other: "You defended the lawn!"
+gallery.lawn_defeated:
+  other: "Zombies defeated: %d of %d"
+gallery.lawn_restart:
+  other: "Restart game"
