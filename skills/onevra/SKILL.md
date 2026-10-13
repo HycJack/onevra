@@ -67,6 +67,7 @@ Use Onevra's control whenever one exists; it replaces MyGo's styled widget of th
 | Scroll, list, grid, tree, outline, table | `ScrollView`, `List`, `GridView`, `Tree`, `TreeVirtualized`, `Table`, `TableVirtualized` |
 | Tabs, accordion, collapsible, split, breadcrumbs, sidebar | The Onevra component of the same name |
 | Modal, alert, popover, tooltip | `Dialog`, `AlertDialog`, `Popover`, `Tooltip` |
+| Toast | MyGo's `c.Toast`, `ToastAction`, `AddToast`; Shell builds them with `components.Toasts`, which standalone hosts call themselves; place them with `ShellOptions.Toasts` (`components.ToastOptions`). `ui.Toast.Type` takes `components.ToastInfo`/`Success`/`Warning`/`Error` |
 | Progress, spinner, badge, rating, icon, image | The Onevra component of the same name; icons from `icons/lucide` |
 | Categorical charts and donuts | `components/chart`: `Bar`, `Line`, `Area`, `StackedBar`, `Donut`; see the [usage example](../../source/components/chart/example_test.go) |
 | Settings surface | `components.Settings` |
@@ -77,7 +78,7 @@ Use MyGo directly for:
 - Specialized charts and continuous/time axes from `ui/chart`, and element transforms and motion methods. Use `LayoutBounds` for layout calculations and local pointer coordinates; `Element.Bounds` includes visual transforms.
 - Native menus and context menus, `Flyout`, `WebView`, and every MyGo plugin, including Glass. Do not write Onevra-style replacements.
 - MyGo's unstyled bases when building a new reusable control.
-- A MyGo widget with no Onevra equivalent. Onevra intentionally omits Toast, Divider, Avatar, Meter, Form, Field, Toolbar, OutlineTable, Segmented and TokenField: prefer contextual feedback over toasts and compose dividers from Box or borders before reaching for the upstream widget.
+- A MyGo widget with no Onevra equivalent. Onevra intentionally omits Divider, Avatar, Meter, Form, Field, Toolbar, OutlineTable, Segmented and TokenField: compose dividers from Box or borders before reaching for the upstream widget.
 
 Charts accept application-owned data and formatting, with generic empty and detail slots. Keep series/slice IDs stable and state separate per chart; `chart.State{Index: -1}` starts unselected. Prepare large datasets outside builders; these views do not downsample or virtualize data.
 

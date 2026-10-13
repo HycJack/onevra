@@ -7,6 +7,7 @@ import (
 
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/source/components"
 	"github.com/oneo-me/onevra/source/theme"
 )
 
@@ -401,5 +402,53 @@ func TestShellBackgroundsAndScaling(t *testing.T) {
 		if !tt.HasText("Document") {
 			t.Fatal(tt.Texts())
 		}
+	}
+}
+
+func TestShellBuildsLocalizedToasts(t *testing.T) {
+	closed := 0
+	s := newShell(ShellOptions{Content: func(c *ui.Context) {
+		ui.Column(c).Padding(HeaderHeight(c), 0, 0, 0).Children(func() {
+			if ui.Button(c, "Save").Clicked() {
+				c.AddToast(ui.Toast{Title: "Saved", Timeout: -1, OnClose: func() { closed++ }})
+			}
+		})
+	}})
+	s.host = &fakeWindow{}
+	s.SetLabels(Labels{CloseToast: "Dismiss"})
+	tt := ui.NewTester(s.view, 820, 600)
+	if err := tt.Click("Save"); err != nil {
+		t.Fatal(err)
+	}
+	if err := tt.Click("Dismiss"); err != nil {
+		t.Fatal(err)
+	}
+	if closed != 1 {
+		t.Fatalf("toast close button closed %d toasts", closed)
+	}
+}
+
+func TestShellTopToastsClearHeader(t *testing.T) {
+	s := newShell(ShellOptions{Content: func(c *ui.Context) {
+		ui.Column(c).Padding(HeaderHeight(c), 0, 0, 0).Children(func() {
+			if ui.Button(c, "Save").Clicked() {
+				c.AddToast(ui.Toast{Title: "Saved", Timeout: -1})
+			}
+		})
+	}})
+	s.host = &fakeWindow{}
+	tt := ui.NewTester(s.view, 820, 600)
+	if err := tt.Click("Save"); err != nil {
+		t.Fatal(err)
+	}
+	if r, ok := tt.Find("Saved"); !ok || r.Y < 300 {
+		t.Fatalf("default toast is not at the bottom: %+v", r)
+	}
+	s.SetToasts(components.ToastOptions{Placement: components.ToastTop})
+	tt.Frame()
+	var header float32
+	ui.NewTester(func(c *ui.Context) { header = HeaderHeight(c) }, 820, 600)
+	if r, ok := tt.Find("Saved"); !ok || r.Y < header || r.Y > header+80 {
+		t.Fatalf("top toast does not sit below the header %v: %+v", header, r)
 	}
 }

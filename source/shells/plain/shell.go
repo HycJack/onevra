@@ -30,10 +30,14 @@ type ShellOptions struct {
 	Content    func(*ui.Context)
 	Appearance theme.Mode
 	Labels     Labels
+	// Toasts places the window's toasts; top placements also clear the
+	// window-control area.
+	Toasts components.ToastOptions
 }
 
-// Labels names the Windows caption buttons. Empty values use English defaults.
-type Labels struct{ Minimize, Maximize, Restore, Close string }
+// Labels names the Windows caption buttons and each toast's close button.
+// Empty values use English defaults.
+type Labels struct{ Minimize, Maximize, Restore, Close, CloseToast string }
 
 // Shell owns presentation only; Window exposes MyGo's original lifecycle API.
 type Shell struct {
@@ -100,6 +104,9 @@ func (s *Shell) SetAppearance(mode theme.Mode) { s.options.Appearance = mode; s.
 // SetLabels updates caption accessibility names without changing their identity.
 func (s *Shell) SetLabels(labels Labels) { s.options.Labels = labels; s.refresh() }
 
+// SetToasts changes toast placement without recreating the window or toasts.
+func (s *Shell) SetToasts(options components.ToastOptions) { s.options.Toasts = options; s.refresh() }
+
 func (s *Shell) refresh() {
 	if s.host != nil {
 		s.host.Invalidate()
@@ -130,6 +137,11 @@ func (s *Shell) view(c *ui.Context) {
 			})
 		})
 	})
+	toasts := s.options.Toasts
+	if toasts.Placement.Top() {
+		toasts.Inset += height
+	}
+	components.WithLocalization(c, components.Localization{CloseToast: s.options.Labels.CloseToast}, func() { components.Toasts(c, toasts) })
 }
 
 func label(value, fallback string) string {

@@ -28,8 +28,19 @@ func Button(c *ui.Context, label string, variant ButtonVariant) ui.Element {
 	if variant == ButtonLink {
 		return dimmed(ui.Link(c, label, ""))
 	}
+	b := styleButton(c, ui.ButtonBase(c), variant)
+	if label != "" {
+		b.Label(label)
+		b.Children(func() { Text(c, label).SingleLine() })
+	}
+	return dimmed(b)
+}
+
+// styleButton gives a button base, such as one a MyGo part provides, the face
+// of a non-link variant.
+func styleButton(c *ui.Context, b ui.Element, variant ButtonVariant) ui.Element {
 	t := c.Theme()
-	b := ui.ButtonBase(c).Padding(t.Space(1.5), t.Space(3.5))
+	b.Padding(t.Space(1.5), t.Space(3.5))
 	bg, hover, pressed, fg, border := t.Surface, t.SurfaceHover, t.SurfacePressed, t.Text, t.Border
 	switch variant {
 	case ButtonPrimary:
@@ -54,10 +65,5 @@ func Button(c *ui.Context, label string, variant ButtonVariant) ui.Element {
 		border = bg
 	}
 	// A transparent Ghost border reserves the same space as the filled variants.
-	b.Radius(t.Radius).Background(bg).TextColor(fg).Border(1, border)
-	if label != "" {
-		b.Label(label)
-		b.Children(func() { Text(c, label).SingleLine() })
-	}
-	return dimmed(b)
+	return b.Radius(t.Radius).Background(bg).TextColor(fg).Border(1, border)
 }

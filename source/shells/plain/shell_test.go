@@ -98,3 +98,22 @@ func TestCaptionAndLiveUpdates(t *testing.T) {
 		t.Fatal("theme not installed before content")
 	}
 }
+
+func TestShellBuildsLocalizedToasts(t *testing.T) {
+	closed := 0
+	s := newShell(ShellOptions{Labels: Labels{CloseToast: "Dismiss"}, Content: func(c *ui.Context) {
+		if components.Button(c, "Save", components.ButtonPrimary).Clicked() {
+			c.AddToast(ui.Toast{Title: "Saved", Timeout: -1, OnClose: func() { closed++ }})
+		}
+	}})
+	tt := ui.NewTester(s.view, 760, 560)
+	if err := tt.Click("Save"); err != nil {
+		t.Fatal(err)
+	}
+	if err := tt.Click("Dismiss"); err != nil {
+		t.Fatal(err)
+	}
+	if closed != 1 {
+		t.Fatalf("toast close button closed %d toasts", closed)
+	}
+}

@@ -51,6 +51,7 @@ type Localization struct {
 	SettingsCategory          string
 	SearchResults             string
 	NoSettings                string
+	CloseToast                string
 	Weekdays                  [7]string
 	FirstWeekday              *time.Weekday
 	FormatDate                func(time.Time, string) string
@@ -188,6 +189,9 @@ func localized(c *ui.Context) Localization {
 	}
 	if words.NoSettings == "" {
 		words.NoSettings = "No matching settings. Try another search."
+	}
+	if words.CloseToast == "" {
+		words.CloseToast = "Close"
 	}
 	for i, day := range [7]string{"Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"} {
 		if words.Weekdays[i] == "" {

@@ -63,6 +63,10 @@ type ShellOptions struct {
 	LeftResizeLabel string
 	// Windows caption button labels; empty values use English defaults.
 	MinimizeLabel, MaximizeLabel, RestoreLabel, CloseLabel string
+	// CloseToastLabel names each toast's close button; empty uses English.
+	CloseToastLabel string
+	// Toasts places the window's toasts; top placements also clear the header.
+	Toasts components.ToastOptions
 	// Appearance selects the window theme: Auto follows the system
 	// appearance, Light and Dark pin Onevra's built-in palettes.
 	// It applies before any content is built; the zero value is Auto.
@@ -235,6 +239,18 @@ func (s *Shell) view(c *ui.Context) {
 	// The theme must be installed before any widget is created.
 	theme.Apply(c, s.options.Appearance)
 	components.WithDialogWindowDrag(c, HeaderHeight(c), func() { s.build(c) })
+	toasts := s.options.Toasts
+	if toasts.Placement.Top() {
+		toasts.Inset += HeaderHeight(c)
+	}
+	components.WithLocalization(c, components.Localization{CloseToast: s.options.CloseToastLabel}, func() { components.Toasts(c, toasts) })
+}
+
+// SetToasts changes toast placement without recreating the window or toasts.
+// Call on the UI thread.
+func (s *Shell) SetToasts(options components.ToastOptions) {
+	s.options.Toasts = options
+	s.refresh()
 }
 
 func (s *Shell) build(c *ui.Context) {

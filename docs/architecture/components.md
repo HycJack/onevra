@@ -136,6 +136,12 @@ Shell supplies a window-local, synchronous build scope so every Onevra dialog, i
 
 Each modal layer reserves clearance and builds its own strip. This keeps underlying header actions blocked rather than forwarding pointer events through the modal; the strip does not dismiss the backdrop. Dragging uses MyGo's focus behavior, which may reset the focused input within the modal.
 
+## Toast composition
+
+The [toast component](../../source/components/toast.go) styles MyGo's toast queue through its unstyled viewport rather than keeping a separate notification manager. Applications add, update and close toasts with MyGo's context methods and own their text, actions and asynchronous work; MyGo owns timing, stacking, pausing, Escape dismissal and announcements.
+
+Both shells build the viewport after their content, inside a localization scope that carries the Shell's close-button label, because application localization scopes end with their builders. Shell also owns placement, adding its header height to top placements so toasts clear the window controls. A view that builds its own viewport earlier in the frame keeps it. Status types select an icon; `Data` may carry a leading content slot instead of type-specific variants.
+
 ## Native appearance
 
 MyGo and the operating system provide native window interaction semantics. On Windows, Shell uses MyGo's frameless window and composes rounded toolbar-style minimize, maximize/restore and close buttons in the shared header, including replacement pages. Labels are application-localizable; close requests retain MyGo's cancellable application lifecycle.
