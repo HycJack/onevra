@@ -142,7 +142,7 @@ func TestNewMyGoReviewEntries(t *testing.T) {
 	}
 	for _, name := range []string{"Code editor", "Diff viewer"} {
 		entry := entries[name]
-		if entry.Status != mygoUpstream || entry.Source != "ui/editor" || !entry.HasExample {
+		if entry.Status != mygoPrimitive || entry.Source != "ui/editor" || !entry.HasExample || entry.Reason == "" {
 			t.Fatalf("%s: %+v", name, entry)
 		}
 	}

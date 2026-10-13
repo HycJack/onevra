@@ -47,7 +47,7 @@ The settings toolbar action opens a Onevra Dialog over the current page. macOS S
 | Layout & containers / Motion | Retargetable spring presets, replayable keyframes and animated poses |
 | Games / Canvas | Offscreen canvas, smooth and pixelated bitmap regions and painter transforms |
 | Games / Lawn defense | A small tower-defense game on the game plugin and an offscreen canvas; Onevra controls show its status and restart it, rebuilt on demand because the loop only repaints. The round stays in memory and pauses without keyboard focus |
-| Code & diffs / Code editor, Diff viewer | Upstream `ui/editor` awaiting an Onevra decision; in-memory buffers with gutter changes, editable diffs and hunk actions |
+| Code & diffs / Code editor, Diff viewer | MyGo `ui/editor` used directly; in-memory buffers with gutter changes, editable diffs and hunk actions |
 
 The [chart examples](../../source/examples/gallery/internal/gallery/control_chart.go) use Onevra's public [chart component](components.md#charts), with an independent navigation entry for each view and localized application-owned data. The [motion examples](../../source/examples/gallery/internal/gallery/mygo_motion.go) use MyGo's animation methods directly. Neither creates native resources, background loops or timers; animation lifetime follows the built elements and MyGo's reduced-motion preference.
 
@@ -83,7 +83,7 @@ The read-only Component status page and startup reminders share [code-owned deci
 
 Generation scans exported free functions taking a context first in MyGo's top-level `ui` package, across platform files and including generic constructors. It omits Base constructors and tests. Generated names and locations are checked in, so running Gallery needs neither a toolchain nor a module cache.
 
-The hand-built catalog and reviewed-subpackage map supplement the scanner for methods, `ui/chart`, `ui/editor` and plugins. Native menus, every MyGo plugin, including the game plugin under Games, audio, canvas drawing, transforms and motion remain direct-use APIs. Standard charts use Onevra's chart component over upstream primitives; the decision map records that boundary. MyGo's browser target has no Gallery route: Gallery and Packer are desktop applications, and browser packaging is outside their current scope.
+The hand-built catalog and reviewed-subpackage map supplement the scanner for methods, `ui/chart`, `ui/editor` and plugins. Native menus, every MyGo plugin, including the game plugin under Games, audio, canvas drawing, transforms, motion and code editing remain direct-use APIs. Standard charts use Onevra's chart component over upstream primitives; the decision map records that boundary. MyGo's browser target has no Gallery route: Gallery and Packer are desktop applications, and browser packaging is outside their current scope.
 
 After every MyGo upgrade, run `GOWORK=off go generate ./examples/gallery/internal/gallery` from `source/` and review the diff. Ordinary running, building and [Packer](../build.md#app-bundles) use the checked-in snapshot. A generation run cannot establish coverage of new methods or subpackages; review release notes and public signatures too.
 

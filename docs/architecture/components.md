@@ -56,7 +56,7 @@ See the [input-source lifecycle API](../../source/components/command/input_sourc
 
 The [code component](../../source/components/code/code.go) tokenizes explicitly named languages with Chroma and renders retained spans through Onevra RichText and MyGo's text engine. Applications retain immutable documents outside frame builders; parsing can run in application-owned background work. Theme changes select prepared palettes without re-tokenization. Adjacent tokens sharing an appearance are merged, and a code block remains one text node rather than a UI element per token. Unknown languages, failed lexers and inputs exceeding highlighting limits retain their complete plain text.
 
-This path targets code snippets and Markdown blocks. It preserves MyGo selection across the document, so it does not virtualize individual lines. Highlighting limits bound lexer input and styling, not the layout cost of arbitrarily large files or a hard regex execution deadline. Large-file viewers need a separate viewport strategy and an explicit whole-document selection contract.
+This path targets code snippets and Markdown blocks. It preserves MyGo selection across the document, so it does not virtualize individual lines. Highlighting limits bound lexer input and styling, not the layout cost of arbitrarily large files or a hard regex execution deadline. Large-file viewers need a separate viewport strategy and an explicit whole-document selection contract. Editable code and diff views stay with MyGo's `ui/editor` and are used directly; see the [Gallery code-and-diff examples](gallery.md).
 
 ### Markdown
 

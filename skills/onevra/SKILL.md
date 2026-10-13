@@ -76,7 +76,7 @@ Use MyGo directly for:
 
 - Layout primitives: `ui.Box`, `Column`, `Row`, `Spacer`, `Grid`, `Overlay`, and `ui.Textf` for formatted display text.
 - Specialized charts and continuous/time axes from `ui/chart`, and element transforms and motion methods. Use `LayoutBounds` for layout calculations and local pointer coordinates; `Element.Bounds` includes visual transforms.
-- Native menus and context menus, `Flyout`, `WebView`, and every MyGo plugin, including Glass. Do not write Onevra-style replacements.
+- Native menus and context menus, `Flyout`, `WebView`, `ui/editor` code and diff views, and every MyGo plugin, including Glass. Do not write Onevra-style replacements.
 - MyGo's unstyled bases when building a new reusable control.
 - A MyGo widget with no Onevra equivalent. Onevra intentionally omits Divider, Avatar, Meter, Form, Field, Toolbar, OutlineTable, Segmented and TokenField: compose dividers from Box or borders before reaching for the upstream widget.
 
