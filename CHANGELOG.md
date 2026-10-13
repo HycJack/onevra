@@ -6,6 +6,7 @@ User-facing updates for Onevra library consumers.
 
 - Add Onevra-styled toasts on MyGo's toast queue: Shell shows `c.Toast`, `ToastAction` and `AddToast` toasts with status icons for `components.ToastInfo`, `ToastSuccess`, `ToastWarning` and `ToastError`, an optional action, a close button and a `components.ToastContent` leading slot. Standalone hosts call `components.Toasts`; localize the close button with `Labels.CloseToast` or `Localization.CloseToast`.
 - Place toasts at the top or bottom edge, centered or at either side, with `components.ToastOptions`, through `ShellOptions.Toasts` and `SetToasts` or the standalone `Toasts` call. Top placements stack downward, newest first, just below the Shell header; `Inset` adds further edge clearance.
+- Update the Lucide icons with 13 additions, including `lucide.MessageCircleText`, `ServerNas`, `ShieldHouse`, `UserRoundStar` and `WifiLock`, and refreshed artwork for `PenTool`, `Salad`, `Soup` and `ToolCase`.
 
 ## [0.2026.7] - 2026-10-12
 

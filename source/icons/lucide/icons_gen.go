@@ -6532,6 +6532,14 @@ func Grip() *ui.SVG {
 
 var cacheGrip lazyIcon
 
+// Groceries returns the Lucide groceries icon.
+// It parses once on first use and returns the same shared SVG on subsequent calls.
+func Groceries() *ui.SVG {
+	return cacheGroceries.get("<svg\n  xmlns=\"http://www.w3.org/2000/svg\"\n  width=\"24\"\n  height=\"24\"\n  viewBox=\"0 0 24 24\"\n  fill=\"none\"\n  stroke=\"currentColor\"\n  stroke-width=\"2\"\n  stroke-linecap=\"round\"\n  stroke-linejoin=\"round\"\n>\n  <path d=\"M10 15h4\" />\n  <path d=\"M19.424 11.095a2.5 2.5 0 00.471-2.309 2 2 0 00.424-3.286 2 2 0 00-2.143-3.322 2 2 0 00-.676.502 2 2 0 00-3.287.424 2.5 2.5 0 00-3.189 2.06A3 3 0 0012 11l4-4\" />\n  <path d=\"M4 12.006A1 1 0 014.994 11H19a1 1 0 011 1v7a2 2 0 01-2 2H6a2 2 0 01-2-2z\" />\n  <path d=\"M7 11a4 4 0 01-4-4V5a1 1 0 011-1h2a4 4 0 013.584 2.222\" />\n</svg>\n")
+}
+
+var cacheGroceries lazyIcon
+
 // Group returns the Lucide group icon.
 // It parses once on first use and returns the same shared SVG on subsequent calls.
 func Group() *ui.SVG {
@@ -6643,6 +6651,14 @@ func Handbag() *ui.SVG {
 }
 
 var cacheHandbag lazyIcon
+
+// HandleBottomRight returns the Lucide handle-bottom-right icon.
+// It parses once on first use and returns the same shared SVG on subsequent calls.
+func HandleBottomRight() *ui.SVG {
+	return cacheHandleBottomRight.get("<svg\n  xmlns=\"http://www.w3.org/2000/svg\"\n  width=\"24\"\n  height=\"24\"\n  viewBox=\"0 0 24 24\"\n  fill=\"none\"\n  stroke=\"currentColor\"\n  stroke-width=\"2\"\n  stroke-linecap=\"round\"\n  stroke-linejoin=\"round\"\n>\n  <path d=\"M21 8 8 21\" />\n  <path d=\"m21 15-6 6\" />\n</svg>\n")
+}
+
+var cacheHandleBottomRight lazyIcon
 
 // Handshake returns the Lucide handshake icon.
 // It parses once on first use and returns the same shared SVG on subsequent calls.
@@ -6899,6 +6915,14 @@ func Highlighter() *ui.SVG {
 }
 
 var cacheHighlighter lazyIcon
+
+// HikingStick returns the Lucide hiking-stick icon.
+// It parses once on first use and returns the same shared SVG on subsequent calls.
+func HikingStick() *ui.SVG {
+	return cacheHikingStick.get("<svg\n  xmlns=\"http://www.w3.org/2000/svg\"\n  width=\"24\"\n  height=\"24\"\n  viewBox=\"0 0 24 24\"\n  fill=\"none\"\n  stroke=\"currentColor\"\n  stroke-width=\"2\"\n  stroke-linecap=\"round\"\n  stroke-linejoin=\"round\"\n>\n  <path d=\"M13.5 10.5 2 22\" />\n  <path d=\"M16.352 11.648a1.205 1.205 0 01-1.704 0l-2.296-2.296a1.205 1.205 0 010-1.704l.72-.72a2 2 0 011.022-.546l.599-.12a2 2 0 001.569-1.57l.12-.598a2 2 0 01.546-1.022l.72-.72a1.205 1.205 0 011.704 0l2.296 2.296a1.205 1.205 0 010 1.704l-6.02 6.02a1 1 0 103 3l.201-.201A7.4 7.4 0 0021 9.93V7\" />\n  <path d=\"m6 21-3-3\" />\n</svg>\n")
+}
+
+var cacheHikingStick lazyIcon
 
 // HopOff returns the Lucide hop-off icon.
 // It parses once on first use and returns the same shared SVG on subsequent calls.
@@ -7580,6 +7604,14 @@ func LensConvex() *ui.SVG {
 
 var cacheLensConvex lazyIcon
 
+// Lens returns the Lucide lens icon.
+// It parses once on first use and returns the same shared SVG on subsequent calls.
+func Lens() *ui.SVG {
+	return cacheLens.get("<svg\n  xmlns=\"http://www.w3.org/2000/svg\"\n  width=\"24\"\n  height=\"24\"\n  viewBox=\"0 0 24 24\"\n  fill=\"none\"\n  stroke=\"currentColor\"\n  stroke-width=\"2\"\n  stroke-linecap=\"round\"\n  stroke-linejoin=\"round\"\n>\n  <path d=\"M15.725 7.296h.01\" />\n  <path d=\"M6 12a6 6 0 016-6\" />\n  <circle cx=\"12\" cy=\"12\" r=\"10\" />\n</svg>\n")
+}
+
+var cacheLens lazyIcon
+
 // Letters returns the Lucide letters icon.
 // It parses once on first use and returns the same shared SVG on subsequent calls.
 func Letters() *ui.SVG {
@@ -8060,6 +8092,14 @@ func MailClock() *ui.SVG {
 
 var cacheMailClock lazyIcon
 
+// MailDot returns the Lucide mail-dot icon.
+// It parses once on first use and returns the same shared SVG on subsequent calls.
+func MailDot() *ui.SVG {
+	return cacheMailDot.get("<svg\n  xmlns=\"http://www.w3.org/2000/svg\"\n  width=\"24\"\n  height=\"24\"\n  viewBox=\"0 0 24 24\"\n  fill=\"none\"\n  stroke=\"currentColor\"\n  stroke-width=\"2\"\n  stroke-linecap=\"round\"\n  stroke-linejoin=\"round\"\n>\n  <path d=\"M12.674 4H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-4.675\" />\n  <path d=\"m2 7 9 5.701a2 2 0 0 0 2 0l1.084-.686\" />\n  <circle cx=\"19\" cy=\"7\" r=\"3\" />\n</svg>\n")
+}
+
+var cacheMailDot lazyIcon
+
 // MailMinus returns the Lucide mail-minus icon.
 // It parses once on first use and returns the same shared SVG on subsequent calls.
 func MailMinus() *ui.SVG {
@@ -8451,6 +8491,14 @@ func MessageCircleReply() *ui.SVG {
 }
 
 var cacheMessageCircleReply lazyIcon
+
+// MessageCircleText returns the Lucide message-circle-text icon.
+// It parses once on first use and returns the same shared SVG on subsequent calls.
+func MessageCircleText() *ui.SVG {
+	return cacheMessageCircleText.get("<svg\n  xmlns=\"http://www.w3.org/2000/svg\"\n  width=\"24\"\n  height=\"24\"\n  viewBox=\"0 0 24 24\"\n  fill=\"none\"\n  stroke=\"currentColor\"\n  stroke-width=\"2\"\n  stroke-linecap=\"round\"\n  stroke-linejoin=\"round\"\n>\n  <path d=\"M3.086 17.509a2 2 0 00-.094-1.167 10 10 0 114.777 4.719 2 2 0 00-1.099-.092l-3.413.998a1 1 0 01-1.236-1.168z\" />\n  <path d=\"M8 12h9\" />\n  <path d=\"M8 16h5\" />\n  <path d=\"M8 8h7\" />\n</svg>\n")
+}
+
+var cacheMessageCircleText lazyIcon
 
 // MessageCircleWarning returns the Lucide message-circle-warning icon.
 // It parses once on first use and returns the same shared SVG on subsequent calls.
@@ -9783,7 +9831,7 @@ var cachePenOff lazyIcon
 // PenTool returns the Lucide pen-tool icon.
 // It parses once on first use and returns the same shared SVG on subsequent calls.
 func PenTool() *ui.SVG {
-	return cachePenTool.get("<svg\n  xmlns=\"http://www.w3.org/2000/svg\"\n  width=\"24\"\n  height=\"24\"\n  viewBox=\"0 0 24 24\"\n  fill=\"none\"\n  stroke=\"currentColor\"\n  stroke-width=\"2\"\n  stroke-linecap=\"round\"\n  stroke-linejoin=\"round\"\n>\n  <path d=\"M15.707 21.293a1 1 0 0 1-1.414 0l-1.586-1.586a1 1 0 0 1 0-1.414l5.586-5.586a1 1 0 0 1 1.414 0l1.586 1.586a1 1 0 0 1 0 1.414z\" />\n  <path d=\"m18 13-1.375-6.874a1 1 0 0 0-.746-.776L3.235 2.028a1 1 0 0 0-1.207 1.207L5.35 15.879a1 1 0 0 0 .776.746L13 18\" />\n  <path d=\"m2.3 2.3 7.286 7.286\" />\n  <circle cx=\"11\" cy=\"11\" r=\"2\" />\n</svg>\n")
+	return cachePenTool.get("<svg\n  xmlns=\"http://www.w3.org/2000/svg\"\n  width=\"24\"\n  height=\"24\"\n  viewBox=\"0 0 24 24\"\n  fill=\"none\"\n  stroke=\"currentColor\"\n  stroke-width=\"2\"\n  stroke-linecap=\"round\"\n  stroke-linejoin=\"round\"\n>\n  <path d=\"m18 13-.654-4.736a4 4 0 00-2.756-3.266l-9.163-2.9a2 2 0 00-2.017.493l-.82.819a2 2 0 00-.492 2.017l2.9 9.163a4 4 0 003.266 2.756L13 18\" />\n  <path d=\"M18.648 12.352a1.205 1.205 0 011.704 0l1.296 1.296a1.205 1.205 0 010 1.704l-6.296 6.296a1.205 1.205 0 01-1.704 0l-1.296-1.296a1.205 1.205 0 010-1.704z\" />\n  <path d=\"m3 3 6.586 6.586\" />\n  <circle cx=\"11\" cy=\"11\" r=\"2\" />\n</svg>\n")
 }
 
 var cachePenTool lazyIcon
@@ -9899,6 +9947,14 @@ func PhoneIncoming() *ui.SVG {
 }
 
 var cachePhoneIncoming lazyIcon
+
+// PhoneLog returns the Lucide phone-log icon.
+// It parses once on first use and returns the same shared SVG on subsequent calls.
+func PhoneLog() *ui.SVG {
+	return cachePhoneLog.get("<svg\n  xmlns=\"http://www.w3.org/2000/svg\"\n  width=\"24\"\n  height=\"24\"\n  viewBox=\"0 0 24 24\"\n  fill=\"none\"\n  stroke=\"currentColor\"\n  stroke-width=\"2\"\n  stroke-linecap=\"round\"\n  stroke-linejoin=\"round\"\n>\n  <path d=\"M13.832 16.568a1 1 0 001.213-.303l.355-.465A2 2 0 0117 15h3a2 2 0 012 2v3a2 2 0 01-2 2A18 18 0 012 4a2 2 0 012-2h3a2 2 0 012 2v3a2 2 0 01-.8 1.6l-.468.351a1 1 0 00-.292 1.233 14 14 0 006.392 6.384\" />\n  <path d=\"M14.396 4.171h7.171\" />\n  <path d=\"M17.343 8.17h4.224\" />\n</svg>\n")
+}
+
+var cachePhoneLog lazyIcon
 
 // PhoneMissed returns the Lucide phone-missed icon.
 // It parses once on first use and returns the same shared SVG on subsequent calls.
@@ -10927,7 +10983,7 @@ var cacheSailboat lazyIcon
 // Salad returns the Lucide salad icon.
 // It parses once on first use and returns the same shared SVG on subsequent calls.
 func Salad() *ui.SVG {
-	return cacheSalad.get("<svg\n  xmlns=\"http://www.w3.org/2000/svg\"\n  width=\"24\"\n  height=\"24\"\n  viewBox=\"0 0 24 24\"\n  fill=\"none\"\n  stroke=\"currentColor\"\n  stroke-width=\"2\"\n  stroke-linecap=\"round\"\n  stroke-linejoin=\"round\"\n>\n  <path d=\"M7 21h10\" />\n  <path d=\"M12 21a9 9 0 0 0 9-9H3a9 9 0 0 0 9 9Z\" />\n  <path d=\"M11.38 12a2.4 2.4 0 0 1-.4-4.77 2.4 2.4 0 0 1 3.2-2.77 2.4 2.4 0 0 1 3.47-.63 2.4 2.4 0 0 1 3.37 3.37 2.4 2.4 0 0 1-1.1 3.7 2.51 2.51 0 0 1 .03 1.1\" />\n  <path d=\"m13 12 4-4\" />\n  <path d=\"M10.9 7.25A3.99 3.99 0 0 0 4 10c0 .73.2 1.41.54 2\" />\n</svg>\n")
+	return cacheSalad.get("<svg\n  xmlns=\"http://www.w3.org/2000/svg\"\n  width=\"24\"\n  height=\"24\"\n  viewBox=\"0 0 24 24\"\n  fill=\"none\"\n  stroke=\"currentColor\"\n  stroke-width=\"2\"\n  stroke-linecap=\"round\"\n  stroke-linejoin=\"round\"\n>\n  <path d=\"M19.496 12a2.5 2.5 0 00.399-2.214A2 2 0 0020.32 6.5 2 2 0 0019 3a2 2 0 00-1.5.68 2 2 0 00-3.287.424 2.5 2.5 0 00-3.189 2.06A3 3 0 0012 12l4-4\" />\n  <path d=\"M4 12a1 1 0 00-.99 1.133A9 9 0 0012 21a9 9 0 008.99-7.867A1 1 0 0020 12z\" />\n  <path d=\"M7 21h10\" />\n  <path d=\"M9.85 6.907A3.5 3.5 0 005.05 12\" />\n</svg>\n")
 }
 
 var cacheSalad lazyIcon
@@ -11156,6 +11212,14 @@ func Scooter() *ui.SVG {
 
 var cacheScooter lazyIcon
 
+// ScratchBlocks returns the Lucide scratch-blocks icon.
+// It parses once on first use and returns the same shared SVG on subsequent calls.
+func ScratchBlocks() *ui.SVG {
+	return cacheScratchBlocks.get("<svg\n  xmlns=\"http://www.w3.org/2000/svg\"\n  width=\"24\"\n  height=\"24\"\n  viewBox=\"0 0 24 24\"\n  fill=\"none\"\n  stroke=\"currentColor\"\n  stroke-width=\"2\"\n  stroke-linecap=\"round\"\n  stroke-linejoin=\"round\"\n>\n  <path d=\"M19 5a2 2 0 012 2v11a2 2 0 01-2 2h-5.586a1 1 0 00-.707.293l-1.414 1.414a1 1 0 01-.707.293H8.414a1 1 0 01-.707-.293l-1.414-1.414A1 1 0 005.586 20H5a2 2 0 01-2-2V5.286c0-.394.11-.785.36-1.09a6 6 0 019.168-.133C12.996 4.6 13.637 5 14.35 5z\" />\n  <path d=\"M21 12h-7.586a1 1 0 00-.707.293l-1.414 1.414a1 1 0 01-.707.293H8.414a1 1 0 01-.707-.293l-1.414-1.414A1 1 0 005.586 12H3\" />\n</svg>\n")
+}
+
+var cacheScratchBlocks lazyIcon
+
 // ScreenShareOff returns the Lucide screen-share-off icon.
 // It parses once on first use and returns the same shared SVG on subsequent calls.
 func ScreenShareOff() *ui.SVG {
@@ -11171,6 +11235,14 @@ func ScreenShare() *ui.SVG {
 }
 
 var cacheScreenShare lazyIcon
+
+// Screw returns the Lucide screw icon.
+// It parses once on first use and returns the same shared SVG on subsequent calls.
+func Screw() *ui.SVG {
+	return cacheScrew.get("<svg\n  xmlns=\"http://www.w3.org/2000/svg\"\n  width=\"24\"\n  height=\"24\"\n  viewBox=\"0 0 24 24\"\n  fill=\"none\"\n  stroke=\"currentColor\"\n  stroke-width=\"2\"\n  stroke-linecap=\"round\"\n  stroke-linejoin=\"round\"\n>\n  <path d=\"M10 9v10\" />\n  <path d=\"M14 13v2\" />\n  <path d=\"M16.5 10.5 5.706 21.294A2.4 2.4 0 014.002 22H2.5a.5.5 0 01-.5-.5v-1.502a2.4 2.4 0 01.706-1.704L13.5 7.5\" />\n  <path d=\"M20.819 11.575a6 6 0 00.969-5.162.6.6 0 00-.981-.219l-.455.454a1.2 1.2 0 01-1.704 0l-1.296-1.296a1.2 1.2 0 010-1.704l.454-.453a.595.595 0 00-.219-.98 6 6 0 00-5.162.967 2 2 0 00-.222 3.019l5.596 5.597a2 2 0 003.02-.222\" />\n  <path d=\"M6 13v8\" />\n</svg>\n")
+}
+
+var cacheScrew lazyIcon
 
 // ScrollText returns the Lucide scroll-text icon.
 // It parses once on first use and returns the same shared SVG on subsequent calls.
@@ -11299,6 +11371,14 @@ func ServerCrash() *ui.SVG {
 }
 
 var cacheServerCrash lazyIcon
+
+// ServerNas returns the Lucide server-nas icon.
+// It parses once on first use and returns the same shared SVG on subsequent calls.
+func ServerNas() *ui.SVG {
+	return cacheServerNas.get("<svg\n  xmlns=\"http://www.w3.org/2000/svg\"\n  width=\"24\"\n  height=\"24\"\n  viewBox=\"0 0 24 24\"\n  fill=\"none\"\n  stroke=\"currentColor\"\n  stroke-width=\"2\"\n  stroke-linecap=\"round\"\n  stroke-linejoin=\"round\"\n>\n  <path d=\"M10 16V8\" />\n  <path d=\"M14 16V8\" />\n  <path d=\"M18 16V8\" />\n  <path d=\"M6 12h.01\" />\n  <path d=\"M6 16h.01\" />\n  <rect x=\"2\" y=\"4\" width=\"20\" height=\"16\" rx=\"2\" />\n</svg>\n")
+}
+
+var cacheServerNas lazyIcon
 
 // ServerOff returns the Lucide server-off icon.
 // It parses once on first use and returns the same shared SVG on subsequent calls.
@@ -11443,6 +11523,14 @@ func ShieldHalf() *ui.SVG {
 }
 
 var cacheShieldHalf lazyIcon
+
+// ShieldHouse returns the Lucide shield-house icon.
+// It parses once on first use and returns the same shared SVG on subsequent calls.
+func ShieldHouse() *ui.SVG {
+	return cacheShieldHouse.get("<svg\n  xmlns=\"http://www.w3.org/2000/svg\"\n  width=\"24\"\n  height=\"24\"\n  viewBox=\"0 0 24 24\"\n  fill=\"none\"\n  stroke=\"currentColor\"\n  stroke-width=\"2\"\n  stroke-linecap=\"round\"\n  stroke-linejoin=\"round\"\n>\n  <path d=\"M15 22a1 1 0 01-1-1v-4a1 1 0 01.445-.832l3-2a1 1 0 011.11 0l3 2A1 1 0 0122 17v4a1 1 0 01-1 1z\" />\n  <path d=\"M18 22v-3\" />\n  <path d=\"M20 10.418V6a1 1 0 00-1-1c-2 0-4.49-1.19-6.24-2.72a1.17 1.17 0 00-1.52 0C9.5 3.8 7 5 5 5a1 1 0 00-1 1v7c0 4.602 2.67 7.1 6.037 8.603\" />\n</svg>\n")
+}
+
+var cacheShieldHouse lazyIcon
 
 // ShieldKeyhole returns the Lucide shield-keyhole icon.
 // It parses once on first use and returns the same shared SVG on subsequent calls.
@@ -11855,7 +11943,7 @@ var cacheSolarPanel lazyIcon
 // Soup returns the Lucide soup icon.
 // It parses once on first use and returns the same shared SVG on subsequent calls.
 func Soup() *ui.SVG {
-	return cacheSoup.get("<svg\n  xmlns=\"http://www.w3.org/2000/svg\"\n  width=\"24\"\n  height=\"24\"\n  viewBox=\"0 0 24 24\"\n  fill=\"none\"\n  stroke=\"currentColor\"\n  stroke-width=\"2\"\n  stroke-linecap=\"round\"\n  stroke-linejoin=\"round\"\n>\n  <path d=\"M12 21a9 9 0 0 0 9-9H3a9 9 0 0 0 9 9Z\" />\n  <path d=\"M7 21h10\" />\n  <path d=\"M19.5 12 22 6\" />\n  <path d=\"M16.25 3c.27.1.8.53.75 1.36-.06.83-.93 1.2-1 2.02-.05.78.34 1.24.73 1.62\" />\n  <path d=\"M11.25 3c.27.1.8.53.74 1.36-.05.83-.93 1.2-.98 2.02-.06.78.33 1.24.72 1.62\" />\n  <path d=\"M6.25 3c.27.1.8.53.75 1.36-.06.83-.93 1.2-1 2.02-.05.78.34 1.24.74 1.62\" />\n</svg>\n")
+	return cacheSoup.get("<svg\n  xmlns=\"http://www.w3.org/2000/svg\"\n  width=\"24\"\n  height=\"24\"\n  viewBox=\"0 0 24 24\"\n  fill=\"none\"\n  stroke=\"currentColor\"\n  stroke-width=\"2\"\n  stroke-linecap=\"round\"\n  stroke-linejoin=\"round\"\n>\n  <path d=\"M11.248 3c.273.1.808.53.747 1.36-.05.83-.938 1.2-.989 2.02-.06.78.333 1.24.727 1.62\" />\n  <path d=\"M16.252 3c.268.1.794.53.745 1.36-.06.83-.923 1.2-.993 2.02-.05.78.338 1.24.725 1.62\" />\n  <path d=\"M19.5 12 22 6\" />\n  <path d=\"M4 12a1 1 0 00-.99 1.133A9 9 0 0012 21a9 9 0 008.99-7.867A1 1 0 0020 12z\" />\n  <path d=\"M6.252 3c.268.1.794.53.745 1.36-.06.83-.923 1.2-.993 2.02-.05.78.338 1.24.735 1.62\" />\n  <path d=\"M7 21h10\" />\n</svg>\n")
 }
 
 var cacheSoup lazyIcon
@@ -13519,7 +13607,7 @@ var cacheToilet lazyIcon
 // ToolCase returns the Lucide tool-case icon.
 // It parses once on first use and returns the same shared SVG on subsequent calls.
 func ToolCase() *ui.SVG {
-	return cacheToolCase.get("<svg\n  xmlns=\"http://www.w3.org/2000/svg\"\n  width=\"24\"\n  height=\"24\"\n  viewBox=\"0 0 24 24\"\n  fill=\"none\"\n  stroke=\"currentColor\"\n  stroke-width=\"2\"\n  stroke-linecap=\"round\"\n  stroke-linejoin=\"round\"\n>\n  <path d=\"M10 15h4\" />\n  <path d=\"m14.817 10.995-.971-1.45 1.034-1.232a2 2 0 0 0-2.025-3.238l-1.82.364L9.91 3.885a2 2 0 0 0-3.625.748L6.141 6.55l-1.725.426a2 2 0 0 0-.19 3.756l.657.27\" />\n  <path d=\"m18.822 10.995 2.26-5.38a1 1 0 0 0-.557-1.318L16.954 2.9a1 1 0 0 0-1.281.533l-.924 2.122\" />\n  <path d=\"M4 12.006A1 1 0 0 1 4.994 11H19a1 1 0 0 1 1 1v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z\" />\n</svg>\n")
+	return cacheToolCase.get("<svg\n  xmlns=\"http://www.w3.org/2000/svg\"\n  width=\"24\"\n  height=\"24\"\n  viewBox=\"0 0 24 24\"\n  fill=\"none\"\n  stroke=\"currentColor\"\n  stroke-width=\"2\"\n  stroke-linecap=\"round\"\n  stroke-linejoin=\"round\"\n>\n  <path d=\"M10 15h4\" />\n  <path d=\"m14.5 4.058.571-1.429a1 1 0 011.3-.558l5 2a1 1 0 01.549.534.88.88 0 01.01.765l-2.332 5.83\" />\n  <path d=\"M15.634 11a2 2 0 00-.186-.34l-1.17-1.757 1.31-1.656a2 2 0 00-2.109-3.165l-2.032.57-1.17-1.758a2 2 0 00-3.664 1.028l-.086 2.11-2.032.568a2 2 0 00-.155 3.8l1.617.6\" />\n  <path d=\"M4 12.006A1 1 0 014.994 11H19a1 1 0 011 1v7a2 2 0 01-2 2H6a2 2 0 01-2-2z\" />\n</svg>\n")
 }
 
 var cacheToolCase lazyIcon
@@ -14148,6 +14236,14 @@ func UserRoundSearch() *ui.SVG {
 
 var cacheUserRoundSearch lazyIcon
 
+// UserRoundStar returns the Lucide user-round-star icon.
+// It parses once on first use and returns the same shared SVG on subsequent calls.
+func UserRoundStar() *ui.SVG {
+	return cacheUserRoundStar.get("<svg\n  xmlns=\"http://www.w3.org/2000/svg\"\n  width=\"24\"\n  height=\"24\"\n  viewBox=\"0 0 24 24\"\n  fill=\"none\"\n  stroke=\"currentColor\"\n  stroke-width=\"2\"\n  stroke-linecap=\"round\"\n  stroke-linejoin=\"round\"\n>\n  <path d=\"M16.051 12.616a1 1 0 0 1 1.909.024l.737 1.452a1 1 0 0 0 .737.535l1.634.256a1 1 0 0 1 .588 1.806l-1.172 1.168a1 1 0 0 0-.282.866l.259 1.613a1 1 0 0 1-1.541 1.134l-1.465-.75a1 1 0 0 0-.912 0l-1.465.75a1 1 0 0 1-1.539-1.133l.258-1.613a1 1 0 0 0-.282-.867l-1.156-1.152a1 1 0 0 1 .572-1.822l1.633-.256a1 1 0 0 0 .737-.535z\" />\n  <path d=\"M2 21a8 8 0 0 1 6.778-7.905\" />\n  <path d=\"M8.927 12.885a5 5 0 1 1 6.061-4.535\" />\n</svg>\n")
+}
+
+var cacheUserRoundStar lazyIcon
+
 // UserRoundX returns the Lucide user-round-x icon.
 // It parses once on first use and returns the same shared SVG on subsequent calls.
 func UserRoundX() *ui.SVG {
@@ -14659,6 +14755,14 @@ func WifiHigh() *ui.SVG {
 }
 
 var cacheWifiHigh lazyIcon
+
+// WifiLock returns the Lucide wifi-lock icon.
+// It parses once on first use and returns the same shared SVG on subsequent calls.
+func WifiLock() *ui.SVG {
+	return cacheWifiLock.get("<svg\n  xmlns=\"http://www.w3.org/2000/svg\"\n  width=\"24\"\n  height=\"24\"\n  viewBox=\"0 0 24 24\"\n  fill=\"none\"\n  stroke=\"currentColor\"\n  stroke-width=\"2\"\n  stroke-linecap=\"round\"\n  stroke-linejoin=\"round\"\n>\n  <path d=\"M2 8.82a15 15 0 0120 0\" />\n  <path d=\"M20 16v-2a2 2 0 00-4 0v2\" />\n  <path d=\"M5 12.859a10 10 0 018.436-2.756\" />\n  <path d=\"M8.5 16.429a5 5 0 011.794-1.13\" />\n  <rect x=\"14\" y=\"16\" width=\"8\" height=\"5\" rx=\"1\" />\n</svg>\n")
+}
+
+var cacheWifiLock lazyIcon
 
 // WifiLow returns the Lucide wifi-low icon.
 // It parses once on first use and returns the same shared SVG on subsequent calls.
