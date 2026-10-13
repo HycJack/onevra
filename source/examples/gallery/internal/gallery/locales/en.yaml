@@ -1201,3 +1201,47 @@ gallery.audio_pan:
   other: "Pan"
 gallery.audio_unavailable:
   other: "Audio output unavailable: %v"
+gallery.toast_info:
+  other: "Info"
+gallery.toast_success:
+  other: "Success"
+gallery.toast_warning:
+  other: "Warning"
+gallery.toast_error:
+  other: "Error"
+gallery.toast_info_title:
+  other: "A new version is available"
+gallery.toast_success_title:
+  other: "Changes saved"
+gallery.toast_warning_title:
+  other: "Storage is almost full"
+gallery.toast_error_title:
+  other: "Couldn't sync"
+gallery.toast_status_description:
+  other: "Toasts pause while the pointer rests on them."
+gallery.toast_deleted:
+  other: "Item deleted"
+gallery.toast_items:
+  other: "Items: %d"
+gallery.toast_start_upload:
+  other: "Start upload"
+gallery.toast_finish_upload:
+  other: "Finish upload"
+gallery.toast_uploading:
+  other: "Uploading report.pdf"
+gallery.toast_uploaded:
+  other: "Upload complete"
+gallery.toast_placement:
+  other: "Placement"
+gallery.toast_bottom:
+  other: "Bottom center"
+gallery.toast_bottom_start:
+  other: "Bottom left"
+gallery.toast_bottom_end:
+  other: "Bottom right"
+gallery.toast_top:
+  other: "Top center"
+gallery.toast_top_start:
+  other: "Top left"
+gallery.toast_top_end:
+  other: "Top right"

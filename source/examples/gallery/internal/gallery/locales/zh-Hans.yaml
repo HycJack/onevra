@@ -1201,3 +1201,47 @@ gallery.audio_pan:
   other: "声像"
 gallery.audio_unavailable:
   other: "音频输出不可用：%v"
+gallery.toast_info:
+  other: "信息"
+gallery.toast_success:
+  other: "成功"
+gallery.toast_warning:
+  other: "警告"
+gallery.toast_error:
+  other: "错误"
+gallery.toast_info_title:
+  other: "有新版本可用"
+gallery.toast_success_title:
+  other: "更改已保存"
+gallery.toast_warning_title:
+  other: "存储空间即将用尽"
+gallery.toast_error_title:
+  other: "无法同步"
+gallery.toast_status_description:
+  other: "指针停留在通知上时会暂停计时。"
+gallery.toast_deleted:
+  other: "项目已删除"
+gallery.toast_items:
+  other: "项目数：%d"
+gallery.toast_start_upload:
+  other: "开始上传"
+gallery.toast_finish_upload:
+  other: "完成上传"
+gallery.toast_uploading:
+  other: "正在上传 report.pdf"
+gallery.toast_uploaded:
+  other: "上传完成"
+gallery.toast_placement:
+  other: "位置"
+gallery.toast_bottom:
+  other: "底部居中"
+gallery.toast_bottom_start:
+  other: "左下角"
+gallery.toast_bottom_end:
+  other: "右下角"
+gallery.toast_top:
+  other: "顶部居中"
+gallery.toast_top_start:
+  other: "左上角"
+gallery.toast_top_end:
+  other: "右上角"

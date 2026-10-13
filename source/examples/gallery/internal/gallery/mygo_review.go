@@ -23,7 +23,7 @@ var mygoHandled = map[string]mygoDecision{
 	"ColorPicker":      {Replacement: "components.ColorView", Reason: "Onevra RGBA color editing view"},
 	"ColorWell":        {Replacement: "components.ColorPicker", Reason: "Customizable swatch opening Onevra ColorView"},
 	"Tooltip":          {Replacement: "components.Tooltip", Reason: "Onevra text hints on MyGo tooltip behavior"},
-	"Toast":            {Reason: "Transient toast notifications are not needed; prefer contextual feedback in application content"},
+	"Toast":            {Replacement: "components.Toasts", Reason: "Onevra toast look with status icons and a leading slot on MyGo's toast queue; Shell builds it automatically"},
 	"Popover":          {Replacement: "components.Popover", Reason: "Onevra anchored non-modal panel on MyGo popover behavior"},
 	"Modal":            {Replacement: "components.Dialog", Reason: "Onevra composable modal layers"},
 	"AlertDialog":      {Replacement: "components.AlertDialog", Reason: "Onevra result-bearing dialog preset"},

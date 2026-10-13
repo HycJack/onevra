@@ -29,6 +29,7 @@ type Gallery struct {
 	grid           components.GridState
 	mygoStates     map[string]*demoState
 	controlStates  map[string]*controlState
+	toasts         components.ToastOptions
 	// Native startup supplies the factory; headless views never load libraries.
 	createTerminal func() (*terminal.Terminal, error)
 	createWebView  func() (*mygo.WebView, error)

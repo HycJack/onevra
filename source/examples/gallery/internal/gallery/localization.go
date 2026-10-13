@@ -142,6 +142,7 @@ func (g *Gallery) updateLanguageWindows() {
 			LeftToggle: g.text("gallery.toggle_sidebar"), LeftResize: g.text("gallery.resize_sidebar"),
 			Minimize: g.text("gallery.minimize_window"), Maximize: g.text("gallery.maximize_window"),
 			Restore: g.text("gallery.restore_window"), Close: g.text("gallery.close_window"),
+			CloseToast: g.text("gallery.close"),
 		})
 		if win := g.Shell.Window(); win != nil {
 			win.SetTitle(g.text("gallery.onevra_gallery"))
@@ -215,6 +216,7 @@ func (g *Gallery) componentWords() components.Localization {
 		SettingsCategory:          g.text("gallery.settings_category"),
 		SearchResults:             g.text("gallery.search_results"),
 		NoSettings:                g.text("gallery.no_matching_settings_try_another_search"),
+		CloseToast:                g.text("gallery.close"),
 	}
 	words.NumberAction = func(action, label string) string {
 		source := map[string]string{"adjust": "gallery.adjust_s", "increase": "gallery.s_increase", "decrease": "gallery.s_decrease"}[action]

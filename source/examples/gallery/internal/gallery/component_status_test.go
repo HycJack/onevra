@@ -118,7 +118,7 @@ func TestTextfUsesMyGoDirectly(t *testing.T) {
 func TestComponentStatusCards(t *testing.T) {
 	entries := mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled)
 	cards := componentStatusCards(entries, mygoReplaced)
-	if len(cards) != 40 {
+	if len(cards) != 41 {
 		t.Fatalf("got %d replacement cards", len(cards))
 	}
 	foundCharts := false
