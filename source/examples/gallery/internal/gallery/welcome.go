@@ -12,7 +12,7 @@ import (
 )
 
 // Keep the application version aligned with packer.yaml; a test checks both.
-const galleryVersion = "0.2026.7"
+const galleryVersion = "0.2026.8"
 
 const (
 	repositoryURL   = "https://github.com/oneo-me/onevra"

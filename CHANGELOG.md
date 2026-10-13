@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+## [0.2026.8] - 2026-10-13
+
 - Add Onevra-styled toasts on MyGo's toast queue: Shell shows `c.Toast`, `ToastAction` and `AddToast` toasts with status icons for `components.ToastInfo`, `ToastSuccess`, `ToastWarning` and `ToastError`, an optional action, a close button and a `components.ToastContent` leading slot. Standalone hosts call `components.Toasts`; localize the close button with `Labels.CloseToast` or `Localization.CloseToast`.
 - Place toasts at the top or bottom edge, centered or at either side, with `components.ToastOptions`, through `ShellOptions.Toasts` and `SetToasts` or the standalone `Toasts` call. Top placements stack downward, newest first, just below the Shell header; `Inset` adds further edge clearance.
 - Require MyGo 0.4.8, which adds a code editor and diff viewer (`ui/editor`), offscreen canvases, painter transforms, pixelated bitmaps and the game plugin for applications to use directly.

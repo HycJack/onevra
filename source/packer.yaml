@@ -1,6 +1,6 @@
 name: Onevra Gallery
 identifier: me.oneo.onevra.gallery
-version: "0.2026.7"
+version: "0.2026.8"
 main: ./examples/gallery
 out: ../dist
 platforms:
