@@ -26,7 +26,7 @@ const (
 	lawnW             = 192
 	lawnH             = lawnTop + lawnRows*lawnTile
 	lawnSecond        = game.Rate
-	lawnZombies       = 15 // in the level, the last of them together
+	lawnZombies       = 100 // a level's total, its last lawnFinalWave together
 	lawnFinalWave     = 5
 	lawnZombieHealth  = 180
 	lawnZombieSpeed   = 0.1
@@ -155,6 +155,7 @@ type lawnMowerState struct {
 // lawnWorld is one round, replaced whole on restart.
 type lawnWorld struct {
 	state              lawnState
+	endless            bool
 	steps, sun         int
 	selected           int // a seed, or -1
 	recharge           [3]int
@@ -167,8 +168,8 @@ type lawnWorld struct {
 	nextSpawn, nextSun int
 }
 
-func newLawnWorld() lawnWorld {
-	w := lawnWorld{sun: 150, selected: -1, nextSpawn: 20 * lawnSecond, nextSun: 4 * lawnSecond}
+func newLawnWorld(endless bool) lawnWorld {
+	w := lawnWorld{endless: endless, sun: 150, selected: -1, nextSpawn: 20 * lawnSecond, nextSun: 4 * lawnSecond}
 	for row := range w.mowers {
 		w.mowers[row].x = 6
 	}
@@ -183,6 +184,8 @@ type lawnDemo struct {
 	sheet      *ui.Bitmap
 	screen     *ui.Canvas
 	rng        *rand.Rand
+	sfx        *lawnAudio
+	output     bool
 	invalidate func()
 	// fitX, fitY and fitK map view points to screen pixels.
 	fitX, fitY, fitK float32
@@ -196,13 +199,16 @@ func (d *lawnDemo) init(c *ui.Context) {
 		d.screen = ui.NewCanvas(lawnW, lawnH)
 		d.screen.Bitmap().Pixelated()
 		d.rng = rand.New(rand.NewPCG(uint64(time.Now().UnixNano()), 0))
-		d.lawnWorld = newLawnWorld()
+		d.sfx = newLawnAudio()
+		d.lawnWorld = newLawnWorld(false)
 	}
 	d.invalidate = c.Invalidate
 }
 
+// restart starts a fresh round and keeps the chosen game mode.
 func (d *lawnDemo) restart() {
-	d.lawnWorld = newLawnWorld()
+	d.lawnWorld = newLawnWorld(d.endless)
+	d.playMusic()
 	d.changed()
 }
 
@@ -212,11 +218,13 @@ func (d *lawnDemo) changed() {
 	}
 }
 
-func (d *lawnDemo) setState(s lawnState) {
-	if d.state != s {
-		d.state = s
-		d.changed()
+func (d *lawnDemo) setState(s lawnState) bool {
+	if d.state == s {
+		return false
 	}
+	d.state = s
+	d.changed()
+	return true
 }
 
 func (d *lawnDemo) ready(seed int) bool {
@@ -265,6 +273,7 @@ func (d *lawnDemo) click(x, y float32) {
 		if s := d.suns[i]; x >= s.x-7 && x <= s.x+7 && y >= s.y-7 && y <= s.y+7 {
 			d.sun += lawnSunValue
 			d.suns = slices.Delete(d.suns, i, i+1)
+			d.play(d.sfx.collect)
 			return
 		}
 	}
@@ -291,6 +300,7 @@ func (d *lawnDemo) click(x, y float32) {
 	d.sun -= seed.cost
 	d.recharge[d.selected] = seed.recharge
 	d.selected = -1
+	d.play(d.sfx.plant)
 }
 
 func (d *lawnDemo) step() {
@@ -307,18 +317,25 @@ func (d *lawnDemo) step() {
 	d.updateSuns()
 	for _, z := range d.zombies {
 		if z.health > 0 && z.x+3 <= 0 {
-			d.setState(lawnLost)
+			if d.setState(lawnLost) {
+				d.stopMusic()
+				d.play(d.sfx.lose)
+			}
 			return
 		}
 	}
-	if d.spawned == lawnZombies && len(d.zombies) == 0 {
-		d.setState(lawnWon)
+	if !d.endless && d.spawned == lawnZombies && len(d.zombies) == 0 {
+		if d.setState(lawnWon) {
+			d.stopMusic()
+			d.play(d.sfx.win)
+		}
 	}
 }
 
-// spawn sends zombies ever more often, then a final wave together.
+// spawn sends zombies ever more often, then a final wave together. A
+// level stops after its last wave; endless mode keeps sending waves.
 func (d *lawnDemo) spawn() {
-	if d.spawned == lawnZombies {
+	if !d.endless && d.spawned == lawnZombies {
 		return
 	}
 	if d.nextSpawn--; d.nextSpawn > 0 {
@@ -334,6 +351,7 @@ func (d *lawnDemo) spawn() {
 		for i := range lawnFinalWave {
 			d.addZombie(float32(i * 10))
 		}
+		d.nextSpawn = 12 * lawnSecond
 	}
 	d.changed()
 }
@@ -371,6 +389,7 @@ func (d *lawnDemo) updatePlants() {
 					if p.timer--; p.timer <= 0 {
 						p.timer = lawnShotInterval
 						d.peas = append(d.peas, lawnPea{row, x + 13})
+						d.playShot()
 					}
 				}
 			}
@@ -418,6 +437,7 @@ func (d *lawnDemo) updateZombies() {
 	for _, z := range d.zombies {
 		if z.health <= 0 {
 			d.defeated++
+			d.playDefeat()
 			d.changed()
 			continue
 		}
@@ -450,6 +470,9 @@ func (d *lawnDemo) updateMowers() {
 		}
 		for _, z := range d.zombies {
 			if z.row == row && z.health > 0 && z.x+3 <= lawnLeft {
+				if !m.running {
+					d.play(d.sfx.mower)
+				}
 				m.running = true
 			}
 		}
@@ -616,7 +639,8 @@ func (d *lawnDemo) paintSeedBar(cp *ui.Painter, sprite func(int, float32, float3
 	bar := ui.Rect{X: 120, Y: 9, W: 66, H: 6}
 	cp.Fill(bar, ui.RGB(50, 36, 22), 0)
 	if d.spawned > 0 {
-		w := float32(int((bar.W - 2) * float32(d.spawned) / lawnZombies))
+		progress := min(float32(1), float32(d.spawned)/float32(lawnZombies))
+		w := float32(int((bar.W - 2) * progress))
 		cp.Fill(ui.Rect{X: bar.X + 1, Y: bar.Y + 1, W: w, H: bar.H - 2}, ui.RGB(150, 210, 80), 0)
 	}
 }
@@ -638,6 +662,7 @@ func exampleLawn(c *ui.Context, s *demoState) {
 	t := c.Theme()
 	d := &s.lawn
 	d.init(c)
+	d.syncMusic()
 	components.Text(c, tr(c, "gallery.lawn_hint")).TextColor(t.TextMuted).Wrap()
 	game.View(c, d).Height(320).FillWidth().Radius(12).Clip().Label(tr(c, "gallery.lawn_scene"))
 	status := map[lawnState]string{
@@ -646,7 +671,24 @@ func exampleLawn(c *ui.Context, s *demoState) {
 	}[d.state]
 	ui.Row(c).Gap(t.Space(3)).Wrap().AlignItems(ui.Center).Children(func() {
 		components.Badge(c, tr(c, status))
-		components.Text(c, fmt.Sprintf(tr(c, "gallery.lawn_defeated"), d.defeated, lawnZombies)).TextColor(t.TextMuted)
+		if d.endless {
+			components.Text(c, fmt.Sprintf(tr(c, "gallery.lawn_defeated_endless"), d.defeated)).TextColor(t.TextMuted)
+		} else {
+			components.Text(c, fmt.Sprintf(tr(c, "gallery.lawn_defeated"), d.defeated, lawnZombies)).TextColor(t.TextMuted)
+		}
+		// Switching modes restarts, so the round matches the chosen mode.
+		endless := d.endless
+		components.Switch(c, &endless, tr(c, "gallery.lawn_endless")).Changed()
+		if endless != d.endless {
+			d.endless = endless
+			d.restart()
+		}
+		music := d.sfx.musicOn
+		components.Switch(c, &music, tr(c, "gallery.lawn_music")).Changed()
+		if music != d.sfx.musicOn {
+			d.sfx.musicOn = music
+			d.syncMusic()
+		}
 		if components.Button(c, tr(c, "gallery.lawn_restart"), components.ButtonSecondary).Clicked() {
 			d.restart()
 		}

@@ -90,6 +90,7 @@ func (g *Gallery) Close() {
 		s.terminal.close()
 		s.webView.close()
 		s.audio.close()
+		s.lawn.closeMusic()
 		s.flyout.close()
 	}
 }

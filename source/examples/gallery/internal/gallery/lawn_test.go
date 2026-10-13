@@ -2,10 +2,12 @@ package gallery
 
 import (
 	"fmt"
+	"math"
 	"slices"
 	"testing"
 	"time"
 
+	"github.com/egoist/mygo/audio"
 	"github.com/egoist/mygo/ui"
 )
 
@@ -172,8 +174,8 @@ func TestLawnMowersAndDefeat(t *testing.T) {
 
 func TestLawnLevel(t *testing.T) {
 	_, d, _, _ := lawnTester(t, "en")
-	d.nextSpawn = newLawnWorld().nextSpawn
-	for range 6 * 60 * lawnSecond {
+	d.nextSpawn = newLawnWorld(false).nextSpawn
+	for range 12 * 60 * lawnSecond {
 		if d.spawned == lawnZombies {
 			break
 		}
@@ -188,6 +190,112 @@ func TestLawnLevel(t *testing.T) {
 	}
 	if d.spawned != lawnZombies || d.state != lawnWon || d.defeated != lawnZombies {
 		t.Fatalf("spawned %d, defeated %d, state %v", d.spawned, d.defeated, d.state)
+	}
+}
+
+func TestLawnEndlessMode(t *testing.T) {
+	g, d, tt, _ := lawnTester(t, "en")
+	// Turning on endless mode after losing restarts the round in the new
+	// mode, since the switch takes the keyboard.
+	d.setState(lawnLost)
+	advance(tt)
+	if err := tt.Click(g.text("gallery.lawn_endless")); err != nil {
+		t.Fatal(err)
+	}
+	if !d.endless || d.state == lawnLost {
+		t.Fatalf("endless=%v state=%v after turning on endless mode", d.endless, d.state)
+	}
+	// A level stops at its total; endless mode keeps sending waves.
+	d.setState(lawnPlaying)
+	d.spawned, d.nextSpawn = lawnZombies, 1
+	for range 13 * lawnSecond {
+		d.step()
+	}
+	if d.state != lawnPlaying || d.spawned <= lawnZombies || len(d.zombies) == 0 {
+		t.Fatalf("endless: spawned %d, %d zombies, state %v", d.spawned, len(d.zombies), d.state)
+	}
+	advance(tt)
+	if !tt.HasText(fmt.Sprintf(g.text("gallery.lawn_defeated_endless"), d.defeated)) {
+		t.Fatalf("missing endless defeated count: %q", tt.Texts())
+	}
+}
+
+func TestLawnAudio(t *testing.T) {
+	_, d, _, _ := lawnTester(t, "en")
+	if d.output {
+		t.Fatal("headless lawn opened audio output")
+	}
+	if d.sfx == nil {
+		t.Fatal("lawn effects were not synthesized")
+	}
+	effects := map[string]*audio.Sound{
+		"plant": d.sfx.plant, "shoot": d.sfx.shoot, "collect": d.sfx.collect,
+		"defeat": d.sfx.defeat, "mower": d.sfx.mower, "win": d.sfx.win, "lose": d.sfx.lose,
+	}
+	for name, s := range effects {
+		if s == nil || s.Duration() <= 0 {
+			t.Fatalf("%s effect is empty", name)
+		}
+	}
+}
+
+func TestLawnMusic(t *testing.T) {
+	_, d, _, _ := lawnTester(t, "en")
+	if !d.sfx.musicOn {
+		t.Fatal("background music did not default on")
+	}
+	if d.sfx.music != nil {
+		t.Fatal("headless lawn opened a music player")
+	}
+	d.syncMusic()
+	if d.sfx.music != nil {
+		t.Fatal("syncMusic opened a music player without output")
+	}
+	tune := &lawnTune{}
+	if tune.Channels() != 2 || tune.Len() != -1 || tune.SampleRate() != lawnTuneRate {
+		t.Fatalf("tune format: %d channels, %d frames, %d Hz", tune.Channels(), tune.Len(), tune.SampleRate())
+	}
+	buf := make([]float32, tune.SampleRate()) // half a second, stereo
+	n, err := tune.Read(buf)
+	if err != nil || n != len(buf) {
+		t.Fatalf("tune read: %d of %d, %v", n, len(buf), err)
+	}
+	var peak, sum float64
+	stereo := false
+	for i := 0; i+1 < len(buf); i += 2 {
+		peak = max(peak, math.Abs(float64(buf[i])), math.Abs(float64(buf[i+1])))
+		stereo = stereo || buf[i] != buf[i+1]
+		sum += float64(buf[i])*float64(buf[i]) + float64(buf[i+1])*float64(buf[i+1])
+	}
+	if peak == 0 || peak > 1 {
+		t.Fatalf("tune peak %v", peak)
+	}
+	if rms := math.Sqrt(sum / float64(len(buf))); rms < .05 || rms > .5 {
+		t.Fatalf("tune rms %v", rms)
+	}
+	if !stereo {
+		t.Fatal("tune is mono")
+	}
+}
+
+func TestLawnMusicToggle(t *testing.T) {
+	_, d, _, _ := lawnTester(t, "en")
+	if !d.musicShouldPlay() {
+		t.Fatal("music should play while a round is underway")
+	}
+	// Turning the switch off must rest the loop, not just stop new plays.
+	d.sfx.musicOn = false
+	if d.musicShouldPlay() {
+		t.Fatal("music still plays after the switch went off")
+	}
+	d.sfx.musicOn = true
+	d.setState(lawnWon)
+	if d.musicShouldPlay() {
+		t.Fatal("music still plays after the round ended")
+	}
+	d.setState(lawnPlaying)
+	if !d.musicShouldPlay() {
+		t.Fatal("music did not resume with the new round")
 	}
 }
 

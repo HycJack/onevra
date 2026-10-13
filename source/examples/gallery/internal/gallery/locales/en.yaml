@@ -1301,5 +1301,11 @@ gallery.lawn_won:
   other: "You defended the lawn!"
 gallery.lawn_defeated:
   other: "Zombies defeated: %d of %d"
+gallery.lawn_defeated_endless:
+  other: "Zombies defeated: %d"
+gallery.lawn_endless:
+  other: "Endless mode"
+gallery.lawn_music:
+  other: "Music"
 gallery.lawn_restart:
   other: "Restart game"
