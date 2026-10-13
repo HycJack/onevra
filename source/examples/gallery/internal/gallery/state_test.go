@@ -1,6 +1,7 @@
 package gallery
 
 import (
+	"encoding/json"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -8,22 +9,21 @@ import (
 	"testing"
 
 	"github.com/egoist/mygo"
-	"go.yaml.in/yaml/v3"
 )
 
 func TestGalleryVersionMatchesPackaging(t *testing.T) {
-	data, err := os.ReadFile("../../../../packer.yaml")
+	data, err := os.ReadFile("../../../../mygo.json")
 	if err != nil {
 		t.Fatal(err)
 	}
 	var config struct {
-		Version string `yaml:"version"`
+		Version string `json:"version"`
 	}
-	if err := yaml.Unmarshal(data, &config); err != nil {
+	if err := json.Unmarshal(data, &config); err != nil {
 		t.Fatal(err)
 	}
 	if config.Version != galleryVersion {
-		t.Fatalf("update galleryVersion to match packer.yaml: %q != %q", galleryVersion, config.Version)
+		t.Fatalf("update galleryVersion to match mygo.json: %q != %q", galleryVersion, config.Version)
 	}
 }
 

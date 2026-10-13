@@ -1,9 +1,0 @@
-name: Onevra Menu Bar
-identifier: me.oneo.onevra.examples.menubar
-version: "0.1.0"
-main: .
-out: ../../../dist/menubar
-platforms:
-  - darwin/arm64/zip
-macos:
-  minimumSystemVersion: "13.0"

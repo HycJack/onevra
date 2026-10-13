@@ -1,0 +1,9 @@
+{
+  "name": "Onevra Menu Bar",
+  "identifier": "me.oneo.onevra.examples.menubar",
+  "version": "0.1.0",
+  "out": "../../../dist/menubar",
+  "macos": {
+    "minimumSystemVersion": "13.0"
+  }
+}

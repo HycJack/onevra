@@ -1,0 +1,12 @@
+{
+  "name": "Onevra Gallery",
+  "identifier": "me.oneo.onevra.gallery",
+  "version": "0.2026.8",
+  "icon": "assets/icon.png",
+  "main": "./examples/gallery",
+  "out": "../dist",
+  "macos": {
+    "icon": "assets/icon.icon",
+    "minimumSystemVersion": "13.0"
+  }
+}

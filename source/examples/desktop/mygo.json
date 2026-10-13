@@ -1,0 +1,9 @@
+{
+  "name": "Onevra Desktop",
+  "identifier": "me.oneo.onevra.examples.desktop",
+  "version": "0.1.0",
+  "out": "../../../dist/desktop",
+  "macos": {
+    "minimumSystemVersion": "13.0"
+  }
+}

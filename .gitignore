@@ -1,4 +1,4 @@
 /dist/
 /.mygo/
-/source/.mygo/
+/source/**/.mygo/
 .DS_Store

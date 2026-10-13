@@ -17,9 +17,6 @@ func main() {
 		log.Fatal("theme must be system, light, or dark")
 	}
 	gallery.LogMyGoReview(log.Printf)
-	if err := configureTerminalLibrary(); err != nil {
-		log.Fatal(err)
-	}
 	home, err := os.UserHomeDir()
 	if err != nil {
 		log.Fatal(err)

@@ -1,9 +1,0 @@
-name: Onevra Desktop
-identifier: me.oneo.onevra.examples.desktop
-version: "0.1.0"
-main: .
-out: ../../../dist/desktop
-platforms:
-  - darwin/arm64/zip
-macos:
-  minimumSystemVersion: "13.0"

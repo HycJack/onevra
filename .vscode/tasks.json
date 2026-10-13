@@ -5,7 +5,7 @@
       "label": "run",
       "type": "process",
       "command": "go",
-      "args": ["run", "./tools/packer", "run"],
+      "args": ["tool", "mygo", "dev"],
       "runOptions": {
         "instanceLimit": 1,
         "instancePolicy": "terminateOldest"
@@ -19,7 +19,7 @@
       "label": "build",
       "type": "process",
       "command": "go",
-      "args": ["run", "./tools/packer", "build"],
+      "args": ["tool", "mygo", "build", "-platform", "darwin/arm64,windows/amd64,linux/amd64,linux/arm64"],
       "runOptions": {
         "instanceLimit": 1,
         "instancePolicy": "terminateOldest"

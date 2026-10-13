@@ -11,7 +11,7 @@ import (
 	"github.com/oneo-me/onevra/source/icons/lucide"
 )
 
-// Keep the application version aligned with packer.yaml; a test checks both.
+// Keep the application version aligned with mygo.json; a test checks both.
 const galleryVersion = "0.2026.8"
 
 const (
