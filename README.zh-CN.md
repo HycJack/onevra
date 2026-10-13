@@ -79,20 +79,16 @@ func main() {
 
 在 MyGo 就绪后创建窗口，用 Onevra 控件和 MyGo 布局原语构建内容；状态、持久化和异步任务由应用管理。
 
-## Packer
+## 打包
 
-Onevra 单独提供 [Packer](source/tools/packer/main.go)，可替代 MyGo 官方打包命令。它读取 `packer.yaml`，生成包含图标、资源和插件原生库的应用包；应用无需使用 Onevra 组件也可以使用 Packer。
-
-在 `source/` 中运行或打包 Gallery：
+应用使用 MyGo 官方 CLI 打包，Onevra 不提供单独的打包工具。在 `source/` 中运行或打包 Gallery：
 
 ```sh
-go run ./tools/packer run
-go run ./tools/packer build
+go tool mygo dev
+go tool mygo build
 ```
 
-`run` 编译并启动当前平台的应用；`build` 按配置的目标生成归档。用于其他项目时，在 `source/` 执行 `go install ./tools/packer`，将 Go 的二进制安装目录加入 `PATH`，然后在目标项目的 `packer.yaml` 所在目录执行 `packer run` 或 `packer build`。
-
-支持 macOS DMG/ZIP、Windows ZIP 和 Linux tar.gz。macOS 打包需要 Mac；面向分发的签名与公证需另行处理。详见[打包配置与要求](docs/build.md#app-bundles)。
+`dev` 编译并启动当前平台的应用，支持热重载；`build` 为当前平台或 `-platform` 指定的目标打包。配置位于 `mygo.json`。详见 [Gallery 打包](docs/build.md#app-bundles)和 MyGo 的[分发指南](https://mygo.egoist.dev/docs/distribution)。
 
 ## Shells
 

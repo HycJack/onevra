@@ -16,7 +16,7 @@ Production startup stores application data under `~/.oneo/onevra`. The disk-free
 
 Unknown routes and unreadable files fall back to defaults; read and save errors are logged. MyGo centers a restored window that would not show on any connected display. Only YAML filenames are read; older JSON files may be renamed because JSON is valid YAML. An explicit `-theme` launch argument temporarily overrides the saved appearance without rewriting it.
 
-Gallery's application version stays aligned with `packer.yaml`.
+Gallery's application version stays aligned with `mygo.json`.
 
 ### Navigation and previews
 
@@ -83,9 +83,9 @@ The read-only Component status page and startup reminders share [code-owned deci
 
 Generation scans exported free functions taking a context first in MyGo's top-level `ui` package, across platform files and including generic constructors. It omits Base constructors and tests. Generated names and locations are checked in, so running Gallery needs neither a toolchain nor a module cache.
 
-The hand-built catalog and reviewed-subpackage map supplement the scanner for methods, `ui/chart`, `ui/editor` and plugins. Native menus, every MyGo plugin, including the game plugin under Games, audio, canvas drawing, transforms, motion and code editing remain direct-use APIs. Standard charts use Onevra's chart component over upstream primitives; the decision map records that boundary. MyGo's browser target has no Gallery route: Gallery and Packer are desktop applications, and browser packaging is outside their current scope.
+The hand-built catalog and reviewed-subpackage map supplement the scanner for methods, `ui/chart`, `ui/editor` and plugins. Native menus, every MyGo plugin, including the game plugin under Games, audio, canvas drawing, transforms, motion and code editing remain direct-use APIs. Standard charts use Onevra's chart component over upstream primitives; the decision map records that boundary. MyGo's browser target has no Gallery route: Gallery is a desktop application, and browser packaging is outside its current scope.
 
-After every MyGo upgrade, run `GOWORK=off go generate ./examples/gallery/internal/gallery` from `source/` and review the diff. Ordinary running, building and [Packer](../build.md#app-bundles) use the checked-in snapshot. A generation run cannot establish coverage of new methods or subpackages; review release notes and public signatures too.
+After every MyGo upgrade, run `GOWORK=off go generate ./examples/gallery/internal/gallery` from `source/` and review the diff. Ordinary running, building and [packaging](../build.md#app-bundles) use the checked-in snapshot. A generation run cannot establish coverage of new methods or subpackages; review release notes and public signatures too.
 
 Record replacement and exclusion reasons in the decision map, never in generated files. Both hide upstream examples and reminders without affecting Onevra demonstrations. New entries remain visible for review without synthetic examples or build failures. Decisions are neither interactive nor persisted in user settings.
 

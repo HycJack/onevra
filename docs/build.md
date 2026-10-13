@@ -6,89 +6,22 @@ Native windows require a desktop session. Linux also needs GTK 3, Pango and Open
 
 ## App bundles
 
-The local [packer](../source/tools/packer/main.go) builds desktop apps for selected platforms and runs the host version. Run it from `source/`:
+Applications are packaged with MyGo's own CLI, pinned as a Go tool in [go.mod](../source/go.mod). Run it from `source/`:
 
 ```sh
-go run ./tools/packer run
-go run ./tools/packer build
+go tool mygo dev
+go tool mygo build -platform darwin/arm64,windows/amd64,linux/amd64,linux/arm64
 ```
 
-Packer accepts only the `run` and `build` commands, with no options or application-argument forwarding. It reads `packer.yaml` from the working directory; all packaging settings belong there.
+[mygo.json](../source/mygo.json) owns the Gallery's packaging configuration. Its fields, platform outputs, resources, plugin native libraries, signing, notarization and signed updates follow MyGo's [configuration](https://mygo.egoist.dev/docs/configuration) and [distribution](https://mygo.egoist.dev/docs/distribution) guides; Onevra adds no packaging behavior of its own. VS Code's [tasks](../.vscode/tasks.json) provide `run` (`mygo dev`) and a default `build` task for the Gallery's release targets.
 
-Packer does not run code generators. The gallery uses its checked-in [MyGo component review inventory](architecture/gallery.md#component-review).
+Packaging does not run code generators. The gallery uses its checked-in [MyGo component review inventory](architecture/gallery.md#component-review).
 
-The top-level `platforms` array in [packer.yaml](../source/packer.yaml) selects release targets using `GOOS/GOARCH[/FORMAT]`: `darwin`, `windows` or `linux`, each with `arm64` or `amd64`. The gallery configuration selects macOS arm64, Windows amd64 (x64), and Linux amd64 and arm64. Edit this list to change release targets. If omitted or empty, Packer builds the host platform. An optional format selects `dmg` or `zip` on macOS, `zip` on Windows, or `tar.gz` on Linux. For example, separate `darwin/arm64/dmg` and `darwin/arm64/zip` entries produce both archives from one build. Entries for the same OS and architecture merge their formats; duplicates are emitted once. Without a format, macOS selects DMG and ZIP, Windows ZIP, and Linux tar.gz. Unsupported targets or format combinations fail before building.
+Everything in `source/resources/` ships as application payload, so icon sources live outside it. The gallery uses a 1024 × 1024 [PNG](../source/assets/icon.png), from which MyGo derives the Windows, Linux and fallback macOS icons, and the layered [Icon Composer project](../source/assets/icon.icon) on macOS, which requires Xcode 26 or later. The PNG is a static export of the layered icon's default appearance; refresh it when changing the design. The gallery's Image example loads the author's avatar from `resources/images/avatar.jpeg` through MyGo's resource path; direct `go run` uses the module's resource directory.
 
-`run` always uses the host and ignores the release target list. It compiles once with ordinary Go optimizations and caching, attaches terminal I/O and waits for exit. On macOS it retains `dist/Onevra Gallery Dev.app` with a separate `.dev` bundle identifier; Windows and Linux retain a `dist/Onevra Gallery Dev/` directory. The next run replaces the development output. There is no file watcher or hot reload.
-
-`build` uses `-trimpath` and linker `-s -w` flags to omit symbol tables and debug information. Both Windows development and release executables use the GUI subsystem so launching them does not open a console window. Release builds also set MyGo's production marker so `mygo.IsDev()` returns false; `run` leaves the marker unset and retains MyGo's normal development-mode detection. Outputs go into `dist/releases/<version>/`, with no platform subdirectories:
-
-| Target | Artifacts |
-| --- | --- |
-| macOS | `onevra-gallery-darwin-arm64-<version>.dmg`, containing `Onevra Gallery.app` and an Applications shortcut |
-| Windows | `onevra-gallery-windows-amd64-<version>.zip`, containing the app directory and `.exe` |
-| Linux | `onevra-gallery-linux-<arch>-<version>.tar.gz`, containing the app directory and executable |
-
-By default, `build` also retains the uncompressed application beside the archives for the target matching the host OS and CPU architecture: `Onevra Gallery.app` on macOS, or `Onevra Gallery/` on Windows and Linux. Set top-level `keepUncompressed: false` in `packer.yaml` to keep only archives. This does not add a host build when the host target is absent from `platforms`, retain cross-target application directories, or change `run` outputs.
-
-`<version>` comes from `version` in `packer.yaml`. The version determines the release directory and archive suffix, not the contained application or development output. For example, version `0.2026.1` writes archives to `dist/releases/0.2026.1/`. Different versions coexist in separate directories. Before building any release target, Packer clears the current version's directory, removing all previous artifacts for that version, including targets no longer selected.
-
-After all release targets build successfully, Packer opens the current version's `releases/<version>/` directory under the configured output path in the host's file manager. Set top-level `openReleases: false` in `packer.yaml` to disable this behavior, for example in CI or a headless session. Failure to open the directory produces a warning without failing the completed build; `run` does not open it.
-
-Each target finishes compilation and packaging in staging before publishing its archives and any retained application together, with backups for rollback. Targets build sequentially: a later target's failure does not remove an earlier target's successful artifacts. Development outputs and other versions remain untouched; previous artifacts for the current version are not restored if a build fails.
-
-[packer.yaml](../source/packer.yaml) owns application packaging configuration; Packer does not read `mygo.json` or import MyGo Go packages. macOS application metadata goes into Info.plist. Both Go compilation and dependency discovery use the selected target's `GOOS`/`GOARCH` with cgo disabled. For plugin-provided native dependencies, Packer uses `go list` to locate the selected application's imported packages and reads their `mygo-plugin.json` manifests as data. Versions, download URLs and SHA-256 hashes remain owned by the pinned upstream dependency, not duplicated in application configuration. Missing target builds, invalid manifests and conflicting library definitions fail the build. Unknown configuration fields also fail; the supported shape is defined in the [configuration type](../source/tools/packer/main.go).
-
-Cross-compilation requires a pure-Go-compatible application. Windows and Linux archives can be built on any supported host. macOS packaging requires a macOS host for Apple tools, even when only changing architectures. The gallery selects `darwin/arm64/dmg` to produce only a DMG. Selecting `darwin/arm64/zip` instead skips disk-image creation and Finder automation, but still requires macOS for icon compilation and signing. When enabled, release DMGs open in a drag-to-install layout with an Applications shortcut and require a logged-in desktop session and permission for the invoking terminal or IDE to control Finder (System Settings → Privacy & Security → Automation); Finder briefly opens the staging image to save its layout before compression. Without this permission, packaging fails rather than publishing an unstyled image. Requests for macOS on another host fail before any target builds. The scope stays small: no universal binaries, Windows installers, Linux desktop registration or distribution packages, resource mappings, frontend pipeline, Developer ID signing, notarization or publishing. macOS bundles are ad-hoc signed; Windows executables are not Authenticode-signed. The configured version matches the latest library release; building archives does not publish the module. VS Code's [tasks](../.vscode/tasks.json) provide `run` and a default `build` task, both using Packer from `source/`.
-
-Icon sources live at the root of `resources/` beside `packer.yaml`. The default icon source names (including the entire `icon.icon` directory) and explicitly configured icon paths are excluded from payload copying on every platform; only the target's compiled or installed icon is shipped. Nested payload images such as `resources/images/avatar.jpeg` are unaffected. Packer discovers `icon.icon` or `icon.icns` for macOS, `icon.ico` for Windows, and `icon.png` or `icon.svg` for Linux, in that order of preference. Platform-specific `macos.icon`, `windows.icon` and `linux.icon` values can override discovery; `macos.minimumSystemVersion` also belongs in the platform section. Windows ICOs are embedded in the staged EXE, preserving existing resources and supplying a DPI-aware manifest if the application has none. Linux PNG/SVG icons are included beside the executable; the archive does not install a desktop entry. If no icon is configured or discovered for a target, it builds without a custom icon.
-
-macOS accepts only a prebuilt `.icns` file or an Icon Composer `.icon` directory, not PNG. ICNS files are checked for valid container framing and copied unchanged as the bundle icon. `.icon` requires a full Xcode installation with Icon Composer support selected by `xcode-select`; Apple `actool` compiles layered assets and supplies the icon metadata merged into Info.plist without flattening to PNG. The resulting icon files and asset catalogs go into `Contents/Resources`, separately from application payload resources. Select a non-default icon through its platform's `icon` property in `packer.yaml`.
-
-Paths in the configuration are relative to its directory. The gallery uses the layered [Icon Composer project](../source/resources/icon.icon) on macOS, a multi-size [ICO](../source/resources/icon.ico) on Windows and a 1024 × 1024 [PNG](../source/resources/icon.png) on Linux. The ICO and PNG are static exports of the layered icon’s default appearance; refresh both when changing the design. The gallery’s Image example loads the author’s avatar from `resources/images/avatar.jpeg` through MyGo’s resource path; direct `go run` uses the module’s resource directory. The contents of a sibling `resources/` directory preserve their relative paths: under `Contents/Resources` on macOS, beside the executable on Windows and Linux. Resource symlinks, special files and collisions with generated files are rejected. Native libraries go into `Contents/Frameworks` on macOS and are signed before the enclosing app; DLLs and shared objects live beside the executable on Windows and Linux. Only macOS packaging invokes Apple's signing and archive tools.
-
-On macOS, the gallery's Terminal page requires macOS 13 or later. Packer verifies manifest-provided downloads and keeps an independent `onevra-packer/natives` user cache. The first build may need network access; packaged apps do not download missing libraries. MyGo's current terminal loader does not search `Contents/Frameworks`, so Gallery startup selects its bundled library through `MYGO_GHOSTTY_VT`, preserving an explicit user override. This application-side adaptation is not injected by Packer. Direct `go run` and ordinary test binaries retain the plugin's normal lookup and may download the terminal library on first use. A missing bundled library is shown as an error on the page rather than silently using a developer's cache.
+On macOS, the gallery's Terminal page requires macOS 13 or later. MyGo bundles the terminal plugin's library among the app's resources, where the plugin finds it. The first build may need network access to download it.
 
 For an unpackaged run on any supported desktop, use `go run ./examples/gallery -theme dark`.
-
-### Additional macOS metadata
-
-Use `macos.infoPlist` for application-owned Info.plist entries, including permission usage descriptions:
-
-```yaml
-macos:
-  minimumSystemVersion: "13.0"
-  infoPlist:
-    NSMicrophoneUsageDescription: >-
-      Records your voice when you start recording.
-```
-
-Both `run` and `build` merge these entries before signing. The development bundle retains its separate name and identifier; retained release apps, ZIPs and DMGs use the same signed bundle.
-
-The mapping accepts strings, booleans, 64-bit signed or unsigned integers, finite double-precision reals, arrays and string-keyed dictionaries, including nested combinations. Types are preserved: `1` is an integer, `1.0` is a real, and `"1"` is a string. Omit the mapping or use `{}` for no extensions. Nulls, duplicate or non-string keys, dates, binary values, custom YAML tags, aliases and merge keys are rejected. Quote date-like text when it should be a string. Strings and keys must be valid XML text.
-
-Packer reserves its generated bundle metadata, including names, identifier, versions, executable, minimum system version and icon fields. Configure those through the existing fields instead. Extension keys that conflict with generated bundle or icon-compiler metadata fail even if their values match; dictionaries are not merged into protected entries. Known conflicts and invalid values fail during configuration loading, with a key path and line number. Additional icon-compiler conflicts fail after icon compilation, before Go compilation. Unknown fields outside `infoPlist` remain errors, and configuration validation applies on every target; the entries are only emitted on macOS. See the [configuration](../source/tools/packer/main.go) and [metadata validation](../source/tools/packer/plist.go) for the supported contract.
-
-A usage description explains an application's request; it does not grant system authorization. The application still owns permission requests and their lifecycle. Packer does not add entitlements or request microphone or accessibility access.
-
-### Application-owned native libraries
-
-Place compiled libraries in a `runtimes/` directory beside `packer.yaml`, grouped by `GOOS/GOARCH`. No YAML declaration is needed:
-
-```text
-source/
-├── packer.yaml
-└── runtimes/
-    ├── darwin/arm64/libaudio.dylib
-    ├── windows/amd64/audio.dll
-    └── linux/amd64/libaudio.so
-```
-
-Packer copies the files directly inside the selected target's directory, retaining their filenames but not the `runtimes/GOOS/GOARCH` wrapper. Other targets are not scanned. A missing or empty target directory adds no local libraries, so applications must ensure their required libraries are built before packaging. Keep only compiled library files there, with sources and intermediate build outputs elsewhere. Nested directories, framework bundles, symlinks and special files are rejected. Case-insensitive filename collisions with other runtime libraries, plugin libraries or existing destination entries also fail packaging.
-
-Both `run` and `build` use this convention and sign staged macOS copies before signing the app and creating archives; source files are not modified. Runtime files supplement plugin manifests, not override them. Keep these libraries separate from `resources/`, which is copied as application payload, and compile them with the application's own toolchain before invoking Packer.
-
-The application owns architecture compatibility, library discovery and transitive dependencies. Packer does not compile native sources, inspect or rewrite loader paths, or recursively collect linked libraries; explicitly include any non-system dependencies and link them for the packaged layout. Copying a library does not add permission descriptions; declare those separately through [macOS metadata](#additional-macos-metadata).
 
 ## Starter applications
 
@@ -114,18 +47,9 @@ On macOS and Windows, left-click toggles the quick-note panel and right-click op
 
 English, Simplified Chinese and Follow system apply to application content, settings, window titles and application-owned menus. System language is resolved at startup, with unsupported languages falling back to English. Preferences and the menu bar introduction acknowledgement are saved in `config.yaml` under `os.UserConfigDir()/onevra-examples/<example>/`; each example has its own directory. Writes replace the file atomically. Read failures use defaults and save failures leave changes active for the current session, with feedback in the interface. Note text is intentionally session-only. OS-provided menu items keep their system language.
 
-Each example has a local `packer.yaml`. From `source/`, build Packer once and invoke it beside each configuration:
+Each example has a local `mygo.json`. From an example's directory, such as `source/examples/desktop`, run `go tool mygo dev` or `go tool mygo build`. Builds write to separate `dist/<example>/` directories and need no Gallery resources or custom app icon. See [App bundles](#app-bundles).
 
-```sh
-GOWORK=off go build -o ../dist/packer ./tools/packer
-(cd examples/desktop && ../../../dist/packer build)
-(cd examples/menubar && ../../../dist/packer build)
-(cd examples/hybrid && ../../../dist/packer build)
-```
-
-Replace `build` with `run` for a retained development bundle. Configurations select macOS arm64 ZIPs and write to separate `dist/<example>/` directories; edit their target lists for other platforms. They need no Gallery resources or custom app icon. See [App bundles](#app-bundles) for packaging requirements.
-
-To start a project, copy one complete example directory, including `locales/` and `packer.yaml`, into the application's Go module. Change the application name, package identifier, preference directory and output path; provide module dependencies using this repository's [module guidance](../ARCHITECTURE.md#repository-landmarks). The examples have no imports from Gallery or sibling examples. Translation IDs and stored option values remain stable across language changes; extend both catalogs together.
+To start a project, copy one complete example directory, including `locales/` and `mygo.json`, into the application's Go module. Change the application name, package identifier, preference directory and output path; provide module dependencies using this repository's [module guidance](../ARCHITECTURE.md#repository-landmarks). The examples have no imports from Gallery or sibling examples. Translation IDs and stored option values remain stable across language changes; extend both catalogs together.
 
 For native lifecycle checks and settings captures, run from `source/` in a desktop session:
 
@@ -153,7 +77,7 @@ From `source/`, run `ONEVRA_NATIVE_SMOKE=1 ONEVRA_NATIVE_FOREGROUND=1 GOWORK=off
 
 ## Notification example
 
-Select **Desktop / System notifications** and click **Send notification**. On macOS, use `go run ./tools/packer run` so Gallery has an application bundle, and allow notifications when prompted. An unpackaged executable reports that notifications are unavailable. Linux requires a desktop notification service; Windows uses notification-area balloons.
+Select **Desktop / System notifications** and click **Send notification**. On macOS, use `go tool mygo dev` so Gallery has an application bundle, and allow notifications when prompted. An unpackaged executable reports that notifications are unavailable. Linux requires a desktop notification service; Windows uses notification-area balloons.
 
 Review delivery with sound enabled and disabled, denied permission, repeated sends, withdrawal, and clicking a notification while Gallery is hidden or minimized or showing another page. Clicking restores the notification page; closing Gallery withdraws the demo notification. System notification settings and Do Not Disturb can suppress presentation even after successful submission. Check both interface languages and themes, narrow layouts and keyboard navigation. Windows and Linux need their own native review.
 
@@ -187,7 +111,7 @@ For Flyout captures and parent-window cleanup checks, add `ONEVRA_NATIVE_FOREGRO
 
 For command-palette captures, use the same environment with `-run '^TestNativeCommand(Expansion|InputSource)?$'`. The macOS input-source test additionally requires `ONEVRA_NATIVE_FOREGROUND=1`, ABC and another enabled input source, temporarily switches between them, and restores the original source; it checks automatic selection, restoration, manual overrides and retaining ABC on close. In Gallery, review Command+E (Ctrl+E on other platforms), typing and Chinese input-method composition, arrow navigation, single-click and Enter activation, Escape dismissal, restored focus, and opening Settings from a command. Check both interface languages and themes, narrow windows and screen-reader announcements; captures alone do not verify these interactions.
 
-For packaging changes, run `ONEVRA_PACKER_SMOKE=1 GOWORK=off go test ./tools/packer -run '^Test(Native.*|Cross)Packaging$' -count=1 -v`. Cross tests inspect Windows PE headers, embedded ICO/manifest resources, Linux ELF headers, executable permissions and target-specific native payloads for both architectures; they do not execute foreign binaries. The native packaging tests use the real Apple tools on macOS and skip elsewhere. These check prebuilt ICNS packaging and Icon Composer compilation, payload copying, bundle metadata, signing, versioned release archive outputs, DMG integrity and the retained development bundle using independent fixtures. The local-library fixture compiles a Swift dylib and loads signed copies from development, retained release and relocated ZIP bundles without modifying the original library. To verify the terminal library from a built bundle, set `ONEVRA_GALLERY_BUNDLE` to an absolute path to a development app or an extracted release app and run `go test ./examples/gallery -run '^TestBundledTerminalLoad$' -count=1 -v`. This loads a relocated copy from Frameworks rather than the cache. Also run the packaged gallery in a desktop session; archive checks do not establish Finder or Dock appearance.
+For packaging changes, build the affected targets with `go tool mygo build` and run the packaged gallery in a desktop session, including the Terminal page; build output does not establish Finder or Dock appearance.
 
 For UI changes, manually review both themes, narrow layouts, text scaling, window controls, keyboard navigation and accessibility. Verify that sidebar dragging respects configured width limits and double-clicking restores the default width without resizing the window. Inspect background blending over a contrasting backdrop. Captures do not replace interaction review; Windows and Linux need separate desktop checks. See the [gallery verification approach](architecture/gallery.md#verification-approach).
 
@@ -230,7 +154,7 @@ Before an authorized release:
 2. Review native behavior on the platforms being claimed, including keyboard navigation, input methods and accessibility. macOS native captures are available; Windows and Linux still require their own desktop review. Do not imply native acceptance from compilation. Follow the [update-summary rules](../AGENTS.md#maintenance) when writing release notes.
 3. Review tracked files and the history being made public for credentials, private configuration and unintended assets. Retain the root [MIT license](../LICENSE), [adapted MyGo notices](../source/components/LICENSE.mygo) and [Lucide notices](../source/icons/lucide/LICENSE). Review the licenses of dependencies and any bundled native libraries when distributing application archives.
 4. Review the shipping scope in [CHANGELOG.md](../CHANGELOG.md), move only shipping entries from `Unreleased` into the confirmed version at release time, and retain `Unreleased` for pending changes. Keep both READMEs accurate about release availability and any repository access requirements.
-5. Align Gallery's application version with `packer.yaml` when shipping Gallery alongside the module. Gallery archives are optional release attachments; the Go library is distributed as source and needs no application archive.
+5. Align Gallery's application version with `mygo.json` when shipping Gallery alongside the module. Gallery archives are optional release attachments; the Go library is distributed as source and needs no application archive.
 
 ### Authorized publication
 

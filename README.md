@@ -79,20 +79,16 @@ func main() {
 
 Create windows after MyGo is ready. Build content with Onevra controls and MyGo layout primitives; your application owns state, persistence and asynchronous work.
 
-## Packer
+## Packaging
 
-Onevra provides a standalone [Packer](source/tools/packer/main.go) as an alternative to MyGo's official packaging commands. It reads `packer.yaml` and builds native application bundles with icons, resources and plugin libraries. Your application does not need to use Onevra components to use Packer.
-
-To run or package Gallery, execute these commands from `source/`:
+Package applications with MyGo's own CLI; Onevra adds no packager. To run or package Gallery, execute these commands from `source/`:
 
 ```sh
-go run ./tools/packer run
-go run ./tools/packer build
+go tool mygo dev
+go tool mygo build
 ```
 
-`run` builds and launches the host application; `build` creates archives for the configured targets. To use Packer in another project, run `go install ./tools/packer` from `source/`, add Go's binary installation directory to `PATH`, then run `packer run` or `packer build` beside that project's `packer.yaml`.
-
-Supported archives are macOS DMG/ZIP, Windows ZIP and Linux tar.gz. macOS packaging requires a Mac; signing for distribution and notarization remain separate steps. See [packaging configuration and requirements](docs/build.md#app-bundles).
+`dev` builds and launches the host application with live reload; `build` packages it for the host, or for the targets given with `-platform`. Configuration lives in `mygo.json`. See [packaging the Gallery](docs/build.md#app-bundles) and MyGo's [distribution guide](https://mygo.egoist.dev/docs/distribution).
 
 ## Shells
 

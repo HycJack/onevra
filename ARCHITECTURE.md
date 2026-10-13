@@ -36,11 +36,11 @@ There is one Go module under `source/`, with module path `github.com/oneo-me/one
 - `source/shells/`: native window presentation styles, `sidebar` and `plain`.
 - `source/components/`: common controls and independent subpackages for complex components, usable without Shell; see [complex component composition](docs/architecture/components.md#complex-component-composition).
 - `source/icons/lucide/`: public icon assets and upstream provenance.
-- `source/tools/`: Packer, the minimal desktop app runner/packager, and library maintenance commands such as the Lucide importer; these share the Go module but are not runtime library dependencies.
+- `source/tools/`: library maintenance commands such as the Lucide importer; these share the Go module but are not runtime library dependencies. Applications are packaged with MyGo's CLI, pinned as a Go tool.
 - `source/examples/gallery/`: standalone example, with presentation, native review tests and MyGo inventory tooling under its own `internal/` directory.
 - [Development guide](docs/build.md): build, verification and release procedures.
 
-The repository-root [`skills/onevra/`](skills/onevra/SKILL.md) is an Agent skill for consumer applications, covering usage, component choice, hidden tests and Packer layout. It is not part of the Go module.
+The repository-root [`skills/onevra/`](skills/onevra/SKILL.md) is an Agent skill for consumer applications, covering usage, component choice, hidden tests and project layout. It is not part of the Go module.
 
 No sibling application or shared workspace is required. The module path includes `source` so the repository layout also works for remote consumers. Version tags include the same directory prefix; see [publication](docs/build.md#publication).
 

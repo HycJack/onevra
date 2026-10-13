@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Remove Packer and `packer.yaml`; package applications with MyGo's CLI (`go tool mygo dev` and `go tool mygo build`) and `mygo.json` instead. MyGo bundles plugin native libraries among the app's resources, and application-owned libraries go in platform directories of `resources/` rather than `runtimes/`.
+
 ## [0.2026.8] - 2026-10-13
 
 - Add Onevra-styled toasts on MyGo's toast queue: Shell shows `c.Toast`, `ToastAction` and `AddToast` toasts with status icons for `components.ToastInfo`, `ToastSuccess`, `ToastWarning` and `ToastError`, an optional action, a close button and a `components.ToastContent` leading slot. Standalone hosts call `components.Toasts`; localize the close button with `Labels.CloseToast` or `Localization.CloseToast`.

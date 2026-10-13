@@ -1,11 +1,11 @@
 ---
 name: onevra
-description: Build, test and package native Go desktop applications with Onevra components on MyGo. Use when writing or reviewing UI that imports github.com/oneo-me/onevra/source, choosing between Onevra and MyGo controls, writing headless or hidden-window UI tests, or setting up packer.yaml and the source/ project layout. Excludes changes to MyGo itself.
+description: Build, test and package native Go desktop applications with Onevra components on MyGo. Use when writing or reviewing UI that imports github.com/oneo-me/onevra/source, choosing between Onevra and MyGo controls, writing headless or hidden-window UI tests, or setting up mygo.json packaging and the source/ project layout. Excludes changes to MyGo itself.
 ---
 
 # Onevra
 
-Onevra (`github.com/oneo-me/onevra/source`) is a product-neutral component library built on MyGo. MyGo owns rendering, layout, input, windows and plugins; Onevra supplies themed controls, window shells, Lucide icons, complex components and the Packer packaging tool. The application owns business state, localized text, persistence and asynchronous work.
+Onevra (`github.com/oneo-me/onevra/source`) is a product-neutral component library built on MyGo. MyGo owns rendering, layout, input, windows and plugins; Onevra supplies themed controls, window shells, Lucide icons and complex components; applications package with MyGo's CLI. The application owns business state, localized text, persistence and asynchronous work.
 
 Before using an API, read its public signature in the version-matched module source rather than guessing:
 
@@ -90,7 +90,7 @@ Write tests that never show a window by default. Read [references/testing.md](re
 
 ## Project layout and packaging
 
-Package applications with Onevra Packer and its `packer.yaml`, not MyGo's packaging commands or `mygo.json`. Read [references/packer.md](references/packer.md) before creating a project, changing its layout or packaging configuration.
+Package applications with MyGo's CLI and `mygo.json`. Read [references/packaging.md](references/packaging.md) before creating a project, changing its layout or packaging configuration.
 
 ## Checks
 
