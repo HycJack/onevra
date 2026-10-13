@@ -34,6 +34,7 @@ type Gallery struct {
 	createTerminal func() (*terminal.Terminal, error)
 	createWebView  func() (*mygo.WebView, error)
 	audioOutput    bool
+	gamepads       bool
 	// stateKey asks MyGo to remember the window; empty keeps it disk-free.
 	stateKey string
 	openURL  func(string) error
@@ -47,7 +48,7 @@ func (g *Gallery) New() *sidebar.Shell {
 func (g *Gallery) newWindow(hidden bool) *sidebar.Shell {
 	g.createTerminal = newShellTerminal
 	g.createWebView = g.newWebView
-	g.audioOutput = true
+	g.audioOutput, g.gamepads = true, true
 	g.openURL = mygo.Shell.OpenExternal
 	g.Shell = sidebar.NewShell(sidebar.ShellOptions{
 		Title:     "Onevra Gallery",

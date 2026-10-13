@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/egoist/mygo/ui"
+	"github.com/egoist/mygo/ui/editor"
 	"github.com/oneo-me/onevra/source/components"
 	"github.com/oneo-me/onevra/source/icons/lucide"
 )
@@ -18,6 +19,10 @@ type demoState struct {
 	terminal        terminalDemo
 	webView         webViewDemo
 	audio           audioDemo
+	canvas          canvasDemo
+	game            gameDemo
+	code            *editor.State
+	diff            *editor.DiffState
 	text            string
 	buffer          *ui.TextBuffer
 	readOnly        bool

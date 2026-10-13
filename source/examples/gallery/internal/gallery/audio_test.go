@@ -1,6 +1,9 @@
 package gallery
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 func TestAudioControlsWithoutOutput(t *testing.T) {
 	for _, lang := range []string{"en", "zh-Hans"} {
@@ -49,6 +52,14 @@ func TestAudioSamplesLoopWithoutSeam(t *testing.T) {
 	pad := padSamples()
 	if d := pad[len(pad)-1] - pad[0]; d > .01 || d < -.01 {
 		t.Fatalf("loop seam jumps by %v", d)
+	}
+	loop := loopSamples()
+	intro := len(loop) - len(pad)
+	if loop[0] != 0 || loop[intro] != pad[0] || abs32(loop[intro-1]-pad[len(pad)-1]) > .01 {
+		t.Fatalf("intro does not join the loop: starts %v, joins %v -> %v", loop[0], loop[intro-1], loop[intro])
+	}
+	if time.Duration(intro)*time.Second/audioRate != padDuration {
+		t.Fatalf("loop range starts at %d samples", intro)
 	}
 	pluck := pluckSamples()
 	if pluck[0] != 0 || abs32(pluck[len(pluck)-1]) > .01 {

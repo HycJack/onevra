@@ -42,7 +42,7 @@ func loadEnglishMessages() (map[string]string, map[string]string) {
 	for id, message := range catalog {
 		english[id] = message.Other
 		// Contextual messages are addressed only by ID.
-		if id != "gallery.clear_glass_style" {
+		if id != "gallery.clear_glass_style" && id != "gallery.navigation_new" {
 			sources[message.Other] = id
 		}
 	}

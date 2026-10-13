@@ -3,6 +3,7 @@ package gallery
 import (
 	"fmt"
 	"math"
+	"time"
 
 	"github.com/egoist/mygo/audio"
 	"github.com/egoist/mygo/ui"
@@ -31,7 +32,7 @@ type audioDemo struct {
 
 func (d *audioDemo) sounds() {
 	if d.pluck == nil {
-		d.pluck, d.pad = audio.NewSound(audioRate, 1, pluckSamples()), audio.NewSound(audioRate, 1, padSamples())
+		d.pluck, d.pad = audio.NewSound(audioRate, 1, pluckSamples()), audio.NewSound(audioRate, 1, loopSamples())
 	}
 }
 
@@ -51,7 +52,8 @@ func (d *audioDemo) toggleLoop() {
 	}
 	if d.loop == nil {
 		d.sounds()
-		d.loop = d.pad.NewPlayer().SetLoop(true)
+		// The swell-in plays once; the steady pad after it repeats.
+		d.loop = d.pad.NewPlayer().SetLoopRange(padDuration, 0)
 	}
 	if d.looping {
 		d.loop.SetVolume(d.volume).SetPan(d.pan).Play()
@@ -86,10 +88,23 @@ func pluckSamples() []float32 {
 	return samples
 }
 
+const padDuration = 2 * time.Second
+
+// loopSamples is a fading-in intro followed by the pad. The intro is one
+// cycle of the pad itself, so it joins the loop without a seam.
+func loopSamples() []float32 {
+	pad := padSamples()
+	intro := make([]float32, len(pad))
+	for i, v := range pad {
+		intro[i] = v * float32(i) / float32(len(pad))
+	}
+	return append(intro, pad...)
+}
+
 // padSamples is two seconds of a soft A-major chord. Every partial and the
 // swell complete whole cycles, so the loop has no seam.
 func padSamples() []float32 {
-	samples := make([]float32, audioRate*2)
+	samples := make([]float32, int(audioRate*padDuration.Seconds()))
 	for i := range samples {
 		t := float64(i) / audioRate
 		v := math.Sin(2*math.Pi*220*t) + .8*math.Sin(2*math.Pi*277*t) + .7*math.Sin(2*math.Pi*330*t)

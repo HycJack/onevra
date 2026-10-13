@@ -116,6 +116,8 @@ var mygoDirectExamples = map[string]string{
 	"Flyout":     "Use MyGo parent-owned native popup windows directly; applications own content and lifetime",
 	"WebView":    "Use MyGo web views directly; applications own their pages and windows",
 	"Audio":      "Use MyGo audio directly for decoding, mixing and device output; applications own sounds and player lifetime",
+	"Canvas":     "Use MyGo painters, offscreen canvases, bitmap regions and pixelated bitmaps directly; no Onevra drawing layer",
+	"Game loop":  "Use the MyGo game plugin directly for fixed-step loops, cameras and gamepads; no Onevra game runtime",
 }
 
 // mygoDirectUse reports examples of MyGo APIs used directly, which the sidebar
@@ -133,7 +135,7 @@ var mygoNativeMenus = map[string]string{
 }
 
 // Reviewed subpackages outside the top-level styled-widget scanner.
-var mygoSubpackages = map[string]string{"Charts": "ui/chart"}
+var mygoSubpackages = map[string]string{"Charts": "ui/chart", "Code editor": "ui/editor", "Diff viewer": "ui/editor"}
 
 type mygoComponent struct{ Name, Source string }
 
@@ -171,7 +173,11 @@ func mygoReviewEntries(discovered []mygoComponent, examples []mygoExample, decis
 		demonstrated[entry.name] = true
 		plugins[entry.name] = entry.group == "Plugins"
 		if _, ok := found[entry.name]; !ok {
-			found[entry.name] = mygoComponent{entry.name, "gallery catalog"}
+			source := mygoSubpackages[entry.name]
+			if source == "" {
+				source = "gallery catalog"
+			}
+			found[entry.name] = mygoComponent{entry.name, source}
 		}
 	}
 	for name := range decisions {

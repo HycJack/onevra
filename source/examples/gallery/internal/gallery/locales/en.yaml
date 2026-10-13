@@ -1245,3 +1245,43 @@ gallery.toast_top_start:
   other: "Top left"
 gallery.toast_top_end:
   other: "Top right"
+gallery.component_canvas:
+  other: "Canvas"
+gallery.component_code_editor:
+  other: "Code editor"
+gallery.component_diff_viewer:
+  other: "Diff viewer"
+gallery.component_game_loop:
+  other: "Game loop"
+gallery.group_code_diffs:
+  other: "Code & diffs"
+gallery.group_games:
+  other: "Games"
+gallery.navigation_new:
+  other: "New"
+gallery.code_editor_label:
+  other: "Source code"
+gallery.code_editor_position:
+  other: "Line %d, column %d"
+gallery.diff_viewer_side_by_side:
+  other: "Side by side"
+gallery.diff_viewer_unified:
+  other: "Unified"
+gallery.diff_viewer_stats:
+  other: "%d lines added, %d deleted"
+gallery.canvas_smooth:
+  other: "Smooth scaling"
+gallery.canvas_pixelated:
+  other: "Pixelated scaling"
+gallery.canvas_layer:
+  other: "Rotated canvas"
+gallery.canvas_next_frame:
+  other: "Next frame"
+gallery.canvas_mirror:
+  other: "Mirror"
+gallery.canvas_rotation:
+  other: "Rotation"
+gallery.game_hint:
+  other: "Click the scene, then move with WASD, the arrow keys or a gamepad's left stick."
+gallery.game_scene:
+  other: "Game scene"

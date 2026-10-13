@@ -20,7 +20,7 @@ Gallery's application version stays aligned with `packer.yaml`.
 
 ### Navigation and previews
 
-The grouped sidebar contains Welcome, Component status, the Lucide library, desktop integrations including MyGo audio, MyGo plugins and component pages. Components share purpose-based groups regardless of implementation; a trailing dot marks upstream widgets awaiting an Onevra decision. MyGo plugins and explicitly retained direct-use APIs have no dot. Named routes remain stable when catalog order changes.
+The grouped sidebar contains Welcome, Component status, the Lucide library, desktop integrations including MyGo audio, MyGo plugins and component pages. Components share purpose-based groups regardless of implementation; a trailing dot marks upstream widgets awaiting an Onevra decision. MyGo plugins and explicitly retained direct-use APIs have no dot. A "New" badge highlights the most recently added pages until the next pages are added, which replace the [code-owned list](../../source/examples/gallery/internal/gallery/navigation.go). Named routes remain stable when catalog order changes.
 
 Welcome is a promotional page: the product name, repository link, command search and the Gallery version, over a faint tilted field of Lucide icons. The field paints a small cached icon sample directly and passes the pointer through. The repository link opens through MyGo's shell integration; headless views never open URLs. Welcome plays a brief entrance animation that MyGo completes immediately under reduced motion. Review pages share a fixed pixel-grid background that Settings can disable, while Welcome and Terminal keep dedicated backgrounds. Examples remain interactive and use independent state per variant. MyGo pages show controls without source listings or tutorial prose. Supporting controls use Onevra equivalents whenever available.
 
@@ -38,13 +38,15 @@ The settings toolbar action opens a Onevra Dialog over the current page. macOS S
 
 | Page | Integration boundary |
 | --- | --- |
-| Content display / Code | Retained read-only highlighting, selectable samples and application-owned copying |
+| Code & diffs / Code | Retained read-only highlighting, selectable samples and application-owned copying |
 | Content display / Markdown | Cached [fixture](../../source/resources/markdown.md), bundled images and interactive custom code blocks |
 | Content display / Chat | Static conversation, folding, bounded details and composer controls; no model or file access |
 | Plugins / Terminal | MyGo shell session, retained across navigation and closed with Gallery |
 | Charts / Bar, Line, Area, Stacked bar, Donut | Separate public chart-component pages with per-page state, data updates, legends, empty states and selection |
 | Layout & containers / Transforms | Editable Onevra controls and anchored popovers under composed transforms, plus a perspective card |
 | Layout & containers / Motion | Retargetable spring presets, replayable keyframes and animated poses |
+| Games / Canvas | Offscreen canvas, smooth and pixelated bitmap regions and painter transforms |
+| Code & diffs / Code editor, Diff viewer | Upstream `ui/editor` awaiting an Onevra decision; in-memory buffers with gutter changes, editable diffs and hunk actions |
 
 The [chart examples](../../source/examples/gallery/internal/gallery/control_chart.go) use Onevra's public [chart component](components.md#charts), with an independent navigation entry for each view and localized application-owned data. The [motion examples](../../source/examples/gallery/internal/gallery/mygo_motion.go) use MyGo's animation methods directly. Neither creates native resources, background loops or timers; animation lifetime follows the built elements and MyGo's reduced-motion preference.
 
@@ -59,7 +61,8 @@ Terminal starts the user's default login shell on first entry. MyGo owns shell s
 | Desktop / Dock menu | macOS-only explicit installation; disable or shutdown restores the previous menu unless another owner replaced it |
 | Feedback & overlays / Flyout | Actions open parent-owned native windows; MyGo owns placement, dismissal and parent lifetime |
 | Content display / WebView | Gallery retains the native view, refills its background with the current theme and hides it under modal layers |
-| Desktop / Audio | Sounds are synthesized in memory on first use; Gallery close stops the loop. Headless views never open an audio device |
+| Desktop / Audio | Sounds are synthesized in memory on first use; the loop plays its intro once, and Gallery close stops it. Headless views never open an audio device |
+| Games / Game loop | The fixed-step loop runs only while the page shows; native windows read gamepads, headless views never load controller frameworks |
 
 The tray survives page navigation. Its auxiliary window hides on close or blur, retaining the note across hide/show and disable/enable cycles. The main window keeps normal close-to-quit behavior. Notification clicks restore Gallery to their page. Dock actions target their owning Gallery independently of the focused window. Flyout editor and system-popover variants retain their note in application memory.
 
@@ -79,7 +82,7 @@ The read-only Component status page and startup reminders share [code-owned deci
 
 Generation scans exported free functions taking a context first in MyGo's top-level `ui` package, across platform files and including generic constructors. It omits Base constructors and tests. Generated names and locations are checked in, so running Gallery needs neither a toolchain nor a module cache.
 
-The hand-built catalog and reviewed-subpackage map supplement the scanner for methods, `ui/chart`, and plugins. Native menus, every MyGo plugin, audio, transforms and motion remain direct-use APIs. Standard charts use Onevra's chart component over upstream primitives; the decision map records that boundary. MyGo's browser target has no Gallery route: Gallery and Packer are desktop applications, and browser packaging is outside their current scope.
+The hand-built catalog and reviewed-subpackage map supplement the scanner for methods, `ui/chart`, `ui/editor` and plugins. Native menus, every MyGo plugin, including the game plugin under Games, audio, canvas drawing, transforms and motion remain direct-use APIs. Standard charts use Onevra's chart component over upstream primitives; the decision map records that boundary. MyGo's browser target has no Gallery route: Gallery and Packer are desktop applications, and browser packaging is outside their current scope.
 
 After every MyGo upgrade, run `GOWORK=off go generate ./examples/gallery/internal/gallery` from `source/` and review the diff. Ordinary running, building and [Packer](../build.md#app-bundles) use the checked-in snapshot. A generation run cannot establish coverage of new methods or subpackages; review release notes and public signatures too.
 
@@ -89,6 +92,6 @@ Record replacement and exclusion reasons in the decision map, never in generated
 
 Ordinary tests use headless views and never open windows. Opt-in native tests run MyGo with temporary user data and capture light, dark and narrow layouts. macOS captures use hidden windows, an accessory process and a test-only AppKit display pump. Foreground lifecycle and input checks need a separate opt-in; other platforms require their own desktop review. See [native review](../build.md#native-review).
 
-`TestNativeCharts` captures selection and data-update transitions on each chart page; `TestNativeMyGoFeatures` captures transform and motion variants. Both include narrow Chinese content inside Shell. Headless interaction coverage includes chart selection, legend visibility, data updates and empty states, transformed editors and popovers, reduced-motion replay and physical-key command shortcuts.
+`TestNativeCharts` captures selection and data-update transitions on each chart page; `TestNativeMyGoFeatures` captures transform and motion variants. Both include narrow Chinese content inside Shell. Headless interaction coverage includes chart selection, legend visibility, data updates and empty states, transformed editors and popovers, reduced-motion replay, code and diff editing, canvas redraws, held-key game steps and physical-key command shortcuts.
 
 Captures omit OS-composited blur and do not prove pointer, input-method or assistive-technology behavior. Review those interactions, both languages and themes, text scaling, window controls and sidebar resizing in a desktop session. WebView needs its own page capture because window captures leave its native content transparent. Terminal review exercises its real shell and cleanup.

@@ -1245,3 +1245,43 @@ gallery.toast_top_start:
   other: "左上角"
 gallery.toast_top_end:
   other: "右上角"
+gallery.component_canvas:
+  other: "画布"
+gallery.component_code_editor:
+  other: "代码编辑器"
+gallery.component_diff_viewer:
+  other: "差异查看器"
+gallery.component_game_loop:
+  other: "游戏循环"
+gallery.group_code_diffs:
+  other: "代码与差异"
+gallery.group_games:
+  other: "游戏"
+gallery.navigation_new:
+  other: "新增"
+gallery.code_editor_label:
+  other: "源代码"
+gallery.code_editor_position:
+  other: "第 %d 行，第 %d 列"
+gallery.diff_viewer_side_by_side:
+  other: "并排"
+gallery.diff_viewer_unified:
+  other: "合并"
+gallery.diff_viewer_stats:
+  other: "新增 %d 行，删除 %d 行"
+gallery.canvas_smooth:
+  other: "平滑缩放"
+gallery.canvas_pixelated:
+  other: "像素化缩放"
+gallery.canvas_layer:
+  other: "旋转画布"
+gallery.canvas_next_frame:
+  other: "下一帧"
+gallery.canvas_mirror:
+  other: "镜像"
+gallery.canvas_rotation:
+  other: "旋转角度"
+gallery.game_hint:
+  other: "点击场景，然后使用 WASD、方向键或手柄左摇杆移动。"
+gallery.game_scene:
+  other: "游戏场景"

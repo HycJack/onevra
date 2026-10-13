@@ -66,7 +66,7 @@ var controlCatalog = []controlExample{
 	{"AlertDialog", "AlertDialog", "Feedback & overlays", []string{"Confirmation", "Notice"}, controlAlertDialog},
 	{"Badge", "Badge", "Feedback & overlays", []string{"Default", "Accent"}, controlBadge},
 	{"Toast", "Toast", "Feedback & overlays", []string{"Status", "Actions", "Progress"}, controlToast},
-	{"Code", "Code", "Content display", []string{"Default"}, controlCode},
+	{"Code", "Code", "Code & diffs", []string{"Default"}, controlCode},
 	{"Markdown", "Markdown", "Content display", []string{"Default"}, controlMarkdown},
 	{"Chat", "Chat", "Content display", []string{"Default"}, controlChat},
 	{"RichText", "RichText", "Content display", []string{"Default"}, controlRichText},

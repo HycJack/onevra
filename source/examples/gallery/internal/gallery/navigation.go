@@ -3,8 +3,14 @@ package gallery
 // Component sections describe purpose, never implementation ownership.
 var navigationGroups = []string{
 	"Plugins", "Actions & navigation", "Text input", "Selection & values",
-	"Date & time", "Color", "Content display", "Charts", "Layout & containers",
-	"Feedback & overlays",
+	"Date & time", "Color", "Content display", "Code & diffs", "Charts", "Layout & containers",
+	"Feedback & overlays", "Games",
+}
+
+// newestPages are the routes added most recently; the sidebar highlights
+// them. When pages are next added, replace this list with theirs.
+var newestPages = map[string]bool{
+	"mygo/Code editor": true, "mygo/Diff viewer": true, "mygo/Canvas": true, "mygo/Game loop": true,
 }
 
 type navigationEntry struct {

@@ -12,7 +12,7 @@ type mygoExample struct {
 	build       func(*ui.Context, *demoState)
 }
 
-var mygoGroups = []string{"Content display", "Feedback & overlays", "Layout & containers"}
+var mygoGroups = []string{"Content display", "Code & diffs", "Feedback & overlays", "Layout & containers", "Games"}
 
 var demoImage = ui.MustParseSVG([]byte(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 100"><rect width="180" height="100" rx="12" fill="#dbeafe"/><circle cx="140" cy="28" r="15" fill="#fbbf24"/><path d="M0 100L55 25L110 100Z" fill="#2563eb"/><path d="M65 100L120 45L180 100Z" fill="#059669"/></svg>`))
 
@@ -29,6 +29,8 @@ func mygoVariants(name string) []string {
 	switch name {
 	case "Motion":
 		return []string{"Springs", "Keyframes", "Animated pose", "Draggable"}
+	case "Diff viewer":
+		return []string{"Side by side", "Unified"}
 	case "Transforms":
 		return []string{"Editable controls", "Perspective"}
 	case "Toggle", "ToggleGroup", "Checkbox", "Switch":
@@ -73,6 +75,10 @@ func (g *Gallery) mygoState(name, variant string, first bool) *demoState {
 	if name == "Audio" {
 		s.audio.output, s.audio.volume = g.audioOutput, .8
 	}
+	if name == "Canvas" {
+		s.value = 0
+	}
+	s.game.gamepads = g.gamepads
 	s.flyout.gallery = g
 	switch variant {
 	case "Empty":

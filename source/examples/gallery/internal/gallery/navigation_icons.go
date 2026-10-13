@@ -87,6 +87,10 @@ var navigationIcons = map[string]func() *ui.SVG{
 	"WebView":          lucide.Globe,
 	"Glass":            lucide.GlassWater,
 	"Audio":            lucide.AudioLines,
+	"Canvas":           lucide.Brush,
+	"Code editor":      lucide.SquareCode,
+	"Diff viewer":      lucide.Diff,
+	"Game loop":        lucide.Gamepad2,
 }
 
 func (entry navigationEntry) icon() *ui.SVG {
