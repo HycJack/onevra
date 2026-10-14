@@ -40,6 +40,12 @@ Numeric updates transition together through MyGo's animation channel, including 
 
 These views target bounded categorical datasets. Preparation and path construction remain proportional to the supplied data; applications own aggregation or sampling. Continuous/time axes, zooming and specialized charts can compose upstream primitives. The component reuses MyGo's Cartesian selection, with a coordinate adaptation for transformed plots in 0.4.3; radial selection composes MyGo's shortcuts and slice hit testing.
 
+### Relationship graphs
+
+The [graph component](../../source/components/graph/graph.go) draws a force-directed graph. Applications supply stable node IDs, groups, sizes, colors and edge styles, and handle opening nodes. Groups seed placement and evenly spaced hues; palettes, group colors, forces and hover depth are replaceable, with empty and overlay slots.
+
+Layout, camera, hover fading and reveal advance from `Draw` on the UI thread, without background work. First ticks run within a per-frame budget before the graph appears; Reduced Motion settles at once. Nodes and edges draw as rounded boxes, not paths, leaving MyGo's mask atlas to label glyphs. MyGo has no trackpad magnification events; Control-scroll replaces pinch zoom.
+
 ### Commands
 
 The [command component](../../source/components/command/command.go) provides an embeddable palette and a Dialog composition. Applications retain query and active-command state, supply stable command identities and localized metadata, register window shortcuts, and handle activation. Hosts can show results immediately or start with a compact search field that expands after a committed query and collapses when cleared. Local metadata filtering is optional; asynchronous search, stale-result rejection, command execution and history remain application-owned. Loading and errors replace actionable results.

@@ -50,7 +50,7 @@ func main() {
 - Element handles are valid only for the current build pass. Bind a `ui.Handle` for identity or geometry across frames.
 - Shells apply Onevra's theme. Without a Shell, call `theme.Apply(c, mode)` at the top of the root builder. Components never call `Context.SetTheme`.
 - Pass translated labels explicitly and wrap content in `components.WithLocalization` for component-owned labels. Keep keys and stored values independent of translated text.
-- Complex views each have their own package in `components/chart`, `components/command`, `components/code`, `components/markdown` and `components/chat`. Keep their documents and results in retained state, prepared outside builders.
+- Complex views each have their own package in `components/chart`, `components/graph`, `components/command`, `components/code`, `components/markdown` and `components/chat`. Keep their documents and results in retained state, prepared outside builders.
 
 ## Choosing controls
 
@@ -70,6 +70,7 @@ Use Onevra's control whenever one exists; it replaces MyGo's styled widget of th
 | Toast | MyGo's `c.Toast`, `ToastAction`, `AddToast`; Shell builds them with `components.Toasts`, which standalone hosts call themselves; place them with `ShellOptions.Toasts` (`components.ToastOptions`). `ui.Toast.Type` takes `components.ToastInfo`/`Success`/`Warning`/`Error` |
 | Progress, spinner, badge, rating, icon, image | The Onevra component of the same name; icons from `icons/lucide` |
 | Categorical charts and donuts | `components/chart`: `Bar`, `Line`, `Area`, `StackedBar`, `Donut`; see the [usage example](../../source/components/chart/example_test.go) |
+| Relationship graph | `components/graph`: `View`; see the [usage example](../../source/components/graph/example_test.go) |
 | Settings surface | `components.Settings` |
 
 Use MyGo directly for:
@@ -80,7 +81,7 @@ Use MyGo directly for:
 - MyGo's unstyled bases when building a new reusable control.
 - A MyGo widget with no Onevra equivalent. Onevra intentionally omits Divider, Avatar, Meter, Form, Field, Toolbar, OutlineTable, Segmented and TokenField: compose dividers from Box or borders before reaching for the upstream widget.
 
-Charts accept application-owned data and formatting, with generic empty and detail slots. Keep series/slice IDs stable and state separate per chart; `chart.State{Index: -1}` starts unselected. Prepare large datasets outside builders; these views do not downsample or virtualize data.
+Charts accept application-owned data and formatting, with generic empty and detail slots. Keep series/slice IDs stable and state separate per chart; `chart.State{Index: -1}` starts unselected. Prepare large datasets outside builders; these views do not downsample or virtualize data. Graphs keep layout and camera in one retained `graph.State` per view and need stable node IDs.
 
 The authoritative replacement and exclusion map, with reasons, is `examples/gallery/internal/gallery/mygo_review.go` in the Onevra module.
 
