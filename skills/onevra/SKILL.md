@@ -75,6 +75,8 @@ Use Onevra's control whenever one exists; it replaces MyGo's styled widget of th
 | Pan and zoom on a custom canvas | `components/gesture`: `Navigation.Handle` for wheel and pinch zoom and touchpad panning, or `Classify` inside an existing `HandleInput` |
 | Settings surface | `components.Settings` |
 
+Let a scroll view reach the edges of the surface it scrolls within and balance the visuals with content padding instead of an outer margin: an inset view clips scrollbars, scroll gestures and edge hit targets before they reach the edge. `ScrollbarInsets` moves the track independently of content padding.
+
 Use MyGo directly for:
 
 - Layout primitives: `ui.Box`, `Column`, `Row`, `Spacer`, `Grid`, `Overlay`, and `ui.Textf` for formatted display text.
