@@ -18,8 +18,6 @@ placeholder:
   other: "Write something…"
 session_note:
   other: "Notes stay in memory until you quit."
-hide:
-  other: "Hide"
 done:
   other: "Done"
 welcome:

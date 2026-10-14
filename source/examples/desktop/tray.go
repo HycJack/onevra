@@ -37,7 +37,7 @@ func (a *application) primaryClick() {
 		a.openSettings()
 		return
 	}
-	if a.panel != nil && a.panel.IsVisible() {
+	if a.panel != nil {
 		a.hidePanel()
 	} else {
 		a.showPanel()
@@ -46,48 +46,31 @@ func (a *application) primaryClick() {
 
 func (a *application) hidePanel() {
 	if a.panel != nil {
-		a.panel.Hide()
+		a.panel.Close()
 	}
 }
 
+// showPanel opens the quick-note panel as a system popover anchored to the
+// tray icon. The platform owns placement, light dismissal and, on macOS, the
+// popover material; panelView draws its own surface elsewhere.
 func (a *application) showPanel() {
 	if a.tray == nil || !a.config.Panel {
 		a.openSettings()
 		return
 	}
 	if a.panel == nil {
-		a.panel = mygo.NewWindow(mygo.WindowOptions{
-			Title: a.text("panel_title"), Width: 360, Height: 300, Hidden: true,
-			Frameless: true, AlwaysOnTop: true, SkipTaskbar: true,
-			DisableResize: true, DisableMinimize: true, DisableMaximize: true, DisableFullScreen: true,
+		panel := mygo.NewFlyout(mygo.FlyoutOptions{
+			Tray: a.tray, Placement: mygo.PlacementBottom, Gap: 4,
+			Width: 360, Height: 300, Focusable: true, Shadow: true, Popover: true,
 			Content: ui.View(a.panelView),
 		})
-		a.panel.OnBlur(a.hidePanel)
-		a.panel.OnClose(func(e *mygo.CloseEvent) {
-			if !a.quitting {
-				e.PreventDefault()
-				a.hidePanel()
+		a.panel = panel
+		panel.OnClosed(func() {
+			if a.panel == panel {
+				a.panel = nil
 			}
 		})
 	}
-	anchor := a.tray.Bounds()
-	if anchor.Width <= 0 || anchor.Height <= 0 {
-		a.panel.Center()
-	} else {
-		area := mygo.Screen.DisplayNearestPoint(mygo.Point{X: anchor.X + anchor.Width/2, Y: anchor.Y + anchor.Height/2}).WorkArea
-		x, y := panelPosition(anchor, area, a.panel.Bounds())
-		a.panel.SetPosition(x, y)
-	}
-	show(a.panel)
-}
-
-func panelPosition(anchor, area, panel mygo.Rectangle) (int, int) {
-	x := anchor.X + (anchor.Width-panel.Width)/2
-	y := anchor.Y + anchor.Height + 6
-	if y+panel.Height > area.Y+area.Height {
-		y = anchor.Y - panel.Height - 6
-	}
-	return max(area.X, min(x, area.X+max(0, area.Width-panel.Width))), max(area.Y, min(y, area.Y+max(0, area.Height-panel.Height)))
 }
 
 func (a *application) destroyTray() {

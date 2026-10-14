@@ -1,6 +1,6 @@
 # Component design
 
-Each shell style lives in its own package under `shells/`, without a shared facade or style selector. The public [sidebar shell package](../../source/shells/sidebar/doc.go) owns a replaceable sidebar-and-content container; the [plain shell package](../../source/shells/plain/shell.go) owns a single-content window. Both own native presentation, not application lifetime.
+Each shell style lives in its own package under `shells/`, without a shared facade or style selector. The public [sidebar shell package](../../source/shells/sidebar/doc.go) owns a replaceable sidebar-and-content container; the [plain shell package](../../source/shells/plain/shell.go) owns a single-content window that shows its title in the header. Both own native presentation, not application lifetime.
 
 The [components package](../../source/components/doc.go) provides common controls independently of Shell. Sidebar Shell also provides icon buttons for titlebar and toolbar actions. Both packages compose MyGo directly.
 
@@ -106,7 +106,7 @@ Shell accepts updated control labels without recreating its window. Applications
 
 ## Page container and layout
 
-Plain Shell hides the system title bar and automatically places its content below a draggable strip with native macOS/Linux controls or Onevra caption buttons on Windows. Its opaque theme background covers the whole window, including the strip. Applications do not add another header inset. Caption-label updates preserve the window and its content. Dialogs inherit the strip's drag behavior and clearance. The starter applications use this shell for main, settings and introduction windows; their transient tray panels remain application-owned frameless MyGo windows.
+Plain Shell hides the system title bar and automatically places its content below a draggable strip with native macOS/Linux controls or Onevra caption buttons on Windows. Its opaque theme background covers the whole window, including the strip. Applications do not add another header inset. Caption-label updates preserve the window and its content. Dialogs inherit the strip's drag behavior and clearance. The starter applications use this shell for main, settings and introduction windows; their transient tray panels are MyGo flyouts shown as system popovers, drawn by the application where the platform provides no popover material.
 
 The sidebar page container reserves space for system window controls and overlays a transparent draggable header with a Lucide sidebar control. The toggle keeps additional clearance from macOS traffic lights. Its default page contains a collapsible left sidebar and a flexible main region.
 

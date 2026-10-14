@@ -40,7 +40,6 @@ func (a *application) mainView(c *ui.Context) {
 			a.feedback(c)
 			ui.Row(c).Gap(12).Children(func() {
 				components.Button(c, a.text("settings"), components.ButtonPrimary).OnClick(a.openSettings)
-				components.Button(c, a.text("quit"), components.ButtonGhost).OnClick(mygo.App.Quit)
 			})
 		})
 		components.Dialog(c, &a.settingsOpen, components.DialogOptions{Label: a.text("settings")}, func(panel ui.Element) {
@@ -59,17 +58,24 @@ func (a *application) panelView(c *ui.Context) {
 		if c.Shortcut(0, ui.KeyEscape) || c.Shortcut(ui.Cmd, ui.KeyW) {
 			a.hidePanel()
 		}
-		ui.Column(c).Fill().Padding(20).Gap(12).Children(func() {
+		// The popover material shows on macOS; elsewhere the flyout is
+		// transparent and the panel draws its own surface.
+		c.Root().Background(ui.Transparent)
+		panel := ui.Column(c).Fill().Padding(20).Gap(12)
+		if !c.Vibrancy() {
+			panel.Background(c.Theme().Surface)
+			switch runtime.GOOS {
+			case "darwin":
+				panel.Radius(10)
+			case "windows":
+			default:
+				panel.Radius(10).Border(1, c.Theme().Border)
+			}
+		}
+		panel.Children(func() {
 			components.Text(c, a.text("panel_title")).FontSize(20).Bold()
 			components.TextBox(c, &a.note, components.TextBoxOptions{Multiline: true}).Grow(1).Label(a.text("note")).Placeholder(a.text("placeholder")).AutoFocus()
 			components.Text(c, a.text("session_note")).Wrap().FontSize(11)
-			ui.Row(c).Gap(8).Children(func() {
-				if appKind == "hybrid" {
-					components.Button(c, a.text("open"), components.ButtonPrimary).OnClick(func() { a.hidePanel(); a.showMain() })
-				}
-				components.Button(c, a.text("settings"), components.ButtonSecondary).OnClick(a.openSettings)
-				components.Button(c, a.text("hide"), components.ButtonGhost).OnClick(a.hidePanel)
-			})
 		})
 	})
 }
@@ -87,7 +93,6 @@ func (a *application) welcomeView(c *ui.Context) {
 				a.feedback(c)
 				components.Button(c, a.text("continue"), components.ButtonPrimary).OnClick(a.finishWelcome)
 				components.Button(c, a.text("settings"), components.ButtonSecondary).OnClick(a.openSettings)
-				components.Button(c, a.text("quit"), components.ButtonGhost).OnClick(mygo.App.Quit)
 			})
 		})
 	})

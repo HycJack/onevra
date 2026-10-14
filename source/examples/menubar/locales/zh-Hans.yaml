@@ -18,8 +18,6 @@ placeholder:
   other: "写点什么…"
 session_note:
   other: "笔记仅在本次运行期间保留。"
-hide:
-  other: "隐藏"
 done:
   other: "完成"
 welcome:

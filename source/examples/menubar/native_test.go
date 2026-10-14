@@ -77,20 +77,25 @@ func TestNativeLifecycle(t *testing.T) {
 				return
 			}
 			a.showPanel()
-			a.panel.Close()
-			if a.panel.IsVisible() {
-				t.Error("panel close did not hide")
+			panel := a.panel
+			if panel == nil {
+				t.Error("panel did not open")
+			} else {
+				panel.Close()
+				if panel.IsVisible() {
+					t.Error("panel close did not hide")
+				}
+				a.primaryClick()
+				if a.panel == nil || !a.panel.IsVisible() {
+					t.Error("left click did not open panel")
+				}
+				a.config.Panel = false
+				a.changed()
+				if a.panel != nil {
+					t.Error("disabling panel did not hide it")
+				}
+				a.primaryClick()
 			}
-			a.primaryClick()
-			if !a.panel.IsVisible() {
-				t.Error("left click did not open panel")
-			}
-			a.config.Panel = false
-			a.changed()
-			if a.panel.IsVisible() {
-				t.Error("disabling panel did not hide it")
-			}
-			a.primaryClick()
 		} else {
 			a.openSettings()
 		}
