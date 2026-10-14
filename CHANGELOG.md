@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+## [0.2026.9] - 2026-10-14
+
 - Breaking: Shells no longer choose the theme. Replace `ShellOptions.Appearance` and `plain.Shell.SetAppearance` with `mygo.Theme.SetSource`, which also switches native window chrome, and pass `Theme: theme.Onevra` for Onevra's palettes or a function returning your own `*ui.Theme`; without it, Shells keep MyGo's theme. `theme.Mode` is removed and `theme.Apply(c)` takes no mode.
 - Onevra's palettes now follow the desktop's text scale and higher-contrast settings; `theme.Palette(dark)` returns either palette directly.
 - Add `components/graph`, an interactive force-directed relationship graph: drag or two-finger touchpad scroll to pan, drag nodes to move them, use the wheel or a pinch to zoom around the pointer, hover to highlight a node's neighbourhood and double-click to open nodes. Applications supply node groups, sizes and colors, edge styles, palettes, group colors and forces, with empty and overlay content slots. Layout runs across processors for graphs of thousands of nodes.
