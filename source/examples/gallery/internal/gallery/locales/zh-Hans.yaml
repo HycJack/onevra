@@ -1309,6 +1309,12 @@ gallery.lawn_music:
   other: "音乐"
 gallery.lawn_restart:
   other: "重新开始游戏"
+gallery.component_3d_renderer:
+  other: "3D 渲染"
+gallery.scene3d_hint:
+  other: "拖动可环绕观察，滚轮缩放，WASD 或方向键调整视角。软件光栅化在 CPU 上为场景逐像素着色。"
+gallery.scene3d_view:
+  other: "软件 3D 场景"
 gallery.relationship_graph:
   other: "关系图谱"
 gallery.graph_intro:

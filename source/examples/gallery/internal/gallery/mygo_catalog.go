@@ -56,6 +56,7 @@ var mygoExamples = []mygoExample{
 	{"Canvas", "Games", exampleCanvas},
 	{"Game loop", "Games", exampleGame},
 	{"Lawn defense", "Games", exampleLawn},
+	{"3D renderer", "Games", example3D},
 	{"Box", "Layout & containers", exampleBox},
 	{"Row", "Layout & containers", exampleRow},
 	{"Column", "Layout & containers", exampleColumn},

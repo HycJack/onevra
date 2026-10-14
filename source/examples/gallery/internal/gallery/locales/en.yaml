@@ -1309,6 +1309,12 @@ gallery.lawn_music:
   other: "Music"
 gallery.lawn_restart:
   other: "Restart game"
+gallery.component_3d_renderer:
+  other: "3D renderer"
+gallery.scene3d_hint:
+  other: "Drag to orbit the camera, scroll to zoom, and use WASD or the arrow keys to look around. A software rasterizer shades every pixel of the scene on the CPU."
+gallery.scene3d_view:
+  other: "Software 3D scene"
 gallery.relationship_graph:
   other: "Relationship graph"
 gallery.graph_intro:
