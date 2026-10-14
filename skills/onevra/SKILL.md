@@ -72,6 +72,7 @@ Use Onevra's control whenever one exists; it replaces MyGo's styled widget of th
 | Progress, spinner, badge, rating, icon, image | The Onevra component of the same name; icons from `icons/lucide` |
 | Categorical charts and donuts | `components/chart`: `Bar`, `Line`, `Area`, `StackedBar`, `Donut`; see the [usage example](../../source/components/chart/example_test.go) |
 | Relationship graph | `components/graph`: `View`; see the [usage example](../../source/components/graph/example_test.go) |
+| Pan and zoom on a custom canvas | `components/gesture`: `Navigation.Handle` for wheel and pinch zoom and touchpad panning, or `Classify` inside an existing `HandleInput` |
 | Settings surface | `components.Settings` |
 
 Use MyGo directly for:

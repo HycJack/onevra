@@ -4,7 +4,7 @@ Onevra is an experimental, product-neutral Go component library built on MyGo. I
 
 ## System boundaries
 
-- MyGo owns rendering, layout, input, native controls and desktop integration. The command component has a narrow AppKit adapter for optional input-source selection, which upstream does not expose; see [complex component composition](docs/architecture/components.md#complex-component-composition).
+- MyGo owns rendering, layout, input, native controls and desktop integration. The command component has a narrow AppKit adapter for optional input-source selection, and the gesture package one for scroll devices and pinches, which upstream does not expose; see [complex component composition](docs/architecture/components.md#complex-component-composition).
 - Onevra composes MyGo primitives, rather than wrapping every upstream API or maintaining a parallel UI system.
 - Applications own business state, localized text, persistence, background work and application lifetime.
 - Applications own the theme: `mygo.Theme.SetSource` selects light or dark for the whole app, including native chrome, and the application supplies the frame's `ui.Theme`. Onevra's light and dark palettes are an optional preset in the `theme` package. Components read the frame theme. MyGo and the operating system own native window behavior; Shell composes caption buttons on Windows.

@@ -16,6 +16,17 @@ type graphDemoState struct {
 	empty                 bool
 	added                 int
 	opened                string
+	cache                 graphCache
+}
+
+// graphCache keeps the sample between builds, so thousands of added notes
+// are not regenerated for every frame.
+type graphCache struct {
+	added             int
+	attachments, dark bool
+	newTitle          string
+	data              graph.Data
+	titles            map[string]string
 }
 
 // graphNote is a document of the sample library; its path's first segment
@@ -58,8 +69,18 @@ func graphDirectory(path string) string {
 // graphSample maps the library onto graph data: directories become groups,
 // directory indexes own their notes, wiki links are references and
 // attachments sit beside their note.
-func graphSample(c *ui.Context, s *graphDemoState) graph.Data {
-	return graphLibrary(s, c.Theme().Dark, tr(c, "gallery.graph_new_note"))
+func graphSample(c *ui.Context, s *graphDemoState) (graph.Data, map[string]string) {
+	dark, newTitle := c.Theme().Dark, tr(c, "gallery.graph_new_note")
+	k := &s.cache
+	if k.titles == nil || k.added != s.added || k.attachments != s.attachments || k.dark != dark || k.newTitle != newTitle {
+		*k = graphCache{added: s.added, attachments: s.attachments, dark: dark, newTitle: newTitle}
+		k.data = graphLibrary(s, dark, newTitle)
+		k.titles = make(map[string]string, len(k.data.Nodes))
+		for _, n := range k.data.Nodes {
+			k.titles[n.ID] = n.Label
+		}
+	}
+	return k.data, k.titles
 }
 
 // graphLibrary builds the sample with newTitle formatting added notes' titles.
@@ -74,14 +95,24 @@ func graphLibrary(s *graphDemoState, dark bool, newTitle string) graph.Data {
 	reference := graph.EdgeStyle{Distance: 200, Width: .85, Opacity: referenceOpacity, HoverOpacity: .35}
 	attached := graph.EdgeStyle{Distance: 64, Width: .8, Opacity: attachmentOpacity, Color: attachment}
 
-	notes := graphNotes
+	notes := append(make([]graphNote, 0, len(graphNotes)+s.added), graphNotes...)
+	base := len(graphNotes) - 2
 	for i := range s.added {
-		parent := graphNotes[2+i%(len(graphNotes)-2)]
+		// The first notes join the sample's folders; later ones branch from
+		// earlier added notes, with a few links back across the library.
+		parent := notes[2+i%base]
+		var links []string
+		if i >= base {
+			parent = notes[len(graphNotes)+(i-base)/3]
+			if i%7 == 0 {
+				links = append(links, graphNotes[2+i%base].path)
+			}
+		}
 		notes = append(notes, graphNote{
 			path:  fmt.Sprintf("%s/new-%d.md", graphDirectory(parent.path), i+1),
 			title: fmt.Sprintf(newTitle, i+1),
+			links: append([]string{parent.path}, links...),
 		})
-		notes[len(notes)-1].links = []string{parent.path}
 	}
 	var data graph.Data
 	for _, note := range notes {
@@ -106,6 +137,10 @@ func graphLibrary(s *graphDemoState, dark bool, newTitle string) graph.Data {
 	return data
 }
 
+// graphBulkCounts are the larger additions offered for trying the graph's
+// performance.
+var graphBulkCounts = []int{100, 1000}
+
 func controlGraph(c *ui.Context, s *controlState, _ string) {
 	if s.graph == nil {
 		s.graph = &graphDemoState{attachments: true}
@@ -116,6 +151,14 @@ func controlGraph(c *ui.Context, s *controlState, _ string) {
 	ui.Row(c).FillWidth().MinWidth(0).Wrap().Gap(t.Space(2)).Children(func() {
 		if components.Button(c, tr(c, "gallery.graph_add"), components.ButtonOutline).Clicked() {
 			d.added++
+		}
+		for _, count := range graphBulkCounts {
+			if components.Button(c, fmt.Sprintf(tr(c, "gallery.graph_add_many"), count), components.ButtonOutline).Clicked() {
+				d.added += count
+			}
+		}
+		if d.added > 0 && components.Button(c, tr(c, "gallery.graph_reset"), components.ButtonGhost).Clicked() {
+			d.added = 0
 		}
 		if components.Button(c, tr(c, "gallery.graph_fit"), components.ButtonOutline).Clicked() {
 			d.view.Fit()
@@ -129,12 +172,9 @@ func controlGraph(c *ui.Context, s *controlState, _ string) {
 		}
 	})
 	var data graph.Data
+	var titles map[string]string
 	if !d.empty {
-		data = graphSample(c, d)
-	}
-	titles := map[string]string{}
-	for _, n := range data.Nodes {
-		titles[n.ID] = n.Label
+		data, titles = graphSample(c, d)
 	}
 	ui.Column(c).FillWidth().MinWidth(0).Radius(t.Radius*1.5).Background(t.Surface).Border(1, t.Border.Alpha(.5)).Clip().Children(func() {
 		graph.View(c, &d.view, data, graph.Options{

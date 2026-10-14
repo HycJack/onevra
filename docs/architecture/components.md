@@ -42,9 +42,11 @@ These views target bounded categorical datasets. Preparation and path constructi
 
 ### Relationship graphs
 
-The [graph component](../../source/components/graph/graph.go) draws a force-directed graph. Applications supply stable node IDs, groups, sizes, colors and edge styles, and handle opening nodes. Groups seed placement and evenly spaced hues; palettes, group colors, forces and hover depth are replaceable, with empty and overlay slots.
+The [graph component](../../source/components/graph/graph.go) draws a force-directed graph. Applications supply stable node IDs, groups, sizes, colors and edge styles, and open nodes. Groups seed placement and even hue spacing; palettes, colors, forces, hover depth and empty or overlay slots are replaceable.
 
-Layout, camera, hover fading and reveal advance from `Draw` on the UI thread, without background work. First ticks run within a per-frame budget before the graph appears; Reduced Motion settles at once. Nodes and edges draw as rounded boxes, not paths, leaving MyGo's mask atlas to label glyphs. MyGo has no trackpad magnification events; Control-scroll replaces pinch zoom.
+Layout, camera, hover and reveal advance in `Draw` on the UI thread. Initial ticks run in per-frame budgets before showing; Reduced Motion settles at once.
+
+[Gestures](../../source/components/gesture/gesture.go): wheels and pinches zoom, touchpads pan. MyGo 0.4.8 neither tells smoothed mice from touchpads nor reports pinches; a macOS adapter reads scroll phases and observes magnify events.
 
 ### Commands
 

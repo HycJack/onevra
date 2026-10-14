@@ -1,6 +1,7 @@
 package gallery
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/egoist/mygo/ui"
@@ -54,6 +55,30 @@ func TestGraphPage(t *testing.T) {
 			}
 			if s.added != 1 {
 				t.Fatal("add note did not update the graph")
+			}
+			if err := tt.Click(fmt.Sprintf(g.text("gallery.graph_add_many"), 1000)); err != nil {
+				t.Fatal(err)
+			}
+			if s.added != 1001 || len(s.cache.data.Nodes) != len(graphNotes)+1001 {
+				t.Fatalf("bulk add left %d added notes and %d nodes", s.added, len(s.cache.data.Nodes))
+			}
+			ids := map[string]bool{}
+			for _, n := range s.cache.data.Nodes {
+				if ids[n.ID] {
+					t.Fatalf("duplicate node %q", n.ID)
+				}
+				ids[n.ID] = true
+			}
+			for _, e := range s.cache.data.Edges {
+				if !ids[e.Source] || !ids[e.Target] {
+					t.Fatalf("edge %s → %s leaves the sample", e.Source, e.Target)
+				}
+			}
+			if err := tt.Click(g.text("gallery.graph_reset")); err != nil {
+				t.Fatal(err)
+			}
+			if s.added != 0 || tt.HasText(g.text("gallery.graph_reset")) {
+				t.Fatal("reset did not remove the added notes")
 			}
 			if err := tt.Click(g.text("gallery.chart_empty")); err != nil {
 				t.Fatal(err)

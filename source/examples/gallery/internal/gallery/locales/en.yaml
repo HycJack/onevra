@@ -1312,13 +1312,17 @@ gallery.lawn_restart:
 gallery.relationship_graph:
   other: "Relationship graph"
 gallery.graph_intro:
-  other: "Notes are colored by folder. Drag empty space to pan, drag a note to move it, scroll to zoom, and hover to highlight its neighbours."
+  other: "Notes are colored by folder. Drag empty space or two fingers on a touchpad to pan, drag a note to move it, use the wheel or pinch to zoom, and hover to highlight its neighbours. Add hundreds of notes at once to try larger graphs."
 gallery.graph_add:
   other: "Add note"
+gallery.graph_add_many:
+  other: "Add %d notes"
+gallery.graph_reset:
+  other: "Remove added notes"
 gallery.graph_fit:
   other: "Fit view"
 gallery.graph_label:
-  other: "Knowledge graph with %d nodes and %d links. Double-click a note to open it, drag to pan, and scroll to zoom."
+  other: "Knowledge graph with %d nodes and %d links. Double-click a note to open it, drag to pan, and use the wheel or pinch to zoom."
 gallery.graph_empty:
   other: "No notes to draw yet"
 gallery.graph_new_note:

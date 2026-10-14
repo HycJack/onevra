@@ -1312,13 +1312,17 @@ gallery.lawn_restart:
 gallery.relationship_graph:
   other: "关系图谱"
 gallery.graph_intro:
-  other: "笔记按文件夹着色。拖动空白处平移，拖动笔记移动它，滚动缩放，悬停时高亮相邻笔记。"
+  other: "笔记按文件夹着色。拖动空白处或在触控板上双指拖动可平移，拖动笔记移动它，滚轮或双指捏合可缩放，悬停时高亮相邻笔记。可一次添加数百篇笔记来体验更大的图谱。"
 gallery.graph_add:
   other: "添加笔记"
+gallery.graph_add_many:
+  other: "添加 %d 篇笔记"
+gallery.graph_reset:
+  other: "移除新增笔记"
 gallery.graph_fit:
   other: "适应视图"
 gallery.graph_label:
-  other: "知识图谱，包含 %d 个节点和 %d 条关系。双击笔记可打开，拖动画布可平移，滚动可缩放。"
+  other: "知识图谱，包含 %d 个节点和 %d 条关系。双击笔记可打开，拖动画布可平移，滚轮或双指捏合可缩放。"
 gallery.graph_empty:
   other: "还没有可绘制的笔记"
 gallery.graph_new_note:
