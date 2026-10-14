@@ -141,6 +141,18 @@ GOWORK=off go build ./...
 
 格式检查应无输出，完整验证要求见[开发检查](docs/build.md#development-checks)和[原生界面检查](docs/build.md#native-review)。保持中英文 README 内容一致，并将面向使用者的变化记录到 [CHANGELOG.md](CHANGELOG.md)。版本规则与发布流程见[发布说明](docs/build.md#publication)。
 
+## 官网
+
+官网位于 [website/](website)，使用 React Router 和 shadcn/ui 构建。[Website workflow](.github/workflows/website.yml) 会将其部署到 GitHub Pages。
+
+```sh
+cd website
+bun install
+bun run dev
+```
+
+构建与部署细节见 [website/README.md](website/README.md)。
+
 ## 协议
 
 项目代码采用 [MIT](LICENSE) 协议。改编自 MyGo 的控件保留[上游 MIT 声明](source/components/LICENSE.mygo)。Lucide 资源保留[上游 ISC 和 Feather MIT 声明](source/icons/lucide/LICENSE)。

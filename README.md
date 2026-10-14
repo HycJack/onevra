@@ -141,6 +141,18 @@ GOWORK=off go build ./...
 
 Formatting should produce no output. See [development checks](docs/build.md#development-checks) and [native review](docs/build.md#native-review) for verification. Keep both READMEs equivalent and record consumer-visible changes in [CHANGELOG.md](CHANGELOG.md). Versioning and release procedures are in [Publication](docs/build.md#publication).
 
+## Website
+
+The marketing site lives in [website/](website) and is built with React Router and shadcn/ui. The [Website workflow](.github/workflows/website.yml) deploys it to GitHub Pages.
+
+```sh
+cd website
+bun install
+bun run dev
+```
+
+See [website/README.md](website/README.md) for the build and deployment details.
+
 ## License
 
 Project code: [MIT](LICENSE). Components adapted from MyGo retain the [upstream MIT notice](source/components/LICENSE.mygo). Lucide assets retain their [upstream ISC and Feather MIT notices](source/icons/lucide/LICENSE).

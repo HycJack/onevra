@@ -39,6 +39,7 @@ There is one Go module under `source/`, with module path `github.com/oneo-me/one
 - `source/tools/`: library maintenance commands such as the Lucide importer; these share the Go module but are not runtime library dependencies. Applications are packaged with MyGo's CLI, pinned as a Go tool.
 - `source/examples/gallery/`: standalone example, with presentation, native review tests and MyGo inventory tooling under its own `internal/` directory.
 - [Development guide](docs/build.md): build, verification and release procedures.
+- `website/`: the official website, built with React Router and shadcn/ui and deployed to GitHub Pages; see [website/README.md](website/README.md).
 
 The repository-root [`skills/onevra/`](skills/onevra/SKILL.md) is an Agent skill for consumer applications, covering usage, component choice, hidden tests and project layout. It is not part of the Go module.
 

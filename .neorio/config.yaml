@@ -1,22 +1,45 @@
 icon: source/assets/icon.png
-commands:
-  - id: run
-    command: go tool mygo dev
-    directory: source
-  - id: build
-    command: go tool mygo build -platform darwin/arm64,windows/amd64,linux/amd64,linux/arm64
-    directory: source
+tasks:
+  - label: Run
+    group: run
+    command: go
+    args: [tool, mygo, dev]
+    options:
+      cwd: source
+      env:
+        GOWORK: "off"
+  - label: Build
+    group: build
+    command: go
+    args: [tool, mygo, build, -platform, "darwin/arm64,windows/amd64,linux/amd64,linux/arm64"]
+    options:
+      cwd: source
+      env:
+        GOWORK: "off"
     outputDirectory: ../dist
-menu:
-  - id: desktop
-    name: Run desktop example
-    command: GOWORK=off go run ./examples/desktop
-    directory: source
-  - id: hybrid
-    name: Run hybrid example
-    command: GOWORK=off go run ./examples/hybrid
-    directory: source
-  - id: menubar
-    name: Run menubar example
-    command: GOWORK=off go run ./examples/menubar
-    directory: source
+  - label: Run desktop example
+    command: go
+    args: [run, ./examples/desktop]
+    options:
+      cwd: source
+      env:
+        GOWORK: "off"
+  - label: Run hybrid example
+    command: go
+    args: [run, ./examples/hybrid]
+    options:
+      cwd: source
+      env:
+        GOWORK: "off"
+  - label: Run menubar example
+    command: go
+    args: [run, ./examples/menubar]
+    options:
+      cwd: source
+      env:
+        GOWORK: "off"
+  - label: Website
+    type: shell
+    command: bun install && bun run dev
+    options:
+      cwd: website

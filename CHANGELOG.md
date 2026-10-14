@@ -5,6 +5,7 @@ User-facing updates for Onevra library consumers.
 ## [Unreleased]
 
 - Show the window title in `shells/plain`'s header, so a window without the default title bar still displays it. The header follows `Window().SetTitle`, including later language changes.
+- Add the official website at <https://oneo-me.github.io/onevra/>, covering the component set, theming, installation and common questions in English and Simplified Chinese.
 
 ## [0.2026.9] - 2026-10-14
 
