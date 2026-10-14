@@ -195,7 +195,7 @@ func TestNewestPagesHighlighted(t *testing.T) {
 			}
 			found := false
 			for key := range newestPages {
-				found = found || g.text(sourceMessageIDs[strings.TrimPrefix(key, "mygo/")]) == label
+				found = found || g.text(sourceMessageIDs[routeLabel(key)]) == label
 			}
 			if !found {
 				t.Fatalf("%s badge follows %q", lang, label)
@@ -211,7 +211,7 @@ func TestNewestBadgeCentered(t *testing.T) {
 	for key := range newestPages {
 		g := &Gallery{}
 		page := pageFromKey(key)
-		label := strings.TrimPrefix(key, "mygo/")
+		label := routeLabel(key)
 		tt := ui.NewTester(func(c *ui.Context) {
 			g.withLanguage(c, func() { g.navigationItem(c, label, nil, page) })
 		}, 220, 80)
@@ -224,4 +224,10 @@ func TestNewestBadgeCentered(t *testing.T) {
 			t.Fatalf("%s badge is off center by %v: badge %+v, label %+v", key, d, badge, text)
 		}
 	}
+}
+
+// routeLabel is the source label of a route key such as "mygo/Canvas".
+func routeLabel(key string) string {
+	_, label, _ := strings.Cut(key, "/")
+	return label
 }

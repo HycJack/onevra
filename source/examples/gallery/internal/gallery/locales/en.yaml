@@ -1309,3 +1309,27 @@ gallery.lawn_music:
   other: "Music"
 gallery.lawn_restart:
   other: "Restart game"
+gallery.relationship_graph:
+  other: "Relationship graph"
+gallery.graph_intro:
+  other: "Notes are colored by folder. Drag empty space to pan, drag a note to move it, scroll to zoom, and hover to highlight its neighbours."
+gallery.graph_add:
+  other: "Add note"
+gallery.graph_fit:
+  other: "Fit view"
+gallery.graph_label:
+  other: "Knowledge graph with %d nodes and %d links. Double-click a note to open it, drag to pan, and scroll to zoom."
+gallery.graph_empty:
+  other: "No notes to draw yet"
+gallery.graph_new_note:
+  other: "New note %d"
+gallery.graph_hint:
+  other: "Double-click a note to open it."
+gallery.graph_opened:
+  other: "Opened: %s"
+gallery.graph_settings:
+  other: "Graph settings"
+gallery.graph_attachments:
+  other: "Show attachments"
+gallery.graph_attachments_hint:
+  other: "Show attachment nodes beside the notes in their folder."

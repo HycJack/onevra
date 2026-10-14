@@ -8,7 +8,7 @@ import (
 )
 
 func TestControlPages(t *testing.T) {
-	if len(controlCatalog) != 46 {
+	if len(controlCatalog) != 47 {
 		t.Fatal("missing control examples")
 	}
 	for i, example := range controlCatalog {
@@ -148,6 +148,9 @@ func TestControlExampleInteractions(t *testing.T) {
 				case "Bar chart", "Line chart", "Area chart", "Stacked bar chart", "Donut chart":
 					click("Update data")
 					changed = s.on
+				case "Relationship graph":
+					click("Add note")
+					changed = s.graph.added == 1
 				case "Calendar":
 					before := s.day
 					tt.Key(0, ui.KeyTab)

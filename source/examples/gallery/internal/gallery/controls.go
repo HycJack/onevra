@@ -17,6 +17,7 @@ type controlExample struct {
 type controlState struct {
 	chat                   *chatDemoState
 	chart                  *chartDemoState
+	graph                  *graphDemoState
 	dialogOpen, nestedOpen bool
 	tree                   components.TreeVirtualizedState[string]
 	table                  components.TableVirtualizedState
@@ -55,6 +56,7 @@ var controlCatalog = []controlExample{
 	{"Area chart", "Area chart", "Charts", []string{"Default"}, controlAreaChart},
 	{"Stacked bar chart", "Stacked bar chart", "Charts", []string{"Default"}, controlStackedBarChart},
 	{"Donut chart", "Donut chart", "Charts", []string{"Default"}, controlDonutChart},
+	{"Relationship graph", "Relationship graph", "Charts", []string{"Default"}, controlGraph},
 	{"TimePicker", "TimePicker", "Date & time", []string{"Default"}, controlTimePicker},
 	{"Calendar", "Calendar", "Date & time", []string{"Default"}, controlCalendar},
 	{"CalendarPicker", "CalendarPicker", "Date & time", []string{"Default"}, controlCalendarPicker},
@@ -209,7 +211,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 			for _, variant := range example.variants {
 				cell := ui.Column(c).Key(variant).MinWidth(0).MaxWidthPercent(100).Gap(12)
 				switch example.name {
-				case "Text", "GridView", "Markdown", "Code", "Bar chart", "Line chart", "Area chart", "Stacked bar chart", "Donut chart":
+				case "Text", "GridView", "Markdown", "Code", "Bar chart", "Line chart", "Area chart", "Stacked bar chart", "Donut chart", "Relationship graph":
 					cell.FillWidth()
 				case "TextBox", "TextBox (multiline)", "TextBoxBuffer", "TextBoxBuffer (multiline)", "NumberInput", "Slider", "Sidebar", "List", "Split", "ScrollView", "Progress", "Accordion", "Collapsible", "PixelGrid":
 					cell.Width(240)
