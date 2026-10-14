@@ -176,11 +176,10 @@ func controlGraph(c *ui.Context, s *controlState, _ string) {
 	if !d.empty {
 		data, titles = graphSample(c, d)
 	}
-	ui.Column(c).FillWidth().MinWidth(0).Radius(t.Radius*1.5).Background(t.Surface).Border(1, t.Border.Alpha(.5)).Clip().Children(func() {
+	ui.Column(c).FillWidth().Grow(1).MinWidth(0).MinHeight(240).Radius(t.Radius*1.5).Background(t.Surface).Border(1, t.Border.Alpha(.5)).Clip().Children(func() {
 		graph.View(c, &d.view, data, graph.Options{
 			Label:     fmt.Sprintf(tr(c, "gallery.graph_label"), len(data.Nodes), len(data.Edges)),
 			EmptyText: tr(c, "gallery.graph_empty"),
-			Height:    460,
 			Open:      func(id string) { d.opened = id },
 			Overlay:   func(c *ui.Context) { graphSettings(c, d) },
 		})

@@ -151,6 +151,14 @@ func (g *Gallery) controlsLocalized(c *ui.Context, example controlExample) {
 		example.build(c, g.controlState(example.name, "Default"), "Default")
 		return
 	}
+	if example.name == "Relationship graph" {
+		// The graph fills the page below its controls instead of scrolling.
+		ui.Column(c).Key("controls-" + example.name).Fill().MinWidth(0).MinHeight(0).Padding(t.Space(6)).Gap(12).Children(func() {
+			components.Text(c, tr(c, example.name)).Bold().TextColor(t.Text)
+			example.build(c, g.controlState(example.name, "Default"), "Default")
+		})
+		return
+	}
 	components.ScrollView(c, components.ScrollViewOptions{}).Key("controls-" + example.name).Fill().Children(func() {
 		ui.Column(c).FillWidth().MinWidth(0).Padding(t.Space(6)).Gap(t.Space(6)).Children(func() {
 			if example.name == "Markdown" {

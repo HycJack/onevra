@@ -26,6 +26,13 @@ func TestGraphPage(t *testing.T) {
 			if !s.view.Settled() || s.view.Hovered() != "" {
 				t.Fatal("graph did not settle")
 			}
+			// The graph fills the page below its controls, leaving the hint
+			// at the bottom edge.
+			view, ok := tt.Find(fmt.Sprintf(g.text("gallery.graph_label"), len(s.cache.data.Nodes), len(s.cache.data.Edges)))
+			hint, hintOK := tt.Find(g.text("gallery.graph_hint"))
+			if !ok || !hintOK || view.H < 460 || hint.Y+hint.H < 860 {
+				t.Fatalf("graph %v and hint %v do not fill the page", view, hint)
+			}
 			nodes := len(graphLibrary(s, false, "%d").Nodes)
 			if nodes != len(graphNotes)+6 {
 				t.Fatalf("sample has %d nodes", nodes)
