@@ -7,11 +7,12 @@ import (
 
 // Keys are stable example names, not translated navigation labels. Keep SVGs lazy.
 var navigationIcons = map[string]func() *ui.SVG{
-	"Bar chart":         lucide.ChartColumn,
-	"Line chart":        lucide.ChartLine,
-	"Area chart":        lucide.ChartArea,
-	"Stacked bar chart": lucide.ChartColumnStacked,
-	"Donut chart":       lucide.ChartPie,
+	"Bar chart":          lucide.ChartColumn,
+	"Line chart":         lucide.ChartLine,
+	"Area chart":         lucide.ChartArea,
+	"Stacked bar chart":  lucide.ChartColumnStacked,
+	"Donut chart":        lucide.ChartPie,
+	"Relationship graph": lucide.Waypoints,
 
 	"Transforms":       lucide.Rotate3d,
 	"Motion":           lucide.Activity,
