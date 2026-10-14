@@ -7,3 +7,16 @@ commands:
     command: go tool mygo build -platform darwin/arm64,windows/amd64,linux/amd64,linux/arm64
     directory: source
     outputDirectory: ../dist
+menu:
+  - id: desktop
+    name: Run desktop example
+    command: GOWORK=off go run ./examples/desktop
+    directory: source
+  - id: hybrid
+    name: Run hybrid example
+    command: GOWORK=off go run ./examples/hybrid
+    directory: source
+  - id: menubar
+    name: Run menubar example
+    command: GOWORK=off go run ./examples/menubar
+    directory: source
