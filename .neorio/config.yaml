@@ -1,0 +1,9 @@
+icon: source/assets/icon.png
+commands:
+  - id: run
+    command: go tool mygo dev
+    directory: source
+  - id: build
+    command: go tool mygo build -platform darwin/arm64,windows/amd64,linux/amd64,linux/arm64
+    directory: source
+    outputDirectory: ../dist
