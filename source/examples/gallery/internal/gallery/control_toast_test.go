@@ -12,7 +12,7 @@ func TestToastExampleUndoAndUpload(t *testing.T) {
 	g := &Gallery{}
 	actions, progress := g.controlState("Toast", "Actions"), g.controlState("Toast", "Progress")
 	tt := ui.NewTester(func(c *ui.Context) {
-		theme.Apply(c, theme.Light)
+		c.SetTheme(theme.LightPalette())
 		ui.Column(c).Gap(12).Children(func() {
 			controlToast(c, actions, "Actions")
 			controlToast(c, progress, "Progress")
@@ -47,7 +47,7 @@ func TestToastExampleUndoAndUpload(t *testing.T) {
 
 func TestToastExamplePlacement(t *testing.T) {
 	g := &Gallery{page: pageFromKey("controls/Toast")}
-	tt := ui.NewTester(func(c *ui.Context) { theme.Apply(c, theme.Light); g.View(c) }, 900, 900)
+	tt := ui.NewTester(func(c *ui.Context) { c.SetTheme(theme.LightPalette()); g.View(c) }, 900, 900)
 	if !tt.HasText("Placement") {
 		t.Fatalf("missing placement section: %q", tt.Texts())
 	}

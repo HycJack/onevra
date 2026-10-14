@@ -83,14 +83,14 @@ func TestChartDataTransitions(t *testing.T) {
 		}, opts)
 	}
 	for name, view := range views {
-		for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
-			t.Run(fmt.Sprintf("%s/%v", name, mode), func(t *testing.T) {
+		for _, dark := range []bool{false, true} {
+			t.Run(fmt.Sprintf("%s/%v", name, dark), func(t *testing.T) {
 				data := Data{Labels: []string{"A", "B"}, Series: []Series{{ID: "a", Label: "Alpha", Values: []float64{10, 90}}}}
 				opts := Options{Label: "Plot", AnimationDuration: time.Second}
 				state := State{Index: -1}
 				var settled bool
 				build := func(c *ui.Context) {
-					theme.Apply(c, mode)
+					c.SetTheme(theme.Palette(dark))
 					e := view(c, &state, data, opts)
 					settled = e.Settled(dataProgress)
 				}

@@ -7,14 +7,14 @@ import (
 )
 
 func TestNumberInput(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		value := 0.2
 		disabled := false
 		changes := 0
 		selectAll := false
 		var draft string
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(dark))
 			ui.Column(c).Disabled(disabled).Children(func() {
 				control := NumberInput(c, &value, -1, 1, 0.1).Label("Amount")
 				if selectAll {

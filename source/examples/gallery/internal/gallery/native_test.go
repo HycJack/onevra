@@ -10,7 +10,9 @@ import (
 	"time"
 
 	"github.com/egoist/mygo"
+	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/shells/sidebar"
+	"github.com/oneo-me/onevra/source/theme"
 )
 
 // Ordinary tests never open windows.
@@ -158,4 +160,10 @@ func TestNativeGallery(t *testing.T) {
 		}
 		t.Log(path)
 	}
+}
+
+// pinnedTheme fixes a native review window's palette without changing the
+// application-wide appearance that other tests share.
+func pinnedTheme(dark bool) func(*ui.Context) *ui.Theme {
+	return func(*ui.Context) *ui.Theme { return theme.Palette(dark) }
 }

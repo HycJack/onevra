@@ -11,9 +11,9 @@ import (
 	"github.com/oneo-me/onevra/source/theme"
 )
 
-func sidebarFixture(mode theme.Mode, selected *int, disabled bool) func(*ui.Context) {
+func sidebarFixture(dark bool, selected *int, disabled bool) func(*ui.Context) {
 	return func(c *ui.Context) {
-		theme.Apply(c, mode)
+		c.SetTheme(theme.Palette(dark))
 		Sidebar(c).Disabled(disabled).Children(func() {
 			SidebarSection(c, "Locations", func() {
 				if SidebarItem(c, "Home", lucide.House(), *selected == 0).Clicked() {
@@ -29,9 +29,9 @@ func sidebarFixture(mode theme.Mode, selected *int, disabled bool) func(*ui.Cont
 }
 
 func TestSidebarAppearance(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		selected := 0
-		tt := ui.NewTester(sidebarFixture(mode, &selected, false), 220, 300)
+		tt := ui.NewTester(sidebarFixture(dark, &selected, false), 220, 300)
 		home, _ := tt.Find("Home")
 		files, _ := tt.Find("Files")
 		heading, _ := tt.Find("Locations")
@@ -39,7 +39,7 @@ func TestSidebarAppearance(t *testing.T) {
 		if heading.Y != 0 || home.X != 12 || home.W != 196 || files.Y-home.Y-home.H != 4 || account.Y-files.Y-files.H != 12 {
 			t.Fatalf("unexpected sidebar spacing: %v %v %v %v", heading, home, files, account)
 		}
-		blank := ui.NewTester(func(c *ui.Context) { theme.Apply(c, mode) }, 220, 300)
+		blank := ui.NewTester(func(c *ui.Context) { c.SetTheme(theme.Palette(dark)) }, 220, 300)
 		if tt.Image().RGBAAt(20, 299) != blank.Image().RGBAAt(20, 299) {
 			t.Fatal("sidebar must preserve its host background")
 		}
@@ -59,7 +59,7 @@ func TestSidebarAppearance(t *testing.T) {
 		}
 		pixel := tt.Image().RGBAAt(int(files.X+files.W-12), int(files.Y+files.H/2))
 		palette := theme.LightPalette()
-		if mode == theme.Dark {
+		if dark {
 			palette = theme.DarkPalette()
 		}
 		want := palette.Text.Alpha(.1).Over(palette.Background)
@@ -73,7 +73,7 @@ func TestSidebarAppearance(t *testing.T) {
 func TestSidebarKeyboardAndDisabled(t *testing.T) {
 	for _, disabled := range []bool{false, true} {
 		selected := -1
-		tt := ui.NewTester(sidebarFixture(theme.Light, &selected, disabled), 220, 300)
+		tt := ui.NewTester(sidebarFixture(false, &selected, disabled), 220, 300)
 		tt.Key(0, ui.KeyTab)
 		tt.Key(0, ui.KeyEnter)
 		if !disabled && selected != 0 {
@@ -108,7 +108,7 @@ func TestSidebarImageItem(t *testing.T) {
 	wide := solidBitmap(80, 40, red)
 	var size, inset float32
 	tt := ui.NewTester(func(c *ui.Context) {
-		theme.Apply(c, theme.Light)
+		c.SetTheme(theme.LightPalette())
 		size, inset = c.Theme().Space(4.5), c.Theme().Space(2)
 		Sidebar(c).Children(func() {
 			SidebarItem(c, "Icon", lucide.House(), false)

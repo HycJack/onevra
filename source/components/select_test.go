@@ -24,10 +24,10 @@ func buildSelect(c *ui.Context, selected *string, options []string, style ...fun
 }
 
 func TestSelectItemBackgrounds(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, mode := range []bool{false, true} {
 		selected := "M"
 		reference := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(mode))
 			ui.Column(c).Fill().Background(c.Theme().Background).Children(func() {
 				SidebarItem(c, "Selected", nil, true)
 				ui.Row(c).Label("Hover reference").Size(100, 32).Background(c.Theme().Text.Alpha(.04))
@@ -41,7 +41,7 @@ func TestSelectItemBackgrounds(t *testing.T) {
 		hoverFill := ui.RGB(pixel.R, pixel.G, pixel.B)
 		var background ui.Color
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(mode))
 			background = c.Theme().Background
 			// Isolate item state fills from the backdrop-dependent glass surface.
 			buildSelect(c, &selected, []string{"S", "M", "L"}, func(panel ui.Element) {
@@ -87,10 +87,10 @@ func TestSelectItemBackgrounds(t *testing.T) {
 }
 
 func TestSelectPopupShadow(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, mode := range []bool{false, true} {
 		selected := "M"
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(mode))
 			ui.Column(c).Fill().Padding(40).Background(c.Theme().Background).Children(func() {
 				sel := Select(c, &selected)
 				sel.Trigger.Label("size").Children(func() { Text(c, selected) })
@@ -115,14 +115,14 @@ func TestSelectPopupShadow(t *testing.T) {
 
 func TestSelectChoose(t *testing.T) {
 	for _, dark := range []bool{false, true} {
-		mode := theme.Light
+		mode := false
 		if dark {
-			mode = theme.Dark
+			mode = true
 		}
 		selected := "M"
 		options := []string{"S", "M", "L"}
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(mode))
 			buildSelect(c, &selected, options)
 		}, 300, 300)
 		if tt.HasText("item S") {
@@ -147,11 +147,11 @@ func TestSelectChoose(t *testing.T) {
 }
 
 func TestSelectSearch(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, mode := range []bool{false, true} {
 		selected, query := "M", ""
 		var changed bool
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(mode))
 			sel := Select(c, &selected)
 			sel.Trigger.Label("size").Children(func() { Text(c, selected) })
 			sel.Popup(func(panel ui.Element) {
@@ -237,7 +237,7 @@ func TestSelectKeyboard(t *testing.T) {
 	selected := "M"
 	options := []string{"S", "M", "L"}
 	tt := ui.NewTester(func(c *ui.Context) {
-		theme.Apply(c, theme.Light)
+		c.SetTheme(theme.LightPalette())
 		buildSelect(c, &selected, options)
 	}, 300, 300)
 	if err := tt.Click("size"); err != nil {
@@ -268,7 +268,7 @@ func TestSelectWheelScrollsPastHighlight(t *testing.T) {
 	}
 	selected := options[0]
 	tt := ui.NewTester(func(c *ui.Context) {
-		theme.Apply(c, theme.Light)
+		c.SetTheme(theme.LightPalette())
 		sel := Select(c, &selected)
 		sel.Trigger.Label("size").Children(func() { ui.Text(c, "Size").SingleLine() })
 		sel.Popup(func(panel ui.Element) {

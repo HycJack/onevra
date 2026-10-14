@@ -13,7 +13,7 @@ import (
 // color, including Tooltip's inverted palette. Existing interaction tests cover
 // placement, dismissal, focus and caller overrides independently of rendering.
 func TestOverlayGlassTint(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, mode := range []bool{false, true} {
 		for _, kind := range []string{"Dialog", "Popover", "Tooltip", "Select"} {
 			t.Run(fmt.Sprintf("%v/%s", mode, kind), func(t *testing.T) {
 				backdrop := ui.RGB(0, 0, 0)
@@ -22,7 +22,7 @@ func TestOverlayGlassTint(t *testing.T) {
 				var bounds ui.Rect
 				var tint ui.Color
 				tt := ui.NewTester(func(c *ui.Context) {
-					theme.Apply(c, mode)
+					c.SetTheme(theme.Palette(mode))
 					tint = c.Theme().Background
 					ui.Box(c).Absolute().Left(0).Top(0).Size(480, 361).Background(backdrop)
 					style := func(panel ui.Element) {
@@ -63,7 +63,7 @@ func TestOverlayGlassTint(t *testing.T) {
 				dark := sample()
 				if kind == "Dialog" || kind == "Popover" {
 					palette := theme.LightPalette()
-					if mode == theme.Dark {
+					if mode {
 						palette = theme.DarkPalette()
 					}
 					edge := tt.Image().RGBAAt(int(bounds.X+bounds.W/2), int(bounds.Y))

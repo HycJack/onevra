@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Breaking: Shells no longer choose the theme. Replace `ShellOptions.Appearance` and `plain.Shell.SetAppearance` with `mygo.Theme.SetSource`, which also switches native window chrome, and pass `Theme: theme.Onevra` for Onevra's palettes or a function returning your own `*ui.Theme`; without it, Shells keep MyGo's theme. `theme.Mode` is removed and `theme.Apply(c)` takes no mode.
+- Onevra's palettes now follow the desktop's text scale and higher-contrast settings; `theme.Palette(dark)` returns either palette directly.
 - Add `components/graph`, an interactive force-directed relationship graph: drag to pan or move nodes, scroll to zoom around the pointer, hover to highlight a node's neighbourhood and double-click to open nodes. Applications supply node groups, sizes and colors, edge styles, palettes, group colors and forces, with empty and overlay content slots.
 - Remove Packer and `packer.yaml`; package applications with MyGo's CLI (`go tool mygo dev` and `go tool mygo build`) and `mygo.json` instead. MyGo bundles plugin native libraries among the app's resources, and application-owned libraries go in platform directories of `resources/` rather than `runtimes/`.
 

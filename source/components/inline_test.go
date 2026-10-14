@@ -9,11 +9,11 @@ import (
 )
 
 func TestRichTextComposition(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, width := range []int{160, 480} {
 			build := func(rich func(*ui.Context, ...ui.Span) ui.Element) *ui.Tester {
 				return ui.NewTester(func(c *ui.Context) {
-					theme.Apply(c, mode)
+					c.SetTheme(theme.Palette(dark))
 					rich(c, ui.Span{Text: "Hello ", Weight: 600}, ui.Span{Text: "世界 ", Color: c.Theme().Accent, Underline: true},
 						ui.Span{Text: "italic ", Italic: true, Background: c.Theme().Surface}).
 						FontSize(18).Children(func() {
@@ -32,9 +32,9 @@ func TestRichTextComposition(t *testing.T) {
 }
 
 func TestBadge(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(dark))
 			Badge(c, "New").Label("status")
 		}, 200, 100)
 		r, ok := tt.Find("status")
@@ -134,14 +134,14 @@ func TestRatingBounds(t *testing.T) {
 // Compare against independently composed drawing commands so omitting the
 // selected outline or drawing it in the unselected color is a regression.
 func TestRatingSelectedStroke(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		value := 1
 		got := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(dark))
 			Rating(c, &value, 1)
 		}, 100, 100)
 		want := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(dark))
 			t := c.Theme()
 			ui.Box(c).Size(t.Rem(1.5), t.Rem(1.5)).Draw(func(p *ui.Painter, r ui.Rect) {
 				path := ratingStar(r)

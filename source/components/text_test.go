@@ -10,12 +10,12 @@ import (
 )
 
 func TestTextMatchesPrimitive(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, width := range []int{140, 480} {
-			t.Run(fmt.Sprintf("%v/%d", mode, width), func(t *testing.T) {
+			t.Run(fmt.Sprintf("%v/%d", dark, width), func(t *testing.T) {
 				build := func(text func(*ui.Context, string) ui.Element) *ui.Tester {
 					return ui.NewTester(func(c *ui.Context) {
-						theme.Apply(c, mode)
+						c.SetTheme(theme.Palette(dark))
 						ui.Column(c).Fill().TextColor(c.Theme().TextMuted).FontSize(c.Theme().Rem(1.2)).Children(func() {
 							text(c, "Hello, world. 你好，世界。こんにちは 🌍").Label("wrapped")
 							text(c, "A long single-line label with inherited styles").SingleLine().Label("single")
@@ -48,13 +48,13 @@ func TestTextMatchesPrimitive(t *testing.T) {
 }
 
 func TestEditableTextAppearance(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, size := range []float32{14, 24} {
-			t.Run(fmt.Sprintf("%v/%v", mode, size), func(t *testing.T) {
+			t.Run(fmt.Sprintf("%v/%v", dark, size), func(t *testing.T) {
 				value := "Hello 世界"
 				build := func(editable bool) *ui.Tester {
 					return ui.NewTester(func(c *ui.Context) {
-						theme.Apply(c, mode)
+						c.SetTheme(theme.Palette(dark))
 						ui.Column(c).Padding(12).AlignItems(ui.Start).Children(func() {
 							o := TextOptions{}
 							if editable {
@@ -123,7 +123,7 @@ func TestTextEditing(t *testing.T) {
 	tt.Frame()
 	tt.Type("ignored")
 	if value != "Hello 世界" {
-		t.Fatalf("display mode edited: %q", value)
+		t.Fatalf("display dark edited: %q", value)
 	}
 	value = "External"
 	editable = true

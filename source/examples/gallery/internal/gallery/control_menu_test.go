@@ -9,11 +9,11 @@ import (
 )
 
 func TestMenuPreview(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, variant := range []string{"Left-click", "Right-click"} {
 			s := &controlState{}
 			tt := ui.NewTester(func(c *ui.Context) {
-				theme.Apply(c, mode)
+				c.SetTheme(theme.Palette(dark))
 				ui.Column(c).Children(func() { controlMenu(c, s, variant) })
 			}, 280, 240)
 			var err error
@@ -54,11 +54,11 @@ func TestMenuPreview(t *testing.T) {
 }
 
 func TestNativeSelectPreview(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, width := range []int{540, 280} {
 			g := &Gallery{}
 			tt := ui.NewTester(func(c *ui.Context) {
-				theme.Apply(c, mode)
+				c.SetTheme(theme.Palette(dark))
 				for _, example := range controlCatalog {
 					if example.name == "Select" {
 						g.Controls(c, example)

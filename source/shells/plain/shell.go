@@ -9,7 +9,6 @@ import (
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
 	"github.com/oneo-me/onevra/source/icons/lucide"
-	"github.com/oneo-me/onevra/source/theme"
 )
 
 // ShellOptions configures a single-content window. Builders and Shell methods
@@ -27,9 +26,14 @@ type ShellOptions struct {
 	Hidden bool
 	// Content is automatically inset below the draggable window-control area.
 	// Dialogs inherit its drag strip and remain relative to the whole window.
-	Content    func(*ui.Context)
-	Appearance theme.Mode
-	Labels     Labels
+	Content func(*ui.Context)
+	// Theme, when set, returns the frame's theme; Shell installs it before
+	// building anything, so its own surfaces and all content use it. It runs
+	// on every frame, so it can follow application state; pass theme.Onevra
+	// for Onevra's palettes. Nil keeps MyGo's frame theme. Light or dark
+	// belongs to mygo.Theme.SetSource, which also covers native chrome.
+	Theme  func(*ui.Context) *ui.Theme
+	Labels Labels
 	// Toasts places the window's toasts; top placements also clear the
 	// window-control area.
 	Toasts components.ToastOptions
@@ -98,9 +102,6 @@ func (s *Shell) nativeOptions() mygo.WindowOptions {
 // Window exposes native events and operations. Do not replace its content.
 func (s *Shell) Window() *mygo.Window { return s.window }
 
-// SetAppearance changes the theme without recreating content or window state.
-func (s *Shell) SetAppearance(mode theme.Mode) { s.options.Appearance = mode; s.refresh() }
-
 // SetLabels updates caption accessibility names without changing their identity.
 func (s *Shell) SetLabels(labels Labels) { s.options.Labels = labels; s.refresh() }
 
@@ -118,7 +119,9 @@ func (s *Shell) refresh() {
 func HeaderHeight(c *ui.Context) float32 { return max(48, c.TitleBar().Height, c.Theme().Rem(3)) }
 
 func (s *Shell) view(c *ui.Context) {
-	theme.Apply(c, s.options.Appearance)
+	if s.options.Theme != nil {
+		c.SetTheme(s.options.Theme(c))
+	}
 	height := HeaderHeight(c)
 	components.WithDialogWindowDrag(c, height, func() {
 		ui.Column(c).Fill().Background(c.Theme().Background).Clip().Children(func() {

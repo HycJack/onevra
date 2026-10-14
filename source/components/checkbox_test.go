@@ -9,13 +9,13 @@ import (
 
 func TestCheckboxToggle(t *testing.T) {
 	for _, dark := range []bool{false, true} {
-		mode := theme.Light
+		mode := false
 		if dark {
-			mode = theme.Dark
+			mode = true
 		}
 		checked := false
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(mode))
 			Checkbox(c, &checked, "Agree")
 		}, 300, 100)
 		if err := tt.Click("Agree"); err != nil {
@@ -36,7 +36,7 @@ func TestCheckboxToggle(t *testing.T) {
 func TestCheckboxKeyboard(t *testing.T) {
 	checked := false
 	tt := ui.NewTester(func(c *ui.Context) {
-		theme.Apply(c, theme.Light)
+		c.SetTheme(theme.LightPalette())
 		Checkbox(c, &checked, "Agree")
 	}, 300, 100)
 	tt.Key(0, ui.KeyTab)

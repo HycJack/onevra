@@ -12,7 +12,7 @@ func TestWelcome(t *testing.T) {
 		for _, dark := range []bool{false, true} {
 			g := &Gallery{page: welcomePage}
 			tt := ui.NewTester(func(c *ui.Context) {
-				theme.Apply(c, theme.Auto)
+				theme.Apply(c)
 				g.View(c)
 			}, width, 1600)
 			tt.SetDark(dark)

@@ -10,16 +10,16 @@ import (
 )
 
 func TestSettingsPreservesHostBackground(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, narrow := range []bool{false, true} {
 			for _, dialog := range []bool{false, true} {
-				t.Run(fmt.Sprintf("%v/narrow=%v/dialog=%v", mode, narrow, dialog), func(t *testing.T) {
+				t.Run(fmt.Sprintf("%v/narrow=%v/dialog=%v", dark, narrow, dialog), func(t *testing.T) {
 					state := SettingsState{}
 					open, showSettings := true, false
 					backdrop := ui.RGB(0, 0, 0)
 					var bounds ui.Rect
 					tt := ui.NewTester(func(c *ui.Context) {
-						theme.Apply(c, mode)
+						c.SetTheme(theme.Palette(dark))
 						ui.Box(c).Absolute().Left(0).Top(0).Size(800, 600).Background(backdrop)
 						build := func(panel ui.Element) {
 							panel.Size(700, 500).Padding(0).Gap(0).DrawOver(func(_ *ui.Painter, r ui.Rect) { bounds = r })

@@ -10,12 +10,12 @@ import (
 )
 
 func TestDisclosureAppearance(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, accordion := range []bool{false, true} {
 			for _, open := range []bool{false, true} {
 				build := func(upstream bool) *ui.Tester {
 					return ui.NewTester(func(c *ui.Context) {
-						theme.Apply(c, mode)
+						c.SetTheme(theme.Palette(dark))
 						body := func() { Text(c, "Content") }
 						if accordion {
 							if upstream {
@@ -33,7 +33,7 @@ func TestDisclosureAppearance(t *testing.T) {
 				ours, upstream := build(false), build(true)
 				before := bytes.Clone(ours.Image().Pix)
 				if !bytes.Equal(before, upstream.Image().Pix) {
-					t.Fatalf("resting appearance differs: mode=%v accordion=%v open=%v", mode, accordion, open)
+					t.Fatalf("resting appearance differs: dark=%v accordion=%v open=%v", dark, accordion, open)
 				}
 				r, _ := ours.Find("Details")
 				ours.Move(r.X+r.W/2, r.Y+r.H/2)
@@ -50,7 +50,7 @@ func TestCollapsibleInteractionAndPlacement(t *testing.T) {
 		open, disabled, changes := false, false, 0
 		var trigger ui.Rect
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, theme.Light)
+			c.SetTheme(theme.LightPalette())
 			ui.Column(c).Disabled(disabled).Children(func() {
 				p := Collapsible(c, "Details", &open, CollapsibleOptions{ArrowPosition: position}, func() { Button(c, "Inside", ButtonSecondary) })
 				p.Trigger.DrawOver(func(_ *ui.Painter, r ui.Rect) { trigger = r })
@@ -143,7 +143,7 @@ func TestCollapsibleTrailing(t *testing.T) {
 	open := false
 	var root, trigger ui.Rect
 	tt := ui.NewTester(func(c *ui.Context) {
-		theme.Apply(c, theme.Light)
+		c.SetTheme(theme.LightPalette())
 		p := Collapsible(c, "Details", &open, CollapsibleOptions{Trailing: func() { Text(c, "42") }}, func() { Text(c, "Inside") })
 		p.Root.FillWidth().Draw(func(_ *ui.Painter, r ui.Rect) { root = r })
 		p.Trigger.DrawOver(func(_ *ui.Painter, r ui.Rect) { trigger = r })

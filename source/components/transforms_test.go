@@ -45,11 +45,11 @@ func TestScaledControlCoordinates(t *testing.T) {
 }
 
 func TestScaledTabsUnderline(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		selected := 0
 		var list ui.Rect
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(dark))
 			ui.Column(c).Scale(1.5, 1.5).TransformOrigin(0, 0).Children(func() {
 				parts := Tabs(c, &selected, "General", "Appearance")
 				list = parts.List.Bounds()
@@ -64,7 +64,7 @@ func TestScaledTabsUnderline(t *testing.T) {
 		r, _ := tt.Find("Appearance")
 		p := tt.Image().RGBAAt(int(r.X+r.W/2), int(list.Y+list.H-2))
 		accent := theme.LightPalette().Accent
-		if mode == theme.Dark {
+		if dark {
 			accent = theme.DarkPalette().Accent
 		}
 		if p.R != accent.R || p.G != accent.G || p.B != accent.B {

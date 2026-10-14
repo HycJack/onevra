@@ -15,7 +15,7 @@ func TestGraphPage(t *testing.T) {
 			if example, ok := controlExampleFor(g.page); !ok || example.group != "Charts" {
 				t.Fatal("graph is not a public component page")
 			}
-			tt := ui.NewTester(func(c *ui.Context) { theme.Apply(c, theme.Auto); g.View(c) }, 520, 900)
+			tt := ui.NewTester(func(c *ui.Context) { theme.Apply(c); g.View(c) }, 520, 900)
 			tt.SetPreferences(ui.Preferences{ReduceMotion: true})
 			tt.Frame()
 			s := g.controlState("Relationship graph", "Default").graph

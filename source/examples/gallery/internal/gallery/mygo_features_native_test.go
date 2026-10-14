@@ -12,7 +12,6 @@ import (
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/shells/sidebar"
-	"github.com/oneo-me/onevra/source/theme"
 )
 
 func TestNativeMyGoFeatures(t *testing.T) {
@@ -28,12 +27,12 @@ func TestNativeMyGoFeatures(t *testing.T) {
 	}
 	for _, mode := range []struct {
 		name, language string
-		theme          theme.Mode
+		dark           bool
 		width          int
 	}{
-		{"light", "en", theme.Light, 540},
-		{"dark", "en", theme.Dark, 540},
-		{"narrow", "zh-Hans", theme.Light, 280},
+		{"light", "en", false, 540},
+		{"dark", "en", true, 540},
+		{"narrow", "zh-Hans", false, 280},
 	} {
 		for _, name := range []string{"Transforms", "Motion"} {
 			for _, variant := range mygoVariants(name) {
@@ -47,7 +46,7 @@ func TestNativeMyGoFeatures(t *testing.T) {
 						example, _ := mygoExampleFor(pageFromKey("mygo/" + name))
 						shell = sidebar.NewShell(sidebar.ShellOptions{
 							Hidden: nativeBackground(), Title: name, Width: mode.width, Height: 480,
-							MinWidth: 280, MinHeight: 400, LeftCollapsed: true, Appearance: mode.theme,
+							MinWidth: 280, MinHeight: 400, LeftCollapsed: true, Theme: pinnedTheme(mode.dark),
 							Content: func(c *ui.Context) {
 								g.withLanguage(c, func() {
 									ui.Column(c).Fill().Padding(sidebar.HeaderHeight(c)+16, 16, 16, 16).Gap(12).

@@ -29,11 +29,11 @@ func TestSelectionNavigation(t *testing.T) {
 }
 
 func TestSelectionInteractions(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, width := range []int{820, 280} {
 			g := &Gallery{page: pageFromKey("controls/Selection")}
 			tt := ui.NewTester(func(c *ui.Context) {
-				theme.Apply(c, mode)
+				c.SetTheme(theme.Palette(dark))
 				g.View(c)
 			}, width, 1000)
 			for _, name := range []string{"Checkbox", "Switch", "Radio"} {

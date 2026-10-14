@@ -9,13 +9,13 @@ import (
 
 func TestSwitchToggle(t *testing.T) {
 	for _, dark := range []bool{false, true} {
-		mode := theme.Light
+		mode := false
 		if dark {
-			mode = theme.Dark
+			mode = true
 		}
 		on := false
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(mode))
 			Switch(c, &on, "Wi-Fi")
 		}, 300, 100)
 		// Find returns the switch track first: it is built and labeled
@@ -38,7 +38,7 @@ func TestSwitchToggle(t *testing.T) {
 func TestSwitchKeyboard(t *testing.T) {
 	on := false
 	tt := ui.NewTester(func(c *ui.Context) {
-		theme.Apply(c, theme.Light)
+		c.SetTheme(theme.LightPalette())
 		Switch(c, &on, "Wi-Fi")
 	}, 300, 100)
 	tt.Key(0, ui.KeyTab)

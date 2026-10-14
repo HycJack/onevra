@@ -22,6 +22,7 @@ func fixture() (*Shell, *fakeWindow) {
 	s := newShell(ShellOptions{
 		Left:    func(c *ui.Context) { ui.Text(c, "Navigation") },
 		Content: func(c *ui.Context) { ui.Text(c, "Document") },
+		Theme:   theme.Onevra,
 	})
 	w := &fakeWindow{bounds: mygo.Rectangle{X: 50, Y: 60, Width: 820, Height: 600}}
 	s.host = w
@@ -281,9 +282,9 @@ func TestShellSidebarResizeFullHeight(t *testing.T) {
 func TestShellSeparatorsDoNotReserveSpace(t *testing.T) {
 	var main ui.Rect
 	s, _ := fixture()
-	// Shell owns the frame theme; distinguishable pixels come from its own
-	// palette rather than an injected theme.
-	s.options.Appearance = theme.Dark
+	// Shell installs the frame theme; distinguishable pixels come from the
+	// palette it installs.
+	s.options.Theme = func(*ui.Context) *ui.Theme { return theme.DarkPalette() }
 	s.options.Content = func(c *ui.Context) { ui.Box(c).Fill().DrawOver(func(_ *ui.Painter, r ui.Rect) { main = r }) }
 	tt := ui.NewTester(s.view, 820, 600)
 	tt.SetPreferences(ui.Preferences{ReduceMotion: true})

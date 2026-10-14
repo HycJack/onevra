@@ -9,15 +9,9 @@ import (
 	"runtime"
 )
 
-func (a *application) appearance() theme.Mode {
-	if a.config.Appearance == "light" {
-		return theme.Light
-	}
-	if a.config.Appearance == "dark" {
-		return theme.Dark
-	}
-	return theme.Auto
-}
+// themeSource selects light or dark for the whole app, including native
+// window chrome; config values match MyGo's theme sources.
+func (a *application) themeSource() mygo.ThemeSource { return mygo.ThemeSource(a.config.Appearance) }
 
 func (a *application) scope(c *ui.Context, build func()) {
 	c.OnShortcut(ui.Cmd, ui.KeyQ, mygo.App.Quit)
@@ -60,7 +54,7 @@ func (a *application) mainView(c *ui.Context) {
 }
 
 func (a *application) panelView(c *ui.Context) {
-	theme.Apply(c, a.appearance())
+	theme.Apply(c)
 	a.scope(c, func() {
 		if c.Shortcut(0, ui.KeyEscape) || c.Shortcut(ui.Cmd, ui.KeyW) {
 			a.hidePanel()

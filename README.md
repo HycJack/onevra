@@ -57,12 +57,14 @@ import (
     "github.com/egoist/mygo/ui"
     "github.com/oneo-me/onevra/source/components"
     "github.com/oneo-me/onevra/source/shells/plain"
+    "github.com/oneo-me/onevra/source/theme"
 )
 
 func main() {
     mygo.App.WhenReady(func() {
         shell := plain.NewShell(plain.ShellOptions{
             Title: "Hello Onevra",
+            Theme: theme.Onevra,
             Content: func(c *ui.Context) {
                 ui.Column(c).Fill().Padding(24).Children(func() {
                     components.Text(c, "Hello, Onevra!")
@@ -92,14 +94,14 @@ go tool mygo build
 
 ## Shells
 
-Shells create native windows and apply Onevra's theme while leaving application lifecycle and business state to the caller.
+Shells create native windows while leaving application lifecycle, business state and the theme to the caller.
 
 | Package | Layout |
 | --- | --- |
 | [`shells/plain`](source/shells/plain/shell.go) | A single content area with automatic clearance for window controls; used in the example above |
 | [`shells/sidebar`](source/shells/sidebar/shell.go) | A collapsible, resizable sidebar with a content area, header actions and replaceable pages |
 
-Import either package under `github.com/oneo-me/onevra/source/`. Both support system, light and dark appearance through the [theme package](source/theme/doc.go). For Sidebar, use `sidebar.HeaderHeight(c)` when content needs to clear the floating header; see [layout guidance](docs/architecture/components.md#page-container-and-layout).
+Import either package under `github.com/oneo-me/onevra/source/`. Their `Theme` option installs the application's theme before each frame: pass `theme.Onevra` for Onevra's palettes, your own function returning a `*ui.Theme`, or nothing to keep MyGo's theme. Choose light, dark or system appearance with `mygo.Theme.SetSource`; see the [theme package](source/theme/doc.go). For Sidebar, use `sidebar.HeaderHeight(c)` when content needs to clear the floating header; see [layout guidance](docs/architecture/components.md#page-container-and-layout).
 
 ## Icons
 
@@ -123,7 +125,7 @@ components.Checkbox(c, &agreed, "I agree")
 components.Switch(c, &wifi, "Wi-Fi")
 ```
 
-Components work independently of Shell when the host applies Onevra's theme. See the [component contract](source/components/doc.go) and [theme usage](source/theme/doc.go). Complex components each have a separate package under `components/`: `chart`, `graph`, `command`, `code`, `markdown` and `chat`. See [complex component composition](docs/architecture/components.md#complex-component-composition).
+Components read the frame theme and work independently of Shell; a standalone window installs its theme with `c.SetTheme` or `theme.Apply` at the top of its builder. See the [component contract](source/components/doc.go) and [theme usage](source/theme/doc.go). Complex components each have a separate package under `components/`: `chart`, `graph`, `command`, `code`, `markdown` and `chat`. See [complex component composition](docs/architecture/components.md#complex-component-composition).
 
 ## Contributing
 

@@ -12,7 +12,6 @@ import (
 	"github.com/egoist/mygo"
 	"github.com/oneo-me/onevra/source/components/chart"
 	"github.com/oneo-me/onevra/source/shells/sidebar"
-	"github.com/oneo-me/onevra/source/theme"
 )
 
 func TestNativeCharts(t *testing.T) {
@@ -28,12 +27,12 @@ func TestNativeCharts(t *testing.T) {
 	}
 	for _, mode := range []struct {
 		name, language string
-		theme          theme.Mode
+		dark           bool
 		width          int
 	}{
-		{"light", "en", theme.Light, 540},
-		{"dark", "en", theme.Dark, 540},
-		{"narrow", "zh-Hans", theme.Light, 320},
+		{"light", "en", false, 540},
+		{"dark", "en", true, 540},
+		{"narrow", "zh-Hans", false, 320},
 	} {
 		for _, example := range controlCatalog {
 			if example.group != "Charts" {
@@ -48,7 +47,7 @@ func TestNativeCharts(t *testing.T) {
 					state.chart = &chartDemoState{selection: chart.State{Index: -1}}
 					shell = sidebar.NewShell(sidebar.ShellOptions{
 						Hidden: nativeBackground(), Title: example.name, Width: mode.width, Height: 640,
-						MinWidth: 280, MinHeight: 400, LeftCollapsed: true, Appearance: mode.theme,
+						MinWidth: 280, MinHeight: 400, LeftCollapsed: true, Theme: pinnedTheme(mode.dark),
 						Content: g.View,
 					})
 				})

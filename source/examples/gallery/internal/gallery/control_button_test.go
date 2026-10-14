@@ -9,12 +9,12 @@ import (
 )
 
 func TestButtonPreview(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, width := range []int{540, 280} {
 			g := &Gallery{}
 			example, _ := controlExampleFor(pageFromKey("controls/Button"))
 			tt := ui.NewTester(func(c *ui.Context) {
-				theme.Apply(c, mode)
+				c.SetTheme(theme.Palette(dark))
 				g.Controls(c, example)
 			}, width, 600)
 			if _, ok := tt.Find("Button"); !ok || tt.HasText("Default") {
@@ -37,11 +37,11 @@ func TestButtonPreview(t *testing.T) {
 }
 
 func TestButtonTogglePreview(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, width := range []int{540, 280} {
 			g := &Gallery{}
 			tt := ui.NewTester(func(c *ui.Context) {
-				theme.Apply(c, mode)
+				c.SetTheme(theme.Palette(dark))
 				example, _ := controlExampleFor(pageFromKey("controls/Button"))
 				g.Controls(c, example)
 			}, width, 1000)
@@ -75,11 +75,11 @@ func TestButtonTogglePreview(t *testing.T) {
 }
 
 func TestControlButtonWrap(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, width := range []int{540, 200} {
 			s := &controlState{}
 			tt := ui.NewTester(func(c *ui.Context) {
-				theme.Apply(c, mode)
+				c.SetTheme(theme.Palette(dark))
 				ui.Column(c).Fill().Gap(12).Children(func() { controlButton(c, s, "Default") })
 			}, width, 300)
 			var previous ui.Rect
@@ -112,11 +112,11 @@ func TestControlButtonWrap(t *testing.T) {
 }
 
 func TestControlButtonPointerStyles(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, disabled := range []bool{false, true} {
 			s := &controlState{}
 			tt := ui.NewTester(func(c *ui.Context) {
-				theme.Apply(c, mode)
+				c.SetTheme(theme.Palette(dark))
 				ui.Column(c).Fill().Disabled(disabled).Children(func() { controlButton(c, s, "Default") })
 			}, 540, 300)
 			for _, label := range []string{"Primary", "Secondary", "Outline", "Ghost"} {
@@ -136,13 +136,13 @@ func TestControlButtonPointerStyles(t *testing.T) {
 				reset := tt.Image().RGBAAt(int(x), int(y))
 				if disabled {
 					if hover != rest || pressed != rest {
-						t.Fatalf("%v/%s: disabled button changed on pointer input", mode, label)
+						t.Fatalf("%v/%s: disabled button changed on pointer input", dark, label)
 					}
 				} else if hover == rest || pressed == hover {
-					t.Fatalf("%v/%s: missing hover or pressed feedback", mode, label)
+					t.Fatalf("%v/%s: missing hover or pressed feedback", dark, label)
 				}
 				if reset != rest {
-					t.Fatalf("%v/%s: pointer exit did not restore resting style", mode, label)
+					t.Fatalf("%v/%s: pointer exit did not restore resting style", dark, label)
 				}
 			}
 		}

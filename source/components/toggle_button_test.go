@@ -8,11 +8,11 @@ import (
 )
 
 func TestToggleButton(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, disabled := range []bool{false, true} {
 			on, changes := false, 0
 			tt := ui.NewTester(func(c *ui.Context) {
-				theme.Apply(c, mode)
+				c.SetTheme(theme.Palette(dark))
 				ui.Column(c).Disabled(disabled).Children(func() {
 					if ToggleButton(c, &on, "Bold").Changed() {
 						changes++

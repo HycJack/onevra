@@ -11,13 +11,13 @@ import (
 
 func TestTabsClick(t *testing.T) {
 	for _, dark := range []bool{false, true} {
-		mode := theme.Light
+		mode := false
 		if dark {
-			mode = theme.Dark
+			mode = true
 		}
 		selected := 0
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(mode))
 			Tabs(c, &selected, "General", "Appearance", "Advanced")
 		}, 400, 100)
 		if err := tt.Click("Appearance"); err != nil {
@@ -36,11 +36,11 @@ func TestTabsClick(t *testing.T) {
 }
 
 func TestTabsIndicatorAnimation(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, mode := range []bool{false, true} {
 		selected := 0
 		var list ui.Rect
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(mode))
 			parts := Tabs(c, &selected, "General", "Appearance", "Advanced")
 			parts.List.Draw(func(_ *ui.Painter, r ui.Rect) { list = r })
 		}, 400, 100)
@@ -105,10 +105,10 @@ func TestTabsIndicatorAnimation(t *testing.T) {
 }
 
 func TestTabsHoverDoesNotChangeAppearance(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, mode := range []bool{false, true} {
 		selected := 0
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(mode))
 			Tabs(c, &selected, "General", "Appearance")
 		}, 400, 100)
 		before := bytes.Clone(tt.Image().Pix)
@@ -134,7 +134,7 @@ func TestTabsEmpty(t *testing.T) {
 func TestTabsKeyboard(t *testing.T) {
 	selected := 0
 	tt := ui.NewTester(func(c *ui.Context) {
-		theme.Apply(c, theme.Light)
+		c.SetTheme(theme.LightPalette())
 		Tabs(c, &selected, "General", "Appearance", "Advanced")
 	}, 400, 100)
 	tt.Key(0, ui.KeyTab)

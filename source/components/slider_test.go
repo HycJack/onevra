@@ -10,13 +10,13 @@ import (
 )
 
 func TestSliderModes(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, mode := range []bool{false, true} {
 		for _, step := range []float64{0, 10} {
 			t.Run(fmt.Sprint(mode, "/", step), func(t *testing.T) {
 				low, high := 20.0, 80.0
 				changes := 0
 				tt := ui.NewTester(func(c *ui.Context) {
-					theme.Apply(c, mode)
+					c.SetTheme(theme.Palette(mode))
 					s := Slider(c, &low, 0, 100, SliderOptions{Range: &high, Step: step})
 					s.Label("Price").AutoFocus().Width(240)
 					if s.Changed() {
@@ -160,13 +160,13 @@ func TestSliderRangeDisabledAndNormalization(t *testing.T) {
 
 func TestSliderKeyboard(t *testing.T) {
 	for _, dark := range []bool{false, true} {
-		mode := theme.Light
+		mode := false
 		if dark {
-			mode = theme.Dark
+			mode = true
 		}
 		value := 50.0
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(mode))
 			Slider(c, &value, 0, 100).Label("volume").AutoFocus()
 		}, 300, 100)
 		tt.Key(0, ui.KeyRight)
@@ -192,7 +192,7 @@ func TestSliderKeyboard(t *testing.T) {
 func TestSliderDrag(t *testing.T) {
 	value := 0.0
 	tt := ui.NewTester(func(c *ui.Context) {
-		theme.Apply(c, theme.Light)
+		c.SetTheme(theme.LightPalette())
 		Slider(c, &value, 0, 100).Label("volume")
 	}, 300, 100)
 	r, ok := tt.Find("volume")

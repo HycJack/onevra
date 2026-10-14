@@ -38,40 +38,41 @@ func TestScrollbarTextTint(t *testing.T) {
 	}
 }
 
-func TestApplyPinsMode(t *testing.T) {
-	for _, tc := range []struct {
-		mode Mode
-		want ui.Color
-	}{
-		{Light, LightPalette().Background},
-		{Dark, DarkPalette().Background},
-	} {
-		var got *ui.Theme
-		ui.NewTester(func(c *ui.Context) {
-			Apply(c, tc.mode)
-			got = c.Theme()
-		}, 200, 100)
-		if got == nil || got.Background != tc.want {
-			t.Errorf("Apply(%s): background = %v, want %v", tc.mode, got, tc.want)
-		}
-	}
-}
-
-func TestApplyAutoFollowsSystem(t *testing.T) {
+func TestApplyFollowsAppearance(t *testing.T) {
 	var got *ui.Theme
 	tt := ui.NewTester(func(c *ui.Context) {
-		Apply(c, Auto)
+		Apply(c)
 		got = c.Theme()
 	}, 200, 100)
 	if got.Background != LightPalette().Background {
-		t.Fatalf("Auto: initial background = %v, want light %v", got.Background, LightPalette().Background)
+		t.Fatalf("initial background = %v, want light %v", got.Background, LightPalette().Background)
 	}
 	tt.SetDark(true)
 	if got.Background != DarkPalette().Background {
-		t.Fatalf("Auto: after system dark, background = %v, want dark %v", got.Background, DarkPalette().Background)
+		t.Fatalf("after dark, background = %v, want dark %v", got.Background, DarkPalette().Background)
 	}
 	tt.SetDark(false)
 	if got.Background != LightPalette().Background {
-		t.Fatalf("Auto: after system light, background = %v, want light %v", got.Background, LightPalette().Background)
+		t.Fatalf("after light, background = %v, want light %v", got.Background, LightPalette().Background)
+	}
+}
+
+func TestOnevraFollowsPreferences(t *testing.T) {
+	var got *ui.Theme
+	tt := ui.NewTester(func(c *ui.Context) { got = Onevra(c) }, 200, 100)
+	base := LightPalette()
+	if *got != *base {
+		t.Fatalf("usual preferences changed the palette: %+v", got)
+	}
+	accent := ui.Hex("#2563eb")
+	tt.SetPreferences(ui.Preferences{Accent: accent, HighContrast: true, TextScale: 1.5})
+	if got.FontSize != base.FontSize*1.5 {
+		t.Errorf("font size = %v, want %v", got.FontSize, base.FontSize*1.5)
+	}
+	if got.Border == base.Border || got.TextMuted == base.TextMuted || got.Focus.A != 255 {
+		t.Errorf("higher contrast not applied: border %v, muted %v, focus %v", got.Border, got.TextMuted, got.Focus)
+	}
+	if got.Accent != base.Accent {
+		t.Errorf("accent = %v, want Onevra's %v", got.Accent, base.Accent)
 	}
 }

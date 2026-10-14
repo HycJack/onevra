@@ -40,7 +40,7 @@ func newHarness(t *testing.T) *harness {
 	h := &harness{t: t, state: &State{}, data: sample}
 	h.opts = Options{Label: "Graph", Height: 400, Open: func(id string) { h.opened = append(h.opened, id) }}
 	h.tt = ui.NewTester(func(c *ui.Context) {
-		theme.Apply(c, theme.Auto)
+		theme.Apply(c)
 		View(c, h.state, h.data, h.opts)
 	}, 600, 400)
 	// Reduced Motion settles the layout and camera synchronously.

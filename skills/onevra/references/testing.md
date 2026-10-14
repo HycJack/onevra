@@ -12,10 +12,10 @@ Build the same view the application builds, apply the theme yourself (no Shell i
 
 ```go
 func TestSaveButton(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		saved := false
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(dark))
 			if components.Button(c, "Save", components.ButtonPrimary).Clicked() {
 				saved = true
 			}
@@ -24,7 +24,7 @@ func TestSaveButton(t *testing.T) {
 			t.Fatal(err)
 		}
 		if !saved {
-			t.Errorf("mode=%v: click not reported", mode)
+			t.Errorf("dark=%v: click not reported", dark)
 		}
 	}
 }

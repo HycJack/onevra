@@ -74,9 +74,9 @@ func TestFallbackAndLimits(t *testing.T) {
 func TestSelectionAndThemeChange(t *testing.T) {
 	source := "// 世界\nconst n = 42\nprintln(\"hello\")"
 	d := Parse(source, "go")
-	mode := theme.Light
+	mode := false
 	tt := ui.NewTester(func(c *ui.Context) {
-		theme.Apply(c, mode)
+		c.SetTheme(theme.Palette(mode))
 		d.Render(c).Selectable()
 	}, 200, 250)
 	light := bytes.Clone(tt.Image().Pix)
@@ -90,7 +90,7 @@ func TestSelectionAndThemeChange(t *testing.T) {
 	if tt.Clipboard() != source {
 		t.Fatalf("copy: %q", tt.Clipboard())
 	}
-	mode = theme.Dark
+	mode = true
 	tt.Key(0, ui.KeyEscape)
 	if bytes.Equal(light, tt.Image().Pix) {
 		t.Fatal("theme did not change")

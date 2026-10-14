@@ -9,13 +9,13 @@ import (
 
 func TestRadioSelect(t *testing.T) {
 	for _, dark := range []bool{false, true} {
-		mode := theme.Light
+		mode := false
 		if dark {
-			mode = theme.Dark
+			mode = true
 		}
 		selected := "a"
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(mode))
 			Radio(c, &selected, "a", "Alpha")
 			Radio(c, &selected, "b", "Beta")
 		}, 300, 100)
@@ -44,7 +44,7 @@ func TestRadioSelect(t *testing.T) {
 func TestRadioKeyboard(t *testing.T) {
 	selected := "a"
 	tt := ui.NewTester(func(c *ui.Context) {
-		theme.Apply(c, theme.Light)
+		c.SetTheme(theme.LightPalette())
 		Radio(c, &selected, "a", "Alpha")
 		Radio(c, &selected, "b", "Beta")
 	}, 300, 100)

@@ -10,11 +10,11 @@ import (
 )
 
 func TestTextBoxBufferEditing(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		buffer := ui.NewTextBuffer("")
 		options := TextBoxOptions{LeadingIcon: lucide.Search()}
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(dark))
 			TextBoxBuffer(c, buffer, options).Label("Buffer").Width(240).Height(100)
 		}, 300, 120)
 		tt.ClickAt(18, 15)
@@ -49,7 +49,7 @@ func TestTextBoxBufferEditing(t *testing.T) {
 }
 
 func TestTextBoxBufferAppearance(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, multiline := range []bool{false, true} {
 			for _, readOnly := range []bool{false, true} {
 				for _, icon := range []*ui.SVG{nil, lucide.Search()} {
@@ -58,7 +58,7 @@ func TestTextBoxBufferAppearance(t *testing.T) {
 					options := TextBoxOptions{Multiline: multiline, ReadOnly: readOnly, LeadingIcon: icon}
 					makeTester := func(buffered bool) *ui.Tester {
 						return ui.NewTester(func(c *ui.Context) {
-							theme.Apply(c, mode)
+							c.SetTheme(theme.Palette(dark))
 							var e ui.Element
 							if buffered {
 								e = TextBoxBuffer(c, buffer, options)

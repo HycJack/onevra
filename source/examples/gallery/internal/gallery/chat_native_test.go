@@ -11,7 +11,6 @@ import (
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components/chat"
 	"github.com/oneo-me/onevra/source/shells/sidebar"
-	"github.com/oneo-me/onevra/source/theme"
 )
 
 func TestNativeChat(t *testing.T) {
@@ -25,7 +24,7 @@ func TestNativeChat(t *testing.T) {
 	if err := os.MkdirAll(dir, 0700); err != nil {
 		t.Fatal(err)
 	}
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, width := range []int{760, 360} {
 			for _, status := range []chat.Status{chat.Running, chat.Completed, chat.Failed} {
 				var shell *sidebar.Shell
@@ -43,7 +42,7 @@ func TestNativeChat(t *testing.T) {
 					}
 					shell = sidebar.NewShell(sidebar.ShellOptions{Hidden: nativeBackground(),
 						Title: "Chat review", Width: width, Height: height, MinWidth: 280, MinHeight: 400,
-						LeftCollapsed: true, Appearance: mode,
+						LeftCollapsed: true, Theme: pinnedTheme(dark),
 						Content: func(c *ui.Context) {
 							ui.Column(c).Fill().Padding(sidebar.HeaderHeight(c), 0, 0, 0).Children(func() { g.body(c) })
 						},
@@ -56,7 +55,7 @@ func TestNativeChat(t *testing.T) {
 				if err != nil {
 					t.Fatal(err)
 				}
-				path := filepath.Join(dir, fmt.Sprintf("chat-%v-%d-%d.png", mode, width, status))
+				path := filepath.Join(dir, fmt.Sprintf("chat-%v-%d-%d.png", dark, width, status))
 				if err := os.WriteFile(path, data, 0600); err != nil {
 					t.Fatal(err)
 				}

@@ -2,29 +2,6 @@ package theme
 
 import "github.com/egoist/mygo/ui"
 
-// Mode selects which appearance a window uses.
-type Mode int
-
-const (
-	// Auto follows the system's appearance.
-	Auto Mode = iota
-	// Light pins the built-in light palette.
-	Light
-	// Dark pins the built-in dark palette.
-	Dark
-)
-
-func (m Mode) String() string {
-	switch m {
-	case Light:
-		return "light"
-	case Dark:
-		return "dark"
-	default:
-		return "auto"
-	}
-}
-
 // Onevra pairs warm white and warm charcoal surfaces with a terracotta accent.
 // Dark mode lifts the accent for legibility without changing its color family.
 // Spacing and font size keep following MyGo.
@@ -86,29 +63,40 @@ func DarkPalette() *ui.Theme {
 	return t
 }
 
-// Apply installs the theme for the current frame. Call it before creating
-// any widgets, typically at the start of the root content builder: SetTheme
-// only affects the window root and the widgets created after the call.
-//
-// Auto reads the frame's default theme first, which still follows the
-// system's appearance, then installs the matching built-in palette. MyGo
-// reruns the frame when the system appearance changes, so Auto tracks it
-// without polling. A pinned Light or Dark ignores appearance changes.
-//
-// A custom theme does not follow the desktop preferences' colors; the
-// operating system still owns window chrome.
-func Apply(c *ui.Context, m Mode) {
-	dark := c.Theme().Dark
-	switch m {
-	case Light:
-		c.SetTheme(LightPalette())
-	case Dark:
-		c.SetTheme(DarkPalette())
-	default:
-		if dark {
-			c.SetTheme(DarkPalette())
-		} else {
-			c.SetTheme(LightPalette())
-		}
+// Palette returns Onevra's dark palette when dark is set, and its light
+// palette otherwise. It ignores the desktop's preferences; see Onevra.
+func Palette(dark bool) *ui.Theme {
+	if dark {
+		return DarkPalette()
 	}
+	return LightPalette()
 }
+
+// Onevra returns the palette matching the frame's light or dark appearance,
+// which follows mygo.Theme's source. Like MyGo's default theme, it follows the
+// desktop's text scale and higher contrast; it keeps Onevra's own accent
+// rather than the desktop's.
+//
+// Its signature fits a Shell's Theme option. Windows a Shell does not create
+// install it with Apply.
+func Onevra(c *ui.Context) *ui.Theme {
+	t := Palette(c.Theme().Dark)
+	p := c.Preferences()
+	// The same adjustments as MyGo's default theme.
+	if p.HighContrast {
+		t.Border = t.Border.Mix(t.Text, 0.45)
+		t.TextMuted = t.TextMuted.Mix(t.Text, 0.4)
+		t.Focus.A = 255
+		t.Scrollbar = t.Scrollbar.Alpha(1.6)
+	}
+	if s := p.TextScale; s > 0 && s != 1 {
+		t.FontSize *= s
+	}
+	return t
+}
+
+// Apply installs Onevra for the current frame. Call it at the start of the
+// root content builder, before creating any widgets: SetTheme only affects
+// the window root and the widgets created after the call. MyGo reruns the
+// frame when the appearance or the desktop's preferences change.
+func Apply(c *ui.Context) { c.SetTheme(Onevra(c)) }

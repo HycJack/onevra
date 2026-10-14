@@ -12,7 +12,7 @@ func featureTester(name, variant, language string, width int) (*Gallery, *demoSt
 	s := g.mygoState(name, variant, true)
 	example, _ := mygoExampleFor(pageFromKey("mygo/" + name))
 	tt := ui.NewTester(func(c *ui.Context) {
-		theme.Apply(c, theme.Auto)
+		theme.Apply(c)
 		g.withLanguage(c, func() {
 			ui.Column(c).FillWidth().Padding(16).Gap(12).Children(func() { example.build(c, s) })
 		})

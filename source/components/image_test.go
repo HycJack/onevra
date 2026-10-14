@@ -27,11 +27,11 @@ func TestImageSources(t *testing.T) {
 	}
 	for name, source := range sources {
 		t.Run(name, func(t *testing.T) {
-			for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+			for _, dark := range []bool{false, true} {
 				for _, scale := range []float32{1, 2} {
 					build := func(create func(*ui.Context, ui.ImageSource) ui.Element) *ui.Tester {
 						tt := ui.NewTester(func(c *ui.Context) {
-							theme.Apply(c, mode)
+							c.SetTheme(theme.Palette(dark))
 							ui.Row(c).Gap(4).Children(func() {
 								create(c, source).Label("intrinsic")
 								create(c, source).Width(60).Label("aspect")

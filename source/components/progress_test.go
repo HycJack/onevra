@@ -22,11 +22,11 @@ func TestProgressValue(t *testing.T) {
 
 func TestProgressRendering(t *testing.T) {
 	for _, ring := range []bool{false, true} {
-		for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+		for _, dark := range []bool{false, true} {
 			for _, value := range []float64{0, 0.01, 0.5, 1, -1, math.NaN(), math.Inf(1)} {
-				t.Run(fmt.Sprint(ring, "/", mode, "/", value), func(t *testing.T) {
+				t.Run(fmt.Sprint(ring, "/", dark, "/", value), func(t *testing.T) {
 					tt := ui.NewTester(func(c *ui.Context) {
-						theme.Apply(c, mode)
+						c.SetTheme(theme.Palette(dark))
 						ui.Column(c).Fill().Children(func() {
 							if ring {
 								ProgressRing(c, value).Size(80, 40).Label("progress")

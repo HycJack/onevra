@@ -29,7 +29,8 @@ func TestShellFloatingHeader(t *testing.T) {
 			}
 			view := func(c *ui.Context) { surfaces = nil; bodies = nil; s.view(c) }
 			tt := ui.NewTester(view, 820, 600)
-			for _, config := range []struct{ native, scale, want float32 }{{0, 1, 48}, {80, 1, 80}, {48, 2, 48}} {
+			// The header grows with the desktop's text scale: 3 rem.
+			for _, config := range []struct{ native, scale, want float32 }{{0, 1, 48}, {80, 1, 80}, {48, 2, 78}} {
 				tt.SetTitleBar(ui.TitleBar{Height: config.native})
 				tt.SetPreferences(ui.Preferences{TextScale: config.scale, ReduceMotion: true})
 				if height != config.want {

@@ -10,13 +10,13 @@ import (
 )
 
 func TestSidebarLeadingSlot(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, disabled := range []bool{false, true} {
 			clicks := 0
 			var suggested float32
 			var buildContext *ui.Context
 			tt := ui.NewTester(func(c *ui.Context) {
-				theme.Apply(c, mode)
+				c.SetTheme(theme.Palette(dark))
 				Sidebar(c).Disabled(disabled).Children(func() {
 					leading := func(slotContext *ui.Context, size float32) {
 						buildContext, suggested = slotContext, size
@@ -60,7 +60,7 @@ func TestSidebarLeadingSlot(t *testing.T) {
 
 func TestSettingsLeadingSlot(t *testing.T) {
 	red := color.RGBA{R: 255, A: 255}
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		state := SettingsState{}
 		narrow, calls := false, 0
 		catalog := settingsFixture()
@@ -75,7 +75,7 @@ func TestSettingsLeadingSlot(t *testing.T) {
 			t.Fatal("metadata search built a slot")
 		}
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(dark))
 			Settings(c, &state, catalog, SettingsOptions{Narrow: narrow})
 		}, 800, 600)
 		mark, ok := tt.Find("Custom mark")

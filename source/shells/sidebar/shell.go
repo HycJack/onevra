@@ -9,7 +9,6 @@ import (
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
 	"github.com/oneo-me/onevra/source/icons/lucide"
-	"github.com/oneo-me/onevra/source/theme"
 )
 
 // ShellOptions describes a window and its default sidebar-and-content page.
@@ -67,10 +66,12 @@ type ShellOptions struct {
 	CloseToastLabel string
 	// Toasts places the window's toasts; top placements also clear the header.
 	Toasts components.ToastOptions
-	// Appearance selects the window theme: Auto follows the system
-	// appearance, Light and Dark pin Onevra's built-in palettes.
-	// It applies before any content is built; the zero value is Auto.
-	Appearance theme.Mode
+	// Theme, when set, returns the frame's theme; Shell installs it before
+	// building anything, so its own surfaces and all content use it. It runs
+	// on every frame, so it can follow application state; pass theme.Onevra
+	// for Onevra's palettes. Nil keeps MyGo's frame theme. Light or dark
+	// belongs to mygo.Theme.SetSource, which also covers native chrome.
+	Theme func(*ui.Context) *ui.Theme
 }
 
 // Shell owns window presentation, sidebar state and the active page.
@@ -237,7 +238,9 @@ func openFraction(open bool) float32 {
 
 func (s *Shell) view(c *ui.Context) {
 	// The theme must be installed before any widget is created.
-	theme.Apply(c, s.options.Appearance)
+	if s.options.Theme != nil {
+		c.SetTheme(s.options.Theme(c))
+	}
 	components.WithDialogWindowDrag(c, HeaderHeight(c), func() { s.build(c) })
 	toasts := s.options.Toasts
 	if toasts.Placement.Top() {

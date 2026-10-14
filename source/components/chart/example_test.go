@@ -15,7 +15,7 @@ func ExampleLine() {
 		Series: []chart.Series{{ID: "hours", Label: "Hours", Values: []float64{4, 6, 5}}},
 	}
 	view := func(c *ui.Context) {
-		theme.Apply(c, theme.Auto)
+		theme.Apply(c)
 		chart.Line(c, &state, data, chart.Options{
 			Label: "Daily hours", Description: "Use arrow keys to explore", EmptyText: "No data",
 			FormatValue: func(v float64) string { return fmt.Sprintf("%g h", v) },

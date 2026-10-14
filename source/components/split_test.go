@@ -11,11 +11,11 @@ import (
 
 func TestSplitInteraction(t *testing.T) {
 	for _, orientation := range []Orientation{Horizontal, Vertical} {
-		for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
-			t.Run(fmt.Sprint(orientation, "/", mode), func(t *testing.T) {
+		for _, dark := range []bool{false, true} {
+			t.Run(fmt.Sprint(orientation, "/", dark), func(t *testing.T) {
 				size, changes := float32(100), 0
 				tt := ui.NewTester(func(c *ui.Context) {
-					theme.Apply(c, mode)
+					c.SetTheme(theme.Palette(dark))
 					s := Split(c, &size, func() { ui.Box(c).Fill().Label("first") }, func() { ui.Box(c).Fill().Label("second") }, SplitOptions{Orientation: orientation})
 					s.Label("Resize").Fill()
 					if s.Changed() {

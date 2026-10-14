@@ -11,7 +11,7 @@ import (
 )
 
 func TestPickerGlassSurfaces(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, mode := range []bool{false, true} {
 		for _, kind := range []string{"Color", "Calendar", "Time"} {
 			t.Run(fmt.Sprintf("%v/%s", mode, kind), func(t *testing.T) {
 				backdrop := ui.RGB(0, 0, 0)
@@ -19,7 +19,7 @@ func TestPickerGlassSurfaces(t *testing.T) {
 				day := time.Date(2026, 6, 15, 12, 30, 0, 0, time.UTC)
 				var tint ui.Color
 				tt := ui.NewTester(func(c *ui.Context) {
-					theme.Apply(c, mode)
+					c.SetTheme(theme.Palette(mode))
 					tint = c.Theme().Background
 					ui.Column(c).Fill().Padding(40).Background(backdrop).Children(func() {
 						switch kind {

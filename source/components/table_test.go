@@ -20,16 +20,16 @@ func tableTestColumns() []ui.TableColumn {
 
 func TestTableHeaderInteractionAndAppearance(t *testing.T) {
 	for _, virtual := range []bool{false, true} {
-		for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+		for _, dark := range []bool{false, true} {
 			for _, disabled := range []bool{false, true} {
-				t.Run(fmt.Sprintf("virtual=%v/mode=%v/disabled=%v", virtual, mode, disabled), func(t *testing.T) {
+				t.Run(fmt.Sprintf("virtual=%v/dark=%v/disabled=%v", virtual, dark, disabled), func(t *testing.T) {
 					columns := tableTestColumns()
 					order, sorts, chosen := ui.SortOrder{}, 0, -1
 					var state TableVirtualizedState
 					state.Sort, state.OnSort = &order, func() { sorts++ }
 					state.List.Selected = &chosen
 					tt := ui.NewTester(func(c *ui.Context) {
-						theme.Apply(c, mode)
+						c.SetTheme(theme.Palette(dark))
 						original := c.Theme()
 						cell := func(row, col int) {
 							if c.Theme() != original {
@@ -80,7 +80,7 @@ func TestTableHeaderInteractionAndAppearance(t *testing.T) {
 					}
 
 					palette := theme.LightPalette()
-					if mode == theme.Dark {
+					if dark {
 						palette = theme.DarkPalette()
 					}
 					delta := func(a, b uint8) int { return max(int(a)-int(b), int(b)-int(a)) }

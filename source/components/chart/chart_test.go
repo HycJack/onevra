@@ -26,7 +26,7 @@ func TestCartesianInteraction(t *testing.T) {
 				var selected Selection
 				opts := Options{Label: "Plot", Description: "Arrow keys", EmptyText: "Empty", Detail: func(_ *ui.Context, s Selection) { selected = s }}
 				tt := ui.NewTester(func(c *ui.Context) {
-					theme.Apply(c, theme.Auto)
+					theme.Apply(c)
 					ui.Column(c).Width(280).Scale(scale, scale).TransformOrigin(0, 0).Children(func() { view(c, &state, sample, opts) })
 				}, 500, 600)
 				for _, dark := range []bool{false, true} {
@@ -163,7 +163,7 @@ func TestDonutSelectionAndFiltering(t *testing.T) {
 	data := []Slice{{ID: "a", Label: "Alpha", Value: 3}, {ID: "zero", Label: "Zero"}, {ID: "b", Label: "Beta", Value: 1}, {ID: "bad", Label: "Invalid", Value: math.Inf(1)}}
 	state := State{Index: -1}
 	tt := ui.NewTester(func(c *ui.Context) {
-		theme.Apply(c, theme.Auto)
+		theme.Apply(c)
 		Donut(c, &state, data, Options{Label: "Plot", EmptyText: "Empty", FormatValue: func(v float64) string { return fmt.Sprintf("%.0f h", v) }})
 	}, 280, 500)
 	if tt.HasText("Zero") || tt.HasText("Invalid") || !tt.HasText("4 h") {

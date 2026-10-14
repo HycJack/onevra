@@ -18,7 +18,7 @@ Content builders and Shell state changes run synchronously on the UI thread; bui
 
 Shell owns only presentation state, does not persist it, and uses MyGo's rendering, layout and input systems. An application-chosen `StateKey` passes through to MyGo, which owns capturing, restoring and storing window geometry; sidebar width, expansion and pages remain application state.
 
-Components read the frame theme and style their own elements; they must not call `Context.SetTheme`, which also resets the window root's appearance. Only application-level theme installation owns that operation. Collection controls compose their own rows and component-level selection/navigation on MyGo's input and focus APIs.
+Components read the frame theme and style their own elements; they must not call `Context.SetTheme`, which also resets the window root's appearance. Only [application-level theme installation](#theme-ownership) owns that operation. Collection controls compose their own rows and component-level selection/navigation on MyGo's input and focus APIs.
 
 Virtualized collections reuse non-selecting MyGo list and grid containers for scrolling and layout, rather than copying its layout engine or overriding its styled row theme. Their application-owned state is defined in the [collection API](../../source/components/list.go). Tables share MyGo's public column, sort and layout types and its sideways row-width scrolling; Onevra owns the header's sorting, moving and resizing, while applications sort rows and may persist the layout.
 
@@ -104,7 +104,7 @@ Shell accepts updated control labels without recreating its window. Applications
 
 ## Page container and layout
 
-Plain Shell hides the system title bar and automatically places its content below a draggable strip with native macOS/Linux controls or Onevra caption buttons on Windows. Its opaque Onevra background covers the whole window, including the strip. Applications do not add another header inset. Live appearance and caption-label updates preserve the window and its content. Dialogs inherit the strip's drag behavior and clearance. The starter applications use this shell for main, settings and introduction windows; their transient tray panels remain application-owned frameless MyGo windows.
+Plain Shell hides the system title bar and automatically places its content below a draggable strip with native macOS/Linux controls or Onevra caption buttons on Windows. Its opaque theme background covers the whole window, including the strip. Applications do not add another header inset. Caption-label updates preserve the window and its content. Dialogs inherit the strip's drag behavior and clearance. The starter applications use this shell for main, settings and introduction windows; their transient tray panels remain application-owned frameless MyGo windows.
 
 The sidebar page container reserves space for system window controls and overlays a transparent draggable header with a Lucide sidebar control. The toggle keeps additional clearance from macOS traffic lights. Its default page contains a collapsible left sidebar and a flexible main region.
 
@@ -117,8 +117,6 @@ The optional left bottom toolbar remains beneath the sidebar body and disappears
 The left sidebar keeps its content at the full sidebar width while its visible slice animates, so the opaque main region appears to cover or uncover it without resizing the window. A thin separator overlays the main region's left edge, takes no layout space and disappears when the sidebar is fully closed. Its overlaid drag handle spans the full window height, taking precedence over window dragging at the separator, and supports keyboard arrow adjustment; double-clicking restores the application-configured default width.
 
 Applications can bound resizing with minimum and maximum widths. Shell retains the chosen width across toggles and page changes and removes the handle while collapsed or transitioning. The main region takes the remaining space rather than reserving a fixed share of the window.
-
-Narrow layouts only constrain the sidebar to keep its resize handle inside the viewport, without discarding the chosen width; widening the window restores it.
 
 A replacement page occupies the full window behind the shared floating header, with the same application-owned inset and hides the default page's titlebar content and sidebar controls. Returning restores the previous sidebar state without changing window geometry. Shell provides this switching mechanism, not a settings implementation or business router.
 
@@ -150,11 +148,7 @@ Both shells build the viewport after their content, inside a localization scope 
 
 ## Native appearance
 
-MyGo and the operating system provide native window interaction semantics. On Windows, Shell uses MyGo's frameless window and composes rounded toolbar-style minimize, maximize/restore and close buttons in the shared header, including replacement pages. Labels are application-localizable; close requests retain MyGo's cancellable application lifecycle.
-
-Maximize/restore follows the actual window state. Shell applies Onevra's built-in light and dark themes (see the [theme package](../../source/theme/doc.go)) through MyGo's own theme mechanism, so every MyGo widget keeps working; there is no separate theme manager or custom window chrome. `ShellOptions.Appearance` selects `theme.Auto` (the default, follows the system appearance), `theme.Light` or `theme.Dark`. A pinned theme ignores later appearance changes, while window chrome still follows the operating system.
-
-These UI buttons do not implement Windows' native maximize-hover Snap Layouts flyout.
+MyGo and the operating system provide native window interaction semantics. On Windows, Shell uses MyGo's frameless window and composes rounded toolbar-style minimize, maximize/restore and close buttons in the shared header, including replacement pages. Labels are application-localizable; close requests retain MyGo's cancellable application lifecycle. Maximize/restore follows the actual window state; these buttons do not implement Windows' Snap Layouts flyout.
 
 Sidebar Shell requests a sidebar material on macOS and Mica on Windows. MyGo supports Windows system materials on Windows 11 22H2 and later; it owns compositor setup and native opaque fallback. Shell uses `Context.Vibrancy()` each frame, rather than the operating system or requested material, to decide whether to expose the backdrop.
 
@@ -163,3 +157,9 @@ When effective, the root and sidebar preserve transparency without additional ti
 Applications can change or disable the material through the exposed MyGo window's `SetVibrancy`; MyGo rebuilds the view and Shell reapplies the same policy. Windows material rendering still requires target-platform native review.
 
 Application builders can obscure the material by painting their own backgrounds. Preserve transparency through the window and sidebar when changing styling; content captures alone do not include the OS-composited blur.
+
+## Theme ownership
+
+Shell does not choose a theme. `mygo.Theme.SetSource` selects light or dark for the whole application, so native chrome, menus, web views and the frame theme agree. MyGo has no window-level theme hook, and Shell paints its own surfaces before Content, so its `Theme` option calls an application function at the start of each frame; nil keeps MyGo's frame theme. Other windows install theirs atop their builders.
+
+The [theme package](../../source/theme/doc.go) is an optional preset following the frame's appearance and, like MyGo's default theme, the desktop's text scale and contrast, but not its accent.

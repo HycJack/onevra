@@ -9,11 +9,11 @@ import (
 )
 
 func TestListAppearanceAndSelection(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		selected := 0
 		state := ListState{Selected: &selected}
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(dark))
 			original := c.Theme()
 			List(c, &state, 3, func(i int) {
 				if c.Theme() != original {
@@ -46,7 +46,7 @@ func TestListAppearanceAndSelection(t *testing.T) {
 		r, _ := tt.Find("Item 2")
 		p := tt.Image().RGBAAt(180, int(r.Y+r.H/2))
 		palette := theme.LightPalette()
-		if mode == theme.Dark {
+		if dark {
 			palette = theme.DarkPalette()
 		}
 		want := palette.Text.Alpha(.1).Over(palette.Background)
@@ -66,7 +66,7 @@ func TestListVirtualizationAndDisabled(t *testing.T) {
 		selected, built := 0, 0
 		state := ListState{Selected: &selected}
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, theme.Light)
+			c.SetTheme(theme.LightPalette())
 			ui.Column(c).Disabled(disabled).Children(func() {
 				List(c, &state, 10000, func(i int) {
 					built++

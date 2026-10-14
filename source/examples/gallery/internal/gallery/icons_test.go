@@ -84,11 +84,11 @@ func TestIconBrowserLayout(t *testing.T) {
 }
 
 func TestIconButtonFeedback(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		g := &Gallery{}
 		var palette *ui.Theme
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(dark))
 			palette = c.Theme()
 			g.Icons(c)
 		}, 600, 480)
@@ -101,7 +101,7 @@ func TestIconButtonFeedback(t *testing.T) {
 			t.Helper()
 			pixel := tt.Image().RGBAAt(int(r.X+8), int(y))
 			if pixel.R != want.R || pixel.G != want.G || pixel.B != want.B {
-				t.Fatalf("mode=%v %s: pixel=%v, want=%v", mode, state, pixel, want)
+				t.Fatalf("dark=%v %s: pixel=%v, want=%v", dark, state, pixel, want)
 			}
 		}
 		tt.Move(590, 470)

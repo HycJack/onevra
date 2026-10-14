@@ -39,7 +39,7 @@ func (a *trayDemo) view(c *ui.Context) {
 	a.localizedView(c)
 }
 func (a *trayDemo) localizedView(c *ui.Context) {
-	theme.Apply(c, theme.Auto)
+	theme.Apply(c)
 	if c.Shortcut(0, ui.KeyEscape) || c.Shortcut(ui.Cmd, ui.KeyW) {
 		a.win.Hide()
 	}

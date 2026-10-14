@@ -9,12 +9,12 @@ import (
 )
 
 func TestNativeSelect(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, disabled := range []bool{false, true} {
 			choice, changes := 1, 0
 			options := []NativeSelectOption[int]{{1, "Small", false}, {2, "Large", false}, {3, "Unavailable", true}}
 			tt := ui.NewTester(func(c *ui.Context) {
-				theme.Apply(c, mode)
+				c.SetTheme(theme.Palette(dark))
 				ui.Column(c).Disabled(disabled).Children(func() {
 					s := NativeSelect(c, &choice, options)
 					s.Trigger.Label("Size")

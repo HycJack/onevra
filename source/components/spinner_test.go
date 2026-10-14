@@ -11,12 +11,12 @@ import (
 
 func TestSpinnerRendering(t *testing.T) {
 	for _, variant := range []SpinnerVariant{SpinnerRing, SpinnerSpokes, SpinnerVariant(99)} {
-		for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+		for _, dark := range []bool{false, true} {
 			for _, scale := range []float32{1, 1.5} {
-				t.Run(fmt.Sprint(variant, "/", mode, "/", scale), func(t *testing.T) {
+				t.Run(fmt.Sprint(variant, "/", dark, "/", scale), func(t *testing.T) {
 					var diameter float32
 					tt := ui.NewTester(func(c *ui.Context) {
-						theme.Apply(c, mode)
+						c.SetTheme(theme.Palette(dark))
 						diameter = c.Theme().Space(8)
 						ui.Column(c).Fill().Children(func() {
 							Spinner(c, variant).Label("default")
@@ -42,12 +42,12 @@ func TestSpinnerRendering(t *testing.T) {
 }
 
 func TestSpinnerSpokesTextColor(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
-		t.Run(fmt.Sprint(mode), func(t *testing.T) {
+	for _, dark := range []bool{false, true} {
+		t.Run(fmt.Sprint(dark), func(t *testing.T) {
 			var tint *ui.Color
 			var muted ui.Color
 			tt := ui.NewTester(func(c *ui.Context) {
-				theme.Apply(c, mode)
+				c.SetTheme(theme.Palette(dark))
 				muted = c.Theme().TextMuted
 				e := Spinner(c, SpinnerSpokes).Size(80, 40).Label("loading")
 				if tint != nil {
@@ -96,7 +96,7 @@ func TestSpinnerSpokesTextColor(t *testing.T) {
 func TestSpinnerSpokesCentered(t *testing.T) {
 	render := func(width, height float32) *ui.Tester {
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, theme.Light)
+			c.SetTheme(theme.LightPalette())
 			Spinner(c, SpinnerSpokes).Size(width, height)
 		}, 100, 100)
 		tt.SetPreferences(ui.Preferences{ReduceMotion: true})
@@ -124,7 +124,7 @@ func TestSpinnerSpokesCentered(t *testing.T) {
 func TestSpinnerRingMatchesProgressRing(t *testing.T) {
 	render := func(spinner bool) []byte {
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, theme.Light)
+			c.SetTheme(theme.LightPalette())
 			if spinner {
 				Spinner(c, SpinnerRing).Size(80, 40)
 			} else {

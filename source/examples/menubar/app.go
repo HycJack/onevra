@@ -8,6 +8,7 @@ import (
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
 	"github.com/oneo-me/onevra/source/shells/plain"
+	"github.com/oneo-me/onevra/source/theme"
 )
 
 // All application state and native callbacks are owned by the UI thread.
@@ -210,8 +211,8 @@ func (a *application) changed() {
 }
 
 func (a *application) refresh() {
+	mygo.Theme.SetSource(a.themeSource())
 	for _, shell := range a.shells {
-		shell.SetAppearance(a.appearance())
 		shell.SetLabels(a.windowLabels())
 	}
 	a.installMenus()
@@ -236,7 +237,7 @@ func (a *application) windowLabels() plain.Labels {
 }
 
 func (a *application) newWindow(options plain.ShellOptions) *mygo.Window {
-	options.Appearance, options.Labels = a.appearance(), a.windowLabels()
+	options.Theme, options.Labels = theme.Onevra, a.windowLabels()
 	shell := plain.NewShell(options)
 	a.shells = append(a.shells, shell)
 	return shell.Window()

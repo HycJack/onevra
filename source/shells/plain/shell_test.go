@@ -83,15 +83,15 @@ func TestCaptionAndLiveUpdates(t *testing.T) {
 		t.Fatalf("caption actions: %+v", w)
 	}
 	s.SetLabels(Labels{Close: "关闭窗口"})
-	s.SetAppearance(theme.Dark)
 	tt.Frame()
 	if err := tt.Click("关闭窗口"); err != nil {
 		t.Fatal(err)
 	}
-	if w.closed != 2 || w.frames != 2 {
+	if w.closed != 2 || w.frames != 1 {
 		t.Fatalf("live updates: %+v", w)
 	}
 	var dark bool
+	s.options.Theme = func(*ui.Context) *ui.Theme { return theme.DarkPalette() }
 	s.options.Content = func(c *ui.Context) { dark = c.Theme().Dark }
 	ui.NewTester(s.view, 760, 560)
 	if !dark {

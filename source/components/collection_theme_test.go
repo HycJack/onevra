@@ -38,9 +38,9 @@ func TestComponentsDoNotSetFrameTheme(t *testing.T) {
 
 func TestCollectionsPreserveRootBackground(t *testing.T) {
 	for _, name := range []string{"List", "Tree", "TreeVirtualized"} {
-		for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+		for _, dark := range []bool{false, true} {
 			for _, background := range []ui.Color{ui.Transparent, ui.Hex("#473b8c")} {
-				t.Run(fmt.Sprintf("%s/%v/%v", name, mode, background), func(t *testing.T) {
+				t.Run(fmt.Sprintf("%s/%v/%v", name, dark, background), func(t *testing.T) {
 					selected, open := 0, true
 					list := ListState{Selected: &selected}
 					var tree TreeVirtualizedState[int]
@@ -50,7 +50,7 @@ func TestCollectionsPreserveRootBackground(t *testing.T) {
 						items[i] = i
 					}
 					tt := ui.NewTester(func(c *ui.Context) {
-						theme.Apply(c, mode)
+						c.SetTheme(theme.Palette(dark))
 						original := c.Theme()
 						c.Root().Background(background)
 						switch name {

@@ -54,18 +54,18 @@ func TestWebViewCreatedOnce(t *testing.T) {
 
 func TestWebViewHTMLFollowsThemeAndLanguage(t *testing.T) {
 	pages := map[string]string{}
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, code := range []string{"en", "zh-Hans"} {
 			g := &Gallery{language: newTranslator(code, "")}
 			var page string
 			ui.NewTester(func(c *ui.Context) {
-				theme.Apply(c, mode)
+				c.SetTheme(theme.Palette(dark))
 				g.withLanguage(c, func() { page = webViewHTML(c) })
 			}, 200, 200)
 			if !strings.Contains(page, `lang="`+code+`"`) {
 				t.Errorf("%s page lacks its language: %s", code, page)
 			}
-			pages[fmt.Sprint(mode, code)] = page
+			pages[fmt.Sprint(dark, code)] = page
 		}
 	}
 	seen := map[string]bool{}
@@ -75,7 +75,7 @@ func TestWebViewHTMLFollowsThemeAndLanguage(t *testing.T) {
 		}
 		seen[page] = true
 	}
-	if !strings.Contains(pages[fmt.Sprint(theme.Light, "zh-Hans")], "原生界面中的网页") {
+	if !strings.Contains(pages[fmt.Sprint(false, "zh-Hans")], "原生界面中的网页") {
 		t.Error("Chinese page is not translated")
 	}
 }

@@ -10,11 +10,11 @@ import (
 )
 
 func TestTooltipKeyboard(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		visible, disabled := false, false
 		text := "Saves the document"
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(dark))
 			ui.Column(c).Padding(60).Gap(20).Children(func() {
 				anchor := Button(c, "Save", ButtonSecondary).Disabled(disabled)
 				visible = Tooltip(c, anchor, text).Valid()

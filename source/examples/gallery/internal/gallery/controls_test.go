@@ -21,9 +21,9 @@ func TestControlPages(t *testing.T) {
 				t.Fatal("route overlaps MyGo")
 			}
 			for _, width := range []int{540, 280} {
-				for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+				for _, dark := range []bool{false, true} {
 					g := &Gallery{page: page}
-					tt := ui.NewTester(func(c *ui.Context) { theme.Apply(c, mode); g.View(c) }, width, 1800)
+					tt := ui.NewTester(func(c *ui.Context) { c.SetTheme(theme.Palette(dark)); g.View(c) }, width, 1800)
 					wantStates := len(example.variants)
 					if example.name == "TextBox" || example.name == "TextBoxBuffer" {
 						wantStates = 7
@@ -61,16 +61,16 @@ func TestPixelGridStandaloneExample(t *testing.T) {
 	if !ok || example.name != "PixelGrid" {
 		t.Fatal("missing pixel grid route")
 	}
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, variant := range example.variants {
 			tt := ui.NewTester(func(c *ui.Context) {
-				theme.Apply(c, mode)
+				c.SetTheme(theme.Palette(dark))
 				controlPixelGrid(c, nil, variant)
 			}, 240, 160)
 			img := tt.Image()
 			minor, major := img.RGBAAt(16, 8), img.RGBAAt(64, 8)
 			if minor == img.RGBAAt(8, 8) || (minor != major) != (variant == "Major lines") {
-				t.Fatalf("mode=%v variant=%s: incorrect grid emphasis", mode, variant)
+				t.Fatalf("dark=%v variant=%s: incorrect grid emphasis", dark, variant)
 			}
 		}
 	}
@@ -134,7 +134,7 @@ func TestControlExampleInteractions(t *testing.T) {
 			t.Run(example.name+map[bool]string{false: "/enabled", true: "/disabled"}[disabled], func(t *testing.T) {
 				s := (&Gallery{}).controlState(example.name, "Empty")
 				tt := ui.NewTester(func(c *ui.Context) {
-					theme.Apply(c, theme.Light)
+					c.SetTheme(theme.LightPalette())
 					ui.Column(c).Fill().Gap(12).Disabled(disabled).Children(func() { example.build(c, s, "Default") })
 				}, 540, 900)
 				click := func(label string) {
@@ -291,11 +291,11 @@ func TestControlExampleInteractions(t *testing.T) {
 }
 
 func TestControlPageGrid(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, width := range []int{280, 900} {
 			g := &Gallery{page: pageFromKey("controls/Popover")}
 			tt := ui.NewTester(func(c *ui.Context) {
-				theme.Apply(c, mode)
+				c.SetTheme(theme.Palette(dark))
 				g.View(c)
 			}, width, 600)
 			img := tt.Image()
@@ -305,7 +305,7 @@ func TestControlPageGrid(t *testing.T) {
 			for _, y := range []int{5, 575} {
 				for x := 22; x < width-10; x += 22 {
 					if img.RGBAAt(x, y) == background || img.RGBAAt(x+5, y) != background {
-						t.Fatalf("mode=%v width=%d: missing page grid at %d,%d", mode, width, x, y)
+						t.Fatalf("dark=%v width=%d: missing page grid at %d,%d", dark, width, x, y)
 					}
 				}
 			}
@@ -330,7 +330,7 @@ func TestControlPageGrid(t *testing.T) {
 
 func TestControlVariantLayout(t *testing.T) {
 	for _, name := range []string{"Text", "TextBox", "TextBox (multiline)", "Select", "Tabs", "Collapsible", "Image", "Slider"} {
-		for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+		for _, dark := range []bool{false, true} {
 			for _, width := range []int{900, 280} {
 				g := &Gallery{page: pageFromKey("controls/" + name)}
 				example, _ := controlExampleFor(g.page)
@@ -340,7 +340,7 @@ func TestControlVariantLayout(t *testing.T) {
 					}
 				}
 				tt := ui.NewTester(func(c *ui.Context) {
-					theme.Apply(c, mode)
+					c.SetTheme(theme.Palette(dark))
 					ui.Column(c).Fill().Padding(24).Children(func() { g.controlVariants(c, example) })
 				}, width, 1200)
 				var previous ui.Rect

@@ -10,12 +10,12 @@ import (
 )
 
 func TestGridViewSelectionAndVirtualization(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, disabled := range []bool{false, true} {
 			selected, built, changes, submitted := 0, 0, 0, -1
 			state := GridState{Selected: &selected, OnChange: func() { changes++ }, OnSubmit: func(i int) { submitted = i }}
 			tt := ui.NewTester(func(c *ui.Context) {
-				theme.Apply(c, mode)
+				c.SetTheme(theme.Palette(dark))
 				original := c.Theme()
 				c.Root().Background(ui.Transparent)
 				ui.Column(c).Disabled(disabled).Children(func() {
@@ -34,7 +34,7 @@ func TestGridViewSelectionAndVirtualization(t *testing.T) {
 			// Selected applies upstream foreground defaults; Onevra must restore
 			// the normal text color over its neutral selection background.
 			palette := theme.LightPalette()
-			if mode == theme.Dark {
+			if dark {
 				palette = theme.DarkPalette()
 			}
 			selectedRect, _ := tt.Find("Item 0")

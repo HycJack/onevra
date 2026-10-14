@@ -8,10 +8,10 @@ import (
 )
 
 func TestGrowingControlsKeepContentHeight(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		value := "Name"
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(dark))
 			ui.Column(c).Fill().Children(func() {
 				ui.Row(c).Children(func() {
 					ui.Column(c).Grow(1).Children(func() {
@@ -35,10 +35,10 @@ func TestGrowingControlsKeepContentHeight(t *testing.T) {
 }
 
 func TestListHorizontalScrollWithHeader(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		state := ListState{}
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(dark))
 			ui.Column(c).Fill().Children(func() {
 				header := ui.Row(c).Height(24).Shrink(0).Clip().Children(func() {
 					Text(c, "Header").Width(500).Shrink(0)

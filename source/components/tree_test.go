@@ -12,14 +12,14 @@ import (
 
 func TestTreeDisclosureAndAppearance(t *testing.T) {
 	for _, virtual := range []bool{false, true} {
-		for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+		for _, dark := range []bool{false, true} {
 			for _, disabled := range []bool{false, true} {
-				t.Run(fmt.Sprintf("virtual=%v/mode=%v/disabled=%v", virtual, mode, disabled), func(t *testing.T) {
+				t.Run(fmt.Sprintf("virtual=%v/dark=%v/disabled=%v", virtual, dark, disabled), func(t *testing.T) {
 					open, selected := false, ""
 					var state TreeVirtualizedState[string]
 					state.cursor = -1
 					tt := ui.NewTester(func(c *ui.Context) {
-						theme.Apply(c, mode)
+						c.SetTheme(theme.Palette(dark))
 						original := c.Theme()
 						ui.Column(c).Disabled(disabled).Children(func() {
 							if virtual {
@@ -100,7 +100,7 @@ func TestTreeDisclosureAndAppearance(t *testing.T) {
 					}
 					r, _ := tt.Find("Folder")
 					palette := theme.LightPalette()
-					if mode == theme.Dark {
+					if dark {
 						palette = theme.DarkPalette()
 					}
 					pixel := tt.Image().RGBAAt(220, int(r.Y+r.H/2))

@@ -11,12 +11,12 @@ import (
 )
 
 func TestTextBoxLeadingIcon(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, mode := range []bool{false, true} {
 		for _, multiline := range []bool{false, true} {
 			value := ""
 			options := TextBoxOptions{Multiline: multiline}
 			tt := ui.NewTester(func(c *ui.Context) {
-				theme.Apply(c, mode)
+				c.SetTheme(theme.Palette(mode))
 				TextBox(c, &value, options).Label("Search").Width(240).Height(100)
 			}, 300, 120)
 			plain := append([]byte(nil), tt.Image().Pix...)
@@ -55,7 +55,7 @@ func TestTextBoxLeadingIcon(t *testing.T) {
 }
 
 func TestTextBoxLeadingText(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, mode := range []bool{false, true} {
 		for _, multiline := range []bool{false, true} {
 			for _, buffered := range []bool{false, true} {
 				value := ""
@@ -63,7 +63,7 @@ func TestTextBoxLeadingText(t *testing.T) {
 				options := TextBoxOptions{Multiline: multiline, LeadingIcon: lucide.Search()}
 				var input ui.Element
 				tt := ui.NewTester(func(c *ui.Context) {
-					theme.Apply(c, mode)
+					c.SetTheme(theme.Palette(mode))
 					if buffered {
 						input = TextBoxBuffer(c, buffer, options)
 					} else {
@@ -130,13 +130,13 @@ func TestTextBoxLeadingText(t *testing.T) {
 
 func TestTextBoxType(t *testing.T) {
 	for _, dark := range []bool{false, true} {
-		mode := theme.Light
+		mode := false
 		if dark {
-			mode = theme.Dark
+			mode = true
 		}
 		value := ""
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(mode))
 			TextBox(c, &value, TextBoxOptions{}).Label("Name").Placeholder("Ada").AutoFocus()
 		}, 300, 100)
 		tt.Type("Ada")
@@ -147,14 +147,14 @@ func TestTextBoxType(t *testing.T) {
 }
 
 func TestTextBoxReadOnly(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, mode := range []bool{false, true} {
 		for _, multiline := range []bool{false, true} {
 			value := "Selectable text"
 			readOnly := true
 			var focused, selectText bool
 			var start, end int
 			tt := ui.NewTester(func(c *ui.Context) {
-				theme.Apply(c, mode)
+				c.SetTheme(theme.Palette(mode))
 				input := TextBox(c, &value, TextBoxOptions{Multiline: multiline, ReadOnly: readOnly}).
 					Label("Input").Width(240).Height(100)
 				focused = input.Focused()
@@ -192,14 +192,14 @@ func TestTextBoxReadOnly(t *testing.T) {
 }
 
 func TestTextBoxReadOnlyAppearance(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, mode := range []bool{false, true} {
 		for _, multiline := range []bool{false, true} {
 			var backgrounds, borders [2]color.RGBA
 			var neutral ui.Color
 			for i, readOnly := range []bool{false, true} {
 				value := ""
 				tt := ui.NewTester(func(c *ui.Context) {
-					theme.Apply(c, mode)
+					c.SetTheme(theme.Palette(mode))
 					neutral = c.Theme().Border.Mix(c.Theme().Text, 0.25)
 					TextBox(c, &value, TextBoxOptions{Multiline: multiline, ReadOnly: readOnly}).
 						Label("Input").Width(240).Height(100)
@@ -250,7 +250,7 @@ func TestTextBoxModeSwitch(t *testing.T) {
 func TestTextBoxMultilineType(t *testing.T) {
 	value := ""
 	tt := ui.NewTester(func(c *ui.Context) {
-		theme.Apply(c, theme.Dark)
+		c.SetTheme(theme.DarkPalette())
 		TextBox(c, &value, TextBoxOptions{Multiline: true}).Label("Notes").AutoFocus()
 	}, 300, 120)
 	tt.Type("line one")

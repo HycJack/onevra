@@ -46,7 +46,7 @@ func (d *flyoutDemo) show(bounds ui.Rect, popover bool) {
 }
 
 func (d *flyoutDemo) view(c *ui.Context) {
-	theme.Apply(c, theme.Auto)
+	theme.Apply(c)
 	c.Root().Background(ui.Transparent)
 	d.gallery.withLanguage(c, func() {
 		t := c.Theme()

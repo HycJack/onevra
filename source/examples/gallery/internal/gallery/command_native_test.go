@@ -14,7 +14,6 @@ import (
 	"github.com/oneo-me/onevra/source/components"
 	"github.com/oneo-me/onevra/source/components/command"
 	"github.com/oneo-me/onevra/source/shells/sidebar"
-	"github.com/oneo-me/onevra/source/theme"
 )
 
 func TestNativeCommand(t *testing.T) {
@@ -28,7 +27,7 @@ func TestNativeCommand(t *testing.T) {
 	if err := os.MkdirAll(dir, 0700); err != nil {
 		t.Fatal(err)
 	}
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, width := range []int{820, 360} {
 			g := &Gallery{}
 			g.openCommands()
@@ -38,7 +37,7 @@ func TestNativeCommand(t *testing.T) {
 					g.chooseLanguage("zh-Hans")
 				}
 				shell = sidebar.NewShell(sidebar.ShellOptions{Hidden: nativeBackground(), Title: "Command palette review", Width: width, Height: 600,
-					MinWidth: 280, MinHeight: 400, LeftCollapsed: width == 360, Appearance: mode, Left: g.Left, Content: g.View})
+					MinWidth: 280, MinHeight: 400, LeftCollapsed: width == 360, Theme: pinnedTheme(dark), Left: g.Left, Content: g.View})
 			})
 			win := shell.Window()
 			time.Sleep(300 * time.Millisecond)
@@ -51,7 +50,7 @@ func TestNativeCommand(t *testing.T) {
 					win.Destroy()
 					t.Fatal(captureErr)
 				}
-				if writeErr := os.WriteFile(filepath.Join(dir, fmt.Sprintf("command-trigger-%v.png", mode)), preview, 0600); writeErr != nil {
+				if writeErr := os.WriteFile(filepath.Join(dir, fmt.Sprintf("command-trigger-%v.png", dark)), preview, 0600); writeErr != nil {
 					win.Destroy()
 					t.Fatal(writeErr)
 				}
@@ -67,7 +66,7 @@ func TestNativeCommand(t *testing.T) {
 				win.Destroy()
 				t.Fatal(settingsErr)
 			}
-			if writeErr := os.WriteFile(filepath.Join(dir, fmt.Sprintf("command-settings-%v-%d.png", mode, width)), settingsPreview, 0600); writeErr != nil {
+			if writeErr := os.WriteFile(filepath.Join(dir, fmt.Sprintf("command-settings-%v-%d.png", dark, width)), settingsPreview, 0600); writeErr != nil {
 				win.Destroy()
 				t.Fatal(writeErr)
 			}
@@ -79,7 +78,7 @@ func TestNativeCommand(t *testing.T) {
 			if err != nil || img.Bounds().Dx() < width {
 				t.Fatalf("capture: %v", err)
 			}
-			if err := os.WriteFile(filepath.Join(dir, fmt.Sprintf("command-%v-%d.png", mode, width)), data, 0600); err != nil {
+			if err := os.WriteFile(filepath.Join(dir, fmt.Sprintf("command-%v-%d.png", dark, width)), data, 0600); err != nil {
 				t.Fatal(err)
 			}
 		}
@@ -98,12 +97,12 @@ func TestNativeCommandExpansion(t *testing.T) {
 	if err := os.MkdirAll(dir, 0700); err != nil {
 		t.Fatal(err)
 	}
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		state, open := command.State{}, true
 		var shell *sidebar.Shell
 		mygo.RunOnMain(func() {
 			shell = sidebar.NewShell(sidebar.ShellOptions{Hidden: nativeBackground(), Title: "Command expansion review", Width: 820, Height: 600,
-				LeftCollapsed: true, Appearance: mode, Content: func(c *ui.Context) {
+				LeftCollapsed: true, Theme: pinnedTheme(dark), Content: func(c *ui.Context) {
 					command.CommandDialog(c, &open, &state, []command.Item{{ID: "settings", Title: "Settings"}},
 						command.Options{ExpandOnSearch: true}, components.DialogOptions{})
 				}})
@@ -123,7 +122,7 @@ func TestNativeCommandExpansion(t *testing.T) {
 				win.Destroy()
 				t.Fatal(err)
 			}
-			if err := os.WriteFile(filepath.Join(dir, fmt.Sprintf("command-%s-%v.png", phase, mode)), data, 0600); err != nil {
+			if err := os.WriteFile(filepath.Join(dir, fmt.Sprintf("command-%s-%v.png", phase, dark)), data, 0600); err != nil {
 				win.Destroy()
 				t.Fatal(err)
 			}

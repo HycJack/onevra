@@ -10,6 +10,7 @@ import (
 	"github.com/oneo-me/onevra/source/components"
 	"github.com/oneo-me/onevra/source/icons/lucide"
 	"github.com/oneo-me/onevra/source/shells/sidebar"
+	"github.com/oneo-me/onevra/source/theme"
 )
 
 // Gallery owns demonstration state and application preferences.
@@ -57,6 +58,7 @@ func (g *Gallery) newWindow(hidden bool) *sidebar.Shell {
 		LeftWidth: 220, LeftMinWidth: 220, LeftMaxWidth: 520,
 		Left: g.Left, Content: g.View, LeftToolbar: g.LeftToolbar,
 		ContentTitle: g.Titlebar,
+		Theme:        theme.Onevra,
 	})
 	g.updateLanguageWindows()
 	g.Shell.Window().OnClose(func(*mygo.CloseEvent) { g.commands.palette.ReleaseInputSource() })

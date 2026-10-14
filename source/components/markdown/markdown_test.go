@@ -12,10 +12,10 @@ import (
 )
 
 func TestMarkdownSelection(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, width := range []int{180, 600} {
 			document := ParseMarkdown("# Heading\n\nHello **世界** and *friends*.\n\n```go\nfmt.Println(42)\n```\n\nLast paragraph.")
-			tt := ui.NewTester(func(c *ui.Context) { theme.Apply(c, mode); document.Render(c) }, width, 500)
+			tt := ui.NewTester(func(c *ui.Context) { c.SetTheme(theme.Palette(dark)); document.Render(c) }, width, 500)
 			rect, ok := tt.Find("Heading")
 			if !ok {
 				t.Fatal(tt.Texts())
@@ -220,14 +220,14 @@ func TestMarkdownReferenceDefinitionsDoNotReserveSpace(t *testing.T) {
 }
 
 func TestMarkdownTaskAppearanceAndInput(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		checked := true
 		reference := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(dark))
 			components.Checkbox(c, &checked, "")
 		}, 100, 60)
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(dark))
 			Markdown(c, "- [x] Done")
 		}, 200, 100)
 		rect, ok := tt.Find("[x] Done")

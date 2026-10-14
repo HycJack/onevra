@@ -9,10 +9,10 @@ import (
 )
 
 func TestToastsActionAndClose(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		var undone, closed int
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(dark))
 			if Button(c, "Delete", ButtonSecondary).Clicked() {
 				c.AddToast(ui.Toast{ID: "deleted", Title: "Note deleted", Description: "Moved to trash", Type: ToastSuccess,
 					Timeout: -1, Action: "Undo", OnAction: func() { undone++ }, OnClose: func() { closed++ }})

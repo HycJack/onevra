@@ -57,12 +57,14 @@ import (
     "github.com/egoist/mygo/ui"
     "github.com/oneo-me/onevra/source/components"
     "github.com/oneo-me/onevra/source/shells/plain"
+    "github.com/oneo-me/onevra/source/theme"
 )
 
 func main() {
     mygo.App.WhenReady(func() {
         shell := plain.NewShell(plain.ShellOptions{
             Title: "Hello Onevra",
+            Theme: theme.Onevra,
             Content: func(c *ui.Context) {
                 ui.Column(c).Fill().Padding(24).Children(func() {
                     components.Text(c, "Hello, Onevra!")
@@ -92,14 +94,14 @@ go tool mygo build
 
 ## Shells
 
-Shell 负责创建原生窗口并应用 Onevra 主题，应用生命周期和业务状态由调用方管理。
+Shell 负责创建原生窗口，应用生命周期、业务状态和主题由调用方管理。
 
 | 包 | 布局 |
 | --- | --- |
 | [`shells/plain`](source/shells/plain/shell.go) | 单内容区，自动避让窗口控制区；上方最小示例使用此布局 |
 | [`shells/sidebar`](source/shells/sidebar/shell.go) | 可折叠、可调整宽度的侧栏与内容区，支持标题栏操作及页面替换 |
 
-通过 `github.com/oneo-me/onevra/source/` 下的对应路径导入。两者均通过 [theme 包](source/theme/doc.go) 支持跟随系统、浅色和深色外观。Sidebar 内容需要避让悬浮标题栏时，使用 `sidebar.HeaderHeight(c)`，详见[布局说明](docs/architecture/components.md#page-container-and-layout)。
+通过 `github.com/oneo-me/onevra/source/` 下的对应路径导入。两者的 `Theme` 选项会在每帧构建前安装应用的主题：传入 `theme.Onevra` 使用 Onevra 配色，传入返回 `*ui.Theme` 的自定义函数，或留空保留 MyGo 主题。使用 `mygo.Theme.SetSource` 选择浅色、深色或跟随系统，详见 [theme 包](source/theme/doc.go)。Sidebar 内容需要避让悬浮标题栏时，使用 `sidebar.HeaderHeight(c)`，详见[布局说明](docs/architecture/components.md#page-container-and-layout)。
 
 ## 图标
 
@@ -123,7 +125,7 @@ components.Checkbox(c, &agreed, "I agree")
 components.Switch(c, &wifi, "Wi-Fi")
 ```
 
-宿主应用 Onevra 主题后，组件也可脱离 Shell 独立使用。参见[组件契约](source/components/doc.go)和[主题用法](source/theme/doc.go)。复杂组件各自在 `components/` 下保留独立包：`chart`、`graph`、`command`、`code`、`markdown` 和 `chat`。详见[复杂组件组合](docs/architecture/components.md#complex-component-composition)。
+组件读取当前帧主题，可脱离 Shell 独立使用；独立窗口在构建函数开头通过 `c.SetTheme` 或 `theme.Apply` 安装主题。参见[组件契约](source/components/doc.go)和[主题用法](source/theme/doc.go)。复杂组件各自在 `components/` 下保留独立包：`chart`、`graph`、`command`、`code`、`markdown` 和 `chat`。详见[复杂组件组合](docs/architecture/components.md#complex-component-composition)。
 
 ## 参与开发
 

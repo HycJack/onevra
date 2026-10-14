@@ -8,11 +8,11 @@ import (
 )
 
 func TestNumberInputStepperInnerCorners(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		value := 5.0
 		var hover, pressed ui.Color
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(dark))
 			hover, pressed = c.Theme().SurfaceHover, c.Theme().SurfacePressed
 			NumberInput(c, &value, 0, 10, 1).Label("Amount")
 		}, 200, 80)
@@ -38,7 +38,7 @@ func TestNumberInputStepperInnerCorners(t *testing.T) {
 				for _, px := range []int{int(r.X) + 1, int(r.X+r.W) - 2} {
 					got := img.RGBAAt(px, py)
 					if got.R != want.R || got.G != want.G || got.B != want.B {
-						t.Fatalf("%v %s pressed=%t: inner corner %v, want %v", mode, label, down, got, want)
+						t.Fatalf("%v %s pressed=%t: inner corner %v, want %v", dark, label, down, got, want)
 					}
 				}
 			}

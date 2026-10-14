@@ -104,11 +104,11 @@ func TestSettingsSidebarSpacing(t *testing.T) {
 		{ID: "help", Title: "Help"},
 		{ID: "privacy", Title: "Privacy", Section: "Personal"},
 	}
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, mode := range []bool{false, true} {
 		state := SettingsState{}
 		var itemGap, sectionGap float32
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(mode))
 			itemGap, sectionGap = c.Theme().Space(1), c.Theme().Space(3)
 			Settings(c, &state, catalog, SettingsOptions{})
 		}, 800, 600)
@@ -239,7 +239,7 @@ func TestSettingsCategoryImage(t *testing.T) {
 	}
 	state := SettingsState{}
 	tt := ui.NewTester(func(c *ui.Context) {
-		theme.Apply(c, theme.Light)
+		c.SetTheme(theme.LightPalette())
 		Settings(c, &state, catalog, SettingsOptions{})
 	}, 800, 600)
 	general, _ := tt.Find("General")

@@ -9,14 +9,14 @@ import (
 )
 
 func TestNumberInputOptionalControls(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		value := .2
 		disabled := false
 		options := NumberInputOptions{HideStepper: true}
 		unit := float32(1)
 		changes := 0
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(dark))
 			unit = c.Theme().Space(.25)
 			ui.Column(c).Disabled(disabled).Children(func() {
 				n := NumberInput(c, &value, -1, 1, .1, options).Label("Amount")

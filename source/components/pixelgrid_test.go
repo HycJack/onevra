@@ -36,21 +36,21 @@ func TestGridPositions(t *testing.T) {
 }
 
 func TestPixelGridRendering(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, spacing := range []float32{0, -1, 16, float32(math.NaN()), float32(math.Inf(1))} {
 			tt := ui.NewTester(func(c *ui.Context) {
-				theme.Apply(c, mode)
+				c.SetTheme(theme.Palette(dark))
 				PixelGrid(c, PixelGridOptions{Spacing: spacing, MajorEvery: 4}).Width(80).Height(80)
 			}, 100, 100)
 			img := tt.Image()
 			background := img.RGBAAt(8, 8)
 			if img.RGBAAt(0, 8) != background || img.RGBAAt(8, 0) != background || img.RGBAAt(0, 0) != background {
-				t.Fatalf("mode=%v spacing=%v: unexpected leading border", mode, spacing)
+				t.Fatalf("dark=%v spacing=%v: unexpected leading border", dark, spacing)
 			}
 			minor := img.RGBAAt(16, 8)
 			major := img.RGBAAt(64, 8)
 			if background == minor || minor == major || major == background {
-				t.Fatalf("mode=%v spacing=%v: missing grid contrast", mode, spacing)
+				t.Fatalf("dark=%v spacing=%v: missing grid contrast", dark, spacing)
 			}
 		}
 	}

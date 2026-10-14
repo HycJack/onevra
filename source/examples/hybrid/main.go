@@ -27,6 +27,8 @@ func main() {
 	if err != nil {
 		a.report("load_error", err)
 	}
+	// Start in the saved appearance rather than switching after launch.
+	mygo.Theme.SetSource(a.themeSource())
 	if appKind == "menubar" || appKind == "hybrid" && a.config.Silent && a.config.CloseAction != "both" {
 		mygo.App.SetActivationPolicy(mygo.ActivationPolicyAccessory)
 	}

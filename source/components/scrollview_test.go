@@ -8,12 +8,12 @@ import (
 )
 
 func TestScrollViewAxes(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, axes := range []ScrollAxes{ScrollVertical, ScrollHorizontal, ScrollBoth, ScrollAxes(255)} {
 			var state ui.ScrollState
 			var content ui.Rect
 			tt := ui.NewTester(func(c *ui.Context) {
-				theme.Apply(c, mode)
+				c.SetTheme(theme.Palette(dark))
 				ScrollView(c, ScrollViewOptions{Axes: axes}).Fill().TrackScroll(&state).Children(func() {
 					ui.Box(c).Size(600, 800).Shrink(0).Label("content").DrawOver(func(_ *ui.Painter, r ui.Rect) { content = r })
 				})
@@ -26,7 +26,7 @@ func TestScrollViewAxes(t *testing.T) {
 				y = 0
 			}
 			if state.MaxX != x || state.MaxY != y {
-				t.Fatalf("mode=%v axes=%v: bounds %+v, want %v,%v", mode, axes, state, x, y)
+				t.Fatalf("dark=%v axes=%v: bounds %+v, want %v,%v", dark, axes, state, x, y)
 			}
 			initial := content
 			tt.Scroll(100, 100, 50, 70)
@@ -67,11 +67,11 @@ func TestScrollViewArrangement(t *testing.T) {
 }
 
 func TestScrollViewInsets(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, dark := range []bool{false, true} {
 		for _, axes := range []ScrollAxes{ScrollVertical, ScrollHorizontal} {
 			var state ui.ScrollState
 			tt := ui.NewTester(func(c *ui.Context) {
-				theme.Apply(c, mode)
+				c.SetTheme(theme.Palette(dark))
 				ScrollView(c, ScrollViewOptions{Axes: axes}).Fill().
 					ScrollbarInsets(40, 10, 20, 30).TrackScroll(&state).Children(func() {
 					ui.Box(c).Size(600, 800).Shrink(0).Label("content")

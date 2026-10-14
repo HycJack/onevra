@@ -14,12 +14,12 @@ import (
 func TestIconSources(t *testing.T) {
 	wide := ui.MustParseSVG([]byte(`<svg xmlns="http://www.w3.org/2000/svg" width="48" height="24" viewBox="0 0 48 24"><path d="M2 2h44v20H2z" fill="currentColor"/></svg>`))
 	for _, svg := range []*ui.SVG{lucide.Search(), wide, nil} {
-		for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+		for _, dark := range []bool{false, true} {
 			for _, scale := range []float32{1, 2} {
-				t.Run(fmt.Sprintf("%p/%v/%g", svg, mode, scale), func(t *testing.T) {
+				t.Run(fmt.Sprintf("%p/%v/%g", svg, dark, scale), func(t *testing.T) {
 					build := func(icon func(*ui.Context) ui.Element) *ui.Tester {
 						tt := ui.NewTester(func(c *ui.Context) {
-							theme.Apply(c, mode)
+							c.SetTheme(theme.Palette(dark))
 							ui.Row(c).FontSize(24).TextColor(c.Theme().Accent).Children(func() {
 								icon(c).Label("inherited")
 								icon(c).Size(32, 32).TextColor(c.Theme().TextMuted).Label("explicit")

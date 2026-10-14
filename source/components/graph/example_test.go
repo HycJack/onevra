@@ -23,7 +23,7 @@ func ExampleView() {
 		},
 	}
 	view := func(c *ui.Context) {
-		theme.Apply(c, theme.Auto)
+		theme.Apply(c)
 		graph.View(c, &state, data, graph.Options{
 			Label: "Notes graph", Height: 360,
 			Open: func(id string) { opened = id },

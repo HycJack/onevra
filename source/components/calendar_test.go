@@ -11,12 +11,12 @@ import (
 )
 
 func TestCalendarPickerTextBoxAppearance(t *testing.T) {
-	for _, mode := range []theme.Mode{theme.Light, theme.Dark} {
+	for _, mode := range []bool{false, true} {
 		date := time.Date(2024, 2, 29, 0, 0, 0, 0, time.UTC)
 		value := date.Format("2006-01-02")
 		picker := true
 		tt := ui.NewTester(func(c *ui.Context) {
-			theme.Apply(c, mode)
+			c.SetTheme(theme.Palette(mode))
 			if picker {
 				CalendarPicker(c, &date).Width(200).Height(32)
 			} else {
