@@ -1,5 +1,7 @@
 // Package plain provides a single-content native window without the default
-// title bar. Applications own content, localization, state and lifetime.
+// title bar. The window title is shown in the draggable header instead, so it
+// stays visible while the shell owns only presentation. Applications own
+// content, localization, state and lifetime.
 package plain
 
 import (
@@ -14,6 +16,8 @@ import (
 // ShellOptions configures a single-content window. Builders and Shell methods
 // run synchronously on the UI thread, after MyGo is ready.
 type ShellOptions struct {
+	// Title names the window and is shown in the shell's header. Later
+	// Window().SetTitle calls update both the native title and the header.
 	Title string
 	// Dimensions are outer DIPs. Defaults are 760x560 with a 360x300 minimum.
 	Width, Height, MinWidth, MinHeight int
@@ -56,6 +60,7 @@ type windowHost interface {
 	ToggleMaximize()
 	IsMaximized() bool
 	Close()
+	Title() string
 }
 
 // NewShell hides the standard title bar, retaining native macOS/Linux window
@@ -114,6 +119,26 @@ func (s *Shell) refresh() {
 	}
 }
 
+// currentTitle returns the window's current title so the header follows
+// SetTitle; before the host exists it falls back to the construction value.
+func (s *Shell) currentTitle() string {
+	if s.host != nil {
+		return s.host.Title()
+	}
+	return s.options.Title
+}
+
+func (s *Shell) headerTitle(c *ui.Context) {
+	title := s.currentTitle()
+	if title == "" {
+		ui.Spacer(c)
+		return
+	}
+	ui.Row(c).Key("header-title").Grow(1).MinWidth(0).FillHeight().AlignItems(ui.Center).Clip().Children(func() {
+		components.Text(c, title).Bold().SingleLine().Ellipsis("…")
+	})
+}
+
 // HeaderHeight is the frame's native-control clearance and modal drag height.
 // Shell already insets ordinary content by this amount.
 func HeaderHeight(c *ui.Context) float32 { return max(48, c.TitleBar().Height, c.Theme().Rem(3)) }
@@ -131,9 +156,15 @@ func (s *Shell) view(c *ui.Context) {
 				}
 			})
 			bar := c.TitleBar()
+			// Leave a gap beyond the macOS window controls so the title does not
+			// sit against the traffic lights.
+			leftInset := max(8, bar.Left)
+			if runtime.GOOS == "darwin" && bar.Left > 0 {
+				leftInset += 16
+			}
 			ui.Row(c).Key("header").Absolute().Top(0).Left(0).Right(0).Height(height).
-				Padding(6, max(8, bar.Right), 6, max(8, bar.Left)).AlignItems(ui.Center).DragWindow().Children(func() {
-				ui.Spacer(c)
+				Padding(6, max(8, bar.Right), 6, leftInset).AlignItems(ui.Center).DragWindow().Children(func() {
+				s.headerTitle(c)
 				if runtime.GOOS == "windows" {
 					s.captionButtons(c)
 				}

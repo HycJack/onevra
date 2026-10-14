@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Show the window title in `shells/plain`'s header, so a window without the default title bar still displays it. The header follows `Window().SetTitle`, including later language changes.
+
 ## [0.2026.9] - 2026-10-14
 
 - Breaking: Shells no longer choose the theme. Replace `ShellOptions.Appearance` and `plain.Shell.SetAppearance` with `mygo.Theme.SetSource`, which also switches native window chrome, and pass `Theme: theme.Onevra` for Onevra's palettes or a function returning your own `*ui.Theme`; without it, Shells keep MyGo's theme. `theme.Mode` is removed and `theme.Apply(c)` takes no mode.

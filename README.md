@@ -98,7 +98,7 @@ Shells create native windows while leaving application lifecycle, business state
 
 | Package | Layout |
 | --- | --- |
-| [`shells/plain`](source/shells/plain/shell.go) | A single content area with automatic clearance for window controls; used in the example above |
+| [`shells/plain`](source/shells/plain/shell.go) | A single content area with automatic clearance for window controls and the window title shown in its header; used in the example above |
 | [`shells/sidebar`](source/shells/sidebar/shell.go) | A collapsible, resizable sidebar with a content area, header actions and replaceable pages |
 
 Import either package under `github.com/oneo-me/onevra/source/`. Their `Theme` option installs the application's theme before each frame: pass `theme.Onevra` for Onevra's palettes, your own function returning a `*ui.Theme`, or nothing to keep MyGo's theme. Choose light, dark or system appearance with `mygo.Theme.SetSource`; see the [theme package](source/theme/doc.go). For Sidebar, use `sidebar.HeaderHeight(c)` when content needs to clear the floating header; see [layout guidance](docs/architecture/components.md#page-container-and-layout).

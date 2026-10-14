@@ -13,6 +13,7 @@ import (
 type testWindow struct {
 	minimized, closed, frames int
 	maximized                 bool
+	title                     string
 }
 
 func (w *testWindow) Invalidate()       { w.frames++ }
@@ -20,6 +21,21 @@ func (w *testWindow) Minimize()         { w.minimized++ }
 func (w *testWindow) Close()            { w.closed++ }
 func (w *testWindow) ToggleMaximize()   { w.maximized = !w.maximized }
 func (w *testWindow) IsMaximized() bool { return w.maximized }
+func (w *testWindow) Title() string     { return w.title }
+
+func TestHeaderShowsWindowTitle(t *testing.T) {
+	s := newShell(ShellOptions{Title: "Draft"})
+	tt := ui.NewTester(s.view, 760, 560)
+	if !tt.HasText("Draft") {
+		t.Fatalf("header missing construction title: %v", tt.Texts())
+	}
+	w := &testWindow{title: "Saved"}
+	s.host = w
+	tt.Frame()
+	if !tt.HasText("Saved") {
+		t.Fatalf("header did not follow the window title: %v", tt.Texts())
+	}
+}
 
 func TestNativeConfiguration(t *testing.T) {
 	s := newShell(ShellOptions{Hidden: true, Width: 200, Height: 100})
