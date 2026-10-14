@@ -7,10 +7,11 @@ var navigationGroups = []string{
 	"Feedback & overlays", "Games",
 }
 
-// unreleasedPages are the routes added since the last published version; the
-// sidebar highlights them. Add new pages here alongside earlier unreleased
-// ones, and clear the list when the next version is published.
-var unreleasedPages = map[string]bool{
+// newPages are the routes added in the latest published version or since; the
+// sidebar highlights them. Add new pages alongside the existing entries. When
+// publishing a version, keep the pages it ships and remove those from earlier
+// versions.
+var newPages = map[string]bool{
 	"controls/Relationship graph": true,
 }
 
