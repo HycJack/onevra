@@ -29,7 +29,7 @@ func (g *Gallery) navigationItem(c *ui.Context, label string, icon *ui.SVG, page
 			components.Text(c, tr(c, "gallery.bullet")).FontSize(c.Theme().Rem(1.4)).TextColor(c.Theme().TextMuted).SingleLine()
 		})
 	}
-	if newestPages[pageKey(page)] {
+	if unreleasedPages[pageKey(page)] {
 		t := c.Theme()
 		item.Children(func() {
 			if !upstream || mygoDirectUse(example) {

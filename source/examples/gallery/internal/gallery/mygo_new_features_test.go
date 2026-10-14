@@ -172,10 +172,10 @@ func TestCodeAndGameGroups(t *testing.T) {
 	}
 }
 
-func TestNewestPagesHighlighted(t *testing.T) {
-	for key := range newestPages {
+func TestUnreleasedPagesHighlighted(t *testing.T) {
+	for key := range unreleasedPages {
 		if pageKey(pageFromKey(key)) != key {
-			t.Fatalf("newest page %q has no route", key)
+			t.Fatalf("unreleased page %q has no route", key)
 		}
 	}
 	for _, lang := range []string{"en", "zh-Hans"} {
@@ -194,21 +194,21 @@ func TestNewestPagesHighlighted(t *testing.T) {
 				label = texts[i-2]
 			}
 			found := false
-			for key := range newestPages {
+			for key := range unreleasedPages {
 				found = found || g.text(sourceMessageIDs[routeLabel(key)]) == label
 			}
 			if !found {
 				t.Fatalf("%s badge follows %q", lang, label)
 			}
 		}
-		if got != len(newestPages) {
-			t.Fatalf("%s: %d badges, want %d", lang, got, len(newestPages))
+		if got != len(unreleasedPages) {
+			t.Fatalf("%s: %d badges, want %d", lang, got, len(unreleasedPages))
 		}
 	}
 }
 
 func TestNewestBadgeCentered(t *testing.T) {
-	for key := range newestPages {
+	for key := range unreleasedPages {
 		g := &Gallery{}
 		page := pageFromKey(key)
 		label := routeLabel(key)
