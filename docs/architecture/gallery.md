@@ -20,7 +20,7 @@ Gallery's application version stays aligned with `mygo.json`.
 
 ### Navigation and previews
 
-The grouped sidebar contains Welcome, Component status, the Lucide library, desktop integrations including MyGo audio, MyGo plugins and component pages. Components share purpose-based groups regardless of implementation; a trailing dot marks upstream widgets awaiting an Onevra decision. MyGo plugins and explicitly retained direct-use APIs have no dot. A "New" badge highlights the most recently added pages until the next pages are added, which replace the [code-owned list](../../source/examples/gallery/internal/gallery/navigation.go). Named routes remain stable when catalog order changes.
+The grouped sidebar contains Welcome, the Lucide library, desktop integrations including MyGo audio, MyGo plugins and component pages. Components share purpose-based groups regardless of implementation; a trailing dot marks upstream widgets awaiting an Onevra decision. MyGo plugins and explicitly retained direct-use APIs have no dot. A "New" badge highlights the most recently added pages until the next pages are added, which replace the [code-owned list](../../source/examples/gallery/internal/gallery/navigation.go). Named routes remain stable when catalog order changes.
 
 Welcome is a promotional page: the product name, repository link, command search and the Gallery version, over a faint tilted field of Lucide icons. The field paints a small cached icon sample directly and passes the pointer through. The repository link opens through MyGo's shell integration; headless views never open URLs. Welcome plays a brief entrance animation that MyGo completes immediately under reduced motion. Review pages share a fixed pixel-grid background that Settings can disable, while Welcome and Terminal keep dedicated backgrounds. Examples remain interactive and use independent state per variant. MyGo pages show controls without source listings or tutorial prose. Supporting controls use Onevra equivalents whenever available.
 
@@ -79,7 +79,7 @@ Keep both catalogs equivalent and preserve format placeholders. Translate comple
 
 ## Component review
 
-The read-only Component status page and startup reminders share [code-owned decisions](../../source/examples/gallery/internal/gallery/mygo_review.go). They distinguish replacements, exclusions, retained upstream examples, newly discovered entries and composition primitives. Empty groups are hidden; replacements group under their Onevra owner. This describes maintenance decisions and example coverage, not every application call site or transitive dependency.
+The [code-owned decision map](../../source/examples/gallery/internal/gallery/mygo_review.go) and its startup reminders distinguish replacements, exclusions, retained upstream examples, newly discovered entries and composition primitives. This describes maintenance decisions and example coverage, not every application call site or transitive dependency.
 
 Generation scans exported free functions taking a context first in MyGo's top-level `ui` package, across platform files and including generic constructors. It omits Base constructors and tests. Generated names and locations are checked in, so running Gallery needs neither a toolchain nor a module cache.
 

@@ -240,7 +240,7 @@ func pendingMyGo(discovered []mygoComponent, examples []mygoExample) []mygoCompo
 // during rendering. Pending decisions are reminders, not build or runtime errors.
 func LogMyGoReview(printf func(string, ...any)) {
 	pending := pendingMyGo(mygoDiscovered, mygoExamples)
-	printf("[MyGo review] %s: %d pending; see Component status or record decisions in mygo_review.go", mygoScanVersion, len(pending))
+	printf("[MyGo review] %s: %d pending; record decisions in mygo_review.go", mygoScanVersion, len(pending))
 	for _, entry := range mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled) {
 		if entry.Status == mygoUpstream || entry.Status == mygoUnreviewed {
 			detail := entry.Source

@@ -226,8 +226,6 @@ gallery.component_split:
   other: "Split"
 gallery.component_splitvertical:
   other: "SplitVertical"
-gallery.component_status:
-  other: Component status
 gallery.component_stepper:
   other: "Stepper"
 gallery.component_stepslider:

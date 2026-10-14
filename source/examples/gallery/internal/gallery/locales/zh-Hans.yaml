@@ -226,8 +226,6 @@ gallery.component_split:
   other: "分栏"
 gallery.component_splitvertical:
   other: "垂直分栏"
-gallery.component_status:
-  other: 组件状态
 gallery.component_stepper:
   other: "步进器"
 gallery.component_stepslider:

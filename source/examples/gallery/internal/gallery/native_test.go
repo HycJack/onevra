@@ -98,23 +98,19 @@ func TestNativeGallery(t *testing.T) {
 		width, height int
 		settings      bool
 		icons         bool
-		review        bool
 	}{
-		{"light", mygo.ThemeLight, 820, 900, false, false, false},
-		{"dark", mygo.ThemeDark, 820, 900, false, false, false},
-		{"settings", mygo.ThemeLight, 820, 600, true, false, false},
-		{"settings-dark", mygo.ThemeDark, 820, 600, true, false, false},
-		{"settings-narrow", mygo.ThemeLight, 360, 480, true, false, false},
-		{"settings-tall", mygo.ThemeLight, 820, 900, true, false, false},
-		{"settings-large", mygo.ThemeDark, 1200, 900, true, false, false},
-		{"restored", mygo.ThemeDark, 820, 900, false, false, false},
-		{"narrow", mygo.ThemeLight, 360, 900, false, false, false},
-		{"icons-light", mygo.ThemeLight, 820, 900, false, true, false},
-		{"icons-dark", mygo.ThemeDark, 820, 900, false, true, false},
-		{"icons-narrow", mygo.ThemeLight, 360, 900, false, true, false},
-		{"status-light", mygo.ThemeLight, 820, 900, false, false, true},
-		{"status-dark", mygo.ThemeDark, 820, 900, false, false, true},
-		{"status-narrow", mygo.ThemeLight, 360, 900, false, false, true},
+		{"light", mygo.ThemeLight, 820, 900, false, false},
+		{"dark", mygo.ThemeDark, 820, 900, false, false},
+		{"settings", mygo.ThemeLight, 820, 600, true, false},
+		{"settings-dark", mygo.ThemeDark, 820, 600, true, false},
+		{"settings-narrow", mygo.ThemeLight, 360, 480, true, false},
+		{"settings-tall", mygo.ThemeLight, 820, 900, true, false},
+		{"settings-large", mygo.ThemeDark, 1200, 900, true, false},
+		{"restored", mygo.ThemeDark, 820, 900, false, false},
+		{"narrow", mygo.ThemeLight, 360, 900, false, false},
+		{"icons-light", mygo.ThemeLight, 820, 900, false, true},
+		{"icons-dark", mygo.ThemeDark, 820, 900, false, true},
+		{"icons-narrow", mygo.ThemeLight, 360, 900, false, true},
 	} {
 		mygo.Theme.SetSource(mode.theme)
 		mygo.RunOnMain(func() {
@@ -126,9 +122,6 @@ func TestNativeGallery(t *testing.T) {
 			g.page = welcomePage
 			if mode.icons {
 				g.page = lucidePage
-			}
-			if mode.review {
-				g.page = componentStatusPage
 			}
 			win.SetSize(mode.width, mode.height)
 			before = win.Bounds()

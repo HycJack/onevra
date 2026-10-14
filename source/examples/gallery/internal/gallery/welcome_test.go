@@ -32,7 +32,7 @@ func TestWelcome(t *testing.T) {
 }
 
 func TestWelcomeNavigation(t *testing.T) {
-	g := &Gallery{page: componentStatusPage}
+	g := &Gallery{page: lucidePage}
 	tt := ui.NewTester(g.Left, 220, 600)
 	if err := tt.Click("Welcome"); err != nil {
 		t.Fatal(err)

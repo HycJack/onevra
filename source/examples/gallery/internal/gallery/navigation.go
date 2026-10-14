@@ -32,7 +32,7 @@ func navigationCatalog() []navigationGroup {
 			groups = append(groups, navigationGroup{label, entries})
 		}
 	}
-	add("Overview", []navigationEntry{{"Welcome", welcomePage}, {"Component status", componentStatusPage}})
+	add("Overview", []navigationEntry{{"Welcome", welcomePage}})
 	add("Icon library", []navigationEntry{{"Lucide", lucidePage}})
 	desktop := []navigationEntry{{"Tray", trayPage}, {"Dock menu", dockPage}, {"System notifications", notificationsPage}}
 	for _, group := range append([]string{"Desktop"}, navigationGroups...) {

@@ -15,7 +15,7 @@ import (
 	"github.com/oneo-me/onevra/source/theme"
 )
 
-const trayPage galleryPage = componentStatusPage + 1
+const trayPage galleryPage = shellPage + 1
 
 // The application owns the panel, in-memory note and lifetime. All callbacks
 // run on MyGo's UI thread; hiding the panel does not discard the note.

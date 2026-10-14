@@ -78,9 +78,6 @@ func (g *Gallery) titlebarLocalized(c *ui.Context) {
 	if g.page == lucidePage {
 		title = "Icon library / Lucide"
 	}
-	if g.page == componentStatusPage {
-		title = "Component status"
-	}
 	if g.page == trayPage {
 		title = "Desktop / Tray"
 	}
@@ -235,10 +232,6 @@ func (g *Gallery) body(c *ui.Context) {
 	}
 	if g.page == welcomePage {
 		g.Welcome(c)
-		return
-	}
-	if g.page == componentStatusPage {
-		g.ComponentStatus(c)
 		return
 	}
 	if example, ok := controlExampleFor(g.page); ok {

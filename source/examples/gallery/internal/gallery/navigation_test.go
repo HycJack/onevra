@@ -17,7 +17,7 @@ func TestNavigationSpacing(t *testing.T) {
 	if !ok || !searchOK || search.Y != 48 || first.Y != search.Y+search.H+8 {
 		t.Fatalf("first group must follow the search field at the shell's safe content edge: %v", first)
 	}
-	item, _ := tt.Find("Component status")
+	item, _ := tt.Find("Welcome")
 	next, _ := tt.Find("Icon library")
 	if gap := next.Y - item.Y - item.H; math.Abs(float64(gap-12)) > 0.001 {
 		t.Fatalf("group gap = %v, want 12", gap)
@@ -28,7 +28,7 @@ func TestNavigationGroupOrder(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.Left, 220, 6000)
 	var bottom float32
-	for _, label := range []string{"Overview", "Welcome", "Component status", "Icon library", "Lucide", "Desktop", "Tray", "Dock menu", "System notifications", "Plugins", "Terminal", "Actions & navigation", "Buttons", "Text input", "Selection & values", "Date & time", "Color", "Content display", "Markdown", "Chat", "Code & diffs", "Code", "Code editor", "Diff viewer", "Charts", "Bar chart", "Layout & containers", "Feedback & overlays", "Games", "Canvas", "Game loop", "Lawn defense"} {
+	for _, label := range []string{"Overview", "Welcome", "Icon library", "Lucide", "Desktop", "Tray", "Dock menu", "System notifications", "Plugins", "Terminal", "Actions & navigation", "Buttons", "Text input", "Selection & values", "Date & time", "Color", "Content display", "Markdown", "Chat", "Code & diffs", "Code", "Code editor", "Diff viewer", "Charts", "Bar chart", "Layout & containers", "Feedback & overlays", "Games", "Canvas", "Game loop", "Lawn defense"} {
 		r, ok := tt.Find(label)
 		if !ok || r.Y < bottom {
 			t.Fatalf("%s missing or out of order: %v (previous bottom %v)", label, r, bottom)
@@ -143,7 +143,7 @@ func TestNavigationCatalog(t *testing.T) {
 			seen[entry.page] = true
 		}
 	}
-	if count != 6+len(controlCatalog)+len(mygoCatalog) {
+	if count != 5+len(controlCatalog)+len(mygoCatalog) {
 		t.Fatalf("missing catalog entries: %d", count)
 	}
 }

@@ -173,3 +173,109 @@ func TestMyGoReviewLog(t *testing.T) {
 		}
 	}
 }
+
+func TestComponentStatuses(t *testing.T) {
+	decisions := map[string]mygoDecision{
+		"Replaced": {Replacement: "components.Button", Reason: "Button variant"},
+		"Excluded": {Reason: "Not needed in Onevra"},
+	}
+	entries := mygoReviewEntries([]mygoComponent{
+		{Name: "Replaced"}, {Name: "Excluded"}, {Name: "Future"}, {Name: "Box"},
+	}, []mygoExample{{name: "Replaced"}, {name: "Excluded"}, {name: "Upstream"}}, decisions)
+	want := map[string]mygoStatus{"Replaced": mygoReplaced, "Excluded": mygoExcluded, "Future": mygoUnreviewed, "Box": mygoPrimitive, "Upstream": mygoUpstream, "ContextMenu": mygoPrimitive, "Menu": mygoPrimitive}
+	for i, entry := range entries {
+		if entry.Status != want[entry.Name] {
+			t.Fatalf("wrong status: %+v", entry)
+		}
+		if i > 0 && entries[i-1].Name >= entry.Name {
+			t.Fatal("entries not sorted")
+		}
+		if entry.Status == mygoExcluded || entry.Status == mygoReplaced {
+			if entry.HasExample || entry.Reason == "" {
+				t.Fatalf("invalid handled entry: %+v", entry)
+			}
+		}
+		delete(want, entry.Name)
+	}
+	if len(want) != 0 {
+		t.Fatalf("missing statuses: %v", want)
+	}
+	stale := mygoReviewEntries(nil, nil, decisions)
+	if len(stale) != 4 || stale[1].Name != "Excluded" || stale[1].Source != "Not found in current inventory" {
+		t.Fatal("lost stale decisions")
+	}
+	for name, decision := range mygoHandled {
+		if strings.TrimSpace(decision.Reason) == "" {
+			t.Fatalf("missing reason for %s", name)
+		}
+		for _, example := range mygoCatalog {
+			if example.name == name {
+				t.Fatalf("handled example remains: %s", name)
+			}
+		}
+	}
+}
+
+func TestTerminalUsesMyGoDirectly(t *testing.T) {
+	found := false
+	for _, entry := range mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled) {
+		if entry.Name == "Terminal" {
+			found = true
+			if entry.Status != mygoPrimitive || !entry.HasExample || entry.Reason == "" {
+				t.Fatalf("unexpected terminal status: %+v", entry)
+			}
+		}
+	}
+	if !found {
+		t.Fatal("Terminal missing from review inventory")
+	}
+	for _, entry := range pendingMyGo(mygoDiscovered, mygoExamples) {
+		if entry.Name == "Terminal" {
+			t.Fatal("Terminal still awaiting review")
+		}
+	}
+	for _, example := range mygoCatalog {
+		if example.name == "Terminal" && example.group == "Plugins" {
+			return
+		}
+	}
+	t.Fatal("Terminal plugin demonstration missing")
+}
+
+func TestFocusedValueUsesMyGoDirectly(t *testing.T) {
+	entries := mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled)
+	found := false
+	for _, entry := range entries {
+		if entry.Name == "FocusedValue" {
+			found = true
+			if entry.Status != mygoPrimitive || entry.HasExample {
+				t.Fatalf("unexpected focus API status: %+v", entry)
+			}
+		}
+	}
+	if !found {
+		t.Fatal("FocusedValue missing from review inventory")
+	}
+	for _, entry := range pendingMyGo(mygoDiscovered, mygoExamples) {
+		if entry.Name == "FocusedValue" {
+			t.Fatal("FocusedValue still awaiting review")
+		}
+	}
+	for _, example := range mygoCatalog {
+		if example.name == "FocusedValue" {
+			t.Fatal("FocusedValue still has a standalone example")
+		}
+	}
+}
+
+func TestTextfUsesMyGoDirectly(t *testing.T) {
+	for _, entry := range mygoReviewEntries(mygoDiscovered, mygoExamples, mygoHandled) {
+		if entry.Name == "Textf" {
+			if entry.Status != mygoPrimitive || entry.Replacement != "" || entry.HasExample {
+				t.Fatalf("unexpected formatted text status: %+v", entry)
+			}
+			return
+		}
+	}
+	t.Fatal("Textf missing from review inventory")
+}

@@ -116,9 +116,6 @@ func pageKey(page galleryPage) string {
 	if page == welcomePage {
 		return "welcome"
 	}
-	if page == componentStatusPage {
-		return "component-status"
-	}
 	if page == shellPage {
 		return "shell"
 	}
@@ -152,9 +149,6 @@ func pageFromKey(key string) galleryPage {
 	}
 	if key == "welcome" {
 		return welcomePage
-	}
-	if key == "component-status" {
-		return componentStatusPage
 	}
 	if key == "shell" {
 		return shellPage

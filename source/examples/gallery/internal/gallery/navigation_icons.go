@@ -100,8 +100,6 @@ func (entry navigationEntry) icon() *ui.SVG {
 	switch entry.page {
 	case welcomePage:
 		return lucide.House()
-	case componentStatusPage:
-		return lucide.ClipboardCheck()
 	case lucidePage:
 		return lucide.Shapes()
 	case trayPage:
