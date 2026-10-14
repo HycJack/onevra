@@ -1,6 +1,7 @@
 package graph
 
 import (
+	"fmt"
 	"math"
 	"testing"
 )
@@ -125,5 +126,27 @@ func TestNodeDiameterBounds(t *testing.T) {
 	}
 	if !(nodeDiameter(10) > nodeDiameter(5)) {
 		t.Fatal("diameter does not grow with weight")
+	}
+}
+
+// Large graphs gather forces in parallel; the result must not depend on
+// scheduling.
+func TestParallelLayoutIsDeterministic(t *testing.T) {
+	var d Data
+	for i := range 1500 {
+		d.Nodes = append(d.Nodes, Node{ID: fmt.Sprint(i)})
+		if i > 0 {
+			d.Edges = append(d.Edges, Edge{Source: fmt.Sprint(i), Target: fmt.Sprint(i / 3)})
+		}
+	}
+	var a, b graphView
+	a.update(d, Options{}, DefaultPalette(false), false, false)
+	b.update(d, Options{}, DefaultPalette(false), false, false)
+	a.sim.step(5)
+	b.sim.step(5)
+	for i := range a.sim.bodies {
+		if a.sim.bodies[i] != b.sim.bodies[i] {
+			t.Fatal("parallel layout is not deterministic")
+		}
 	}
 }

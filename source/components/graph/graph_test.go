@@ -5,6 +5,7 @@ import (
 	"testing"
 
 	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/source/components/gesture"
 	"github.com/oneo-me/onevra/source/theme"
 )
 
@@ -156,15 +157,37 @@ func TestZoomAndPan(t *testing.T) {
 	if after := (float64(px-r.X) - h.state.camera.x) / h.state.camera.zoom; math.Abs(after-gx) > 1e-6 {
 		t.Fatal("zoom did not stay anchored at the pointer")
 	}
-	// Tester scrolls carry no modifiers; platforms report Control with them.
+	// Tester scrolls carry no modifiers or precision; platforms report them.
+	scroll := func(dx, dy float32, mods ui.Modifiers, precise bool) {
+		e, _ := gesture.Classify(ui.InputEvent{Kind: ui.InputScroll, X: px - r.X, Y: py - r.Y, DX: dx, DY: dy, Mods: mods, Precise: precise})
+		h.state.navigate(e)
+	}
 	zoomed := h.state.Zoom()
-	h.state.input(ui.InputEvent{Kind: ui.InputScroll, X: px - r.X, Y: py - r.Y, DY: 48, Mods: ui.Ctrl}, nil)
+	scroll(0, 48, ui.Ctrl, true)
 	if got := h.state.Zoom(); math.Abs(float64(zoomed/got)-1.5) > 1e-3 {
-		t.Fatalf("pinch-rate zoom = %g from %g", got, zoomed)
+		t.Fatalf("touchpad Control-scroll zoom = %g from %g", got, zoomed)
+	}
+	zoomed = h.state.Zoom()
+	h.state.navigate(gesture.Event{Kind: gesture.Zoom, X: px - r.X, Y: py - r.Y, Scale: 2, Pinch: true})
+	if got := h.state.Zoom(); math.Abs(float64(got/zoomed)-2) > 1e-3 {
+		t.Fatalf("pinch zoom = %g from %g", got, zoomed)
+	}
+
+	// Two fingers on a touchpad pan without zooming, and so does a
+	// sideways wheel.
+	zoomed, cam := h.state.Zoom(), h.state.camera
+	scroll(12, -30, 0, true)
+	if dx, dy := h.state.camera.x-cam.x, h.state.camera.y-cam.y; math.Abs(dx+12) > 1e-6 || math.Abs(dy-30) > 1e-6 || h.state.Zoom() != zoomed {
+		t.Fatalf("touchpad scroll moved the camera by (%g,%g), zoom %g", dx, dy, h.state.Zoom())
+	}
+	cam = h.state.camera
+	scroll(40, 0, ui.Shift, false)
+	if dx, dy := h.state.camera.x-cam.x, h.state.camera.y-cam.y; math.Abs(dx+40) > 1e-6 || dy != 0 || h.state.Zoom() != zoomed {
+		t.Fatalf("sideways wheel moved the camera by (%g,%g), zoom %g", dx, dy, h.state.Zoom())
 	}
 
 	// Pan from a corner, which holds no node.
-	cam := h.state.camera
+	cam = h.state.camera
 	h.tt.Press(r.X+3, r.Y+3)
 	h.tt.Move(r.X+43, r.Y+23)
 	h.tt.Release(r.X+43, r.Y+23)

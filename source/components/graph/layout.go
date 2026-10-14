@@ -1,6 +1,10 @@
 package graph
 
-import "math"
+import (
+	"math"
+	"runtime"
+	"sync"
+)
 
 // The layout uses a velocity-damped force model with an exponentially cooling
 // alpha, as d3-force does: centering, link springs, Barnes–Hut repulsion and
@@ -23,6 +27,7 @@ const (
 	pinAlphaTarget     = 0.25
 	initialAreaPerNode = 60 * 60
 	newNodeOffset      = 24
+	parallelChunk      = 256
 )
 
 var alphaDecay = 1 - math.Pow(alphaMin, 1.0/settleTicks)
@@ -76,6 +81,7 @@ type simulation struct {
 	running            bool
 	seed               uint32
 	tree               quadtree
+	pushes             [][2]float64
 }
 
 func newSimulation(bodies []body, springs []springInput, forces Forces) *simulation {
@@ -113,9 +119,36 @@ func (s *simulation) setSprings(inputs []springInput) {
 }
 
 // jiggle separates exactly coincident points with a deterministic sequence.
-func (s *simulation) jiggle() float64 {
-	s.seed = s.seed*1664525 + 1013904223
-	return (float64(s.seed)/4294967296 - 0.5) * 1e-6
+func (s *simulation) jiggle() float64 { return nextJiggle(&s.seed) }
+
+func nextJiggle(seed *uint32) float64 {
+	*seed = *seed*1664525 + 1013904223
+	return (float64(*seed)/4294967296 - 0.5) * 1e-6
+}
+
+// bodySeed gives each body its own jiggle sequence in passes that run in
+// parallel, so the result does not depend on scheduling.
+func (s *simulation) bodySeed(i int) uint32 { return s.seed ^ uint32(i+1)*2654435761 }
+
+// parallel runs fn over [0, n) in contiguous chunks, across processors when
+// the graph is large enough to repay it. Chunks must write only their own
+// bodies' state.
+func parallel(n int, fn func(lo, hi int)) {
+	workers := min(runtime.GOMAXPROCS(0), n/parallelChunk)
+	if workers <= 1 {
+		fn(0, n)
+		return
+	}
+	size := (n + workers - 1) / workers
+	var wg sync.WaitGroup
+	for lo := 0; lo < n; lo += size {
+		wg.Add(1)
+		go func(lo, hi int) {
+			defer wg.Done()
+			fn(lo, hi)
+		}(lo, min(n, lo+size))
+	}
+	wg.Wait()
 }
 
 func (s *simulation) tick() {
@@ -184,12 +217,17 @@ func (s *simulation) repel() {
 	}
 	t := &s.tree
 	t.build(s.bodies, false)
-	for i := range s.bodies {
-		s.repelFrom(0, i, t.size)
-	}
+	s.jiggle()
+	// Each body gathers its own push from the read-only tree.
+	parallel(len(s.bodies), func(lo, hi int) {
+		for i := lo; i < hi; i++ {
+			seed := s.bodySeed(i)
+			s.repelFrom(0, i, t.size, &seed)
+		}
+	})
 }
 
-func (s *simulation) repelFrom(q int32, i int, size float64) {
+func (s *simulation) repelFrom(q int32, i int, size float64, seed *uint32) {
 	t := &s.tree
 	cell := &t.cells[q]
 	if cell.count == 0 {
@@ -201,11 +239,11 @@ func (s *simulation) repelFrom(q int32, i int, size float64) {
 	// A distant cell acts as one body at its centre of mass.
 	if size*size/barnesHutTheta2 < l {
 		if dx == 0 {
-			dx = s.jiggle()
+			dx = nextJiggle(seed)
 			l += dx * dx
 		}
 		if dy == 0 {
-			dy = s.jiggle()
+			dy = nextJiggle(seed)
 			l += dy * dy
 		}
 		if l < repelDistanceMin2 {
@@ -219,7 +257,7 @@ func (s *simulation) repelFrom(q int32, i int, size float64) {
 	if cell.first < 0 {
 		for _, child := range cell.children {
 			if child >= 0 {
-				s.repelFrom(child, i, size/2)
+				s.repelFrom(child, i, size/2, seed)
 			}
 		}
 		return
@@ -231,10 +269,10 @@ func (s *simulation) repelFrom(q int32, i int, size float64) {
 		o := &s.bodies[j]
 		dx, dy := o.x-b.x, o.y-b.y
 		if dx == 0 {
-			dx = s.jiggle()
+			dx = nextJiggle(seed)
 		}
 		if dy == 0 {
-			dy = s.jiggle()
+			dy = nextJiggle(seed)
 		}
 		l := dx*dx + dy*dy
 		if l < repelDistanceMin2 {
@@ -253,15 +291,30 @@ func (s *simulation) collide() {
 	t := &s.tree
 	t.build(s.bodies, true)
 	reach := 2 * s.forces.Collision
-	for i := range s.bodies {
-		b := s.bodies[i]
-		s.collideWith(0, i, b.x+b.vx, b.y+b.vy, reach, t.x0, t.y0, t.size)
+	s.jiggle()
+	if cap(s.pushes) < len(s.bodies) {
+		s.pushes = make([][2]float64, len(s.bodies))
+	}
+	pushes := s.pushes[:len(s.bodies)]
+	// Velocities stay unchanged until every body has gathered its push.
+	parallel(len(s.bodies), func(lo, hi int) {
+		for i := lo; i < hi; i++ {
+			b := s.bodies[i]
+			seed := s.bodySeed(i)
+			pushes[i] = [2]float64{}
+			s.collideWith(0, i, b.x+b.vx, b.y+b.vy, reach, t.x0, t.y0, t.size, &pushes[i], &seed)
+		}
+	})
+	for i, push := range pushes {
+		s.bodies[i].vx += push[0]
+		s.bodies[i].vy += push[1]
 	}
 }
 
-// collideWith pushes overlapping pairs apart once each, sharing the
-// correction equally because every node has the same radius.
-func (s *simulation) collideWith(q int32, i int, xi, yi, reach, x0, y0, size float64) {
+// collideWith pushes body i out of every node it overlaps by half the
+// overlap; the other node takes the other half when its turn comes, as
+// every node has the same radius.
+func (s *simulation) collideWith(q int32, i int, xi, yi, reach, x0, y0, size float64, push *[2]float64, seed *uint32) {
 	t := &s.tree
 	cell := &t.cells[q]
 	if cell.count == 0 || x0 > xi+reach || x0+size < xi-reach || y0 > yi+reach || y0+size < yi-reach {
@@ -271,13 +324,13 @@ func (s *simulation) collideWith(q int32, i int, xi, yi, reach, x0, y0, size flo
 		half := size / 2
 		for k, child := range cell.children {
 			if child >= 0 {
-				s.collideWith(child, i, xi, yi, reach, x0+float64(k&1)*half, y0+float64(k>>1)*half, half)
+				s.collideWith(child, i, xi, yi, reach, x0+float64(k&1)*half, y0+float64(k>>1)*half, half, push, seed)
 			}
 		}
 		return
 	}
 	for j := cell.first; j >= 0; j = t.next[j] {
-		if int(j) <= i {
+		if int(j) == i {
 			continue
 		}
 		o := &s.bodies[j]
@@ -288,21 +341,24 @@ func (s *simulation) collideWith(q int32, i int, xi, yi, reach, x0, y0, size flo
 			continue
 		}
 		if x == 0 {
-			x = s.jiggle()
+			// Coincident pairs separate in opposite directions.
+			x = math.Abs(nextJiggle(seed))
+			if int(j) < i {
+				x = -x
+			}
 			l += x * x
 		}
 		if y == 0 {
-			y = s.jiggle()
+			y = math.Abs(nextJiggle(seed))
+			if int(j) < i {
+				y = -y
+			}
 			l += y * y
 		}
 		l = math.Sqrt(l)
 		l = (reach - l) / l * s.forces.CollisionStrength
-		x, y = x*l*.5, y*l*.5
-		b := &s.bodies[i]
-		b.vx += x
-		b.vy += y
-		o.vx -= x
-		o.vy -= y
+		push[0] += x * l * .5
+		push[1] += y * l * .5
 	}
 }
 

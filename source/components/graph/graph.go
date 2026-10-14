@@ -144,9 +144,9 @@ func (s *State) Zoom() float32 { return float32(s.camera.zoom) }
 // Fit moves the camera to show the whole graph.
 func (s *State) Fit() { s.fit(false) }
 
-// View builds the graph. Drag empty space to pan, drag nodes to move them,
-// and scroll to zoom around the pointer (faster with Control held);
-// double-clicking empty space zooms in, or out with Shift.
+// View builds the graph. Drag empty space or two fingers on a touchpad to
+// pan, drag nodes to move them, and use the wheel or a pinch to zoom around
+// the pointer; double-clicking empty space zooms in, or out with Shift.
 func View(c *ui.Context, state *State, data Data, opts Options) ui.Element {
 	t := c.Theme()
 	root := ui.Box(c).Clip().MinWidth(0)
@@ -193,7 +193,7 @@ func View(c *ui.Context, state *State, data Data, opts Options) ui.Element {
 			g.setHovered(-1)
 		}
 		open := opts.Open
-		canvas.HandleInput(func(ev ui.InputEvent) bool { return g.input(ev, open) })
+		g.navigation.Handle(c, canvas, g.navigate, func(ev ui.InputEvent) bool { return g.input(ev, open) })
 		canvas.Draw(func(p *ui.Painter, r ui.Rect) { g.draw(p, r) })
 		if opts.Overlay != nil {
 			inset := t.Space(2)
@@ -253,25 +253,48 @@ func (g *graphView) update(data Data, opts Options, palette Palette, dark, reduc
 		degree[d]++
 	}
 
-	layoutHash := fnv.New64a()
+	var layout hasher
+	layout.reset()
 	for _, n := range nodes {
-		fmt.Fprintf(layoutHash, "%s\x00%s\x00", n.ID, n.Group)
+		layout.string(n.ID)
+		layout.string(n.Group)
 	}
 	for _, l := range links {
-		fmt.Fprintf(layoutHash, "%d>%d:%g:%g\x00", l.source, l.target, l.edge.Style.Distance, l.edge.Style.Strength)
+		layout.int(l.source)
+		layout.int(l.target)
+		layout.float(l.edge.Style.Distance)
+		layout.float(l.edge.Style.Strength)
 	}
-	fmt.Fprintf(layoutHash, "%v", opts.Forces)
-	layoutKey := layoutHash.Sum64()
+	f := opts.Forces
+	for _, v := range [...]float64{f.Center, f.Repel, f.Collision, f.CollisionStrength, f.LinkDistance} {
+		layout.float(v)
+	}
+	layoutKey := layout.sum
 
-	lookHash := fnv.New64a()
+	var look hasher
+	look.reset()
 	for _, n := range nodes {
-		fmt.Fprintf(lookHash, "%s\x00%g\x00%g\x00%v\x00%v\x00%t\x00", n.Label, n.Weight, n.Size, n.Color, n.LabelColor, n.Openable)
+		look.string(n.Label)
+		look.float(n.Weight)
+		look.float(float64(n.Size))
+		look.color(n.Color)
+		look.color(n.LabelColor)
+		look.bool(n.Openable)
 	}
 	for _, l := range links {
-		fmt.Fprintf(lookHash, "%v\x00", l.edge.Style)
+		st := l.edge.Style
+		for _, v := range [...]float32{st.Width, st.Opacity, st.HoverOpacity} {
+			look.float(float64(v))
+		}
+		look.color(st.Color)
 	}
-	fmt.Fprintf(lookHash, "%v%t%v", palette, dark, opts.GroupColor != nil)
-	lookKey := lookHash.Sum64() ^ layoutKey
+	for _, c := range [...]ui.Color{palette.Node, palette.NodeLabel, palette.Isolated, palette.IsolatedLabel, palette.Background} {
+		look.color(c)
+	}
+	look.float(float64(palette.EdgeOpacity))
+	look.bool(dark)
+	look.bool(opts.GroupColor != nil)
+	lookKey := look.sum ^ layoutKey
 
 	if layoutKey == g.layoutKey && lookKey == g.lookKey && (g.sim != nil) == (len(nodes) > 0) {
 		return
@@ -417,16 +440,7 @@ func (g *graphView) update(data Data, opts Options, palette Palette, dark, reduc
 		}
 		var sx, sy float64
 		count := 0
-		for _, l := range links {
-			other := -1
-			if l.source == i {
-				other = l.target
-			} else if l.target == i {
-				other = l.source
-			}
-			if other < 0 {
-				continue
-			}
+		for _, other := range g.adjacency[i] {
 			if _, ok := known[nodes[other].ID]; ok {
 				sx += bodies[other].x
 				sy += bodies[other].y
@@ -496,6 +510,50 @@ func initialPosition(id string, count, cluster, clusters int) (float64, float64)
 	radius := max(64, math.Sqrt(perCluster*initialAreaPerNode/math.Pi)*.95)
 	r := math.Sqrt(sample) * radius
 	return math.Cos(sector)*ring + math.Cos(angle)*r, math.Sin(sector)*ring + math.Sin(angle)*r
+}
+
+// hasher is FNV-1a over the fields that decide whether data changed,
+// written without formatting so large graphs compare cheaply each build.
+type hasher struct{ sum uint64 }
+
+func (h *hasher) reset() { h.sum = 14695981039346656037 }
+
+func (h *hasher) byte(b byte) {
+	h.sum ^= uint64(b)
+	h.sum *= 1099511628211
+}
+
+func (h *hasher) uint(v uint64) {
+	for range 8 {
+		h.byte(byte(v))
+		v >>= 8
+	}
+}
+
+func (h *hasher) string(s string) {
+	for i := 0; i < len(s); i++ {
+		h.byte(s[i])
+	}
+	h.byte(0)
+}
+
+func (h *hasher) int(v int)       { h.uint(uint64(v)) }
+func (h *hasher) float(v float64) { h.uint(math.Float64bits(v)) }
+
+func (h *hasher) bool(v bool) {
+	if v {
+		h.byte(1)
+	} else {
+		h.byte(0)
+	}
+}
+
+func (h *hasher) color(c ui.Color) {
+	h.uint(uint64(c.R) | uint64(c.G)<<8 | uint64(c.B)<<16 | uint64(c.A)<<24)
+	if c != c.SRGB() {
+		// Wide-gamut components are unexported; formatting reaches them.
+		h.string(fmt.Sprint(c))
+	}
 }
 
 func hashString(s string) uint32 {

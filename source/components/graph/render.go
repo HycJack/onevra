@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/source/components/gesture"
 )
 
 const (
@@ -33,16 +34,14 @@ const (
 	clickTolerance       = 4
 	shrinkZoom           = .4
 	minScreenRadius      = .75
-	pinchZoomDistance    = 48
-	wheelZoomDistance    = 120
 )
 
 type camera struct{ x, y, zoom float64 }
 
-type gesture uint8
+type pointerGesture uint8
 
 const (
-	gestureNone gesture = iota
+	gestureNone pointerGesture = iota
 	gesturePan
 	gestureNodePending
 	gestureNode
@@ -78,13 +77,14 @@ type graphView struct {
 	revealStart time.Time
 	revealed    int
 
-	gesture            gesture
+	gesture            pointerGesture
 	dragIndex          int
 	offsetX, offsetY   float64
 	startX, startY     float64
 	lastX, lastY       float64
 	moved, lastDragged bool
 	pressClicks        int
+	navigation         gesture.Navigation
 }
 
 func (g *graphView) init() {
@@ -587,8 +587,7 @@ func (g *graphView) cursor() ui.Cursor {
 }
 
 // input handles the pointer as it comes: pressing a node drags it once the
-// pointer moves past the click tolerance, pressing empty space pans, and
-// scrolling zooms around the pointer.
+// pointer moves past the click tolerance, and pressing empty space pans.
 func (g *graphView) input(ev ui.InputEvent, open func(string)) bool {
 	x, y := float64(ev.X), float64(ev.Y)
 	switch ev.Kind {
@@ -666,19 +665,29 @@ func (g *graphView) input(ev ui.InputEvent, open func(string)) bool {
 		}
 		g.setHovered(g.hit(x, y))
 		return true
-	case ui.InputScroll:
-		if !g.ready {
-			return false
-		}
-		distance := wheelZoomDistance
-		if ev.Mods&ui.Ctrl != 0 {
-			distance = pinchZoomDistance
-		}
-		g.userInteracted = true
-		g.zoomAt(x, y, math.Exp(-float64(ev.DY)*math.Log(1.5)/float64(distance)), false)
-		return true
 	}
 	return false
+}
+
+// navigate pans and zooms the camera: the wheel and pinches zoom around
+// the pointer, and two fingers on a touchpad pan.
+func (g *graphView) navigate(e gesture.Event) {
+	if !g.ready {
+		return
+	}
+	g.userInteracted = true
+	x, y := float64(e.X), float64(e.Y)
+	switch e.Kind {
+	case gesture.Pan:
+		g.camera.x += float64(e.DX)
+		g.camera.y += float64(e.DY)
+		g.target = g.camera
+		if g.gesture == gestureNone {
+			g.setHovered(g.hit(x, y))
+		}
+	case gesture.Zoom:
+		g.zoomAt(x, y, e.Scale, false)
+	}
 }
 
 func clamp(v, lo, hi float64) float64 { return math.Max(lo, math.Min(v, hi)) }
