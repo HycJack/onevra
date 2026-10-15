@@ -33,3 +33,19 @@ func ExampleCommandDialog() {
 	_ = view // Supply to a MyGo window or Onevra Shell content builder.
 	_ = destination
 }
+
+func ExampleCommandView() {
+	var state command.State
+	items := []command.Item{{ID: "settings", Title: "Settings"}}
+	view := func(c *ui.Context) {
+		// A bounded parent, such as a panel window's content, sizes the view.
+		ui.Column(c).Fill().Children(func() {
+			command.CommandView(c, &state, items, command.Options{
+				OnActivate: func(id string) { /* Run id; hide the window if needed. */ },
+			})
+		})
+	}
+	// After showing a hidden host window, call state.Focus so typing reaches
+	// search. Embedded hosts call state.ReleaseInputSource when removing the view.
+	_ = view
+}

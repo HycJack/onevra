@@ -1,16 +1,15 @@
-// Package command provides application-owned command palettes and dialogs.
+// Package command provides application-owned command views and dialogs.
+// CommandView embeds search and results in any bounded parent, such as a
+// panel window; CommandDialog hosts the same view in Onevra's modal surface.
 // Hosts register opening shortcuts, retain State, and execute activated IDs.
 package command
 
 import (
-	"github.com/oneo-me/onevra/source/internal/l10n"
 	"slices"
 	"strings"
-	"time"
 
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
-	"github.com/oneo-me/onevra/source/icons/lucide"
 )
 
 // Item describes a command. IDs must be nonempty and unique, independent of
@@ -28,8 +27,10 @@ type Item struct {
 	Disabled bool
 }
 
-// State is retained by the host for one palette; do not copy it after use.
-// Query and ActiveID may be updated by the host. The zero value is ready to use.
+// State is retained by the host for one command view; do not copy it after use.
+// Query and ActiveID may be updated by the host. When the query or results
+// change, the first available command becomes active and the results scroll to
+// the top, unless the host also set ActiveID. The zero value is ready to use.
 // Closing a dialog preserves the query; hosts choose when to reset it.
 type State struct {
 	// InputSourceError records the last selection or restoration failure.
@@ -40,6 +41,7 @@ type State struct {
 	ActiveID              string
 	scroll                components.ListState
 	lastQuery, lastActive string
+	lastIDs               []string
 	lastIndex             int
 	composing             bool
 	refocus               bool
@@ -60,7 +62,10 @@ type Options struct {
 	// be activated; loading, error and empty states are also hidden until search.
 	// The zero value shows the results area immediately.
 	ExpandOnSearch bool
-	// PreFiltered uses host-supplied matches instead of applying Filter.
+	// Filter replaces the package Filter for synchronous local matching. It
+	// receives this frame's query and must not modify items. Nil uses Filter.
+	Filter func(items []Item, query string) []Item
+	// PreFiltered uses host-supplied matches instead of applying a filter.
 	// For asynchronous search, the host owns cancellation and stale-result checks.
 	PreFiltered bool
 	// Loading and Error replace results and suppress activation. Error wins.
@@ -69,7 +74,7 @@ type Options struct {
 	// Empty labels use Onevra's catalog in the window's language.
 	SearchLabel, Placeholder, ResultsLabel, EmptyText, LoadingText string
 	// OnActivate runs on the UI thread for Enter or a single click. The host
-	// owns execution, background work and whether to close the dialog.
+	// owns execution, background work and whether to close the dialog or window.
 	OnActivate func(id string)
 }
 
@@ -129,7 +134,23 @@ func grouped(items []Item) []Item {
 	return out
 }
 
+// Focus moves keyboard focus to the search field when the view is next built,
+// for example after the host shows a hidden window. CommandDialog focuses
+// search on opening without it.
+func (s *State) Focus() { s.refocus = true }
+
+// sync reconciles ActiveID with this frame's results. When the query or the
+// results change, the first available command becomes active and the list
+// returns to the top, unless the host chose ActiveID itself since last frame.
 func (s *State) sync(items []Item) int {
+	changed := s.Query != s.lastQuery || len(items) != len(s.lastIDs)
+	for i := 0; !changed && i < len(items); i++ {
+		changed = items[i].ID != s.lastIDs[i]
+	}
+	top := changed && s.ActiveID == s.lastActive
+	if top {
+		s.ActiveID = ""
+	}
 	index := -1
 	for i, item := range items {
 		if !item.Disabled && item.ID != "" && (index < 0 || item.ID == s.ActiveID) {
@@ -143,9 +164,18 @@ func (s *State) sync(items []Item) int {
 	if index >= 0 {
 		s.ActiveID = items[index].ID
 	}
-	if s.Query != s.lastQuery || s.ActiveID != s.lastActive || index != s.lastIndex {
+	switch {
+	case top && index >= 0:
+		s.scroll.ScrollTo(0, ui.Start)
+	case changed || s.ActiveID != s.lastActive || index != s.lastIndex:
 		if index >= 0 {
 			s.scroll.ScrollIntoView(index)
+		}
+	}
+	if changed {
+		s.lastIDs = s.lastIDs[:0]
+		for _, item := range items {
+			s.lastIDs = append(s.lastIDs, item.ID)
 		}
 	}
 	s.lastQuery, s.lastActive = s.Query, s.ActiveID
@@ -169,160 +199,6 @@ func fallback(value, defaultValue string) string {
 		return defaultValue
 	}
 	return value
-}
-
-// CommandPalette builds search and grouped virtual results in a
-// bounded parent. Expanded results fill that parent; collapsed search uses only
-// the input's height. The host supplies the available size. Up/Down keep
-// focus in the search field and skip disabled commands, stopping at either end.
-// MyGo owns text editing and IME handling. Tab follows normal focus navigation.
-// Stable keyed parents distinguish independently built palettes.
-func CommandPalette(c *ui.Context, s *State, items []Item, options Options) ui.Element {
-	t := c.Theme()
-	root := ui.Column(c).FillWidth().MinWidth(0).MinHeight(0)
-	root.Children(func() {
-		input := components.TextBox(c, &s.Query, components.TextBoxOptions{}).
-			Label(fallback(options.SearchLabel, l10n.In(c.Locale()).Text("searchCommands"))).Placeholder(fallback(options.Placeholder, l10n.In(c.Locale()).Text("searchCommandsPlaceholder"))).
-			FillWidth().Shrink(0).FontSize(t.Rem(1.15)).
-			Padding(t.Space(4.5), t.Space(4.5), t.Space(4.5), t.Space(12)).
-			Background(ui.Transparent).Border(0, ui.Transparent).Radius(0).FocusRing(false)
-		input.DrawOver(func(p *ui.Painter, r ui.Rect) {
-			size := t.Space(5)
-			p.Icon(lucide.Search(), ui.Rect{X: r.X + t.Space(4.5), Y: r.Y + (r.H-size)/2, W: size, H: size}, t.TextMuted)
-		})
-		// Resolve bound input before deriving results for this frame.
-		input.Changed()
-		s.composing = input.Composing()
-		if s.refocus {
-			input.Focus()
-			s.refocus = false
-		}
-		if !s.inputSource.attempted && options.InputSource != "" {
-			if !s.inputSource.waited {
-				// Modal focus and the native input context are committed after
-				// this build. Select on a subsequent frame, not during creation.
-				s.inputSource.waited = true
-				c.After(time.Millisecond)
-			} else if input.Focused() && !s.composing {
-				s.InputSourceError = s.inputSource.begin(options.InputSource, options.KeepInputSource, selectInputSource)
-			}
-		}
-		if !resultsExpanded(s, options) {
-			s.sync(nil)
-			return
-		}
-		root.FillHeight()
-		results := items
-		if !options.PreFiltered {
-			results = Filter(items, s.Query)
-		}
-		results = grouped(results)
-		if options.Loading || options.Error != "" {
-			results = nil
-		}
-		s.sync(results)
-		activate := func(id string) {
-			for _, item := range results {
-				if item.ID == id && id != "" && !item.Disabled {
-					s.ActiveID = id
-					if options.OnActivate != nil {
-						options.OnActivate(id)
-					}
-					return
-				}
-			}
-		}
-		input.OnShortcut(0, ui.KeyDown, func() { s.move(results, 1) })
-		input.OnShortcut(0, ui.KeyUp, func() { s.move(results, -1) })
-		input.OnSubmit(func() { activate(s.ActiveID) })
-		if len(results) == 0 {
-			message := fallback(options.EmptyText, l10n.In(c.Locale()).Text("noMatchingCommands"))
-			if options.Loading {
-				message = fallback(options.LoadingText, l10n.In(c.Locale()).Text("loading"))
-			}
-			if options.Error != "" {
-				message = options.Error
-			}
-			ui.Box(c).Fill().MinHeight(0).Padding(t.Space(4)).Center().Children(func() {
-				components.Text(c, message).Role(ui.RoleStatus).TextColor(t.TextMuted).Wrap()
-			})
-		} else {
-			s.scroll.Key = func(i int) any { return results[i].ID }
-			components.List(c, &s.scroll, len(results), func(i int) {
-				item := results[i]
-				if item.Group != "" && (i == 0 || results[i-1].Group != item.Group) {
-					components.Text(c, item.Group).TextColor(t.TextMuted).FontSize(t.Rem(.8)).Padding(t.Space(2), t.Space(2.5)).SingleLine()
-				}
-				row := ui.Row(c).FillWidth().MinWidth(0).AlignItems(ui.Center).Gap(t.Space(2.5)).
-					Padding(t.Space(2.5), t.Space(2.5)).Radius(t.Radius * 1.5).Role(ui.RoleButton).
-					Label(item.Title).Description(item.Description).Disabled(item.Disabled || item.ID == "").Selected(item.ID == s.ActiveID).TextColor(t.Text)
-				if item.ID == s.ActiveID {
-					row.Background(t.Text.Alpha(.1))
-					input.ActiveDescendant(row)
-				} else if row.Hovered() && !item.Disabled {
-					row.Background(t.Text.Alpha(.04))
-				}
-				row.OnClick(func() { s.refocus = true; activate(item.ID) })
-				row.Children(func() {
-					if item.Leading != nil {
-						item.Leading(c, t.Space(5))
-					} else if item.Icon != nil {
-						components.Icon(c, item.Icon).Size(t.Space(5), t.Space(5)).Shrink(0)
-					}
-					ui.Column(c).Grow(1).MinWidth(0).Children(func() {
-						color := t.Text
-						if item.Disabled {
-							color = t.TextMuted
-						}
-						components.Text(c, item.Title).TextColor(color).SingleLine()
-						if item.Description != "" {
-							components.Text(c, item.Description).TextColor(t.TextMuted).FontSize(t.Rem(.85)).SingleLine()
-						}
-					})
-					if item.Trailing != nil {
-						item.Trailing(c)
-					}
-					if item.Shortcut != "" {
-						components.Text(c, item.Shortcut).TextColor(t.TextMuted).FontSize(t.Rem(.8)).Shrink(0).SingleLine()
-					}
-				})
-			}).Label(fallback(options.ResultsLabel, l10n.In(c.Locale()).Text("commands"))).Fill().MinHeight(0).Padding(0, t.Space(2), t.Space(3), t.Space(2))
-		}
-	})
-	return root
-}
-
-// CommandDialog hosts CommandPalette in Onevra's modal surface. Call every
-// frame with retained open and state. The host owns opening shortcuts, query
-// resets and closing on activation. Dialog dismissal and focus restoration
-// follow components.Dialog. Its returned panel may be resized in this frame.
-// With ExpandOnSearch, its height fits the input until a query is committed.
-func CommandDialog(c *ui.Context, open *bool, s *State, items []Item, options Options, dialog components.DialogOptions) ui.Element {
-	if !*open {
-		s.ReleaseInputSource()
-		s.composing = false
-		s.refocus = false
-	}
-	// Dismissal is evaluated before the input is built. Preserve the previous
-	// frame's marked-text state so Escape ending composition cannot also close
-	// the surrounding dialog. Text composition remains owned by MyGo.
-	dialog.DisableEscapeClose = dialog.DisableEscapeClose || s.composing
-	if dialog.Label == "" {
-		dialog.Label = fallback(options.SearchLabel, l10n.In(c.Locale()).Text("commands"))
-	}
-	panel := components.Dialog(c, open, dialog, func(panel ui.Element) {
-		panel.Width(640).Padding(0).Gap(0).Radius(c.Theme().Radius * 3).Clip()
-		CommandPalette(c, s, items, options)
-		// Read after the palette resolves bound text input so expansion and
-		// collapse use this frame's query, without rebuilding the search field.
-		if resultsExpanded(s, options) {
-			panel.Height(440)
-		}
-	})
-	if !*open {
-		s.ReleaseInputSource()
-	}
-	return panel
 }
 
 func resultsExpanded(s *State, options Options) bool {

@@ -4,6 +4,7 @@ import (
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
+	"github.com/oneo-me/onevra/source/components/command"
 	"github.com/oneo-me/onevra/source/icons/lucide"
 	"github.com/oneo-me/onevra/source/theme"
 )
@@ -15,9 +16,9 @@ func (a *application) scope(c *ui.Context, build func()) {
 	build()
 }
 
-// panelView is the launcher itself: a search field, the matching apps and a
-// footer that names the keys. It runs on the hidden panel window and reads the
-// application-owned state the shortcut, the tray and the goroutines change.
+// panelView is the launcher itself: a command view that searches the apps and
+// a footer that names the keys. It runs on the hidden panel window and reads
+// the application-owned state the shortcut, the tray and the goroutines change.
 func (a *application) panelView(c *ui.Context) {
 	theme.Apply(c)
 	t := c.Theme()
@@ -29,71 +30,27 @@ func (a *application) panelView(c *ui.Context) {
 	}
 	// An Escape left to the panel closes it, which hides it: with a query,
 	// Escape clears it first.
-	if a.query != "" && c.Shortcut(0, ui.KeyEscape) {
-		a.query = ""
-		a.filter()
-		a.input.Focus()
-	}
-	if c.Shortcut(0, ui.KeyDown) {
-		a.choose(a.chosen + 1)
-	}
-	if c.Shortcut(0, ui.KeyUp) {
-		a.choose(a.chosen - 1)
-	}
-	if c.Shortcut(0, ui.KeyEnter) {
-		a.open()
+	if a.palette.Query != "" && c.Shortcut(0, ui.KeyEscape) {
+		a.palette.Query = ""
+		a.palette.Focus()
 	}
 	c.OnShortcut(ui.Cmd, ui.KeyQ, mygo.App.Quit)
-	a.prefetchIcons()
 
 	ui.Column(c).Fill().Children(func() {
-		ui.Row(c).Padding(16, 18).Gap(12).AlignItems(ui.Center).Children(func() {
-			input := components.TextBox(c, &a.query, components.TextBoxOptions{LeadingIcon: lucide.Search()})
-			input.Bind(&a.input).Grow(1).FontSize(22).Label(a.text("search")).Placeholder(a.text("search"))
-			if input.Changed() {
-				a.filter()
-			}
-		})
-		divider(c)
-		a.list.Selected = &a.chosen
-		a.list.Key = func(i int) any { return a.results[i].Path }
-		a.list.Label = func(i int) string { return a.results[i].Name }
-		a.list.OnSubmit = func(int) { a.open() }
-		message := ""
-		switch {
-		case a.loading && len(a.results) == 0:
-			message = a.text("loading")
-		case len(a.results) == 0:
-			message = a.text("noApps")
-		}
-		if message != "" {
-			ui.Box(c).Grow(1).Center().Children(func() {
-				components.Text(c, message).TextColor(t.TextMuted)
+		ui.Column(c).Grow(1).MinHeight(0).Children(func() {
+			command.CommandView(c, &a.palette, a.items, command.Options{
+				Filter:      filter,
+				Loading:     a.loading && len(a.items) == 0,
+				SearchLabel: a.text("search"), Placeholder: a.text("search"), ResultsLabel: a.text("apps"),
+				EmptyText: a.text("noApps"), LoadingText: a.text("loading"),
+				OnActivate: a.open,
 			})
-		} else {
-			list := components.List(c, &a.list, len(a.results), func(i int) { a.row(c, i) }).Grow(1).Padding(6)
-			if list.Submitted() {
-				a.open()
-			}
-		}
+		})
+		a.fetchIcons()
 		divider(c)
 		ui.Row(c).Padding(8, 16).Gap(16).Children(func() {
 			components.Text(c, a.format("showOrHide", map[string]any{"shortcut": keys(a.accelerator)})).FontSize(11).TextColor(t.TextMuted).Grow(1).SingleLine()
 			components.Text(c, a.text("keyHints")).FontSize(11).TextColor(t.TextMuted).SingleLine()
-		})
-	})
-}
-
-// row shows an app with its icon, its name and where it is. The List draws the
-// chosen row's face; the row owns only its content.
-func (a *application) row(c *ui.Context, i int) {
-	app := a.results[i]
-	t := c.Theme()
-	ui.Row(c).FillWidth().MinWidth(0).AlignItems(ui.Center).Gap(12).Padding(6, 10).Children(func() {
-		a.appIcon(c, app)
-		ui.Column(c).Grow(1).MinWidth(0).Children(func() {
-			components.Text(c, app.Name).SingleLine()
-			components.Text(c, where(app)).FontSize(11).TextColor(t.TextMuted).SingleLine()
 		})
 	})
 }

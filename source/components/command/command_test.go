@@ -153,7 +153,7 @@ func TestExternalResultsAndScrolling(t *testing.T) {
 	var activated string
 	tt := ui.NewTester(func(c *ui.Context) {
 		ui.Column(c).Size(400, 250).Children(func() {
-			CommandPalette(c, &state, items, Options{PreFiltered: true, OnActivate: func(id string) { activated = id }})
+			CommandView(c, &state, items, Options{PreFiltered: true, OnActivate: func(id string) { activated = id }})
 		})
 	}, 400, 250)
 	if err := tt.Click("Search commands"); err != nil {
@@ -165,15 +165,30 @@ func TestExternalResultsAndScrolling(t *testing.T) {
 	if state.ActiveID != "30" || !tt.HasText("Command 030") {
 		t.Fatal("navigation did not reveal active command")
 	}
-	items = []Item{items[30], items[1]}
+	all := items
+	items = all[1:]
 	tt.Frame()
-	if state.ActiveID != "30" {
-		t.Fatal("reordering lost stable selection")
+	if state.ActiveID != "1" || !tt.HasText("Command 001") || tt.HasText("Command 030") {
+		t.Fatalf("changed results did not return to the top: %s", state.ActiveID)
 	}
-	items = items[1:]
+	for range 30 {
+		tt.Key(0, ui.KeyDown)
+	}
+	state.Query = "another host query"
+	tt.Frame()
+	if state.ActiveID != "1" || !tt.HasText("Command 001") {
+		t.Fatalf("query change did not return to the top: %s", state.ActiveID)
+	}
+	// A host choice made alongside the change wins over the reset.
+	items, state.ActiveID = all, "40"
+	tt.Frame()
+	if state.ActiveID != "40" || !tt.HasText("Command 040") {
+		t.Fatalf("host-chosen command was reset: %s", state.ActiveID)
+	}
+	items = []Item{all[30], all[1]}
 	tt.Frame()
 	tt.Key(0, ui.KeyEnter)
-	if activated != "1" {
+	if activated != "30" {
 		t.Fatalf("removed active command was not reconciled: %s", activated)
 	}
 }
@@ -191,7 +206,7 @@ func TestExpandOnSearch(t *testing.T) {
 				if dialog {
 					surface = CommandDialog(c, &open, &s, items, options, components.DialogOptions{})
 				} else {
-					ui.Column(c).Size(500, 440).Children(func() { surface = CommandPalette(c, &s, items, options) })
+					ui.Column(c).Size(500, 440).Children(func() { surface = CommandView(c, &s, items, options) })
 				}
 				surface.DrawOver(func(_ *ui.Painter, r ui.Rect) { bounds = r })
 			}, 700, 600)
@@ -274,7 +289,7 @@ func TestItemSlots(t *testing.T) {
 		Trailing: func(c *ui.Context) { components.Text(c, "Trailing content") },
 	}}
 	tt := ui.NewTester(func(c *ui.Context) {
-		ui.Column(c).Size(400, 250).Children(func() { CommandPalette(c, &state, items, Options{}) })
+		ui.Column(c).Size(400, 250).Children(func() { CommandView(c, &state, items, Options{}) })
 	}, 400, 250)
 	if !tt.HasText("Leading content") || !tt.HasText("Trailing content") || !tt.HasText("⌘T") || leadingSize <= 0 {
 		t.Fatalf("slots were not built: leading size %v", leadingSize)
@@ -283,5 +298,43 @@ func TestItemSlots(t *testing.T) {
 	tt.Frame()
 	if tt.HasText("Task") {
 		t.Fatal("slot content took part in filtering")
+	}
+}
+
+func TestViewFilterAndFocus(t *testing.T) {
+	state := State{}
+	items := []Item{{ID: "first", Title: "First"}, {ID: "second", Title: "Second"}}
+	var queries []string
+	filter := func(items []Item, query string) []Item {
+		queries = append(queries, query)
+		if query == "" {
+			return items
+		}
+		return items[len(items)-1:] // any query keeps only the last item
+	}
+	var activated string
+	tt := ui.NewTester(func(c *ui.Context) {
+		components.Button(c, "Elsewhere", components.ButtonPrimary)
+		ui.Column(c).Size(400, 250).Children(func() {
+			CommandView(c, &state, items, Options{Filter: filter, OnActivate: func(id string) { activated = id }})
+		})
+	}, 400, 300)
+	if err := tt.Click("Elsewhere"); err != nil {
+		t.Fatal(err)
+	}
+	state.Focus()
+	tt.Frame()
+	if !tt.Focused("Search commands") {
+		t.Fatal("Focus did not move focus to search")
+	}
+	tt.Type("x")
+	if queries[len(queries)-1] != "x" || tt.HasText("First") || state.ActiveID != "second" {
+		t.Fatalf("custom filter: queries %q active %q", queries, state.ActiveID)
+	}
+	// The filter sees the committed query in the same frame, so Enter
+	// immediately after typing activates the filtered result.
+	tt.Key(0, ui.KeyEnter)
+	if activated != "second" {
+		t.Fatalf("activation: %q", activated)
 	}
 }

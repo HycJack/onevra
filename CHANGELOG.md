@@ -6,6 +6,9 @@ User-facing updates for Onevra library consumers.
 
 - Breaking: remove `components.Localization` and `components.WithLocalization`.
 - Breaking: remove Shell label overrides `sidebar.Labels`, `plain.Labels` and their `SetLabels` and label options.
+- Breaking: rename `command.CommandPalette` to `command.CommandView`.
+- Add `command.Options.Filter` and `command.State.Focus`.
+- Return command results to the top when they change.
 
 ## [0.2026.10] - 2026-10-15
 

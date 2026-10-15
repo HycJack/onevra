@@ -3,6 +3,7 @@
   "title": "Onevra Launcher",
   "search": "Search apps",
   "loading": "Finding apps…",
+  "apps": "Apps",
   "noApps": "No apps found",
   "showOrHide": "{shortcut} to show or hide",
   "keyHints": "↑↓ Choose   ↵ Open   esc Close",

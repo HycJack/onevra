@@ -3,6 +3,7 @@
   "title": "Onevra 启动器",
   "search": "搜索应用",
   "loading": "正在查找应用…",
+  "apps": "应用",
   "noApps": "未找到应用",
   "showOrHide": "{shortcut} 显示或隐藏",
   "keyHints": "↑↓ 选择   ↵ 打开   esc 关闭",

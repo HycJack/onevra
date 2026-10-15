@@ -64,6 +64,16 @@ func (msgs Messages) Loading() string {
 	return Catalog.Format(msgs.locale, "loading", nil)
 }
 
+// Apps says "Apps"
+// in the language the app shows.
+func Apps() string { return In(i18n.Locale()).Apps() }
+
+// Apps says "Apps"
+// in the language of msgs.
+func (msgs Messages) Apps() string {
+	return Catalog.Format(msgs.locale, "apps", nil)
+}
+
 // NoApps says "No apps found"
 // in the language the app shows.
 func NoApps() string { return In(i18n.Locale()).NoApps() }

@@ -14,9 +14,11 @@ import (
 
 func TestFilter(t *testing.T) {
 	a := &application{config: defaultConfig()}
+	var apps []mygo.InstalledApp
 	for _, name := range []string{"Calendar", "Visual Studio Code", "Activity Monitor", "Code Editor", "Xcode", "Calculator"} {
-		a.apps = append(a.apps, mygo.InstalledApp{Name: name, Path: "/" + name})
+		apps = append(apps, mygo.InstalledApp{Name: name, Path: "/" + name})
 	}
+	a.setApps(apps)
 	for query, want := range map[string][]string{
 		"":     {"Calendar", "Visual Studio Code", "Activity Monitor", "Code Editor", "Xcode", "Calculator"},
 		"cal":  {"Calendar", "Calculator"},
@@ -25,11 +27,9 @@ func TestFilter(t *testing.T) {
 		"ACT":  {"Activity Monitor", "Calculator"}, // its letters in order, last
 		"zzz":  nil,
 	} {
-		a.query = query
-		a.filter()
 		var got []string
-		for _, app := range a.results {
-			got = append(got, app.Name)
+		for _, item := range filter(a.items, query) {
+			got = append(got, item.Title)
 		}
 		if !slices.Equal(got, want) {
 			t.Errorf("%q: %v, want %v", query, got, want)
@@ -92,9 +92,8 @@ func TestShortcuts(t *testing.T) {
 
 func TestPanel(t *testing.T) {
 	a := &application{config: defaultConfig(), accelerator: "Alt+Shift+Space"}
-	a.apps = []mygo.InstalledApp{{Name: "Calculator", ID: "com.apple.calculator", Path: "/Applications/Calculator.app"}}
-	a.query = "calc"
-	a.filter()
+	a.setApps([]mygo.InstalledApp{{Name: "Calculator", ID: "com.apple.calculator", Path: "/Applications/Calculator.app"}})
+	a.palette.Query = "calc"
 	tt := ui.NewTester(a.panelView, width, height)
 	for _, want := range []string{"Calculator", a.text("keyHints")} {
 		if !tt.HasText(want) {
@@ -104,9 +103,13 @@ func TestPanel(t *testing.T) {
 	if !tt.HasText(a.format("showOrHide", map[string]any{"shortcut": keys("Alt+Shift+Space")})) {
 		t.Fatalf("missing footer: %v", tt.Texts())
 	}
-	a.query = "zzz"
-	a.filter()
-	tt = ui.NewTester(a.panelView, width, height)
+	// Escape clears the query before it may close the panel.
+	tt.Key(0, ui.KeyEscape)
+	if a.palette.Query != "" {
+		t.Fatalf("escape kept the query %q", a.palette.Query)
+	}
+	a.palette.Query = "zzz"
+	tt.Frame()
 	if !tt.HasText(a.text("noApps")) {
 		t.Fatalf("missing empty state: %v", tt.Texts())
 	}

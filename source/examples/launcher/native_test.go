@@ -57,11 +57,9 @@ func TestNativeLauncher(t *testing.T) {
 		if !a.panel.IsVisible() {
 			t.Error("toggle did not show the panel")
 		}
-		a.apps = []mygo.InstalledApp{{Name: "Calculator", ID: "com.apple.calculator", Path: "/Applications/Calculator.app"}}
-		a.query, a.chosen = "calc", 0
-		a.filter()
-		if len(a.results) != 1 || a.results[0].Name != "Calculator" {
-			t.Errorf("filter: %v", a.results)
+		a.setApps([]mygo.InstalledApp{{Name: "Calculator", ID: "com.apple.calculator", Path: "/Applications/Calculator.app"}})
+		if got := filter(a.items, "calc"); len(got) != 1 || got[0].Title != "Calculator" {
+			t.Errorf("filter: %v", got)
 		}
 		a.openSettings()
 		if a.settings == nil || !a.settings.IsVisible() {

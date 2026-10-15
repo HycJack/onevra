@@ -36,8 +36,8 @@ func (s *inputSourceSession) end() error {
 	return nil
 }
 
-// ReleaseInputSource ends this palette's input-source session. CommandDialog
-// calls it when closed. Embedded hosts must call it when removing the palette;
+// ReleaseInputSource ends this view's input-source session. CommandDialog
+// calls it when closed. Embedded hosts must call it when removing the view;
 // all hosts should also call it before destroying the owning window. Call on
 // the UI thread. It is safe to call repeatedly. A manual input-source change or
 // a different active native context is never overwritten during restoration.

@@ -12,19 +12,20 @@ import (
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
+	"github.com/oneo-me/onevra/source/components/command"
 	"github.com/oneo-me/onevra/source/shells/plain"
 	"github.com/oneo-me/onevra/source/theme"
 )
 
 const (
 	width, height = 680, 420
-	iconSize      = 28 // DIPs
-	iconLimit     = 24 // apps whose icons are drawn ahead of the first frame
+	iconSize      = 28 // DIPs, the size icons are drawn at
 )
 
 // application holds what the panel shows. It is read and changed on the main
 // thread, by the view and the callbacks of the app, the tray and the shortcut;
 // the installed apps and their icons come from goroutines through panel.Update.
+// The command view owns the query and the chosen app.
 type application struct {
 	config      config
 	path        string
@@ -45,15 +46,13 @@ type application struct {
 	login                 bool
 
 	apps        []mygo.InstalledApp
-	results     []mygo.InstalledApp
-	query       string
-	chosen      int
+	items       []command.Item
+	palette     command.State
 	opening     bool
 	loading     bool
-	list        components.ListState
-	input       ui.Handle
 	icons       map[string]*ui.Bitmap
 	iconPending map[string]bool
+	iconWanted  []string
 }
 
 func (a *application) report(key string, err error) {
@@ -127,10 +126,9 @@ func (a *application) show() {
 	d := mygo.Screen.DisplayNearestPoint(mygo.Screen.CursorScreenPoint())
 	w, h := a.panel.Size()
 	a.panel.SetPosition(d.WorkArea.X+(d.WorkArea.Width-w)/2, d.WorkArea.Y+(d.WorkArea.Height-h)/3)
-	a.query, a.opening = "", false
-	a.filter()
+	a.palette.Query, a.palette.ActiveID, a.opening = "", "", false
 	a.load()
-	a.input.Focus()
+	a.palette.Focus()
 	a.panel.Show()
 }
 
@@ -157,34 +155,42 @@ func (a *application) load() {
 		if err != nil {
 			log.Print(err)
 		}
-		a.panel.Update(func() {
-			a.apps, a.loading = apps, false
-			a.filter()
-		})
+		a.panel.Update(func() { a.setApps(apps) })
 	}()
+}
+
+// setApps makes a command of each app, identified by its path, with its icon
+// and where it is.
+func (a *application) setApps(apps []mygo.InstalledApp) {
+	a.apps, a.loading = apps, false
+	a.items = make([]command.Item, len(apps))
+	for i, app := range apps {
+		a.items[i] = command.Item{ID: app.Path, Title: app.Name, Description: where(app),
+			Leading: func(c *ui.Context, size float32) { a.appIcon(c, app, size) }}
+	}
 }
 
 // filter ranks the apps matching the query: names starting with it first, then
 // those with a word starting with it, those containing it, and those with its
 // letters in order, as "vsc" finds Visual Studio Code.
-func (a *application) filter() {
-	q := strings.ToLower(strings.TrimSpace(a.query))
+func filter(items []command.Item, query string) []command.Item {
+	q := strings.ToLower(strings.TrimSpace(query))
 	type ranked struct {
-		app  mygo.InstalledApp
+		item command.Item
 		rank int
 	}
 	var found []ranked
-	for _, app := range a.apps {
-		if r := rank(strings.ToLower(app.Name), q); r >= 0 {
-			found = append(found, ranked{app, r})
+	for _, item := range items {
+		if r := rank(strings.ToLower(item.Title), q); r >= 0 {
+			found = append(found, ranked{item, r})
 		}
 	}
 	slices.SortStableFunc(found, func(x, y ranked) int { return cmp.Compare(x.rank, y.rank) })
-	a.results = a.results[:0]
-	for _, f := range found {
-		a.results = append(a.results, f.app)
+	out := make([]command.Item, len(found))
+	for i, f := range found {
+		out[i] = f.item
 	}
-	a.choose(0)
+	return out
 }
 
 func rank(name, q string) int {
@@ -207,46 +213,27 @@ func rank(name, q string) int {
 	return 3
 }
 
-func (a *application) choose(i int) {
-	a.chosen = max(0, min(i, len(a.results)-1))
-	if len(a.results) > 0 {
-		a.list.ScrollIntoView(a.chosen)
-	}
-}
-
 // open launches the chosen app and hides the panel, which gives the keyboard
 // back to the app the user was in, before the launched app takes it.
-func (a *application) open() {
-	if a.opening || a.chosen < 0 || a.chosen >= len(a.results) {
+func (a *application) open(path string) {
+	i := slices.IndexFunc(a.apps, func(app mygo.InstalledApp) bool { return app.Path == path })
+	if a.opening || i < 0 {
 		return
 	}
 	a.opening = true
-	app := a.results[a.chosen]
+	app := a.apps[i]
 	a.hide()
 	if err := mygo.Shell.LaunchApp(app); err != nil {
 		log.Printf("launching %s: %v", app.Name, err)
 	}
 }
 
-// prefetchIcons draws the icons of the rows that show ahead of their first
-// frame, on a goroutine, and keeps them by path; a row without one shows its
-// initial.
-func (a *application) prefetchIcons() {
-	if !a.native || len(a.results) == 0 {
-		return
-	}
-	var todo []string
-	for i, app := range a.results {
-		if i >= iconLimit {
-			break
-		}
-		if _, ok := a.icons[app.Path]; ok || a.iconPending[app.Path] {
-			continue
-		}
-		a.iconPending[app.Path] = true
-		todo = append(todo, app.Path)
-	}
-	if len(todo) == 0 {
+// fetchIcons draws the icons the visible rows asked for, on a goroutine, and
+// keeps them by path; a row without one shows its initial meanwhile.
+func (a *application) fetchIcons() {
+	todo := a.iconWanted
+	a.iconWanted = nil
+	if !a.native || len(todo) == 0 {
 		return
 	}
 	scale := 1.0
@@ -263,10 +250,6 @@ func (a *application) prefetchIcons() {
 			a.panel.Update(func() { a.icons[path] = bitmap })
 		}
 	}()
-}
-
-func (a *application) icon(app mygo.InstalledApp) *ui.Bitmap {
-	return a.icons[app.Path]
 }
 
 func (a *application) openSettings() {
@@ -382,14 +365,18 @@ func keys(shortcut string) string {
 	return strings.NewReplacer("CmdOrCtrl+", "⌘", "Cmd+", "⌘", "Ctrl+", "⌃", "Alt+", "⌥", "Shift+", "⇧").Replace(shortcut)
 }
 
-// appIcon draws an app's icon when it is ready, and its initial otherwise.
-func (a *application) appIcon(c *ui.Context, app mygo.InstalledApp) {
+// appIcon draws an app's icon when it is ready, and its initial otherwise,
+// asking for the icon the first time its row shows.
+func (a *application) appIcon(c *ui.Context, app mygo.InstalledApp, size float32) {
 	t := c.Theme()
-	if bitmap := a.icon(app); bitmap != nil {
-		components.Image(c, bitmap).Size(iconSize, iconSize).Shrink(0)
+	if bitmap, ok := a.icons[app.Path]; ok && bitmap != nil {
+		components.Image(c, bitmap).Size(size, size).Shrink(0)
 		return
+	} else if !ok && a.native && !a.iconPending[app.Path] {
+		a.iconPending[app.Path] = true
+		a.iconWanted = append(a.iconWanted, app.Path)
 	}
-	ui.Box(c).Size(iconSize, iconSize).Radius(t.Radius).Background(t.Surface).Center().Shrink(0).Children(func() {
-		components.Text(c, initial(app.Name)).FontSize(iconSize * 0.45).TextColor(t.TextMuted)
+	ui.Box(c).Size(size, size).Radius(t.Radius).Background(t.Surface).Center().Shrink(0).Children(func() {
+		components.Text(c, initial(app.Name)).FontSize(size * 0.45).TextColor(t.TextMuted)
 	})
 }
