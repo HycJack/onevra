@@ -1,7 +1,6 @@
 package gallery
 
 import (
-	"fmt"
 	"runtime"
 
 	"github.com/egoist/mygo"
@@ -55,12 +54,12 @@ func (g *Gallery) settingsLocalized(c *ui.Context) {
 	w, h := c.Size()
 	inset := sidebar.HeaderHeight(c)
 	width := min(t.Space(200), w*.88, max(0, w-2*inset))
-	components.Dialog(c, &g.settings.open, components.DialogOptions{Label: tr(c, "gallery.settings"), Inset: inset}, func(panel ui.Element) {
+	components.Dialog(c, &g.settings.open, components.DialogOptions{Label: tr(c, "settings"), Inset: inset}, func(panel ui.Element) {
 		panel.Width(width).Height(min(t.Space(180), h*.85)).Padding(0).Gap(0).Clip()
 		components.Settings(c, &g.settings.view, g.settingsCategories(), components.SettingsOptions{
 			Narrow: width < t.Space(170),
 			HeaderActions: func(c *ui.Context) {
-				if sidebar.IconButton(c, lucide.X(), tr(c, "gallery.close_settings")).Clicked() {
+				if sidebar.IconButton(c, lucide.X(), tr(c, "closeSettings")).Clicked() {
 					g.settings.open = false
 				}
 			},
@@ -70,25 +69,25 @@ func (g *Gallery) settingsLocalized(c *ui.Context) {
 
 func (g *Gallery) settingsCategories() []components.SettingsCategory {
 	notifications := components.SettingsCategory{
-		ID: "notifications", Title: g.text("gallery.notifications"), Section: g.text("gallery.personal"), Icon: lucide.Bell(),
-		Description: g.text("gallery.template_preview_changes_stay_in_this_session_no_notifications_are_sen"),
+		ID: "notifications", Title: g.text("notifications"), Section: g.text("personal"), Icon: lucide.Bell(),
+		Description: g.text("templatePreviewChangesStayInThisSessionNoNotificationsAreSen"),
 		Groups: []components.SettingsGroup{{
 			ID: "smart",
 			Items: []components.SettingsItem{{
-				ID: "smart", Title: g.text("gallery.smart_notifications"), Description: g.text("gallery.pause_mobile_alerts_while_you_re_active_on_desktop"),
+				ID: "smart", Title: g.text("smartNotifications"), Description: g.text("pauseMobileAlertsWhileYouReActiveOnDesktop"),
 				// The description ends with an inline link that toggles the switch.
 				DescriptionContent: func(c *ui.Context) {
-					ui.Text(c, g.text("gallery.pause_mobile_alerts_while_you_re_active_on_desktop")+" ")
-					action := "gallery.turn_on"
+					ui.Text(c, g.text("pauseMobileAlertsWhileYouReActiveOnDesktop")+" ")
+					action := "turnOn"
 					if g.settings.smart {
-						action = "gallery.turn_off"
+						action = "turnOff"
 					}
 					if components.Button(c, g.text(action), components.ButtonLink).Clicked() {
 						g.settings.smart = !g.settings.smart
 					}
 				},
 				Build: func(c *ui.Context) {
-					components.Switch(c, &g.settings.smart, g.text("gallery.toggle_smart_notifications"), components.SwitchOptions{HideLabel: true})
+					components.Switch(c, &g.settings.smart, g.text("toggleSmartNotifications"), components.SwitchOptions{HideLabel: true})
 				},
 			}},
 		}},
@@ -97,7 +96,7 @@ func (g *Gallery) settingsCategories() []components.SettingsCategory {
 		if notifications.Groups[len(notifications.Groups)-1].ID != row.group {
 			group := row.group
 			notifications.Groups = append(notifications.Groups, components.SettingsGroup{ID: group, Title: g.text(group), Actions: func(c *ui.Context) {
-				if components.Button(c, g.text("gallery.reset_defaults"), components.ButtonGhost).Label(fmt.Sprintf(g.text("gallery.reset_s"), g.text(group))).Shrink(0).Clicked() {
+				if components.Button(c, g.text("resetDefaults"), components.ButtonGhost).Label(g.messages().ResetS(g.text(group))).Shrink(0).Clicked() {
 					for i, row := range notificationRows {
 						if row.group == group {
 							g.settings.channels[i] = row.channel
@@ -110,36 +109,36 @@ func (g *Gallery) settingsCategories() []components.SettingsCategory {
 		group.Items = append(group.Items, components.SettingsItem{
 			ID: row.title, Title: g.text(row.title), Description: g.text(row.description),
 			Build: func(c *ui.Context) {
-				settingsSelect(c, &g.settings.channels[i], fmt.Sprintf(g.text("gallery.s_delivery"), g.text(row.title)), []string{"Email", "In-app", "Off"}).Shrink(0)
+				settingsSelect(c, &g.settings.channels[i], g.messages().DeliveryOf(g.text(row.title)), []string{"Email", "In-app", "Off"}).Shrink(0)
 			},
 		})
 	}
 	return []components.SettingsCategory{
-		{ID: "general", Title: g.text("gallery.general"), Section: g.text("gallery.application"), Icon: lucide.Settings(),
+		{ID: "general", Title: g.text("general"), Section: g.text("application"), Icon: lucide.Settings(),
 			Groups: []components.SettingsGroup{{ID: "language", Items: []components.SettingsItem{{
-				ID: "language", Title: g.text("gallery.language"), Description: g.text("gallery.applies_immediately_system_menus_keep_their_current_language"), Keywords: []string{"language", "English", "中文", g.text("gallery.follow_system")},
+				ID: "language", Title: g.text("language"), Description: g.text("appliesImmediatelyToMenusAndControls"), Keywords: []string{"language", "English", "中文", g.text("followSystem")},
 				Build: func(c *ui.Context) {
 					choice := g.config.Language
-					if settingsSelect(c, &choice, g.text("gallery.language_preference"), []string{"", "en", "zh-Hans"}).Changed() {
+					if settingsSelect(c, &choice, g.text("languagePreference"), []string{"", "en", "zh-Hans"}).Changed() {
 						g.chooseLanguage(choice)
 						c.Invalidate()
 					}
 				},
 			}}}, g.commandSettingsGroup()}},
-		{ID: "appearance", Title: g.text("gallery.appearance"), Section: g.text("gallery.application"), Icon: lucide.Palette(),
+		{ID: "appearance", Title: g.text("appearance"), Section: g.text("application"), Icon: lucide.Palette(),
 			Groups: []components.SettingsGroup{{ID: "theme", Items: []components.SettingsItem{{
-				ID: "theme", Title: g.text("gallery.theme"), Description: g.text("gallery.applies_immediately_and_follows_the_toolbar_theme_menu"), Keywords: []string{"System", "Light", "Dark", g.text("gallery.system"), g.text("gallery.light"), g.text("gallery.dark")},
+				ID: "theme", Title: g.text("theme"), Description: g.text("appliesImmediatelyAndFollowsTheToolbarThemeMenu"), Keywords: []string{"System", "Light", "Dark", g.text("system"), g.text("light"), g.text("dark")},
 				Build: func(c *ui.Context) {
 					choice := string(mygo.Theme.Source())
-					if settingsSelect(c, &choice, g.text("gallery.theme_preference"), []string{"system", "light", "dark"}).Changed() {
+					if settingsSelect(c, &choice, g.text("themePreference"), []string{"system", "light", "dark"}).Changed() {
 						g.chooseTheme(mygo.ThemeSource(choice))
 					}
 				},
 			}, {
-				ID: "pixel-grid", Title: g.text("gallery.pixel_grid_background"), Description: g.text("gallery.pixel_grid_background_description"),
+				ID: "pixel-grid", Title: g.text("pixelGridBackground"), Description: g.text("pixelGridBackgroundDescription"),
 				Build: func(c *ui.Context) {
 					enabled := !g.config.DisablePixelGrid
-					components.Switch(c, &enabled, g.text("gallery.toggle_pixel_grid_background"), components.SwitchOptions{HideLabel: true}).Changed()
+					components.Switch(c, &enabled, g.text("togglePixelGridBackground"), components.SwitchOptions{HideLabel: true}).Changed()
 					if enabled != !g.config.DisablePixelGrid {
 						g.config.DisablePixelGrid = !enabled
 						g.savePreferences()
@@ -166,35 +165,35 @@ func settingsSelect(c *ui.Context, value *string, label string, choices []string
 func settingChoiceLabel(c *ui.Context, choice string) string {
 	switch choice {
 	case "":
-		return tr(c, "gallery.follow_system")
+		return tr(c, "followSystem")
 	case "en":
 		return "English"
 	case "zh-Hans":
 		return "简体中文"
 	case "system":
-		return tr(c, "gallery.system")
+		return tr(c, "system")
 	case "light":
-		return tr(c, "gallery.light")
+		return tr(c, "light")
 	case "dark":
-		return tr(c, "gallery.dark")
+		return tr(c, "dark")
 	default:
 		return tr(c, choice)
 	}
 }
 
 func (g *Gallery) commandSettingsGroup() components.SettingsGroup {
-	return components.SettingsGroup{ID: "commands", Title: g.text("gallery.command_palette"), Items: []components.SettingsItem{
-		{ID: "command-abc", Title: g.text("gallery.command_auto_abc"), Description: g.text("gallery.command_auto_abc_description"), Keywords: []string{"ABC", "input", "Raycast"}, Build: func(c *ui.Context) {
+	return components.SettingsGroup{ID: "commands", Title: g.text("commandPalette"), Items: []components.SettingsItem{
+		{ID: "command-abc", Title: g.text("commandAutoAbc"), Description: g.text("commandAutoAbcDescription"), Keywords: []string{"ABC", "input", "Raycast"}, Build: func(c *ui.Context) {
 			enabled := !g.config.DisableCommandABC
-			components.Switch(c, &enabled, g.text("gallery.toggle_command_auto_abc"), components.SwitchOptions{HideLabel: true}).Disabled(runtime.GOOS != "darwin").Changed()
+			components.Switch(c, &enabled, g.text("toggleCommandAutoAbc"), components.SwitchOptions{HideLabel: true}).Disabled(runtime.GOOS != "darwin").Changed()
 			if enabled != !g.config.DisableCommandABC {
 				g.config.DisableCommandABC = !enabled
 				g.savePreferences()
 			}
 		}},
-		{ID: "command-expanded", Title: g.text("gallery.command_default_expanded"), Description: g.text("gallery.command_default_expanded_description"), Keywords: []string{"search", "results", "Raycast"}, Build: func(c *ui.Context) {
+		{ID: "command-expanded", Title: g.text("commandDefaultExpanded"), Description: g.text("commandDefaultExpandedDescription"), Keywords: []string{"search", "results", "Raycast"}, Build: func(c *ui.Context) {
 			expanded := !g.config.CommandExpandOnSearch
-			components.Switch(c, &expanded, g.text("gallery.toggle_command_default_expanded"), components.SwitchOptions{HideLabel: true}).Changed()
+			components.Switch(c, &expanded, g.text("toggleCommandDefaultExpanded"), components.SwitchOptions{HideLabel: true}).Changed()
 			if expanded != !g.config.CommandExpandOnSearch {
 				g.config.CommandExpandOnSearch = !expanded
 				g.savePreferences()

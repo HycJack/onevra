@@ -5,6 +5,7 @@
 package plain
 
 import (
+	"github.com/oneo-me/onevra/source/internal/l10n"
 	"runtime"
 
 	"github.com/egoist/mygo"
@@ -53,7 +54,7 @@ type ShellOptions struct {
 }
 
 // Labels names the Windows caption buttons and each toast's close button.
-// Empty values use English defaults.
+// Empty values use Onevra's catalog in the window's language.
 type Labels struct{ Minimize, Maximize, Restore, Close, CloseToast string }
 
 // Shell owns presentation only; Window exposes MyGo's original lifecycle API.
@@ -211,19 +212,19 @@ func captionButton(c *ui.Context, icon *ui.SVG, name string) ui.Element {
 }
 
 func (s *Shell) captionButtons(c *ui.Context) {
-	o, w := s.options.Labels, s.host
+	o, w, m := s.options.Labels, s.host, l10n.In(c.Locale())
 	ui.Row(c).Key("window-controls").Shrink(0).Gap(4).Children(func() {
-		if captionButton(c, lucide.Minus(), label(o.Minimize, "Minimize window")).Clicked() && w != nil {
+		if captionButton(c, lucide.Minus(), label(o.Minimize, m.Text("minimizeWindow"))).Clicked() && w != nil {
 			w.Minimize()
 		}
-		icon, name := lucide.Square(), label(o.Maximize, "Maximize window")
+		icon, name := lucide.Square(), label(o.Maximize, m.Text("maximizeWindow"))
 		if w != nil && w.IsMaximized() {
-			icon, name = lucide.Copy(), label(o.Restore, "Restore window")
+			icon, name = lucide.Copy(), label(o.Restore, m.Text("restoreWindow"))
 		}
 		if captionButton(c, icon, name).Clicked() && w != nil {
 			w.ToggleMaximize()
 		}
-		if captionButton(c, lucide.X(), label(o.Close, "Close window")).Clicked() && w != nil {
+		if captionButton(c, lucide.X(), label(o.Close, m.Text("closeWindow"))).Clicked() && w != nil {
 			w.Close()
 		}
 	})

@@ -17,10 +17,7 @@ func (a *application) themeSource() mygo.ThemeSource { return mygo.ThemeSource(a
 func (a *application) scope(c *ui.Context, build func()) {
 	c.OnShortcut(ui.Cmd, ui.KeyQ, mygo.App.Quit)
 	c.OnShortcut(ui.Cmd, ui.KeyComma, a.openSettings)
-	components.WithLocalization(c, components.Localization{
-		Settings: a.text("settings"), SearchSettings: a.text("search"), SearchSettingsPlaceholder: a.text("search"),
-		SettingsCategory: a.text("category"), SearchResults: a.text("results"), NoSettings: a.text("no_results"),
-	}, build)
+	build()
 }
 
 func (a *application) feedback(c *ui.Context) {
@@ -41,7 +38,7 @@ func (a *application) mainView(c *ui.Context) {
 				components.Text(c, a.text("description")).Wrap().TextColor(t.TextMuted)
 			default:
 				components.TextBox(c, &a.note, components.TextBoxOptions{Multiline: true}).Grow(1).Label(a.text("note")).Placeholder(a.text("placeholder"))
-				components.Text(c, a.text("session_note")).Wrap().FontSize(12).TextColor(t.TextMuted)
+				components.Text(c, a.text("sessionNote")).Wrap().FontSize(12).TextColor(t.TextMuted)
 			}
 			a.feedback(c)
 		})
@@ -95,7 +92,7 @@ func (a *application) panelView(c *ui.Context) {
 				components.Text(c, a.text("description")).Wrap().FontSize(12).TextColor(c.Theme().TextMuted)
 			default:
 				components.TextBox(c, &a.note, components.TextBoxOptions{Multiline: true}).Grow(1).Label(a.text("note")).Placeholder(a.text("placeholder")).AutoFocus()
-				components.Text(c, a.text("session_note")).Wrap().FontSize(11)
+				components.Text(c, a.text("sessionNote")).Wrap().FontSize(11)
 			}
 		})
 	})
@@ -122,9 +119,9 @@ func (a *application) welcomeView(c *ui.Context) {
 		components.ScrollView(c, components.ScrollViewOptions{}).Fill().Children(func() {
 			ui.Column(c).FillWidth().Padding(24).Gap(16).Children(func() {
 				components.Text(c, a.text("welcome")).FontSize(24).Bold()
-				key := "welcome_body"
+				key := "welcomeBody"
 				if runtime.GOOS == "linux" {
-					key = "welcome_linux"
+					key = "welcomeLinux"
 				}
 				components.Text(c, a.text(key)).Wrap()
 				a.feedback(c)
@@ -137,10 +134,10 @@ func (a *application) welcomeView(c *ui.Context) {
 func (a *application) selectSetting(c *ui.Context, value *string, label string, choices []string) {
 	before := *value
 	selectBox := components.Select(c, value)
-	selectBox.Trigger.Label(a.text(label)).MinWidth(160).Children(func() { components.Text(c, a.text(*value)).SingleLine() })
+	selectBox.Trigger.Label(a.text(label)).MinWidth(160).Children(func() { components.Text(c, a.text(optionKey(*value))).SingleLine() })
 	selectBox.Popup(func(ui.Element) {
 		for _, choice := range choices {
-			selectBox.Item(choice).Label(a.text(choice)).Children(func() { components.Text(c, a.text(choice)) })
+			selectBox.Item(choice).Label(a.text(optionKey(choice))).Children(func() { components.Text(c, a.text(optionKey(choice))) })
 		}
 	})
 	if before != *value {
@@ -168,18 +165,18 @@ func (a *application) settingsView(c *ui.Context, width float32) {
 			choices = []string{"dock", "quit"}
 		}
 		if len(choices) > 1 {
-			items = append(items, components.SettingsItem{ID: "close", Title: a.text("close_action"), Build: func(c *ui.Context) { a.selectSetting(c, &a.config.CloseAction, "close_action", choices) }})
+			items = append(items, components.SettingsItem{ID: "close", Title: a.text("closeAction"), Build: func(c *ui.Context) { a.selectSetting(c, &a.config.CloseAction, "closeAction", choices) }})
 		}
 	}
 	if appKind == "hybrid" {
-		items = append(items, components.SettingsItem{ID: "silent", Title: a.text("silent"), Description: a.text("silent_hint"), Build: func(c *ui.Context) {
+		items = append(items, components.SettingsItem{ID: "silent", Title: a.text("silent"), Description: a.text("silentHint"), Build: func(c *ui.Context) {
 			if components.Switch(c, &a.config.Silent, a.text("silent"), components.SwitchOptions{HideLabel: true}).Changed() {
 				a.changed()
 			}
 		}})
 	}
 	if appKind != "desktop" {
-		items = append(items, components.SettingsItem{ID: "panel", Title: a.text("panel"), Description: a.text("panel_hint"), Build: func(c *ui.Context) {
+		items = append(items, components.SettingsItem{ID: "panel", Title: a.text("panel"), Description: a.text("panelHint"), Build: func(c *ui.Context) {
 			if components.Switch(c, &a.config.Panel, a.text("panel"), components.SwitchOptions{HideLabel: true}).Changed() {
 				a.changed()
 			}
@@ -189,7 +186,7 @@ func (a *application) settingsView(c *ui.Context, width float32) {
 		components.Settings(c, &a.settingsState, []components.SettingsCategory{{ID: "general", Title: a.text("general"), Groups: []components.SettingsGroup{{ID: "preferences", Items: items}}}}, components.SettingsOptions{
 			Narrow: width < 620,
 			HeaderActions: func(c *ui.Context) {
-				if components.IconButton(c, lucide.X(), a.text("close_settings"), components.IconButtonPlain).Clicked() {
+				if components.IconButton(c, lucide.X(), a.text("closeSettings"), components.IconButtonPlain).Clicked() {
 					if appKind == "menubar" {
 						a.settings.Close()
 					} else {

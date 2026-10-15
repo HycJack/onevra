@@ -33,23 +33,23 @@ func (g *Gallery) sendNotification() {
 	}
 	d.err = nil
 	if !mygo.NotificationsSupported() {
-		d.status = "gallery.notification_unsupported"
+		d.status = "notificationUnsupported"
 		return
 	}
 	d.close()
 	n := mygo.NewNotification(mygo.NotificationOptions{
-		Title:  g.text("gallery.notification_title"),
-		Body:   g.text("gallery.notification_body"),
+		Title:  g.text("notificationTitle"),
+		Body:   g.text("notificationBody"),
 		Silent: d.silent,
 	})
 	d.current, d.pending = n, true
-	d.status = "gallery.notification_sending"
+	d.status = "notificationSending"
 	n.OnClick(func() {
 		if d.current != n {
 			return
 		}
 		d.close()
-		d.status = "gallery.notification_clicked"
+		d.status = "notificationClicked"
 		g.page = notificationsPage
 		g.settings.open = false
 		g.showFromDock()
@@ -69,12 +69,12 @@ func (g *Gallery) sendNotification() {
 			switch {
 			case errors.Is(err, mygo.ErrNotificationsDenied):
 				d.close()
-				d.status = "gallery.notification_denied"
+				d.status = "notificationDenied"
 			case err != nil:
 				d.close()
-				d.status, d.err = "gallery.notification_failed", err
+				d.status, d.err = "notificationFailed", err
 			default:
-				d.status = "gallery.notification_sent"
+				d.status = "notificationSent"
 			}
 			g.Shell.Window().Invalidate()
 		})
@@ -86,17 +86,17 @@ func (g *Gallery) Notifications(c *ui.Context) {
 		d := &g.notification
 		components.ScrollView(c, components.ScrollViewOptions{}).Fill().Children(func() {
 			ui.Column(c).FillWidth().Padding(c.Theme().Space(6)).Gap(16).Children(func() {
-				components.Text(c, tr(c, "gallery.system_notifications")).FontSize(22).Bold()
-				components.Text(c, tr(c, "gallery.notification_description")).Wrap()
-				components.Text(c, tr(c, "gallery.notification_requirements")).Wrap().TextColor(c.Theme().TextMuted)
-				components.Checkbox(c, &d.silent, tr(c, "gallery.notification_silent"))
-				components.Button(c, tr(c, "gallery.notification_send"), components.ButtonPrimary).
+				components.Text(c, tr(c, "systemNotifications")).FontSize(22).Bold()
+				components.Text(c, tr(c, "notificationDescription")).Wrap()
+				components.Text(c, tr(c, "notificationRequirements")).Wrap().TextColor(c.Theme().TextMuted)
+				components.Checkbox(c, &d.silent, tr(c, "notificationSilent"))
+				components.Button(c, tr(c, "notificationSend"), components.ButtonPrimary).
 					Disabled(g.Shell == nil || d.pending).OnClick(g.sendNotification)
-				components.Button(c, tr(c, "gallery.notification_withdraw"), components.ButtonOutline).
+				components.Button(c, tr(c, "notificationWithdraw"), components.ButtonOutline).
 					Disabled(d.current == nil).OnClick(func() {
 					d.close()
 					d.err = nil
-					d.status = "gallery.notification_withdrawn"
+					d.status = "notificationWithdrawn"
 				})
 				if d.status != "" {
 					components.Text(c, tr(c, d.status)).Wrap()

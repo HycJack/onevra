@@ -21,6 +21,8 @@ func TestMain(m *testing.M) {
 	}
 	mygo.App.SetName(appName + " Test")
 	mygo.App.SetPath(mygo.PathUserData, dir)
+	// Language choices made by tests apply without being saved for later launches.
+	os.Setenv("MYGO_LOCALE", "en")
 	mygo.App.OnWindowAllClosed(func() {})
 	result := make(chan int, 1)
 	mygo.App.WhenReady(func() { go func() { result <- m.Run(); mygo.App.Quit() }() })

@@ -1,7 +1,6 @@
 package gallery
 
 import (
-	"fmt"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
 )
@@ -21,5 +20,5 @@ func controlSplit(c *ui.Context, s *controlState, variant string) {
 		}
 	}
 	components.Split(c, &s.split, pane(first), pane(second), options).
-		Label(fmt.Sprintf(tr(c, "gallery.s_divider"), tr(c, variant))).FillWidth().Height(240)
+		Label(msg(c).DividerOf(tr(c, variant))).FillWidth().Height(240)
 }

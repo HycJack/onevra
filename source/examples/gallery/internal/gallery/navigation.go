@@ -14,6 +14,17 @@ var navigationGroups = []string{
 var newPages = map[string]bool{
 	"controls/Relationship graph": true,
 	"controls/Honeycomb":          true,
+	"mygo/Rich text editor":       true,
+	"mygo/Markdown stream":        true,
+	"mygo/Network":                true,
+	"mygo/Secrets":                true,
+	"mygo/Recent documents":       true,
+	"mygo/File watching":          true,
+	"mygo/Installed apps":         true,
+	"mygo/Fonts":                  true,
+	"mygo/System appearance":      true,
+	"mygo/Languages & formats":    true,
+	"mygo/Web data":               true,
 }
 
 type navigationEntry struct {

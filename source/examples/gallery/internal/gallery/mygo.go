@@ -12,7 +12,7 @@ type mygoExample struct {
 	build       func(*ui.Context, *demoState)
 }
 
-var mygoGroups = []string{"Content display", "Code & diffs", "Feedback & overlays", "Layout & containers", "Games"}
+var mygoGroups = []string{"Text input", "Content display", "Code & diffs", "Feedback & overlays", "Layout & containers", "Games"}
 
 var demoImage = ui.MustParseSVG([]byte(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 100"><rect width="180" height="100" rx="12" fill="#dbeafe"/><circle cx="140" cy="28" r="15" fill="#fbbf24"/><path d="M0 100L55 25L110 100Z" fill="#2563eb"/><path d="M65 100L120 45L180 100Z" fill="#059669"/></svg>`))
 
@@ -28,7 +28,7 @@ func mygoExampleFor(page galleryPage) (mygoExample, bool) {
 func mygoVariants(name string) []string {
 	switch name {
 	case "Motion":
-		return []string{"Springs", "Keyframes", "Animated pose", "Draggable"}
+		return []string{"Springs", "Keyframes", "Timeline", "Animated pose", "Draggable"}
 	case "Diff viewer":
 		return []string{"Side by side", "Unified"}
 	case "Transforms":
@@ -79,6 +79,7 @@ func (g *Gallery) mygoState(name, variant string, first bool) *demoState {
 		s.value = 0
 	}
 	s.lawn.output = g.audioOutput
+	s.system.native, s.system.window = g.systemServices, g.window
 	s.game.gamepads = g.gamepads
 	s.flyout.gallery = g
 	switch variant {
@@ -151,9 +152,9 @@ func (g *Gallery) myGoLocalized(c *ui.Context, example mygoExample) {
 					ui.Column(c).FillWidth().MinWidth(0).Gap(12).Disabled(variant == "Disabled").Children(func() {
 						if variant == "Read only" && s.buffer == nil {
 							if example.name == "TextInput" {
-								components.TextBox(c, &s.text, components.TextBoxOptions{ReadOnly: true}).Label(tr(c, "gallery.name")).FillWidth()
+								components.TextBox(c, &s.text, components.TextBoxOptions{ReadOnly: true}).Label(tr(c, "name")).FillWidth()
 							} else {
-								components.TextBox(c, &s.text, components.TextBoxOptions{Multiline: true, ReadOnly: true}).Label(tr(c, "gallery.notes")).Height(140).FillWidth()
+								components.TextBox(c, &s.text, components.TextBoxOptions{Multiline: true, ReadOnly: true}).Label(tr(c, "notes")).Height(140).FillWidth()
 							}
 						} else {
 							example.build(c, s)

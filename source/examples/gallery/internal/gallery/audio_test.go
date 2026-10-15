@@ -20,16 +20,16 @@ func TestAudioControlsWithoutOutput(t *testing.T) {
 			if s.audio.played != len(audioNotes) || s.audio.pluck != nil {
 				t.Fatalf("headless notes: played %d, synthesized %v", s.audio.played, s.audio.pluck != nil)
 			}
-			if err := tt.Click(g.text("gallery.audio_play_loop")); err != nil {
+			if err := tt.Click(g.text("audioPlayLoop")); err != nil {
 				t.Fatal(err)
 			}
 			if !s.audio.looping || s.audio.loop != nil {
 				t.Fatalf("loop toggled without a player: %+v", s.audio)
 			}
-			if _, ok := tt.Find(g.text("gallery.audio_pause_loop")); !ok {
+			if _, ok := tt.Find(g.text("audioPauseLoop")); !ok {
 				t.Fatal("missing pause action")
 			}
-			pan, ok := tt.Find(g.text("gallery.audio_pan"))
+			pan, ok := tt.Find(g.text("audioPan"))
 			if !ok {
 				t.Fatal("missing pan label")
 			}

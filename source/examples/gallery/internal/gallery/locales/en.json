@@ -1,0 +1,1140 @@
+{
+  "@@locale": "en",
+  "percent": "{value, number, integer}%",
+  "@percent": {
+    "placeholders": {
+      "value": {
+        "type": "double"
+      }
+    }
+  },
+  "valueRange": "{low, number, integer} – {high, number, integer}",
+  "@valueRange": {
+    "placeholders": {
+      "low": {
+        "type": "double"
+      },
+      "high": {
+        "type": "double"
+      }
+    }
+  },
+  "twelve": "12",
+  "aHeading": "A heading",
+  "aHelpfulDescriptionOfThisAction": "A helpful description of this action",
+  "aNoteIsSharedWithYou": "A note is shared with you.",
+  "aPageInADialog": "A page in a dialog",
+  "aSidebarAndContentOneNativeWindow": "A sidebar and content, one native window.",
+  "aSingleLineLabel": "A single-line label",
+  "aSmallWindowOpenedFromTheTray": "A small window, opened from the tray.",
+  "aWebPageInsideNativeUi": "A web page inside native UI",
+  "about": "About",
+  "above": "Above",
+  "accent": "Accent",
+  "accessibility": "Accessibility",
+  "account": "Account",
+  "accountSecurity": "Account & security",
+  "actions": "Actions",
+  "anInlineAction": "an inline action",
+  "anotherLayer": "Another layer",
+  "appearance": "Appearance",
+  "appindicatorSupportsMenusOnlyChooseOpenNotesFromTheTrayMenu": "AppIndicator supports menus only. Choose Open notes from the tray menu.",
+  "application": "APPLICATION",
+  "appliesImmediatelyAndFollowsTheToolbarThemeMenu": "Applies immediately and follows the toolbar theme menu.",
+  "appliesImmediatelyToMenusAndControls": "Applies immediately, including menus and built-in controls.",
+  "apply": "Apply",
+  "applyChange": "Apply change?",
+  "applyTheseSettings": "Apply these settings?",
+  "askForConfirmation": "Ask for confirmation",
+  "authorAvatar": "Author avatar",
+  "authorAvatarS": "Author avatar — {name}",
+  "@authorAvatarS": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "awaitingReview": "Awaiting review",
+  "below": "Below",
+  "bold": "Bold",
+  "boldText": "bold text",
+  "both": "Both",
+  "bottomPane": "Bottom pane",
+  "box": "Box",
+  "bufferTextAreas": "Buffer text areas",
+  "bufferTextBoxes": "Buffer text boxes",
+  "builtWithMygo": "Built with MyGo",
+  "builtWithOnevra": "Built with Onevra",
+  "builtWithOnevraPoweredByMygoWrittenInGo": "Built with Onevra · Powered by MyGo · Written in Go",
+  "bullet": "•",
+  "buttons": "Buttons",
+  "cancel": "Cancel",
+  "cancelled": "Cancelled",
+  "cardD": "Card {number}",
+  "@cardD": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "cellD": "Cell {number}",
+  "@cellD": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "checked": "Checked",
+  "chooseAValue": "Choose a value",
+  "chooseAnAncestor": "Choose an ancestor",
+  "chooseSize": "Choose size",
+  "chosenS": "Chosen: {choice}",
+  "@chosenS": {
+    "placeholders": {
+      "choice": {
+        "type": "String"
+      }
+    }
+  },
+  "clear": "Clear",
+  "clearGlassStyle": "Clear",
+  "clicksD": "Clicks: {count}",
+  "@clicksD": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "close": "Close",
+  "closeSettings": "Close settings",
+  "cloudRain": "Cloud rain",
+  "collapsed": "Collapsed",
+  "collections": "Collections",
+  "color": "Color",
+  "columnD": "Column {number}",
+  "@columnD": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "combine": "Combine ",
+  "componentAccordion": "Accordion",
+  "componentAlertdialog": "AlertDialog",
+  "componentBadge": "Badge",
+  "componentBreadcrumbs": "Breadcrumbs",
+  "componentButton": "Button",
+  "componentCalendar": "Calendar",
+  "componentCalendarpicker": "CalendarPicker",
+  "componentCheckbox": "Checkbox",
+  "componentCheckboxgroup": "CheckboxGroup",
+  "componentCollapsible": "Collapsible",
+  "componentColorpicker": "ColorPicker",
+  "componentColorview": "ColorView",
+  "componentColorwell": "ColorWell",
+  "componentColumn": "Column",
+  "componentDateinput": "DateInput",
+  "componentEditabletext": "EditableText",
+  "componentGlass": "Glass",
+  "componentGridview": "GridView",
+  "componentImage": "Image",
+  "componentModal": "Modal",
+  "componentNativeselect": "NativeSelect",
+  "componentNumberinput": "NumberInput",
+  "componentOutlinetable": "OutlineTable",
+  "componentPixelgrid": "PixelGrid",
+  "componentPopover": "Popover",
+  "componentProgressring": "ProgressRing",
+  "componentRadio": "Radio",
+  "componentRadiogroup": "RadioGroup",
+  "componentRangeslider": "RangeSlider",
+  "componentRichtext": "RichText",
+  "componentRow": "Row",
+  "componentScroll": "Scroll",
+  "componentScrollboth": "ScrollBoth",
+  "componentScrollhorizontal": "ScrollHorizontal",
+  "componentSegmented": "Segmented",
+  "componentSelection": "Selection",
+  "componentSidebar": "Sidebar",
+  "componentSpacer": "Spacer",
+  "componentSpinner": "Spinner",
+  "componentSplit": "Split",
+  "componentSplitvertical": "SplitVertical",
+  "componentStepper": "Stepper",
+  "componentStepslider": "StepSlider",
+  "componentSwitch": "Switch",
+  "componentTable": "Table",
+  "componentTabs": "Tabs",
+  "componentTerminal": "Terminal",
+  "componentText": "Text",
+  "componentTextareabuffer": "TextAreaBuffer",
+  "componentTextbox": "TextBox",
+  "componentTextboxMultiline": "TextBox (multiline)",
+  "componentTextboxbuffer": "TextBoxBuffer",
+  "componentTextboxbufferMultiline": "TextBoxBuffer (multiline)",
+  "componentTextinputbuffer": "TextInputBuffer",
+  "componentTimeinput": "TimeInput",
+  "componentTimepicker": "TimePicker",
+  "componentToast": "Toast",
+  "componentTogglebutton": "ToggleButton",
+  "componentTokenfield": "TokenField",
+  "componentTooltip": "Tooltip",
+  "componentTree": "Tree",
+  "componentTreevirtualized": "TreeVirtualized",
+  "componentWebview": "WebView",
+  "components": "Components",
+  "confirmation": "Confirmation",
+  "confirmed": "Confirmed",
+  "confirmedD": "Confirmed: {count}",
+  "@confirmedD": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "contain": "Contain",
+  "containers": "Containers",
+  "copies": "Copies",
+  "copies0f": "Copies: {count, number, integer}",
+  "@copies0f": {
+    "placeholders": {
+      "count": {
+        "type": "double"
+      }
+    }
+  },
+  "copyCode": "Copy code",
+  "count": "Count",
+  "countD": "Count: {count}",
+  "@countD": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "countIncreased": "Count increased",
+  "cover": "Cover",
+  "ratingOutOfFive": "{rating} / 5",
+  "@ratingOutOfFive": {
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "sizeKb": "{size} KB",
+  "@sizeKb": {
+    "placeholders": {
+      "size": {
+        "type": "int"
+      }
+    }
+  },
+  "starsOutOfFive": "{rating} of 5 stars",
+  "@starsOutOfFive": {
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      }
+    }
+  },
+  "dark": "Dark",
+  "date": "Date",
+  "day": "Day",
+  "decimal": "Decimal",
+  "default": "Default",
+  "delete": "Delete",
+  "desktop": "Desktop",
+  "desktopDockMenu": "Desktop / Dock menu",
+  "desktopTray": "Desktop / Tray",
+  "details": "Details",
+  "dialog": "Dialog",
+  "disableDockMenu": "Disable Dock menu",
+  "disableTray": "Disable tray",
+  "disabled": "Disabled",
+  "divider": "Divider",
+  "dockMenu": "Dock menu",
+  "dockMenusAreAvailableOnlyOnMacosUseDesktopTrayForATrayMen": "Dock menus are available only on macOS. Use Desktop / Tray for a tray menu on this platform.",
+  "documents": "Documents",
+  "done": "Done",
+  "dragTheGlassOverTheAvatar": "Drag the glass over the avatar",
+  "draggableGlass": "Draggable glass",
+  "duplicate": "Duplicate",
+  "editName": "Edit name",
+  "editable": "Editable",
+  "editableName": "Editable name",
+  "editableText": "Editable text",
+  "email": "Email",
+  "empty": "Empty",
+  "enableDockMenu": "Enable Dock menu",
+  "enableNotifications": "Enable notifications",
+  "enableTheMenuThenRightClickGallerySDockIconShowGalleryOpen": "Enable the menu, then right-click Gallery's Dock icon. Show Gallery, Open Welcome and Open Settings appear above the standard macOS actions.",
+  "enableTray": "Enable tray",
+  "enabled": "Enabled",
+  "end": "End",
+  "enterAName": "Enter a name",
+  "escapeClosingTheNotesWindowOrClickingAwayHidesItNotesStayI": "Escape, closing the notes window or clicking away hides it. Notes stay in memory; closing Gallery removes the tray.",
+  "expanded": "Expanded",
+  "file": "File",
+  "fileD": "File {number}",
+  "@fileD": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "files": "Files",
+  "filled": "Filled",
+  "fingerprint": "Fingerprint",
+  "first": "First",
+  "followSystem": "Follow system",
+  "galleryTrayNotes": "Gallery Tray notes",
+  "general": "General",
+  "ghost": "Ghost",
+  "glassCanvas": "Glass canvas",
+  "grayscale": "Grayscale",
+  "nativeUiPaintedAfterTheWebViewShowsOverItsPage": "Native UI painted after the web view shows over its page.",
+  "overThePage": "Over the page",
+  "profile": "Profile",
+  "reloadPage": "Reload page",
+  "theSystemWebEngineRendersThisPageNativePopoversDialogsAnd": "The system web engine renders this page. Native popovers, dialogs and tooltips draw over it, and Tab moves in and out of it.",
+  "togglePixelGridBackground": "Toggle pixel grid background",
+  "pixelGridBackground": "Pixel grid background",
+  "pixelGridBackgroundDescription": "Show a pixel grid behind component previews.",
+  "grid": "Grid",
+  "gridItems": "Grid items",
+  "helloWorld": "Hello, world. 你好，世界。こんにちは 🌍",
+  "hide": "Hide",
+  "home": "Home",
+  "horizontal": "Horizontal",
+  "hours": "Hours",
+  "hoverOrFocusMe": "Hover or focus me",
+  "hue": "Hue",
+  "iconGrid": "Icon grid",
+  "iconLibrary": "Icon library",
+  "iconLibraryLucide": "Icon library / Lucide",
+  "icons": "Icons",
+  "images": "Images",
+  "importantWorkspaceSettingsAreUpdated": "Important workspace settings are updated.",
+  "inApp": "In-app",
+  "increment": "Increment",
+  "indeterminate": "Indeterminate",
+  "indeterminateProgress": "Indeterminate progress",
+  "inheritedMutedColor": "Inherited muted color",
+  "inline": "Inline ",
+  "inlineAction": "inline action",
+  "insets": "Insets",
+  "integer": "Integer",
+  "italic": "Italic",
+  "itemD": "Item {number}",
+  "@itemD": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "items": "Items",
+  "keptInMemoryUntilYouQuitEscapeHidesThisWindow": "Kept in memory until you quit. Escape hides this window.",
+  "kind": "Kind",
+  "language": "Language",
+  "languagePreference": "Language preference",
+  "large": "Large",
+  "largeProject": "Large project",
+  "layout": "Layout",
+  "leftArrow": "Left arrow",
+  "leftClick": "Left-click",
+  "leftClickTheTrayIconToToggleTheNotesWindowRightClickForIt": "Left-click the tray icon to toggle the notes window. Right-click for its native menu.",
+  "leftPane": "Left pane",
+  "light": "Light",
+  "lineD": "Line {number}",
+  "@lineD": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "link": "Link",
+  "liquidGlass": "Liquid Glass",
+  "list": "List",
+  "loading": "Loading",
+  "loadingTerminal": "Loading terminal",
+  "locations": "Locations",
+  "longTextWrapsWithinTheAvailableWidthIncludingInNarrowWindows": "Long text wraps within the available width, including in narrow windows.",
+  "lucideIcons": "Lucide icons",
+  "majorLines": "Major lines",
+  "markdownLoadError": "Unable to load markdown.md",
+  "mediaText": "Media & text",
+  "medium": "Medium",
+  "memberRemoved": "Member removed",
+  "mentions": "Mentions",
+  "menus": "Menus",
+  "messagesNotes": "Messages & notes",
+  "mixed": "Mixed",
+  "name": "Name",
+  "navigation": "Navigation",
+  "new": "New",
+  "newSignIn": "New sign-in",
+  "newTeamMemberJoined": "New team member joined",
+  "nextMonth": "Next month",
+  "noActionYet": "No action yet",
+  "noMatchingComponents": "No matching components.",
+  "noMatchingSettingsTryAnotherSearch": "No matching settings. Try another search.",
+  "noMatchingSizes": "No matching sizes",
+  "notNeeded": "Not needed",
+  "note": "Note",
+  "notes": "Notes",
+  "notice": "Notice",
+  "notifications": "Notifications",
+  "off": "Off",
+  "ok": "OK",
+  "on": "On",
+  "onevraGallery": "Onevra Gallery",
+  "onevraMygo": "Onevra × MyGo",
+  "opacity": "Opacity",
+  "open": "Open",
+  "openAnotherLayer": "Open another layer",
+  "openAnotherLayerOrClickTheBackdropToGoBackOneLayer": "Open another layer, or click the backdrop to go back one layer.",
+  "openDialog": "Open dialog",
+  "openNotes": "Open notes",
+  "openSettings": "Open Settings",
+  "openWelcome": "Open Welcome",
+  "originalStrokesAt1624And32DipColorsInheritFromMygo": "Original strokes at 16, 24 and 32 DIP; colors inherit from MyGo.",
+  "outline": "Outline",
+  "outlined": "Outlined",
+  "overlays": "Overlays",
+  "overview": "Overview",
+  "passwordChanged": "Password changed",
+  "path": "Path",
+  "pauseMobileAlertsWhileYouReActiveOnDesktop": "Try a switch for pausing mobile alerts while using the desktop app.",
+  "personal": "EXAMPLES",
+  "personal2": "Personal",
+  "plugins": "Plugins",
+  "popoverContent": "Popover content",
+  "preferences": "Preferences",
+  "primary": "Primary",
+  "progress": "Progress",
+  "progressValue": "Progress value",
+  "project": "Project",
+  "projectOutline": "Project outline",
+  "projectTable": "Project table",
+  "protected": "Protected",
+  "quality": "Quality",
+  "quality0f": "Quality: {value, number, integer}",
+  "@quality0f": {
+    "placeholders": {
+      "value": {
+        "type": "double"
+      }
+    }
+  },
+  "quantity": "Quantity",
+  "quantity0f": "Quantity: {value, number, integer}",
+  "@quantity0f": {
+    "placeholders": {
+      "value": {
+        "type": "double"
+      }
+    }
+  },
+  "quit": "Quit",
+  "range": "Range",
+  "rated": "Rated",
+  "rating": "Rating",
+  "readOnly": "Read only",
+  "regular": "Regular",
+  "replacedByOnevra": "Replaced by Onevra",
+  "turnOn": "Turn on",
+  "turnOff": "Turn off",
+  "resetDefaults": "Reset to defaults",
+  "resetPosition": "Reset position",
+  "resetS": "Reset {name}",
+  "@resetS": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "rightArrow": "Right arrow",
+  "rightClick": "Right-click",
+  "rightClickHere": "Right-click here",
+  "rightPane": "Right pane",
+  "ring": "Ring",
+  "roleOrPermissionChanged": "Role or permission changed",
+  "rounded": "Rounded",
+  "rowD": "Row {number}",
+  "@rowD": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "rowDNameStatusUpdated": "Row {number} — Name                         Status                         Updated",
+  "@rowDNameStatusUpdated": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "activityOf": "{label} activity",
+  "@activityOf": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "colorOf": "{label} color",
+  "@colorOf": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "completionOf": "{label} completion",
+  "@completionOf": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "labelCount": "{label}: {count}",
+  "@labelCount": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "deliveryOf": "{label} delivery",
+  "@deliveryOf": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "dividerOf": "{label} divider",
+  "@dividerOf": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "loadingOf": "{label} loading",
+  "@loadingOf": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "valueOf": "{label} value",
+  "@valueOf": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "saturationAndBrightness": "Saturation and brightness",
+  "saved": "Saved",
+  "scrollViews": "Scroll views",
+  "scrub": "Scrub",
+  "search": "Search",
+  "search2": "Search…",
+  "searchComponents": "Search components",
+  "searchComponents2": "Search components…",
+  "searchSamples": "Search samples",
+  "searchSettings": "Search settings",
+  "searchSizes": "Search sizes",
+  "searchSizes2": "Search sizes…",
+  "searchable": "Searchable",
+  "second": "Second",
+  "secondary": "Secondary",
+  "secondaryText": "Secondary text",
+  "securityAlert": "Security alert",
+  "selected": "Selected",
+  "selectedItemD": "Selected item: {number}",
+  "@selectedItemD": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "selectedS": "Selected: {choice}",
+  "@selectedS": {
+    "placeholders": {
+      "choice": {
+        "type": "String"
+      }
+    }
+  },
+  "selectionValues": "Selection & values",
+  "selects": "Selects",
+  "settings": "Settings",
+  "sharedNotes": "Shared notes",
+  "showGallery": "Show Gallery",
+  "showPopover": "Show popover",
+  "showS": "Show {name}",
+  "@showS": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "showToast": "Show toast",
+  "showUndoToast": "Show undo toast",
+  "size": "Size",
+  "sizeOptions": "Size options",
+  "sliders": "Sliders",
+  "small": "Small",
+  "smallComponentsRealPossibilities": "Small components. Real possibilities.",
+  "smartNotifications": "Smart notifications",
+  "someoneIsRemovedFromTheWorkspace": "Someone is removed from the workspace.",
+  "someoneJoinsTheWorkspace": "Someone joins the workspace.",
+  "someoneMentionsYouInAConversation": "Someone mentions you in a conversation.",
+  "sound": "Sound",
+  "splitPanes": "Split panes",
+  "spokes": "Spokes",
+  "start": "Start",
+  "status": "Status",
+  "step": "Step",
+  "steppedRange": "Stepped range",
+  "stillUsingMygo": "Still using MyGo",
+  "stretch": "Stretch",
+  "style": "Style",
+  "styled": "Styled ",
+  "system": "System",
+  "tags": "Tags",
+  "templatePreviewChangesStayInThisSessionNoNotificationsAreSen": "Explore grouped settings with this notification example. Changes last only for this session and do not send notifications.",
+  "terminalUnavailable": "Terminal unavailable",
+  "textAndAn": "text and an ",
+  "textAreas": "Text areas",
+  "textBoxes": "Text boxes",
+  "textInput": "Text input",
+  "theMenuStaysAvailableWhenYouNavigateAwayDisableItHereOrClo": "The menu stays available when you navigate away. Disable it here or close Gallery to remove the demonstration items.",
+  "thePageUnderneathStaysOpen": "The page underneath stays open.",
+  "theme": "Theme",
+  "themePreference": "Theme preference",
+  "thisDialogReturnsYourChoice": "This dialog returns your choice.",
+  "time": "Time",
+  "tint": "Tint",
+  "tinted": "Tinted",
+  "toggleOrResizeTheSidebarInsideTheWindowDoubleClickItsSepara": "Toggle or resize the sidebar inside the window. Double-click its separator to restore the default width. Open Settings in a dialog without leaving this page.",
+  "topPane": "Top pane",
+  "tray": "Tray",
+  "trayNotes": "Tray notes",
+  "trayTooltip": "Onevra Gallery — Tray demo",
+  "trayUnavailableS": "Tray unavailable: {error}",
+  "@trayUnavailableS": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "typeIntoThePage": "Type into the page",
+  "unableToLoadAvatarJpeg": "Unable to load avatar.jpeg",
+  "unchecked": "Unchecked",
+  "undo": "Undo",
+  "uniform": "Uniform",
+  "unrated": "Unrated",
+  "unusualActivityOrImportantSecurityUpdates": "Unusual activity or important security updates.",
+  "useMygoDirectly": "Use MyGo directly",
+  "versionS": "Version {version}",
+  "@versionS": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      }
+    }
+  },
+  "vertical": "Vertical",
+  "volume": "Volume",
+  "webViewUnavailable": "Web view unavailable",
+  "webViewsNeedANativeWindow": "Web views need a native window.",
+  "welcome": "Welcome",
+  "welcomeEntranceSummary": "A living collection of native desktop components. Try them, theme them and see how they feel.",
+  "welcomeSearchEverything": "Search everything",
+  "with": " with ",
+  "withoutStepper": "Without stepper",
+  "workspaceSettingsChanged": "Workspace settings changed",
+  "workspaceUpdates": "Workspace updates",
+  "wrapAsOneParagraphClicksD": " wrap as one paragraph. Clicks: {count}",
+  "@wrapAsOneParagraphClicksD": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "writeANote": "Write a note",
+  "writeAQuickNote": "Write a quick note…",
+  "writeSomeNotes": "Write some notes",
+  "yourAccessLevelChanges": "Your access level changes.",
+  "yourAccountIsAccessedFromANewDevice": "Your account is accessed from a new device.",
+  "yourName": "Your name",
+  "yourPasswordIsUpdated": "Your password is updated.",
+  "toggleSmartNotifications": "Toggle smart notifications",
+  "actionsNavigation": "Actions & navigation",
+  "dateTime": "Date & time",
+  "contentDisplay": "Content display",
+  "layoutContainers": "Layout & containers",
+  "feedbackOverlays": "Feedback & overlays",
+  "code": "Code",
+  "systemNotifications": "System notifications",
+  "desktopSystemNotifications": "Desktop / System notifications",
+  "notificationDescription": "Send a system notification, then click it to return to this page. Sending again replaces this demo’s previous notification.",
+  "notificationRequirements": "macOS requires a packaged app and notification permission. Linux requires a desktop notification service. System settings may silence or hide notifications.",
+  "notificationSilent": "Silent notification",
+  "notificationSend": "Send notification",
+  "notificationWithdraw": "Withdraw notification",
+  "notificationTitle": "Hello from Onevra Gallery",
+  "notificationBody": "Click to return to the system notification example.",
+  "notificationUnsupported": "Notifications are unavailable. On macOS, run the packaged Gallery app.",
+  "notificationSending": "Sending… Allow notifications if the system asks.",
+  "notificationDenied": "Notification permission was denied. You can allow notifications in System Settings.",
+  "notificationFailed": "Could not send the notification.",
+  "notificationSent": "Submitted to the system. Click the notification to return here.",
+  "notificationClicked": "Notification clicked. Welcome back!",
+  "notificationWithdrawn": "Notification withdrawn.",
+  "commandPalette": "Command palette",
+  "searchCommands": "Search pages and actions…",
+  "commands": "Commands",
+  "noMatchingCommands": "No matching commands",
+  "commandAutoAbc": "Automatically switch to ABC",
+  "commandAutoAbcDescription": "Use ABC when opening the panel and restore the previous input source on close. macOS only.",
+  "commandDefaultExpanded": "Show results when opened",
+  "commandDefaultExpandedDescription": "Turn off to show results only after typing a search.",
+  "toggleCommandAutoAbc": "Toggle automatic ABC switching",
+  "toggleCommandDefaultExpanded": "Toggle results on opening",
+  "chat": "Chat",
+  "chatCompleted": "Completed",
+  "chatFailed": "Failed",
+  "chatCancelled": "Stopped",
+  "chatWaiting": "Waiting for confirmation",
+  "chatRunning": "Working",
+  "chatLatest": "Back to latest",
+  "chatReasoning": "Ran 2 tools",
+  "chatSummary": "{duration} · 2 tool calls",
+  "@chatSummary": {
+    "placeholders": {
+      "duration": {
+        "type": "String"
+      }
+    }
+  },
+  "chatMessage": "Message",
+  "chatPlaceholder": "Write a message. Enter adds a new line.",
+  "chatSend": "Send",
+  "chatStop": "Stop",
+  "chatWorked": "Worked for {minutes}m {seconds}s",
+  "@chatWorked": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      },
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "chatWorking": "{status} · {minutes}m {seconds}s",
+  "@chatWorking": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      },
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "chatRemoveAttachment": "Remove attachment",
+  "chatDemoContext": "Local demonstration · no requests sent",
+  "chatChanged": "Changed 6 files",
+  "chatReview": "Review",
+  "chatMoreFiles": "Show 3 more files",
+  "chatLessFiles": "Show fewer files",
+  "chatSampleDiff": "Sample change preview",
+  "chatCloseReview": "Close preview",
+  "chatAttach": "Attach sample context",
+  "chatModel": "Model",
+  "chatEffort": "Reasoning effort",
+  "chatThink": "Think",
+  "flyoutEditor": "Open editor",
+  "flyoutPopover": "System popover",
+  "flyoutDescription": "A parent-owned popup that can extend beyond the window.",
+  "flyoutDismiss": "Press Escape or click outside to dismiss.",
+  "componentFlyout": "Flyout",
+  "charts": "Charts",
+  "motion": "Motion",
+  "springs": "Springs",
+  "keyframes": "Keyframes",
+  "animatedPose": "Animated pose",
+  "draggable": "Draggable",
+  "transforms": "Transforms",
+  "editableControls": "Editable controls",
+  "perspective": "Perspective",
+  "chartUpdate": "Update data",
+  "chartMon": "Mon",
+  "chartTue": "Tue",
+  "chartWed": "Wed",
+  "chartThu": "Thu",
+  "chartSelection": "Chart selection",
+  "chartDaily": "Daily values",
+  "chartKeys": "Point at the chart, or focus it and use the arrow keys.",
+  "motionReplay": "Replay sequence",
+  "motionTile": "Animated tile",
+  "motionLift": "Keep raised",
+  "motionHover": "Hover to lift",
+  "motionReset": "Reset position",
+  "motionThrow": "Throw to either end",
+  "motionReverse": "Reverse direction",
+  "motionSmooth": "Smooth",
+  "motionSnappy": "Snappy",
+  "motionBouncy": "Bouncy",
+  "transformFlip": "Flip card",
+  "transformFront": "Front",
+  "transformBack": "Back",
+  "transformAngle": "Rotation angle",
+  "transformScale": "Scale down",
+  "transformNote": "Transformed note",
+  "barChart": "Bar chart",
+  "lineChart": "Line chart",
+  "areaChart": "Area chart",
+  "stackedBarChart": "Stacked bar chart",
+  "donutChart": "Donut chart",
+  "chartIntro": "Soft colors, subtle grids and details on selection. Use the legend to explore the data.",
+  "chartEmpty": "Show empty state",
+  "chartRestore": "Restore data",
+  "chartNoData": "No visible data",
+  "chartFri": "Fri",
+  "chartSat": "Sat",
+  "chartCurrent": "Current period",
+  "chartPrevious": "Previous period",
+  "chartDistribution": "Time distribution",
+  "chartDesign": "Design",
+  "chartDevelopment": "Development",
+  "chartResearch": "Research",
+  "chartPlanning": "Planning",
+  "audio": "Audio",
+  "audioNotes": "Play a note",
+  "audioPlayLoop": "Play loop",
+  "audioPauseLoop": "Pause loop",
+  "audioPan": "Pan",
+  "audioUnavailable": "Audio output unavailable: {error}",
+  "@audioUnavailable": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "toastInfo": "Info",
+  "toastSuccess": "Success",
+  "toastWarning": "Warning",
+  "toastError": "Error",
+  "toastInfoTitle": "A new version is available",
+  "toastSuccessTitle": "Changes saved",
+  "toastWarningTitle": "Storage is almost full",
+  "toastErrorTitle": "Couldn't sync",
+  "toastStatusDescription": "Toasts pause while the pointer rests on them.",
+  "toastDeleted": "Item deleted",
+  "toastItems": "Items: {count}",
+  "@toastItems": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "toastStartUpload": "Start upload",
+  "toastFinishUpload": "Finish upload",
+  "toastUploading": "Uploading report.pdf",
+  "toastUploaded": "Upload complete",
+  "toastPlacement": "Placement",
+  "toastBottom": "Bottom center",
+  "toastBottomStart": "Bottom left",
+  "toastBottomEnd": "Bottom right",
+  "toastTop": "Top center",
+  "toastTopStart": "Top left",
+  "toastTopEnd": "Top right",
+  "componentCanvas": "Canvas",
+  "componentCodeEditor": "Code editor",
+  "componentDiffViewer": "Diff viewer",
+  "componentGameLoop": "Game loop",
+  "groupCodeDiffs": "Code & diffs",
+  "groupGames": "Games",
+  "navigationNew": "New",
+  "codeEditorLabel": "Source code",
+  "codeEditorPosition": "Line {line}, column {column}",
+  "@codeEditorPosition": {
+    "placeholders": {
+      "line": {
+        "type": "int"
+      },
+      "column": {
+        "type": "int"
+      }
+    }
+  },
+  "diffViewerSideBySide": "Side by side",
+  "diffViewerUnified": "Unified",
+  "diffViewerStats": "{added} lines added, {deleted} deleted",
+  "@diffViewerStats": {
+    "placeholders": {
+      "added": {
+        "type": "int"
+      },
+      "deleted": {
+        "type": "int"
+      }
+    }
+  },
+  "canvasSmooth": "Smooth scaling",
+  "canvasPixelated": "Pixelated scaling",
+  "canvasLayer": "Rotated canvas",
+  "canvasNextFrame": "Next frame",
+  "canvasMirror": "Mirror",
+  "canvasRotation": "Rotation",
+  "gameHint": "Click the scene, then move with WASD, the arrow keys or a gamepad's left stick.",
+  "gameScene": "Game scene",
+  "componentLawnDefense": "Lawn defense",
+  "lawnHint": "Collect falling suns, pick a seed packet or press 1–3, then plant it on the lawn. Sunflowers make sun, peashooters fire along their row and wall-nuts hold zombies back. Right-click or Escape drops the seed; R restarts.",
+  "lawnScene": "Lawn",
+  "lawnPlaying": "Defend the lawn",
+  "lawnPaused": "Paused: click the lawn to continue",
+  "lawnLost": "The zombies ate your brains!",
+  "lawnWon": "You defended the lawn!",
+  "lawnDefeated": "Zombies defeated: {defeated} of {total}",
+  "@lawnDefeated": {
+    "placeholders": {
+      "defeated": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "lawnDefeatedEndless": "Zombies defeated: {defeated}",
+  "@lawnDefeatedEndless": {
+    "placeholders": {
+      "defeated": {
+        "type": "int"
+      }
+    }
+  },
+  "lawnEndless": "Endless mode",
+  "lawnMusic": "Music",
+  "lawnRestart": "Restart game",
+  "component3dRenderer": "3D renderer",
+  "scene3dHint": "Drag to orbit the camera, scroll to zoom, and use WASD or the arrow keys to look around. A software rasterizer shades every pixel of the scene on the CPU.",
+  "scene3dView": "Software 3D scene",
+  "relationshipGraph": "Relationship graph",
+  "graphIntro": "Notes are colored by folder. Drag empty space or two fingers on a touchpad to pan, drag a note to move it, use the wheel or pinch to zoom, and hover to highlight its neighbours. Add hundreds of notes at once to try larger graphs.",
+  "graphAdd": "Add note",
+  "graphAddMany": "Add {count} notes",
+  "@graphAddMany": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "graphReset": "Remove added notes",
+  "graphFit": "Fit view",
+  "graphLabel": "Knowledge graph with {nodes} nodes and {links} links. Double-click a note to open it, drag to pan, and use the wheel or pinch to zoom.",
+  "@graphLabel": {
+    "placeholders": {
+      "nodes": {
+        "type": "int"
+      },
+      "links": {
+        "type": "int"
+      }
+    }
+  },
+  "graphEmpty": "No notes to draw yet",
+  "graphNewNote": "New note {number}",
+  "@graphNewNote": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "graphHint": "Double-click a note to open it.",
+  "graphOpened": "Opened: {title}",
+  "@graphOpened": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "graphSettings": "Graph settings",
+  "graphAttachments": "Show attachments",
+  "graphAttachmentsHint": "Show attachment nodes beside the notes in their folder.",
+  "componentRichTextEditor": "Rich text editor",
+  "componentMarkdownStream": "Markdown stream",
+  "timeline": "Timeline",
+  "timelineRestart": "Restart",
+  "timelinePlay": "Play",
+  "timelinePause": "Pause",
+  "timelineReverse": "Reverse",
+  "timelineCard": "Launch plan",
+  "timelinePlan": "Plan",
+  "timelineBuild": "Build",
+  "timelineShip": "Ship",
+  "timelineScrub": "Timeline position",
+  "timelineTime": "{elapsed} / {total} ms",
+  "@timelineTime": {
+    "placeholders": {
+      "elapsed": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "richTextLabel": "Release notes",
+  "richTextEdits": "Edits: {count}",
+  "@richTextEdits": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "markdownStreamReplay": "Stream again",
+  "markdownStreamLabel": "Assistant reply",
+  "systemYes": "Yes",
+  "systemNo": "No",
+  "systemError": "Error: {error}",
+  "@systemError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "networkOnline": "Online",
+  "networkOffline": "Offline",
+  "networkMetered": "Metered connection",
+  "networkHint": "Updates when the computer joins or leaves a network.",
+  "secretsKey": "Secret name",
+  "secretsValue": "Secret value",
+  "secretsSave": "Save",
+  "secretsRead": "Read",
+  "secretsSaved": "Saved to the system credential store.",
+  "secretsLoaded": "Read from the system credential store.",
+  "secretsDeleted": "Deleted from the system credential store.",
+  "secretsNotFound": "No secret with this name.",
+  "secretsHint": "Secrets stay in the Keychain, Credential Manager or Secret Service, encrypted for the current user.",
+  "recentChoose": "Add a file…",
+  "recentJumpList": "Add a jump list task",
+  "recentJumpListTask": "Open Onevra Gallery",
+  "recentJumpListHint": "Starts another Gallery window.",
+  "recentEmpty": "No recent documents.",
+  "recentHint": "Recent documents also appear in the Dock menu, Open Recent and the Windows jump list.",
+  "watchChoose": "Choose a folder…",
+  "watchStop": "Stop watching",
+  "watchFolder": "Watched folder",
+  "watchEmpty": "Changes to files in the folder appear here.",
+  "appsLoad": "Find installed apps",
+  "appsShowPanel": "Show floating panel",
+  "appsHidePanel": "Hide floating panel",
+  "appsHint": "Lists the apps installed on this computer with their icons, as a launcher searches them.",
+  "appsSearch": "Search apps",
+  "appsLaunchNamed": "Open {name}",
+  "@appsLaunchNamed": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "appsPanelTitle": "Launcher panel",
+  "appsPanelHint": "A panel floats above other apps, as Spotlight does. Press Escape to close it.",
+  "fontsSearch": "Search fonts",
+  "fontsMonospaced": "Monospaced only",
+  "fontsSample": "The quick brown fox 敏捷的棕色狐狸",
+  "fontsCount": "{count, plural, one {# font family} other {# font families}}",
+  "@fontsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "appearanceAccent": "Accent color",
+  "appearanceNoAccent": "None",
+  "appearanceReduceMotion": "Reduce motion",
+  "appearanceHighContrast": "Increase contrast",
+  "appearanceTextScale": "Text size",
+  "appearanceHint": "These follow the desktop settings and update while the gallery is open.",
+  "languagesShown": "Language shown",
+  "languagesPreferred": "Preferred languages",
+  "languagesRegion": "Regional formats",
+  "languagesFirstWeekday": "First day of the week",
+  "languagesNumber": "Number",
+  "languagesDate": "Date and time",
+  "languagesHint": "Numbers and dates follow the language shown and the user's regional formats.",
+  "webDataAvailable": "System web view available",
+  "webDataList": "List cookies",
+  "webDataSet": "Set a sample cookie",
+  "webDataClear": "Clear cookies",
+  "componentNetwork": "Network",
+  "componentSecrets": "Secrets",
+  "componentRecentDocuments": "Recent documents",
+  "componentFileWatching": "File watching",
+  "componentInstalledApps": "Installed apps",
+  "componentFonts": "Fonts",
+  "componentSystemAppearance": "System appearance",
+  "componentLanguages": "Languages & formats",
+  "componentWebData": "Web data",
+  "componentHoneycomb": "Honeycomb",
+  "honeycombHint": "Drag, scroll or Tab through the honeycomb; the item in the middle is chosen.",
+  "honeycombAdd": "Add item",
+  "honeycombRemove": "Remove item",
+  "archive": "Archive",
+  "bookmarks": "Bookmarks",
+  "camera": "Camera",
+  "cloud": "Cloud",
+  "downloads": "Downloads",
+  "favorites": "Favorites",
+  "lock": "Lock",
+  "mail": "Mail",
+  "videos": "Videos",
+  "segmentedControl": "Segmented control",
+  "underline": "Underline",
+  "toolbar": "Toolbar",
+  "inbox": "Messages"
+}

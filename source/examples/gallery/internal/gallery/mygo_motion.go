@@ -10,12 +10,14 @@ import (
 func exampleMotion(c *ui.Context, s *demoState) {
 	t := c.Theme()
 	switch s.variant {
+	case "Timeline":
+		exampleTimeline(c, s)
 	case "Keyframes":
-		if components.Button(c, tr(c, "gallery.motion_replay"), components.ButtonOutline).Clicked() {
+		if components.Button(c, tr(c, "motionReplay"), components.ButtonOutline).Clicked() {
 			s.count++
 		}
 		ui.Box(c).FillWidth().Height(80).Padding(12).Children(func() {
-			tile := ui.Box(c).Key("sequence").Size(44, 44).Radius(10).Background(t.Accent).Label(tr(c, "gallery.motion_tile"))
+			tile := ui.Box(c).Key("sequence").Size(44, 44).Radius(10).Background(t.Accent).Label(tr(c, "motionTile"))
 			x := tile.Keyframes("x", []ui.Keyframe{
 				{Value: 0}, {At: 200 * time.Millisecond, Value: 110, Ease: ui.EaseOut},
 				{At: 500 * time.Millisecond, Value: 55}, {At: 800 * time.Millisecond, Value: 0, Ease: ui.EaseInOut},
@@ -23,9 +25,9 @@ func exampleMotion(c *ui.Context, s *demoState) {
 			tile.Rotate(x/3).Translate(x, 0)
 		})
 	case "Animated pose":
-		components.Checkbox(c, &s.on, tr(c, "gallery.motion_lift"))
+		components.Checkbox(c, &s.on, tr(c, "motionLift"))
 		ui.Box(c).FillWidth().Height(100).Padding(20).Children(func() {
-			card := components.Button(c, tr(c, "gallery.motion_hover"), components.ButtonOutline)
+			card := components.Button(c, tr(c, "motionHover"), components.ButtonOutline)
 			pose := ui.Pose{}
 			if s.on || card.Hovered() {
 				pose = ui.Pose{Y: -8, Scale: 1.04, Rotate: -4}
@@ -33,11 +35,11 @@ func exampleMotion(c *ui.Context, s *demoState) {
 			card.AnimatePose(pose, ui.Snappy)
 		})
 	case "Draggable":
-		if components.Button(c, tr(c, "gallery.motion_reset"), components.ButtonOutline).Clicked() {
+		if components.Button(c, tr(c, "motionReset"), components.ButtonOutline).Clicked() {
 			s.offset = ui.Point{}
 		}
 		ui.Box(c).FillWidth().Height(100).Padding(20).Children(func() {
-			card := ui.Box(c).Size(90, 60).Radius(10).Background(t.Accent).Label(tr(c, "gallery.motion_throw"))
+			card := ui.Box(c).Size(90, 60).Radius(10).Background(t.Accent).Label(tr(c, "motionThrow"))
 			card.Draggable(&s.offset, ui.DraggableOptions{
 				Axis:   ui.Horizontal,
 				Bounds: &ui.Rect{W: 120},
@@ -50,12 +52,12 @@ func exampleMotion(c *ui.Context, s *demoState) {
 			card.AnimatePose(lift, ui.Snappy)
 		})
 	default:
-		if components.Button(c, tr(c, "gallery.motion_reverse"), components.ButtonOutline).Clicked() {
+		if components.Button(c, tr(c, "motionReverse"), components.ButtonOutline).Clicked() {
 			s.on = !s.on
 		}
 		for i, animation := range []ui.Animation{ui.Smooth, ui.Snappy, ui.Bouncy} {
 			ui.Column(c).Key(i).FillWidth().Gap(4).Children(func() {
-				components.Text(c, tr(c, []string{"gallery.motion_smooth", "gallery.motion_snappy", "gallery.motion_bouncy"}[i])).TextColor(t.TextMuted)
+				components.Text(c, tr(c, []string{"motionSmooth", "motionSnappy", "motionBouncy"}[i])).TextColor(t.TextMuted)
 				ui.Box(c).FillWidth().Height(56).Padding(6).Children(func() {
 					tile := ui.Box(c).Size(36, 36).Radius(9).Background(t.Accent)
 					target := float32(0)
@@ -72,7 +74,7 @@ func exampleMotion(c *ui.Context, s *demoState) {
 func exampleTransforms(c *ui.Context, s *demoState) {
 	t := c.Theme()
 	if s.variant == "Perspective" {
-		if components.Button(c, tr(c, "gallery.transform_flip"), components.ButtonOutline).Clicked() {
+		if components.Button(c, tr(c, "transformFlip"), components.ButtonOutline).Clicked() {
 			s.on = !s.on
 		}
 		ui.Box(c).FillWidth().Height(140).Padding(20).Children(func() {
@@ -83,7 +85,7 @@ func exampleTransforms(c *ui.Context, s *demoState) {
 			}
 			angle := card.Spring("turn", target, ui.SpringOptions{Duration: 600 * time.Millisecond, Bounce: .1})
 			card.Children(func() {
-				for i, label := range []string{"gallery.transform_front", "gallery.transform_back"} {
+				for i, label := range []string{"transformFront", "transformBack"} {
 					ui.Box(c).Absolute().Fill().Radius(12).Background(t.Surface).Border(1, t.Accent).
 						RotateY(angle + float32(i)*180).Perspective(800).BackfaceHidden().
 						AlignItems(ui.Center).Justify(ui.Center).Children(func() { components.Text(c, tr(c, label)) })
@@ -92,8 +94,8 @@ func exampleTransforms(c *ui.Context, s *demoState) {
 		})
 		return
 	}
-	components.Slider(c, &s.value, -15, 15).Label(tr(c, "gallery.transform_angle")).FillWidth()
-	components.Checkbox(c, &s.on, tr(c, "gallery.transform_scale"))
+	components.Slider(c, &s.value, -15, 15).Label(tr(c, "transformAngle")).FillWidth()
+	components.Checkbox(c, &s.on, tr(c, "transformScale"))
 	ui.Box(c).FillWidth().Height(230).Padding(24, 12).Children(func() {
 		scale := float32(1)
 		if s.on {
@@ -102,18 +104,69 @@ func exampleTransforms(c *ui.Context, s *demoState) {
 		pose := ui.Scaling(scale, scale).Then(ui.Rotation(float32(s.value))).Then(ui.Translation(8, 8))
 		ui.Column(c).Width(160).Padding(12).Gap(10).Radius(12).Background(t.Surface).Border(1, t.Border).
 			Transform(pose).TransformOrigin(.5, .5).Children(func() {
-			components.TextBox(c, &s.text, components.TextBoxOptions{}).Label(tr(c, "gallery.transform_note")).FillWidth()
-			anchor := components.Button(c, tr(c, "gallery.show_popover"), components.ButtonOutline).FillWidth()
+			components.TextBox(c, &s.text, components.TextBoxOptions{}).Label(tr(c, "transformNote")).FillWidth()
+			anchor := components.Button(c, tr(c, "showPopover"), components.ButtonOutline).FillWidth()
 			if anchor.Clicked() {
 				s.open = !s.open
 			}
 			components.Popover(c, anchor, &s.open, func(panel ui.Element) {
-				panel.Label(tr(c, "gallery.popover_content"))
-				components.Text(c, tr(c, "gallery.popover_content"))
-				if components.Button(c, tr(c, "gallery.close"), components.ButtonSecondary).Clicked() {
+				panel.Label(tr(c, "popoverContent"))
+				components.Text(c, tr(c, "popoverContent"))
+				if components.Button(c, tr(c, "close"), components.ButtonSecondary).Clicked() {
 					s.open = false
 				}
 			})
 		})
 	})
+}
+
+// exampleTimeline drives several tweens from one playhead. Moving the scrubber
+// pauses playback there; Play continues from the scrubbed position.
+func exampleTimeline(c *ui.Context, s *demoState) {
+	t := c.Theme()
+	paused := s.on
+	ui.Row(c).Gap(8).Children(func() {
+		if components.Button(c, tr(c, "timelineRestart"), components.ButtonOutline).Clicked() {
+			s.count++
+			s.on = false
+		}
+		toggle := map[bool]string{true: "timelinePlay", false: "timelinePause"}[s.on]
+		if components.Button(c, tr(c, toggle), components.ButtonOutline).Clicked() {
+			s.on = !s.on
+		}
+		components.ToggleButton(c, &s.other, tr(c, "timelineReverse"))
+	})
+	o := ui.TimelineOptions{Run: uint64(s.count), Paused: s.on, Reverse: s.other}
+	if paused {
+		o.Progress = &s.seek
+	}
+	var tl *ui.Timeline
+	ui.Box(c).FillWidth().Height(150).Padding(12).Children(func() {
+		card := ui.Column(c).Key("timeline-card")
+		tl = card.Timeline("intro", o)
+		slide := tl.Tween(ui.Tween{From: -160, To: 0, Duration: 450 * time.Millisecond})
+		fade := tl.Tween(ui.Tween{From: 0, To: 1, Duration: 300 * time.Millisecond, Ease: ui.Linear}, ui.AtTime(150*time.Millisecond))
+		tl.Label("rows")
+		var rows [3]float32
+		for i := range rows {
+			rows[i] = tl.Tween(ui.Tween{From: 0, To: 1, Duration: 240 * time.Millisecond, Ease: ui.Linear},
+				ui.AtLabel("rows", time.Duration(i)*90*time.Millisecond))
+		}
+		bounce := tl.Tween(ui.Tween{From: 8, To: 0, Duration: 360 * time.Millisecond, Ease: ui.Bounce(ui.EaseOut)}, ui.AtTime(450*time.Millisecond))
+		card.Width(220).Padding(14).Gap(6).Radius(12).Background(t.Surface).Border(1, t.Border).
+			Translate(slide, bounce).Label(tr(c, "timelineCard")).Children(func() {
+			components.Text(c, tr(c, "timelineCard")).Bold().Opacity(fade)
+			for i, label := range []string{"timelinePlan", "timelineBuild", "timelineShip"} {
+				components.Text(c, tr(c, label)).TextColor(t.TextMuted).Opacity(rows[i]).Translate(0, (1-rows[i])*10)
+			}
+		})
+	})
+	if !paused {
+		s.value = float64(tl.Progress())
+	}
+	if components.Slider(c, &s.value, 0, 1).Label(tr(c, "timelineScrub")).FillWidth().Changed() {
+		s.on = true
+	}
+	s.seek = float32(s.value)
+	components.Text(c, msg(c).TimelineTime(int(tl.Time().Milliseconds()), int(tl.Duration().Milliseconds()))).TextColor(t.TextMuted)
 }

@@ -36,21 +36,21 @@ func TestChartPages(t *testing.T) {
 				tt := ui.NewTester(func(c *ui.Context) { theme.Apply(c); g.View(c) }, 280, 900)
 				for _, dark := range []bool{false, true} {
 					tt.SetDark(dark)
-					if !tt.HasText(g.text(name)) || tt.HasText("gallery.chart_intro") {
+					if !tt.HasText(g.text(name)) || tt.HasText("chartIntro") {
 						t.Fatal("chart page is not localized")
 					}
-					for _, label := range []string{"gallery.chart_update", "gallery.chart_empty"} {
+					for _, label := range []string{"chartUpdate", "chartEmpty"} {
 						if err := tt.Click(g.text(label)); err != nil {
 							t.Fatal(err)
 						}
 					}
-					if !tt.HasText(g.text("gallery.chart_no_data")) {
+					if !tt.HasText(g.text("chartNoData")) {
 						t.Fatal("empty state is missing")
 					}
-					if err := tt.Click(g.text("gallery.chart_restore")); err != nil {
+					if err := tt.Click(g.text("chartRestore")); err != nil {
 						t.Fatal(err)
 					}
-					r, ok := tt.Find(g.text("gallery.chart_selection"))
+					r, ok := tt.Find(g.text("chartSelection"))
 					if !ok || r.X < 0 || r.X+r.W > 280 || r.W < 80 {
 						t.Fatalf("narrow plot bounds = %+v", r)
 					}

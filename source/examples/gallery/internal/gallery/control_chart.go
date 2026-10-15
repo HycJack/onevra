@@ -38,14 +38,14 @@ func controlChart(c *ui.Context, s *controlState, name string, render func(*ui.C
 		s.chart = &chartDemoState{selection: chart.State{Index: -1}}
 	}
 	t := c.Theme()
-	components.Text(c, tr(c, "gallery.chart_intro")).TextColor(t.TextMuted)
+	components.Text(c, tr(c, "chartIntro")).TextColor(t.TextMuted)
 	ui.Row(c).FillWidth().MinWidth(0).Wrap().Gap(t.Space(2)).Children(func() {
-		if components.Button(c, tr(c, "gallery.chart_update"), components.ButtonOutline).Clicked() {
+		if components.Button(c, tr(c, "chartUpdate"), components.ButtonOutline).Clicked() {
 			s.on = !s.on
 		}
-		label := "gallery.chart_empty"
+		label := "chartEmpty"
 		if s.chart.empty {
-			label = "gallery.chart_restore"
+			label = "chartRestore"
 		}
 		if components.Button(c, tr(c, label), components.ButtonGhost).Clicked() {
 			s.chart.empty = !s.chart.empty
@@ -54,8 +54,8 @@ func controlChart(c *ui.Context, s *controlState, name string, render func(*ui.C
 	ui.Column(c).FillWidth().MinWidth(0).Padding(t.Space(4)).Gap(t.Space(4)).
 		Radius(t.Radius*1.5).Background(t.Surface).Border(1, t.Border.Alpha(.5)).Children(func() {
 		opts := chart.Options{
-			Label: tr(c, "gallery.chart_selection"), Description: tr(c, "gallery.chart_keys"),
-			EmptyText: tr(c, "gallery.chart_no_data"), PlotHeight: 220,
+			Label: tr(c, "chartSelection"), Description: tr(c, "chartKeys"),
+			EmptyText: tr(c, "chartNoData"), PlotHeight: 220,
 			FormatValue: func(v float64) string { return strconv.FormatFloat(v, 'f', 0, 64) },
 		}
 		values := []float64{38, 52, 46, 68, 61, 82}
@@ -63,8 +63,8 @@ func controlChart(c *ui.Context, s *controlState, name string, render func(*ui.C
 			values = []float64{62, 43, 71, 54, 78, 65}
 		}
 		if name == "Donut chart" {
-			components.Text(c, tr(c, "gallery.chart_distribution")).Bold()
-			labels := []string{"gallery.chart_design", "gallery.chart_development", "gallery.chart_research", "gallery.chart_planning"}
+			components.Text(c, tr(c, "chartDistribution")).Bold()
+			labels := []string{"chartDesign", "chartDevelopment", "chartResearch", "chartPlanning"}
 			var slices []chart.Slice
 			if !s.chart.empty {
 				for i, label := range labels {
@@ -74,15 +74,15 @@ func controlChart(c *ui.Context, s *controlState, name string, render func(*ui.C
 			chart.Donut(c, &s.chart.selection, slices, opts)
 			return
 		}
-		components.Text(c, tr(c, "gallery.chart_daily")).Bold()
+		components.Text(c, tr(c, "chartDaily")).Bold()
 		var data chart.Data
 		if !s.chart.empty {
-			for _, day := range []string{"mon", "tue", "wed", "thu", "fri", "sat"} {
-				data.Labels = append(data.Labels, tr(c, "gallery.chart_"+day))
+			for _, day := range []string{"chartMon", "chartTue", "chartWed", "chartThu", "chartFri", "chartSat"} {
+				data.Labels = append(data.Labels, tr(c, day))
 			}
 			data.Series = []chart.Series{
-				{ID: "current", Label: tr(c, "gallery.chart_current"), Values: values},
-				{ID: "previous", Label: tr(c, "gallery.chart_previous"), Values: []float64{26, 34, 28, 48, 43, 57}},
+				{ID: "current", Label: tr(c, "chartCurrent"), Values: values},
+				{ID: "previous", Label: tr(c, "chartPrevious"), Values: []float64{26, 34, 28, 48, 43, 57}},
 			}
 		}
 		render(c, &s.chart.selection, data, opts)

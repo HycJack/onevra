@@ -10,5 +10,5 @@ func controlTabs(c *ui.Context, s *controlState, variant string) {
 	if variant == "Segmented control" {
 		tabs = components.TabsSegmented
 	}
-	components.Tabs(c, &s.index, tabs, tr(c, "gallery.general"), tr(c, "gallery.style"))
+	components.Tabs(c, &s.index, tabs, tr(c, "general"), tr(c, "style"))
 }

@@ -78,10 +78,10 @@ func webViewHTML(c *ui.Context) string {
 		"Lang":       lang,
 		"Background": cssColor(t.Background), "Text": cssColor(t.Text), "Muted": cssColor(t.TextMuted),
 		"Border": cssColor(t.Border), "Accent": cssColor(t.Accent), "AccentText": cssColor(t.AccentText),
-		"Title":       tr(c, "gallery.a_web_page_inside_native_ui"),
-		"Body":        tr(c, "gallery.the_system_web_engine_renders_this_page_native_popovers_dialogs_and"),
-		"Placeholder": tr(c, "gallery.type_into_the_page"),
-		"Count":       tr(c, "gallery.count"),
+		"Title":       tr(c, "aWebPageInsideNativeUi"),
+		"Body":        tr(c, "theSystemWebEngineRendersThisPageNativePopoversDialogsAnd"),
+		"Placeholder": tr(c, "typeIntoThePage"),
+		"Count":       tr(c, "count"),
 	})
 	return b.String()
 }
@@ -90,12 +90,12 @@ func exampleWebView(c *ui.Context, s *demoState) {
 	t := c.Theme()
 	d := &s.webView
 	if d.err != nil {
-		components.Text(c, tr(c, "gallery.web_view_unavailable")).Bold()
+		components.Text(c, tr(c, "webViewUnavailable")).Bold()
 		components.Text(c, d.err.Error()).TextColor(t.Danger).Wrap()
 		return
 	}
 	if d.view == nil {
-		components.Text(c, tr(c, "gallery.web_views_need_a_native_window")).TextColor(t.TextMuted).Wrap()
+		components.Text(c, tr(c, "webViewsNeedANativeWindow")).TextColor(t.TextMuted).Wrap()
 		return
 	}
 	if html := webViewHTML(c); d.loaded != html {
@@ -107,15 +107,15 @@ func exampleWebView(c *ui.Context, s *demoState) {
 		d.view.Page().LoadHTML(html, "")
 	}
 	ui.Row(c).Gap(t.Space(2)).AlignItems(ui.Center).Children(func() {
-		if components.Button(c, tr(c, "gallery.reload_page"), components.ButtonSecondary).Clicked() {
+		if components.Button(c, tr(c, "reloadPage"), components.ButtonSecondary).Clicked() {
 			d.view.Page().LoadHTML(d.loaded, "")
 		}
-		anchor := components.Button(c, tr(c, "gallery.over_the_page"), components.ButtonOutline)
+		anchor := components.Button(c, tr(c, "overThePage"), components.ButtonOutline)
 		if anchor.Clicked() {
 			d.menu = !d.menu
 		}
 		components.Popover(c, anchor, &d.menu, func(panel ui.Element) {
-			components.Text(c, tr(c, "gallery.native_ui_painted_after_the_web_view_shows_over_its_page")).Wrap().MaxWidth(t.Space(60))
+			components.Text(c, tr(c, "nativeUiPaintedAfterTheWebViewShowsOverItsPage")).Wrap().MaxWidth(t.Space(60))
 		})
 	})
 	var frame ui.Element

@@ -10,5 +10,5 @@ func controlRadio(c *ui.Context, s *controlState, _ string) {
 		for _, option := range []string{"Small", "Medium", "Large"} {
 			components.Radio(c, &s.choice, option, tr(c, option))
 		}
-	}).Label(tr(c, "gallery.size")).Row().FillWidth().MinWidth(0).Wrap().Gap(c.Theme().Space(4))
+	}).Label(tr(c, "size")).Row().FillWidth().MinWidth(0).Wrap().Gap(c.Theme().Space(4))
 }

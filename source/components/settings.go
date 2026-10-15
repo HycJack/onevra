@@ -57,7 +57,7 @@ type SettingsItem struct {
 }
 
 // SettingsOptions controls presentation without imposing a window or dialog.
-// Empty text fields use English defaults. Narrow is supplied by the host from
+// Empty text fields use Onevra's catalog in the window's language. Narrow is supplied by the host from
 // its allocated width (not the window width); it replaces the sidebar with a
 // category selector and stacks each row's control below its text.
 type SettingsOptions struct {

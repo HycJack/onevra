@@ -2,8 +2,6 @@
 package gallery
 
 import (
-	"fmt"
-
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/plugins/terminal"
 	"github.com/egoist/mygo/ui"
@@ -35,6 +33,7 @@ type Gallery struct {
 	createTerminal func() (*terminal.Terminal, error)
 	createWebView  func() (*mygo.WebView, error)
 	audioOutput    bool
+	systemServices bool
 	gamepads       bool
 	// stateKey asks MyGo to remember the window; empty keeps it disk-free.
 	stateKey string
@@ -49,7 +48,7 @@ func (g *Gallery) New() *sidebar.Shell {
 func (g *Gallery) newWindow(hidden bool) *sidebar.Shell {
 	g.createTerminal = newShellTerminal
 	g.createWebView = g.newWebView
-	g.audioOutput, g.gamepads = true, true
+	g.audioOutput, g.gamepads, g.systemServices = true, true, true
 	g.openURL = mygo.Shell.OpenExternal
 	g.Shell = sidebar.NewShell(sidebar.ShellOptions{
 		Title:     "Onevra Gallery",
@@ -109,7 +108,7 @@ func (g *Gallery) navigation(c *ui.Context) {
 	ui.Column(c).FillWidth().Shrink(0).Padding(0, t.Space(3), t.Space(2), t.Space(3)).Children(func() {
 		_, shortcut := commandShortcut()
 		trigger := components.Button(c, "", components.ButtonSecondary).
-			Label(tr(c, "gallery.search_components")).FillWidth().MinWidth(0).
+			Label(tr(c, "searchComponents")).FillWidth().MinWidth(0).
 			Padding(t.Space(1.5), t.Space(2.5)).Gap(t.Space(2)).TextColor(t.TextMuted)
 		tint, borderAlpha := float32(.08), float32(.18)
 		if trigger.Pressed() {
@@ -120,7 +119,7 @@ func (g *Gallery) navigation(c *ui.Context) {
 		trigger.Background(t.Background.Mix(t.Text, tint).Alpha(.3)).Border(1, t.Text.Alpha(borderAlpha))
 		trigger.Children(func() {
 			components.Icon(c, lucide.Search).Size(t.Space(4), t.Space(4)).Shrink(0)
-			components.Text(c, tr(c, "gallery.search_2")).Grow(1).MinWidth(0).SingleLine()
+			components.Text(c, tr(c, "search2")).Grow(1).MinWidth(0).SingleLine()
 			components.Text(c, shortcut).FontSize(t.Rem(.8)).Shrink(0).SingleLine()
 		})
 		if trigger.Clicked() {
@@ -146,17 +145,17 @@ func (g *Gallery) LeftToolbar(c *ui.Context) {
 }
 
 func (g *Gallery) leftToolbarLocalized(c *ui.Context) {
-	if sidebar.IconButton(c, lucide.Settings(), tr(c, "gallery.settings")).Clicked() {
+	if sidebar.IconButton(c, lucide.Settings(), tr(c, "settings")).Clicked() {
 		g.settings.open = true
 	}
 	ui.Spacer(c)
-	sidebar.IconButton(c, themeIcon(), tr(c, "gallery.theme")).Menu(g.themeMenu)
+	sidebar.IconButton(c, themeIcon(), tr(c, "theme")).Menu(g.themeMenu)
 }
 
 // iconSamples uses only named accessors, not a full-library runtime registry.
 func iconSamples(c *ui.Context) {
-	components.Text(c, tr(c, "gallery.lucide_icons")).Bold()
-	components.Text(c, tr(c, "gallery.original_strokes_at_16_24_and_32_dip_colors_inherit_from_mygo")).Wrap()
+	components.Text(c, tr(c, "lucideIcons")).Bold()
+	components.Text(c, tr(c, "originalStrokesAt1624And32DipColorsInheritFromMygo")).Wrap()
 	for _, sample := range []struct {
 		name string
 		get  func() *ui.SVG
@@ -179,7 +178,7 @@ func iconSamples(c *ui.Context) {
 	ui.Row(c).Gap(12).TextColor(c.Theme().TextMuted).Children(func() {
 		components.Icon(c, lucide.Sun)
 		components.Icon(c, lucide.Moon)
-		components.Text(c, tr(c, "gallery.inherited_muted_color"))
+		components.Text(c, tr(c, "inheritedMutedColor"))
 	})
 }
 
@@ -249,13 +248,21 @@ func (g *Gallery) body(c *ui.Context) {
 	t := c.Theme()
 	components.ScrollView(c, components.ScrollViewOptions{}).Fill().Children(func() {
 		ui.Column(c).FillWidth().Padding(t.Space(6)).Gap(t.Space(4)).Children(func() {
-			components.Text(c, tr(c, "gallery.a_sidebar_and_content_one_native_window")).TextColor(t.TextMuted).Wrap()
-			components.Text(c, tr(c, "gallery.toggle_or_resize_the_sidebar_inside_the_window_double_click_its_separa")).Wrap()
-			if components.Button(c, tr(c, "gallery.count"), components.ButtonSecondary).Clicked() {
+			components.Text(c, tr(c, "aSidebarAndContentOneNativeWindow")).TextColor(t.TextMuted).Wrap()
+			components.Text(c, tr(c, "toggleOrResizeTheSidebarInsideTheWindowDoubleClickItsSepara")).Wrap()
+			if components.Button(c, tr(c, "count"), components.ButtonSecondary).Clicked() {
 				g.Clicks++
 			}
-			components.Text(c, fmt.Sprintf(tr(c, "gallery.clicks_d"), g.Clicks))
+			components.Text(c, msg(c).ClicksD(g.Clicks))
 			iconSamples(c)
 		})
 	})
+}
+
+// window returns the gallery window, or nil in headless views.
+func (g *Gallery) window() *mygo.Window {
+	if g.Shell == nil {
+		return nil
+	}
+	return g.Shell.Window()
 }

@@ -1,7 +1,6 @@
 package gallery
 
 import (
-	"fmt"
 	"slices"
 	"strings"
 
@@ -19,9 +18,9 @@ var tableExampleFiles = []tableExampleFile{{"main.go", 12}, {"go.mod", 1}, {"REA
 // Column IDs stay stable while titles follow the gallery language.
 func tableExampleColumns(c *ui.Context) []ui.TableColumn {
 	return []ui.TableColumn{
-		{Title: tr(c, "gallery.name"), ID: "name", Sortable: true, MinWidth: 120},
-		{Title: tr(c, "gallery.size"), ID: "size", Width: 90, Align: ui.End, Sortable: true},
-		{Title: tr(c, "gallery.kind"), ID: "kind", Width: 90},
+		{Title: tr(c, "name"), ID: "name", Sortable: true, MinWidth: 120},
+		{Title: tr(c, "size"), ID: "size", Width: 90, Align: ui.End, Sortable: true},
+		{Title: tr(c, "kind"), ID: "kind", Width: 90},
 	}
 }
 
@@ -53,7 +52,7 @@ func controlTable(c *ui.Context, s *controlState, variant string) {
 				s.choice = file.name
 			}
 		}
-	}).Label(tr(c, "gallery.files"))
+	}).Label(tr(c, "files"))
 }
 
 const tableExampleCount = 10000
@@ -84,8 +83,8 @@ func controlTableVirtualized(c *ui.Context, s *controlState, _ string) {
 	s.table.List.Key = func(row int) any { return s.tableRows[row] }
 	components.TableVirtualized(c, &s.table, tableExampleColumns(c), len(s.tableRows), func(row, col int) {
 		i := s.tableRows[row]
-		tableExampleCell(c, col, fmt.Sprintf(tr(c, "gallery.file_d"), i+1), size(i))
-	}).Height(240).FillWidth().Label(tr(c, "gallery.large_project"))
+		tableExampleCell(c, col, msg(c).FileD(i+1), size(i))
+	}).Height(240).FillWidth().Label(tr(c, "largeProject"))
 }
 
 func tableExampleCell(c *ui.Context, col int, name string, size int) {
@@ -93,8 +92,8 @@ func tableExampleCell(c *ui.Context, col int, name string, size int) {
 	case 0:
 		components.Text(c, name).SingleLine()
 	case 1:
-		components.Text(c, fmt.Sprintf(tr(c, "gallery.d_kb"), size)).SingleLine()
+		components.Text(c, msg(c).SizeKb(size)).SingleLine()
 	default:
-		components.Text(c, tr(c, "gallery.file")).SingleLine().TextColor(c.Theme().TextMuted)
+		components.Text(c, tr(c, "file")).SingleLine().TextColor(c.Theme().TextMuted)
 	}
 }

@@ -1,0 +1,68 @@
+package gallery
+
+import (
+	"time"
+	"unicode/utf8"
+
+	"github.com/egoist/mygo/ui"
+	"github.com/egoist/mygo/ui/markdown"
+	"github.com/egoist/mygo/ui/richtext"
+	"github.com/oneo-me/onevra/source/components"
+)
+
+// Editable and streamed fixture content stays in English, as other sample
+// documents do.
+const richTextSample = "# Release notes\n\nEdit **bold**, *italic* and `code` text, or type `- ` to start a list.\n\n- [x] Draft the summary\n- [ ] Review the screenshots\n"
+
+const markdownReply = "## Streaming replies\n\nMarkdown arrives **a few words at a time**, and the unfinished tail already shows as what it will become.\n\n- Lists, *emphasis* and `code` render as they stream\n- Finished blocks are never parsed again\n\n```go\nfmt.Println(\"Hello, Onevra\")\n```\n"
+
+// exampleRichTextEditor edits attributed text in page memory only.
+func exampleRichTextEditor(c *ui.Context, s *demoState) {
+	if s.richText == nil {
+		s.richText = richtext.NewDocument(richtext.ParseMarkdown(richTextSample))
+	}
+	f := s.richText.Formatting()
+	ui.Row(c).Gap(6).Children(func() {
+		for _, format := range []struct {
+			label string
+			state richtext.FormatState
+			apply func()
+		}{
+			{"bold", f.Bold, s.richText.ToggleBold},
+			{"italic", f.Italic, s.richText.ToggleItalic},
+			{"code", f.Code, s.richText.ToggleCode},
+		} {
+			on := format.state == richtext.FormatOn
+			// Keep the editor's selection while formatting it.
+			if components.ToggleButton(c, &on, tr(c, format.label)).KeepFocus().Changed() {
+				format.apply()
+			}
+		}
+	})
+	if richtext.Editor(c, s.richText, richtext.EditorOptions{Label: tr(c, "richTextLabel")}).Height(220).FillWidth().Changed() {
+		s.count++
+	}
+	components.Text(c, msg(c).RichTextEdits(s.count)).TextColor(c.Theme().TextMuted)
+}
+
+// exampleMarkdownStream reveals a canned reply on the frame clock, so it
+// needs no goroutine and settles at once when the desktop reduces motion.
+func exampleMarkdownStream(c *ui.Context, s *demoState) {
+	if components.Button(c, tr(c, "markdownStreamReplay"), components.ButtonOutline).Clicked() {
+		s.count++
+	}
+	reply := ui.Column(c).Key("reply").FillWidth().MinHeight(260)
+	tl := reply.Timeline("stream", ui.TimelineOptions{Run: uint64(s.count)})
+	n := int(tl.Tween(ui.Tween{From: 0, To: float32(len(markdownReply)), Duration: 4 * time.Second, Ease: ui.Linear}))
+	text := markdownReply[:n]
+	for !utf8.ValidString(text) {
+		text = text[:len(text)-1]
+	}
+	reply.Label(tr(c, "markdownStreamLabel")).Children(func() {
+		if tl.Settled() {
+			markdown.View(c, markdownReply, &s.markdown)
+		} else {
+			markdown.Stream(c, text, &s.markdown)
+		}
+	})
+}

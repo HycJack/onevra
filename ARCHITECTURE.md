@@ -25,7 +25,7 @@ The `icons/lucide` package supplies lazily parsed, shared MyGo SVGs independentl
 
 The gallery is an independent consumer of the public API, not a dependency of the library. It keeps interactive demonstration values in memory, owns its presentation-state persistence and provides a place to review native behavior. See [Gallery](docs/architecture/gallery.md) for storage and verification.
 
-The desktop, menu bar and hybrid starter applications are independent consumers under `source/examples/`. Each keeps its own lifecycle, preferences, embedded translations and packaging configuration so it can be copied without importing another example. Their small application helpers are intentionally local, not a shared application framework.
+The desktop, menu bar, hybrid and documents starter applications are independent consumers under `source/examples/`. Each keeps its own lifecycle, preferences where it has them, MyGo message catalog and packaging configuration so it can be copied without importing another example. Their small application helpers are intentionally local, not a shared application framework.
 
 They use MyGo directly for single-instance activation, Dock visibility and tray integration, and compose Onevra controls for their content. Settings is an application action: desktop and hybrid host it in a Dialog, while the menu bar example needs no main window and uses a settings window. See [starter applications](docs/build.md#starter-applications) for running, copying and native review.
 

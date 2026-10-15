@@ -8,5 +8,9 @@
   "macos": {
     "icon": "assets/icon.icon",
     "minimumSystemVersion": "13.0"
+  },
+  "i18n": {
+    "dir": "examples/gallery/internal/gallery/locales",
+    "source": "en"
   }
 }

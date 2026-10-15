@@ -3,6 +3,7 @@
 package command
 
 import (
+	"github.com/oneo-me/onevra/source/internal/l10n"
 	"slices"
 	"strings"
 	"time"
@@ -65,7 +66,7 @@ type Options struct {
 	// Loading and Error replace results and suppress activation. Error wins.
 	Loading bool
 	Error   string
-	// Empty labels use English defaults.
+	// Empty labels use Onevra's catalog in the window's language.
 	SearchLabel, Placeholder, ResultsLabel, EmptyText, LoadingText string
 	// OnActivate runs on the UI thread for Enter or a single click. The host
 	// owns execution, background work and whether to close the dialog.
@@ -181,7 +182,7 @@ func CommandPalette(c *ui.Context, s *State, items []Item, options Options) ui.E
 	root := ui.Column(c).FillWidth().MinWidth(0).MinHeight(0)
 	root.Children(func() {
 		input := components.TextBox(c, &s.Query, components.TextBoxOptions{}).
-			Label(fallback(options.SearchLabel, "Search commands")).Placeholder(fallback(options.Placeholder, "Search commands…")).
+			Label(fallback(options.SearchLabel, l10n.In(c.Locale()).Text("searchCommands"))).Placeholder(fallback(options.Placeholder, l10n.In(c.Locale()).Text("searchCommandsPlaceholder"))).
 			FillWidth().Shrink(0).FontSize(t.Rem(1.15)).
 			Padding(t.Space(4.5), t.Space(4.5), t.Space(4.5), t.Space(12)).
 			Background(ui.Transparent).Border(0, ui.Transparent).Radius(0).FocusRing(false)
@@ -235,9 +236,9 @@ func CommandPalette(c *ui.Context, s *State, items []Item, options Options) ui.E
 		input.OnShortcut(0, ui.KeyUp, func() { s.move(results, -1) })
 		input.OnSubmit(func() { activate(s.ActiveID) })
 		if len(results) == 0 {
-			message := fallback(options.EmptyText, "No matching commands")
+			message := fallback(options.EmptyText, l10n.In(c.Locale()).Text("noMatchingCommands"))
 			if options.Loading {
-				message = fallback(options.LoadingText, "Loading…")
+				message = fallback(options.LoadingText, l10n.In(c.Locale()).Text("loading"))
 			}
 			if options.Error != "" {
 				message = options.Error
@@ -285,7 +286,7 @@ func CommandPalette(c *ui.Context, s *State, items []Item, options Options) ui.E
 						components.Text(c, item.Shortcut).TextColor(t.TextMuted).FontSize(t.Rem(.8)).Shrink(0).SingleLine()
 					}
 				})
-			}).Label(fallback(options.ResultsLabel, "Commands")).Fill().MinHeight(0).Padding(0, t.Space(2), t.Space(3), t.Space(2))
+			}).Label(fallback(options.ResultsLabel, l10n.In(c.Locale()).Text("commands"))).Fill().MinHeight(0).Padding(0, t.Space(2), t.Space(3), t.Space(2))
 		}
 	})
 	return root
@@ -307,7 +308,7 @@ func CommandDialog(c *ui.Context, open *bool, s *State, items []Item, options Op
 	// the surrounding dialog. Text composition remains owned by MyGo.
 	dialog.DisableEscapeClose = dialog.DisableEscapeClose || s.composing
 	if dialog.Label == "" {
-		dialog.Label = fallback(options.SearchLabel, "Commands")
+		dialog.Label = fallback(options.SearchLabel, l10n.In(c.Locale()).Text("commands"))
 	}
 	panel := components.Dialog(c, open, dialog, func(panel ui.Element) {
 		panel.Width(640).Padding(0).Gap(0).Radius(c.Theme().Radius * 3).Clip()

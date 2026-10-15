@@ -1,51 +1,42 @@
 package main
 
 import (
-	"embed"
+	"strings"
 
-	"github.com/nicksnyder/go-i18n/v2/i18n"
-	"go.yaml.in/yaml/v3"
-	"golang.org/x/text/language"
+	"github.com/egoist/mygo"
+	"github.com/egoist/mygo/i18n"
+	"github.com/oneo-me/onevra/source/examples/hybrid/locales"
 )
 
-//go:embed locales/*.yaml
-var localeFiles embed.FS
-
-var messages = func() *i18n.Bundle {
-	b := i18n.NewBundle(language.English)
-	b.RegisterUnmarshalFunc("yaml", yaml.Unmarshal)
-	for _, code := range []string{"en", "zh-Hans"} {
-		data, err := localeFiles.ReadFile("locales/" + code + ".yaml")
-		if err != nil {
-			panic(err)
-		}
-		if _, err := b.ParseMessageFileBytes(data, code+".yaml"); err != nil {
-			panic(err)
-		}
+// language returns the catalog language the app shows: the saved choice, or
+// the best match for the user's preferred language.
+func (a *application) language() string {
+	if a.config.Language != "system" {
+		return a.config.Language
 	}
-	return b
-}()
-
-func languageCode(choice, system string) string {
-	if choice == "en" || choice == "zh-Hans" {
-		return choice
+	if tag := i18n.Match([]string{a.locale}, locales.Catalog.Languages()); tag != "" {
+		return tag
 	}
-	tag, err := language.Parse(system)
-	if err == nil {
-		base, _ := tag.Base()
-		script, _ := tag.Script()
-		if base.String() == "zh" && script.String() == "Hans" {
-			return "zh-Hans"
-		}
-	}
-	return "en"
+	return locales.Catalog.Source()
 }
 
-func (a *application) text(id string) string {
-	localizer := i18n.NewLocalizer(messages, languageCode(a.config.Language, a.locale), "en")
-	value, err := localizer.Localize(&i18n.LocalizeConfig{MessageID: id})
-	if err != nil && value == "" {
-		return id
+// applyLanguage makes MyGo's and Onevra's own strings follow the saved choice;
+// "system" follows the user's languages again.
+func (a *application) applyLanguage() {
+	tag := a.config.Language
+	if tag == "system" {
+		tag = ""
 	}
-	return value
+	mygo.App.SetLocale(tag)
+}
+
+// text says the message of a key chosen at run time, such as a setting's
+// value or an error.
+func (a *application) text(key string) string {
+	return locales.Catalog.Format(a.language(), key, nil)
+}
+
+// optionKey names the message of a saved setting value, as "zh-Hans".
+func optionKey(value string) string {
+	return strings.ReplaceAll(value, "-", "")
 }

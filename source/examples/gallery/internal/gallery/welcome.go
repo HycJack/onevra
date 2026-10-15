@@ -1,7 +1,6 @@
 package gallery
 
 import (
-	"fmt"
 	"log"
 	"math"
 	"sync"
@@ -34,7 +33,7 @@ func (g *Gallery) welcomeLocalized(c *ui.Context) {
 		ui.Column(c).FillWidth().MinWidth(0).MinHeight(height * .8).MaxWidth(t.Space(170)).AlignSelf(ui.Center).
 			Justify(ui.Center).AlignItems(ui.Center).Padding(pad).Gap(t.Space(8)).Children(func() {
 			g.welcomeTitle(c)
-			welcomeEnter(c, components.Text(c, tr(c, "gallery.built_with_onevra_powered_by_mygo_written_in_go")).
+			welcomeEnter(c, components.Text(c, tr(c, "builtWithOnevraPoweredByMygoWrittenInGo")).
 				FontSize(t.Rem(.8)).TextColor(t.TextMuted).TextAlign(ui.Center).Wrap(), 4)
 		})
 	})
@@ -104,9 +103,9 @@ func (g *Gallery) welcomeTitle(c *ui.Context) {
 	welcomeEnter(c, ui.Column(c).FillWidth().AlignItems(ui.Center).Gap(t.Space(3)), 1).Children(func() {
 		// The name is one word, so it shrinks to fit rather than wrapping.
 		components.Text(c, "Onevra").FontSize(min(t.Rem(4.2), (g.welcomeContentWidth(c)-t.Space(8))/3.2)).SingleLine().FontWeight(800).LetterSpacing(-2).LineHeight(1)
-		components.Text(c, tr(c, "gallery.small_components_real_possibilities")).
+		components.Text(c, tr(c, "smallComponentsRealPossibilities")).
 			FontSize(t.Rem(1.3)).FontWeight(600).TextAlign(ui.Center).Wrap()
-		components.Text(c, tr(c, "gallery.welcome_entrance_summary")).
+		components.Text(c, tr(c, "welcomeEntranceSummary")).
 			MaxWidth(t.Space(120)).TextColor(t.TextMuted).LineHeight(1.45).TextAlign(ui.Center).Wrap()
 	})
 	compact := g.welcomeContentWidth(c) < 400
@@ -124,11 +123,11 @@ func (g *Gallery) welcomeTitle(c *ui.Context) {
 			g.openRepository()
 		}
 		_, shortcut := commandShortcut()
-		search := components.Button(c, "", components.ButtonPrimary).Label(tr(c, "gallery.welcome_search_everything")).
+		search := components.Button(c, "", components.ButtonPrimary).Label(tr(c, "welcomeSearchEverything")).
 			Gap(t.Space(2)).Radius(t.Space(5)).MinWidth(0).MaxWidthPercent(100)
 		search.Children(func() {
 			components.Icon(c, lucide.Search).Size(t.Space(4), t.Space(4)).Shrink(0)
-			components.Text(c, tr(c, "gallery.welcome_search_everything")).Wrap()
+			components.Text(c, tr(c, "welcomeSearchEverything")).Wrap()
 			if !compact {
 				components.Text(c, shortcut).FontSize(t.Rem(.75)).Opacity(.7).Shrink(0).SingleLine()
 			}
@@ -138,7 +137,7 @@ func (g *Gallery) welcomeTitle(c *ui.Context) {
 		}
 	})
 	welcomeEnter(c, ui.Row(c).Wrap().Justify(ui.Center).Gap(t.Space(2)), 3).Children(func() {
-		for _, badge := range []string{fmt.Sprintf(tr(c, "gallery.version_s"), galleryVersion), "MIT", "Go", "MyGo"} {
+		for _, badge := range []string{msg(c).VersionS(galleryVersion), "MIT", "Go", "MyGo"} {
 			components.Badge(c, badge).Background(t.Surface.Alpha(.8)).TextColor(t.TextMuted)
 		}
 	})

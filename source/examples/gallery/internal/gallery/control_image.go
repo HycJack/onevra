@@ -1,7 +1,6 @@
 package gallery
 
 import (
-	"fmt"
 	"os"
 	"path/filepath"
 	"sync"
@@ -32,10 +31,10 @@ func loadGalleryImage(dir string) (*ui.Bitmap, error) {
 func controlImage(c *ui.Context, _ *controlState, variant string) {
 	bitmap, err := galleryImage()
 	if err != nil {
-		components.Text(c, tr(c, "gallery.unable_to_load_avatar_jpeg")).TextColor(c.Theme().TextMuted)
+		components.Text(c, tr(c, "unableToLoadAvatarJpeg")).TextColor(c.Theme().TextMuted)
 		return
 	}
-	image := components.Image(c, bitmap).Size(180, 120).Label(fmt.Sprintf(tr(c, "gallery.author_avatar_s"), tr(c, variant)))
+	image := components.Image(c, bitmap).Size(180, 120).Label(msg(c).AuthorAvatarS(tr(c, variant)))
 	switch variant {
 	case "Cover":
 		image.Fit(ui.Cover)

@@ -1,19 +1,23 @@
 package components
 
 import (
-	"strings"
 	"time"
 
+	"github.com/egoist/mygo/i18n"
 	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/source/internal/l10n"
 )
 
-// Localization supplies application-owned text for component internals. Empty
-// fields keep English defaults. It does not select languages or load catalogs.
+// Localization overrides the text of component internals. Empty fields take
+// Onevra's catalog in the language the window shows (ui.Context.Locale),
+// which applications also change with "onevra.<key>" keys in their MyGo
+// catalogs. Dates and the first weekday default to the user's regional
+// formats, as MyGo's date controls follow them.
 // FormatDate receives a Go layout identifying the requested presentation:
 // "January 2006", "January 2, 2006", "Jan", or "2006-01-02".
 // NumberAction formats a complete accessible name for "adjust", "increase",
 // or "decrease", including the application-supplied field label.
-// Weekdays are Sunday-first; FirstWeekday is optional and defaults to Monday.
+// Weekdays are Sunday-first.
 type Localization struct {
 	Minimum, Maximum          string
 	Today                     string
@@ -56,6 +60,10 @@ type Localization struct {
 	FirstWeekday              *time.Weekday
 	FormatDate                func(time.Time, string) string
 	NumberAction              func(action, label string) string
+
+	messages     l10n.Messages
+	region       i18n.Region
+	formatLocale string
 }
 
 type localizationKey struct{}
@@ -79,130 +87,71 @@ func WithLocalization(c *ui.Context, words Localization, build func()) {
 
 func localized(c *ui.Context) Localization {
 	words := *localizationSlot(c)
-	if words.Minimum == "" {
-		words.Minimum = "minimum"
+	m := l10n.In(c.Locale())
+	for _, field := range []struct {
+		value *string
+		key   string
+	}{
+		{&words.Minimum, "minimum"}, {&words.Maximum, "maximum"}, {&words.Today, "today"},
+		{&words.ChooseMonth, "chooseMonth"}, {&words.ChooseYear, "chooseYear"},
+		{&words.PreviousMonth, "previousMonth"}, {&words.NextMonth, "nextMonth"},
+		{&words.PreviousYear, "previousYear"}, {&words.NextYear, "nextYear"},
+		{&words.PreviousYears, "previousYears"}, {&words.NextYears, "nextYears"},
+		{&words.MonthSelection, "monthSelection"}, {&words.YearSelection, "yearSelection"},
+		{&words.ChooseTime, "chooseTime"}, {&words.Hours, "hours"}, {&words.Minutes, "minutes"},
+		{&words.Divider, "divider"}, {&words.SaturationBrightness, "saturationBrightness"},
+		{&words.Hue, "hue"}, {&words.Opacity, "opacity"}, {&words.ColorFormat, "colorFormat"},
+		{&words.CopyColor, "copyColor"}, {&words.Red, "red"}, {&words.Green, "green"}, {&words.Blue, "blue"},
+		{&words.HexColor, "hexColor"}, {&words.OpacityPercent, "opacityPercent"}, {&words.HueDegrees, "hueDegrees"},
+		{&words.SaturationPercent, "saturationPercent"}, {&words.BrightnessPercent, "brightnessPercent"},
+		{&words.LightnessPercent, "lightnessPercent"}, {&words.Settings, "settings"},
+		{&words.SearchSettings, "searchSettings"}, {&words.SearchSettingsPlaceholder, "searchSettingsPlaceholder"},
+		{&words.SettingsCategory, "settingsCategory"}, {&words.SearchResults, "searchResults"},
+		{&words.NoSettings, "noSettings"}, {&words.CloseToast, "closeToast"},
+	} {
+		if *field.value == "" {
+			*field.value = m.Text(field.key)
+		}
 	}
-	if words.Maximum == "" {
-		words.Maximum = "maximum"
-	}
-	if words.Today == "" {
-		words.Today = "Today"
-	}
-	if words.ChooseMonth == "" {
-		words.ChooseMonth = "Choose month"
-	}
-	if words.ChooseYear == "" {
-		words.ChooseYear = "Choose year"
-	}
-	if words.PreviousMonth == "" {
-		words.PreviousMonth = "Previous month"
-	}
-	if words.NextMonth == "" {
-		words.NextMonth = "Next month"
-	}
-	if words.PreviousYear == "" {
-		words.PreviousYear = "Previous year"
-	}
-	if words.NextYear == "" {
-		words.NextYear = "Next year"
-	}
-	if words.PreviousYears == "" {
-		words.PreviousYears = "Previous years"
-	}
-	if words.NextYears == "" {
-		words.NextYears = "Next years"
-	}
-	if words.MonthSelection == "" {
-		words.MonthSelection = "Month selection"
-	}
-	if words.YearSelection == "" {
-		words.YearSelection = "Year selection"
-	}
-	if words.ChooseTime == "" {
-		words.ChooseTime = "Choose time"
-	}
-	if words.Hours == "" {
-		words.Hours = "Hours"
-	}
-	if words.Minutes == "" {
-		words.Minutes = "Minutes"
-	}
-	if words.Divider == "" {
-		words.Divider = "Divider"
-	}
-	if words.SaturationBrightness == "" {
-		words.SaturationBrightness = "Saturation and brightness"
-	}
-	if words.Hue == "" {
-		words.Hue = "Hue"
-	}
-	if words.Opacity == "" {
-		words.Opacity = "Opacity"
-	}
-	if words.ColorFormat == "" {
-		words.ColorFormat = "Color format"
-	}
-	if words.CopyColor == "" {
-		words.CopyColor = "Copy color"
-	}
-	if words.Red == "" {
-		words.Red = "Red"
-	}
-	if words.Green == "" {
-		words.Green = "Green"
-	}
-	if words.Blue == "" {
-		words.Blue = "Blue"
-	}
-	if words.HexColor == "" {
-		words.HexColor = "Hex color"
-	}
-	if words.OpacityPercent == "" {
-		words.OpacityPercent = "Opacity percent"
-	}
-	if words.HueDegrees == "" {
-		words.HueDegrees = "Hue degrees"
-	}
-	if words.SaturationPercent == "" {
-		words.SaturationPercent = "Saturation percent"
-	}
-	if words.BrightnessPercent == "" {
-		words.BrightnessPercent = "Brightness percent"
-	}
-	if words.LightnessPercent == "" {
-		words.LightnessPercent = "Lightness percent"
-	}
-	if words.Settings == "" {
-		words.Settings = "Settings"
-	}
-	if words.SearchSettings == "" {
-		words.SearchSettings = "Search settings"
-	}
-	if words.SearchSettingsPlaceholder == "" {
-		words.SearchSettingsPlaceholder = "Search settings…"
-	}
-	if words.SettingsCategory == "" {
-		words.SettingsCategory = "Settings category"
-	}
-	if words.SearchResults == "" {
-		words.SearchResults = "Search results"
-	}
-	if words.NoSettings == "" {
-		words.NoSettings = "No matching settings. Try another search."
-	}
-	if words.CloseToast == "" {
-		words.CloseToast = "Close"
-	}
-	for i, day := range [7]string{"Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"} {
+	words.messages = m
+	words.region, words.formatLocale = formats(c)
+	names := i18n.Weekdays(words.formatLocale, i18n.Short, true)
+	for i := range words.Weekdays {
 		if words.Weekdays[i] == "" {
-			words.Weekdays[i] = day
+			words.Weekdays[i] = names[i]
 		}
 	}
 	return words
 }
+
+// formats returns the user's regional formats and the locale that writes
+// dates in them and the window's language, as MyGo's date controls do. Where
+// the system reports none, as in a headless Tester, CLDR's for the language.
+func formats(c *ui.Context) (i18n.Region, string) {
+	lang := c.Locale()
+	if lang == "" {
+		lang = "en"
+	}
+	r := c.Region()
+	if r.HourCycle != 12 && r.HourCycle != 24 {
+		r = i18n.RegionFor(lang)
+		r.Locale = ""
+	}
+	return r, r.FormatLocale(lang)
+}
+
+// Date presentations, named by the Go layouts FormatDate receives.
+var dateSkeletons = map[string]string{"January 2006": "yMMMM", "January 2, 2006": "yMMMMd", "2006-01-02": "yMd"}
+
 func (l Localization) date(value time.Time, layout string) string {
 	if l.FormatDate != nil {
 		return l.FormatDate(value, layout)
+	}
+	if layout == "Jan" {
+		return i18n.Months(l.formatLocale, i18n.Abbreviated, true)[value.Month()-1]
+	}
+	if skeleton, ok := dateSkeletons[layout]; ok {
+		return i18n.FormatDate(l.formatLocale, value, i18n.DateOptions{Skeleton: skeleton})
 	}
 	return value.Format(layout)
 }
@@ -210,18 +159,15 @@ func (l Localization) numberAction(action, label string) string {
 	if l.NumberAction != nil {
 		return l.NumberAction(action, label)
 	}
-	switch action {
-	case "adjust":
-		return strings.TrimSpace("Adjust " + label)
-	case "increase":
-		return strings.TrimSpace(label + " Increase")
-	default:
-		return strings.TrimSpace(label + " Decrease")
+	key := map[string]string{"adjust": "numberAdjust", "increase": "numberIncrease"}[action]
+	if key == "" {
+		key = "numberDecrease"
 	}
+	return l.messages.Label(key, label)
 }
 func (l Localization) firstWeekday() time.Weekday {
 	if l.FirstWeekday != nil && *l.FirstWeekday >= time.Sunday && *l.FirstWeekday <= time.Saturday {
 		return *l.FirstWeekday
 	}
-	return time.Monday
+	return l.region.FirstWeekday
 }

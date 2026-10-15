@@ -37,6 +37,8 @@ func TestMain(m *testing.M) {
 		mygo.App.SetActivationPolicy(mygo.ActivationPolicyAccessory)
 	}
 	mygo.App.SetPath(mygo.PathUserData, dir)
+	// Language choices made by tests apply without being saved for later launches.
+	os.Setenv("MYGO_LOCALE", "en")
 	// Tests own separate windows; only the end of m.Run should quit the app.
 	mygo.App.OnWindowAllClosed(func() {})
 	result := make(chan int, 1)

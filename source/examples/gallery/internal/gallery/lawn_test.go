@@ -1,7 +1,6 @@
 package gallery
 
 import (
-	"fmt"
 	"math"
 	"slices"
 	"testing"
@@ -45,7 +44,7 @@ func lawnTester(t *testing.T, lang string) (*Gallery, *lawnDemo, *ui.Tester, fun
 	// Real frame times vary, so no sun or zombie arrives by itself.
 	d.nextSun, d.nextSpawn = 1<<30, 1<<30
 	advance(tt)
-	view, ok := tt.Find(g.text("gallery.lawn_scene"))
+	view, ok := tt.Find(g.text("lawnScene"))
 	if !ok {
 		t.Fatal("missing lawn view")
 	}
@@ -140,7 +139,7 @@ func TestLawnDefense(t *testing.T) {
 		t.Fatal("the zombie never reached the wall-nut")
 	}
 	advance(tt)
-	if !tt.HasText(fmt.Sprintf(g.text("gallery.lawn_defeated"), 1, lawnZombies)) {
+	if !tt.HasText(g.messages().LawnDefeated(1, lawnZombies)) {
 		t.Fatalf("missing defeated count: %q", tt.Texts())
 	}
 }
@@ -160,10 +159,10 @@ func TestLawnMowersAndDefeat(t *testing.T) {
 		d.step()
 	}
 	advance(tt)
-	if d.state != lawnLost || !tt.HasText(g.text("gallery.lawn_lost")) {
+	if d.state != lawnLost || !tt.HasText(g.text("lawnLost")) {
 		t.Fatalf("state %v: %q", d.state, tt.Texts())
 	}
-	if err := tt.Click(g.text("gallery.lawn_restart")); err != nil {
+	if err := tt.Click(g.text("lawnRestart")); err != nil {
 		t.Fatal(err)
 	}
 	// The button took the keyboard, so the new round waits for the lawn.
@@ -199,7 +198,7 @@ func TestLawnEndlessMode(t *testing.T) {
 	// mode, since the switch takes the keyboard.
 	d.setState(lawnLost)
 	advance(tt)
-	if err := tt.Click(g.text("gallery.lawn_endless")); err != nil {
+	if err := tt.Click(g.text("lawnEndless")); err != nil {
 		t.Fatal(err)
 	}
 	if !d.endless || d.state == lawnLost {
@@ -215,7 +214,7 @@ func TestLawnEndlessMode(t *testing.T) {
 		t.Fatalf("endless: spawned %d, %d zombies, state %v", d.spawned, len(d.zombies), d.state)
 	}
 	advance(tt)
-	if !tt.HasText(fmt.Sprintf(g.text("gallery.lawn_defeated_endless"), d.defeated)) {
+	if !tt.HasText(g.messages().LawnDefeatedEndless(d.defeated)) {
 		t.Fatalf("missing endless defeated count: %q", tt.Texts())
 	}
 }
@@ -305,7 +304,7 @@ func TestLawnPausesWithoutFocus(t *testing.T) {
 	advance(tt)
 	steps := d.steps
 	advance(tt)
-	if d.state != lawnPaused || d.steps != steps || !tt.HasText(g.text("gallery.lawn_paused")) {
+	if d.state != lawnPaused || d.steps != steps || !tt.HasText(g.text("lawnPaused")) {
 		t.Fatalf("state %v, steps %d then %d", d.state, steps, d.steps)
 	}
 	// Returning to the window returns to the game.
@@ -316,7 +315,7 @@ func TestLawnPausesWithoutFocus(t *testing.T) {
 	}
 	// Another control takes the keyboard; the click back on the lawn
 	// resumes without planting.
-	if err := tt.Click(g.text("gallery.lawn_restart")); err != nil {
+	if err := tt.Click(g.text("lawnRestart")); err != nil {
 		t.Fatal(err)
 	}
 	advance(tt)

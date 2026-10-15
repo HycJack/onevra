@@ -13,10 +13,10 @@ import (
 func TestCodeEditorExample(t *testing.T) {
 	for _, lang := range []string{"en", "zh-Hans"} {
 		g, s, tt := featureTester("Code editor", "Default", lang, 540)
-		if s.code == nil || s.code.DiffBase == nil || s.code.Label != g.text("gallery.code_editor_label") {
+		if s.code == nil || s.code.DiffBase == nil || s.code.Label != g.text("codeEditorLabel") {
 			t.Fatalf("editor state: %+v", s.code)
 		}
-		if err := tt.Click(g.text("gallery.code_editor_label")); err != nil {
+		if err := tt.Click(g.text("codeEditorLabel")); err != nil {
 			t.Fatal(err)
 		}
 		tt.Type("// edited\n")
@@ -28,8 +28,7 @@ func TestCodeEditorExample(t *testing.T) {
 			t.Fatal("editing changed the diff base")
 		}
 		pos := s.code.CursorPos()
-		want := g.text("gallery.code_editor_position")
-		if !tt.HasText(fmt.Sprintf(want, pos.Line+1, pos.Col+1)) {
+		if !tt.HasText(g.messages().CodeEditorPosition(pos.Line+1, pos.Col+1)) {
 			t.Fatalf("missing caret position %v: %q", pos, tt.Texts())
 		}
 	}
@@ -42,7 +41,7 @@ func TestDiffViewerExample(t *testing.T) {
 			t.Fatalf("%s layout = %v", variant, s.diff.Layout)
 		}
 		added, deleted := s.diff.Stats()
-		if added == 0 || deleted == 0 || !tt.HasText(fmt.Sprintf(g.text("gallery.diff_viewer_stats"), added, deleted)) {
+		if added == 0 || deleted == 0 || !tt.HasText(g.messages().DiffViewerStats(added, deleted)) {
 			t.Fatalf("%s stats +%d -%d: %q", variant, added, deleted, tt.Texts())
 		}
 		// Reverting every change restores the old text in the new buffer.
@@ -50,7 +49,7 @@ func TestDiffViewerExample(t *testing.T) {
 			s.diff.Revert(0)
 		}
 		tt.Frame()
-		if s.diff.New.String() != editorSample || !tt.HasText(fmt.Sprintf(g.text("gallery.diff_viewer_stats"), 0, 0)) {
+		if s.diff.New.String() != editorSample || !tt.HasText(g.messages().DiffViewerStats(0, 0)) {
 			t.Fatalf("%s revert left %q", variant, tt.Texts())
 		}
 	}
@@ -61,15 +60,15 @@ func TestCanvasExample(t *testing.T) {
 	if s.value != 0 || s.canvas.smooth == nil || s.canvas.drawn != 0 {
 		t.Fatalf("initial canvas state: value %v, drawn %d", s.value, s.canvas.drawn)
 	}
-	for _, label := range []string{"gallery.canvas_smooth", "gallery.canvas_pixelated", "gallery.canvas_layer"} {
+	for _, label := range []string{"canvasSmooth", "canvasPixelated", "canvasLayer"} {
 		if _, ok := tt.Find(g.text(label)); !ok {
 			t.Fatalf("missing %s", label)
 		}
 	}
-	if err := tt.Click(g.text("gallery.canvas_next_frame")); err != nil {
+	if err := tt.Click(g.text("canvasNextFrame")); err != nil {
 		t.Fatal(err)
 	}
-	if err := tt.Click(g.text("gallery.canvas_mirror")); err != nil {
+	if err := tt.Click(g.text("canvasMirror")); err != nil {
 		t.Fatal(err)
 	}
 	tt.Frame()
@@ -78,7 +77,7 @@ func TestCanvasExample(t *testing.T) {
 		t.Fatalf("frame %d, mirrored %v, layer drawn for %d", s.index, s.on, s.canvas.drawn)
 	}
 	for range spriteFrames - 1 {
-		if err := tt.Click(g.text("gallery.canvas_next_frame")); err != nil {
+		if err := tt.Click(g.text("canvasNextFrame")); err != nil {
 			t.Fatal(err)
 		}
 	}
@@ -181,7 +180,7 @@ func TestNewPagesHighlighted(t *testing.T) {
 	for _, lang := range []string{"en", "zh-Hans"} {
 		g := &Gallery{language: newTranslator(lang, "en")}
 		tt := ui.NewTester(g.Left, 220, 6000)
-		badge := g.text("gallery.navigation_new")
+		badge := g.text("navigationNew")
 		texts, got := tt.Texts(), 0
 		for i, text := range texts {
 			if text != badge {
@@ -195,7 +194,7 @@ func TestNewPagesHighlighted(t *testing.T) {
 			}
 			found := false
 			for key := range newPages {
-				found = found || g.text(sourceMessageIDs[routeLabel(key)]) == label
+				found = found || g.text(sourceKeys[routeLabel(key)]) == label
 			}
 			if !found {
 				t.Fatalf("%s badge follows %q", lang, label)
@@ -216,7 +215,7 @@ func TestNewestBadgeCentered(t *testing.T) {
 			g.withLanguage(c, func() { g.navigationItem(c, label, nil, page) })
 		}, 220, 80)
 		text, _ := tt.Find(label)
-		badge, ok := tt.Find(g.text("gallery.navigation_new"))
+		badge, ok := tt.Find(g.text("navigationNew"))
 		if !ok {
 			t.Fatalf("%s has no badge", key)
 		}

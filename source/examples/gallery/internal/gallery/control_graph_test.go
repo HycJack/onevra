@@ -1,7 +1,7 @@
 package gallery
 
 import (
-	"fmt"
+	"github.com/oneo-me/onevra/source/examples/gallery/internal/gallery/locales"
 	"testing"
 
 	"github.com/egoist/mygo/ui"
@@ -20,7 +20,7 @@ func TestGraphPage(t *testing.T) {
 			tt.SetPreferences(ui.Preferences{ReduceMotion: true})
 			tt.Frame()
 			s := g.controlState("Relationship graph", "Default").graph
-			if !tt.HasText(g.text("Relationship graph")) || !tt.HasText(g.text("gallery.graph_hint")) || tt.HasText("gallery.graph_intro") {
+			if !tt.HasText(g.text("Relationship graph")) || !tt.HasText(g.text("graphHint")) || tt.HasText("graphIntro") {
 				t.Fatal("graph page is not localized")
 			}
 			if !s.view.Settled() || s.view.Hovered() != "" {
@@ -28,42 +28,42 @@ func TestGraphPage(t *testing.T) {
 			}
 			// The graph fills the page below its controls, leaving the hint
 			// at the bottom edge.
-			view, ok := tt.Find(fmt.Sprintf(g.text("gallery.graph_label"), len(s.cache.data.Nodes), len(s.cache.data.Edges)))
-			hint, hintOK := tt.Find(g.text("gallery.graph_hint"))
+			view, ok := tt.Find(g.messages().GraphLabel(len(s.cache.data.Nodes), len(s.cache.data.Edges)))
+			hint, hintOK := tt.Find(g.text("graphHint"))
 			if !ok || !hintOK || view.H < 460 || hint.Y+hint.H < 860 {
 				t.Fatalf("graph %v and hint %v do not fill the page", view, hint)
 			}
-			nodes := len(graphLibrary(s, false, "%d").Nodes)
+			nodes := len(graphLibrary(s, false, locales.In("")).Nodes)
 			if nodes != len(graphNotes)+6 {
 				t.Fatalf("sample has %d nodes", nodes)
 			}
 
-			if err := tt.Click(g.text("gallery.graph_settings")); err != nil {
+			if err := tt.Click(g.text("graphSettings")); err != nil {
 				t.Fatal(err)
 			}
-			if !tt.HasText(g.text("gallery.graph_attachments_hint")) {
+			if !tt.HasText(g.text("graphAttachmentsHint")) {
 				t.Fatal("settings popover did not open")
 			}
 			// The switch is the popover's only control; the keyboard reaches it.
 			for range 2 {
-				if tt.Focused(g.text("gallery.graph_attachments")) {
+				if tt.Focused(g.text("graphAttachments")) {
 					break
 				}
 				tt.Key(0, ui.KeyTab)
 			}
 			tt.Key(0, ui.KeySpace)
-			if s.attachments || len(graphLibrary(s, false, "%d").Nodes) != len(graphNotes) {
+			if s.attachments || len(graphLibrary(s, false, locales.In("")).Nodes) != len(graphNotes) {
 				t.Fatal("switch did not hide attachments")
 			}
 			tt.Key(0, ui.KeyEscape)
 
-			if err := tt.Click(g.text("gallery.graph_add")); err != nil {
+			if err := tt.Click(g.text("graphAdd")); err != nil {
 				t.Fatal(err)
 			}
 			if s.added != 1 {
 				t.Fatal("add note did not update the graph")
 			}
-			if err := tt.Click(fmt.Sprintf(g.text("gallery.graph_add_many"), 1000)); err != nil {
+			if err := tt.Click(g.messages().GraphAddMany(1000)); err != nil {
 				t.Fatal(err)
 			}
 			if s.added != 1001 || len(s.cache.data.Nodes) != len(graphNotes)+1001 {
@@ -81,16 +81,16 @@ func TestGraphPage(t *testing.T) {
 					t.Fatalf("edge %s → %s leaves the sample", e.Source, e.Target)
 				}
 			}
-			if err := tt.Click(g.text("gallery.graph_reset")); err != nil {
+			if err := tt.Click(g.text("graphReset")); err != nil {
 				t.Fatal(err)
 			}
-			if s.added != 0 || tt.HasText(g.text("gallery.graph_reset")) {
+			if s.added != 0 || tt.HasText(g.text("graphReset")) {
 				t.Fatal("reset did not remove the added notes")
 			}
-			if err := tt.Click(g.text("gallery.chart_empty")); err != nil {
+			if err := tt.Click(g.text("chartEmpty")); err != nil {
 				t.Fatal(err)
 			}
-			if !tt.HasText(g.text("gallery.graph_empty")) {
+			if !tt.HasText(g.text("graphEmpty")) {
 				t.Fatal("empty state is missing")
 			}
 		})

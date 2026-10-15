@@ -1,0 +1,17 @@
+{
+  "name": "Onevra Notes",
+  "identifier": "me.oneo.onevra.examples.documents",
+  "version": "0.1.0",
+  "out": "../../../dist/documents",
+  "macos": {
+    "minimumSystemVersion": "13.0"
+  },
+  "fileAssociations": [
+    { "ext": ["md", "markdown"], "name": "Markdown Document", "mimeType": "text/markdown" },
+    { "ext": ["txt"], "name": "Plain Text", "mimeType": "text/plain" }
+  ],
+  "i18n": {
+    "dir": "locales",
+    "source": "en"
+  }
+}

@@ -1,7 +1,6 @@
 package gallery
 
 import (
-	"fmt"
 	"image/color"
 	"math/rand/v2"
 	"slices"
@@ -663,33 +662,33 @@ func exampleLawn(c *ui.Context, s *demoState) {
 	d := &s.lawn
 	d.init(c)
 	d.syncMusic()
-	components.Text(c, tr(c, "gallery.lawn_hint")).TextColor(t.TextMuted).Wrap()
-	game.View(c, d).Height(320).FillWidth().Radius(12).Clip().Label(tr(c, "gallery.lawn_scene"))
+	components.Text(c, tr(c, "lawnHint")).TextColor(t.TextMuted).Wrap()
+	game.View(c, d).Height(320).FillWidth().Radius(12).Clip().Label(tr(c, "lawnScene"))
 	status := map[lawnState]string{
-		lawnPlaying: "gallery.lawn_playing", lawnPaused: "gallery.lawn_paused",
-		lawnLost: "gallery.lawn_lost", lawnWon: "gallery.lawn_won",
+		lawnPlaying: "lawnPlaying", lawnPaused: "lawnPaused",
+		lawnLost: "lawnLost", lawnWon: "lawnWon",
 	}[d.state]
 	ui.Row(c).Gap(t.Space(3)).Wrap().AlignItems(ui.Center).Children(func() {
 		components.Badge(c, tr(c, status))
 		if d.endless {
-			components.Text(c, fmt.Sprintf(tr(c, "gallery.lawn_defeated_endless"), d.defeated)).TextColor(t.TextMuted)
+			components.Text(c, msg(c).LawnDefeatedEndless(d.defeated)).TextColor(t.TextMuted)
 		} else {
-			components.Text(c, fmt.Sprintf(tr(c, "gallery.lawn_defeated"), d.defeated, lawnZombies)).TextColor(t.TextMuted)
+			components.Text(c, msg(c).LawnDefeated(d.defeated, lawnZombies)).TextColor(t.TextMuted)
 		}
 		// Switching modes restarts, so the round matches the chosen mode.
 		endless := d.endless
-		components.Switch(c, &endless, tr(c, "gallery.lawn_endless")).Changed()
+		components.Switch(c, &endless, tr(c, "lawnEndless")).Changed()
 		if endless != d.endless {
 			d.endless = endless
 			d.restart()
 		}
 		music := d.sfx.musicOn
-		components.Switch(c, &music, tr(c, "gallery.lawn_music")).Changed()
+		components.Switch(c, &music, tr(c, "lawnMusic")).Changed()
 		if music != d.sfx.musicOn {
 			d.sfx.musicOn = music
 			d.syncMusic()
 		}
-		if components.Button(c, tr(c, "gallery.lawn_restart"), components.ButtonSecondary).Clicked() {
+		if components.Button(c, tr(c, "lawnRestart"), components.ButtonSecondary).Clicked() {
 			d.restart()
 		}
 	})

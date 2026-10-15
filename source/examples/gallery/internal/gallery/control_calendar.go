@@ -10,5 +10,5 @@ func controlCalendar(c *ui.Context, s *controlState, _ string) {
 }
 
 func controlCalendarPicker(c *ui.Context, s *controlState, _ string) {
-	components.CalendarPicker(c, &s.day).Label(tr(c, "gallery.date"))
+	components.CalendarPicker(c, &s.day).Label(tr(c, "date"))
 }

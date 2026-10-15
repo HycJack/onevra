@@ -38,6 +38,13 @@ tasks:
       cwd: source
       env:
         GOWORK: "off"
+  - label: Run documents example
+    command: go
+    args: [run, ./examples/documents]
+    options:
+      cwd: source
+      env:
+        GOWORK: "off"
   - label: Website
     type: shell
     command: bun install && bun run dev

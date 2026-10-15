@@ -1,6 +1,7 @@
 package gallery
 
 import (
+	"encoding/json"
 	"fmt"
 	"go/ast"
 	"go/parser"
@@ -10,12 +11,12 @@ import (
 	"regexp"
 	"slices"
 	"strconv"
+	"strings"
 	"testing"
 	"time"
 
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
-	"go.yaml.in/yaml/v3"
 )
 
 func TestLanguageResolution(t *testing.T) {
@@ -29,7 +30,7 @@ func TestLanguageResolution(t *testing.T) {
 		if got.code != tc.want {
 			t.Errorf("%+v: %s", tc, got.code)
 		}
-		if got.code == "zh-Hans" && (got.text("gallery.clear_glass_style") != "清透" || got.text("Clear") != "清空") {
+		if got.code == "zh-Hans" && (got.text("clearGlassStyle") != "清透" || got.text("Clear") != "清空") {
 			t.Fatal("contextual translation")
 		}
 		if got.text("untranslated fixture") != "untranslated fixture" {
@@ -39,40 +40,39 @@ func TestLanguageResolution(t *testing.T) {
 }
 
 func TestLanguageCatalogs(t *testing.T) {
-	type message struct {
-		Other string `yaml:"other"`
-	}
-	catalogs := map[string]map[string]message{}
+	catalogs := map[string]map[string]any{}
 	for _, code := range []string{"en", "zh-Hans"} {
-		data, err := localeFiles.ReadFile("locales/" + code + ".yaml")
+		data, err := os.ReadFile(filepath.Join("locales", code+".json"))
 		if err != nil {
 			t.Fatal(err)
 		}
-		var entries map[string]message
-		if err := yaml.Unmarshal(data, &entries); err != nil {
+		var entries map[string]any
+		if err := json.Unmarshal(data, &entries); err != nil {
 			t.Fatal(err)
 		}
 		catalogs[code] = entries
 	}
-	formats := regexp.MustCompile(`%(?:\[[0-9]+\])?[-+ #0]*[0-9]*(?:\.[0-9]+)?[a-zA-Z%]`)
+	placeholders := regexp.MustCompile(`\{(\w+)`)
 	for id, en := range catalogs["en"] {
-		zh, ok := catalogs["zh-Hans"][id]
-		if !ok || zh.Other == "" {
+		if strings.HasPrefix(id, "@") {
+			continue
+		}
+		zh, ok := catalogs["zh-Hans"][id].(string)
+		if !ok || zh == "" {
 			t.Errorf("missing Chinese: %q", id)
 			continue
 		}
-		a, b := formats.FindAllString(en.Other, -1), formats.FindAllString(zh.Other, -1)
+		a, b := placeholders.FindAllString(en.(string), -1), placeholders.FindAllString(zh, -1)
 		slices.Sort(a)
 		slices.Sort(b)
 		if !slices.Equal(a, b) {
-			t.Errorf("format mismatch: %q", id)
+			t.Errorf("placeholder mismatch: %q", id)
 		}
 	}
-	if len(catalogs["en"]) != len(catalogs["zh-Hans"]) {
-		t.Fatal("catalog IDs differ")
+	if len(catalogs["en"]) != len(catalogs["zh-Hans"])+countMetadata(catalogs["en"])-countMetadata(catalogs["zh-Hans"]) {
+		t.Fatal("catalog keys differ")
 	}
-	// Every explicit source message must exist in both catalogs. This includes
-	// component defaults supplied by the application adapter.
+	// Every explicit source message must exist in both catalogs.
 	files, _ := filepath.Glob("*.go")
 	for _, file := range files {
 		if filepath.Ext(file) != ".go" || len(file) > 8 && file[len(file)-8:] == "_test.go" {
@@ -109,13 +109,13 @@ func TestLanguageCatalogs(t *testing.T) {
 		})
 	}
 	for _, group := range navigationGroups {
-		if _, ok := catalogs["en"][sourceMessageIDs[group]]; !ok {
+		if _, ok := catalogs["en"][sourceKeys[group]]; !ok {
 			t.Errorf("navigation: %s", group)
 		}
 	}
 	for _, row := range notificationRows {
 		for _, id := range []string{row.group, row.title, row.description, row.channel} {
-			if _, ok := catalogs["en"][sourceMessageIDs[id]]; !ok {
+			if _, ok := catalogs["en"][sourceKeys[id]]; !ok {
 				t.Errorf("settings: %s", id)
 			}
 		}
@@ -319,4 +319,14 @@ func TestLanguageConfigValidation(t *testing.T) {
 	if err := SaveConfig(path, Config{Theme: mygo.ThemeDark, Language: "unknown"}); err == nil {
 		t.Fatal("accepted invalid language")
 	}
+}
+
+func countMetadata(catalog map[string]any) int {
+	n := 0
+	for key := range catalog {
+		if strings.HasPrefix(key, "@") {
+			n++
+		}
+	}
+	return n
 }

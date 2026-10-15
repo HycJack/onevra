@@ -11,6 +11,9 @@ User-facing updates for Onevra library consumers.
 - Show the window title in `shells/plain`'s header, so a window without the default title bar still displays it. The header follows `Window().SetTitle`, including later language changes.
 - Add the official website at <https://oneo-me.github.io/onevra/>, covering the component set, theming, installation and common questions in English and Simplified Chinese.
 - Add `components.Honeycomb`, a picker that arranges round images or generated content in a magnified honeycomb on the surface of a ball: drag or scroll to pan, or Tab through the items, and the item nearest the middle is chosen and ringed in its own color or the theme's accent. Applications own the items, decoded images, labels, selected ID and the action a choice triggers.
+- Breaking: require MyGo 0.5.1. Bound controls now write the user's edit through their pointer before the constructor returns, so code after a control reads the new value in the same frame, and an edit applies when the app makes the control read-only or disabled in that frame. MyGo also adds a rich text editor (`ui/richtext`), streaming Markdown (`ui/markdown`), timelines, document-based apps, launchers and app localization for applications to use directly.
+- Components and Shells now name their own controls in the window's language, from a MyGo catalog shipped in English and Simplified Chinese: set the language with `mygo.App.SetLocale`, and change or add translations with `onevra.<key>` messages in the application's MyGo catalogs. `components.WithLocalization` and Shell labels still override them.
+- Calendars take their month and day names and first weekday from the user's regional formats, and `CalendarPicker` shows the regional numeric date instead of ISO `2006-01-02`; `Localization.FormatDate` and `FirstWeekday` still override them.
 
 ## [0.2026.9] - 2026-10-14
 

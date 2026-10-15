@@ -30,7 +30,7 @@ func controlButton(c *ui.Context, s *controlState, variant string) {
 					s.button.clicks[i]++
 				}
 				button.Children(func() {
-					ui.Textf(c, tr(c, "gallery.s_d"), tr(c, variant.name), s.button.clicks[i]).SingleLine()
+					ui.Text(c, msg(c).LabelCount(tr(c, variant.name), s.button.clicks[i])).SingleLine()
 				})
 			})
 		}

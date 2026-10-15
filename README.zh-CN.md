@@ -27,15 +27,16 @@ cd source
 go run ./examples/gallery
 ```
 
-追加 `-theme light` 或 `-theme dark` 可预览指定外观。另外提供三个小型应用，在 `source/` 中运行：
+追加 `-theme light` 或 `-theme dark` 可预览指定外观。另外提供四个小型应用，在 `source/` 中运行：
 
 | 示例 | 用途 | 命令 |
 | --- | --- | --- |
 | Desktop | 带设置界面的主窗口应用 | `go run ./examples/desktop` |
 | Menu bar | 带便笺面板的托盘应用 | `go run ./examples/menubar` |
 | Hybrid | 主窗口与托盘组合，可选后台启动 | `go run ./examples/hybrid` |
+| Documents | 基于文档的笔记编辑器 | `go run ./examples/documents` |
 
-每个模板都包含多语言、偏好设置及独立打包配置，复制与修改方式见[应用模板](docs/build.md#starter-applications)。Windows 和 Linux 仍需各自的[原生界面验证](docs/build.md#native-review)。
+每个模板都包含多语言及独立打包配置，前三个还包含偏好设置；复制与修改方式见[应用模板](docs/build.md#starter-applications)。Windows 和 Linux 仍需各自的[原生界面验证](docs/build.md#native-review)。
 
 ## 开发者入门
 

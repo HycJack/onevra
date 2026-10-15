@@ -1,0 +1,77 @@
+{
+  "@@locale": "en",
+  "minimum": "minimum",
+  "maximum": "maximum",
+  "today": "Today",
+  "chooseMonth": "Choose month",
+  "chooseYear": "Choose year",
+  "previousMonth": "Previous month",
+  "nextMonth": "Next month",
+  "previousYear": "Previous year",
+  "nextYear": "Next year",
+  "previousYears": "Previous years",
+  "nextYears": "Next years",
+  "monthSelection": "Month selection",
+  "yearSelection": "Year selection",
+  "chooseTime": "Choose time",
+  "hours": "Hours",
+  "minutes": "Minutes",
+  "divider": "Divider",
+  "saturationBrightness": "Saturation and brightness",
+  "hue": "Hue",
+  "opacity": "Opacity",
+  "colorFormat": "Color format",
+  "copyColor": "Copy color",
+  "red": "Red",
+  "green": "Green",
+  "blue": "Blue",
+  "hexColor": "Hex color",
+  "opacityPercent": "Opacity percent",
+  "hueDegrees": "Hue degrees",
+  "saturationPercent": "Saturation percent",
+  "brightnessPercent": "Brightness percent",
+  "lightnessPercent": "Lightness percent",
+  "settings": "Settings",
+  "searchSettings": "Search settings",
+  "searchSettingsPlaceholder": "Search settings…",
+  "settingsCategory": "Settings category",
+  "searchResults": "Search results",
+  "noSettings": "No matching settings. Try another search.",
+  "closeToast": "Close",
+  "toggleSidebar": "Toggle sidebar",
+  "resizeSidebar": "Resize sidebar",
+  "minimizeWindow": "Minimize window",
+  "maximizeWindow": "Maximize window",
+  "restoreWindow": "Restore window",
+  "closeWindow": "Close window",
+  "numberAdjust": "Adjust {label}",
+  "@numberAdjust": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "numberIncrease": "{label} Increase",
+  "@numberIncrease": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "numberDecrease": "{label} Decrease",
+  "@numberDecrease": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "searchCommands": "Search commands",
+  "searchCommandsPlaceholder": "Search commands…",
+  "noMatchingCommands": "No matching commands",
+  "loading": "Loading…",
+  "commands": "Commands",
+  "copyCode": "Copy code"
+}

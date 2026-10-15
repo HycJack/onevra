@@ -8,6 +8,6 @@ import (
 func controlList(c *ui.Context, s *controlState, _ string) {
 	s.list.Selected = &s.index
 	components.List(c, &s.list, 1000, func(i int) {
-		ui.Textf(c, tr(c, "gallery.item_d"), i+1).Padding(c.Theme().Space(2))
-	}).Height(240).FillWidth().Label(tr(c, "gallery.items"))
+		ui.Text(c, msg(c).ItemD(i+1)).Padding(c.Theme().Space(2))
+	}).Height(240).FillWidth().Label(tr(c, "items"))
 }

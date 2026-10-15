@@ -91,7 +91,7 @@ func TestNativeTray(t *testing.T) {
 		}
 		menu, panel := a.menu, a.win
 		g.chooseLanguage("zh-Hans")
-		if a.menu != menu || a.win != panel || menu.ItemByID("notes").Label != g.text("gallery.open_notes") || menu.ItemByID("quit").Label != "退出" {
+		if a.menu != menu || a.win != panel || menu.ItemByID("notes").Label != g.text("openNotes") || menu.ItemByID("quit").Label != "退出" {
 			t.Error("language switch must update tray menu without recreating its resources")
 		}
 		g.chooseLanguage("en")

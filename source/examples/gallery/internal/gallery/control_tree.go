@@ -25,7 +25,7 @@ func controlTree(c *ui.Context, s *controlState, variant string) {
 		if components.TreeItem(c, "README.md", nil, s.choice == "README.md", nil).Clicked() {
 			s.choice = "README.md"
 		}
-	}).Label(tr(c, "gallery.project"))
+	}).Label(tr(c, "project"))
 }
 
 var treeExampleFiles = func() []string {
@@ -45,5 +45,5 @@ func controlTreeVirtualized(c *ui.Context, s *controlState, _ string) {
 		return nil
 	}, func(name string) {
 		components.Text(c, name).SingleLine()
-	}).Height(240).FillWidth().Label(tr(c, "gallery.large_project"))
+	}).Height(240).FillWidth().Label(tr(c, "largeProject"))
 }

@@ -25,12 +25,13 @@ For an unpackaged run on any supported desktop, use `go run ./examples/gallery -
 
 ## Starter applications
 
-Three independent applications provide small starting points alongside Gallery. From `source/`, run one of:
+Four independent applications provide small starting points alongside Gallery. From `source/`, run one of:
 
 ```sh
 GOWORK=off go run ./examples/desktop
 GOWORK=off go run ./examples/menubar
 GOWORK=off go run ./examples/hybrid
+GOWORK=off go run ./examples/documents
 ```
 
 | Example | Startup and close behavior | Settings host |
@@ -38,6 +39,7 @@ GOWORK=off go run ./examples/hybrid
 | [Desktop](../source/examples/desktop/main.go) | Shows the main window. On macOS, closing it keeps the app in the Dock by default; Settings can change this to quit. Other platforms quit on close. | Dialog inside the main window |
 | [Menu bar](../source/examples/menubar/main.go) | Shows a first-launch introduction, then runs from its tray icon without a main window. The quick-note panel is optional. | Independent window |
 | [Hybrid](../source/examples/hybrid/main.go) | Shows the main window and tray icon. Optional silent startup leaves the window uncreated until needed. Closing can retain the tray, retain both tray and macOS Dock, or quit. | Dialog inside the main window |
+| [Documents](../source/examples/documents/main.go) | A notes editor of Markdown and text files on `mygo.NewDocuments`: MyGo owns the File menu, a window per note, autosave, recovery and changes by other apps. | None; follows the system language |
 
 The main, settings and introduction windows use `shells/plain`, with native window controls and the window title over an integrated draggable header instead of a default title bar. Tray panels are MyGo flyouts shown as system popovers, anchored to the tray icon; where the platform provides no popover material, the panel draws its own surface.
 
@@ -45,11 +47,11 @@ Opening an already running application activates its existing instance. Desktop 
 
 On macOS and Windows, left-click toggles the quick-note panel and right-click opens settings and quit actions; hybrid also offers Open main window. The panel holds only the note; Settings stays in the tray menu. Disabling the panel makes left-click open settings, an application-owned action that can be replaced when adapting the template. Escape, close and loss of focus hide the panel. Linux uses AppIndicator menu actions instead of direct clicks and requires the desktop support described in [Tray example](#tray-example). If icon creation fails, an accessible window displays the error; closing it exits rather than leaving an inaccessible background process.
 
-English, Simplified Chinese and Follow system apply to application content, settings, window titles and application-owned menus. System language is resolved at startup, with unsupported languages falling back to English. Preferences and the menu bar introduction acknowledgement are saved in `config.yaml` under `os.UserConfigDir()/onevra-examples/<example>/`; each example has its own directory. Writes replace the file atomically. Read failures use defaults and save failures leave changes active for the current session, with feedback in the interface. Note text is intentionally session-only. OS-provided menu items keep their system language.
+English, Simplified Chinese and Follow system apply to application content, settings, window titles and menus; each example's messages are a MyGo catalog under `locales/`, and the choice also calls `mygo.App.SetLocale`, so MyGo's and Onevra's own strings and role menu items follow it. Unsupported system languages fall back to English. Preferences and the menu bar introduction acknowledgement are saved in `config.yaml` under `os.UserConfigDir()/onevra-examples/<example>/`; each example has its own directory. Writes replace the file atomically. Read failures use defaults and save failures leave changes active for the current session, with feedback in the interface. Note text is intentionally session-only.
 
 Each example has a local `mygo.json`. From an example's directory, such as `source/examples/desktop`, run `go tool mygo dev` or `go tool mygo build`. Builds write to separate `dist/<example>/` directories and need no Gallery resources or custom app icon. See [App bundles](#app-bundles).
 
-To start a project, copy one complete example directory, including `locales/` and `mygo.json`, into the application's Go module. Change the application name, package identifier, preference directory and output path; provide module dependencies using this repository's [module guidance](../ARCHITECTURE.md#repository-landmarks). The examples have no imports from Gallery or sibling examples. Translation IDs and stored option values remain stable across language changes; extend both catalogs together.
+To start a project, copy one complete example directory, including `locales/` and `mygo.json`, into the application's Go module. Change the application name, package identifier, preference directory and output path; provide module dependencies using this repository's [module guidance](../ARCHITECTURE.md#repository-landmarks). The examples have no imports from Gallery or sibling examples. Message keys and stored option values remain stable across language changes; extend both catalogs together and run `go tool mygo generate` from the example directory, which `mygo dev` and `mygo build` also do.
 
 For native lifecycle checks and settings captures, run from `source/` in a desktop session:
 

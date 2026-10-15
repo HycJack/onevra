@@ -2,6 +2,7 @@ package gallery
 
 import (
 	"fmt"
+	"github.com/oneo-me/onevra/source/examples/gallery/internal/gallery/locales"
 	"strings"
 
 	"github.com/egoist/mygo/ui"
@@ -24,7 +25,7 @@ type graphDemoState struct {
 type graphCache struct {
 	added             int
 	attachments, dark bool
-	newTitle          string
+	newTitle          locales.Messages
 	data              graph.Data
 	titles            map[string]string
 }
@@ -70,7 +71,7 @@ func graphDirectory(path string) string {
 // directory indexes own their notes, wiki links are references and
 // attachments sit beside their note.
 func graphSample(c *ui.Context, s *graphDemoState) (graph.Data, map[string]string) {
-	dark, newTitle := c.Theme().Dark, tr(c, "gallery.graph_new_note")
+	dark, newTitle := c.Theme().Dark, msg(c)
 	k := &s.cache
 	if k.titles == nil || k.added != s.added || k.attachments != s.attachments || k.dark != dark || k.newTitle != newTitle {
 		*k = graphCache{added: s.added, attachments: s.attachments, dark: dark, newTitle: newTitle}
@@ -83,8 +84,8 @@ func graphSample(c *ui.Context, s *graphDemoState) (graph.Data, map[string]strin
 	return k.data, k.titles
 }
 
-// graphLibrary builds the sample with newTitle formatting added notes' titles.
-func graphLibrary(s *graphDemoState, dark bool, newTitle string) graph.Data {
+// graphLibrary builds the sample with newTitle naming added notes.
+func graphLibrary(s *graphDemoState, dark bool, newTitle locales.Messages) graph.Data {
 	attachment, attachmentLabel := ui.Hex("#e0b35a"), ui.Hex("#8a6a2a")
 	referenceOpacity, attachmentOpacity := float32(.16), float32(.13)
 	if dark {
@@ -110,7 +111,7 @@ func graphLibrary(s *graphDemoState, dark bool, newTitle string) graph.Data {
 		}
 		notes = append(notes, graphNote{
 			path:  fmt.Sprintf("%s/new-%d.md", graphDirectory(parent.path), i+1),
-			title: fmt.Sprintf(newTitle, i+1),
+			title: newTitle.GraphNewNote(i + 1),
 			links: append([]string{parent.path}, links...),
 		})
 	}
@@ -147,25 +148,25 @@ func controlGraph(c *ui.Context, s *controlState, _ string) {
 	}
 	d := s.graph
 	t := c.Theme()
-	components.Text(c, tr(c, "gallery.graph_intro")).TextColor(t.TextMuted).Wrap()
+	components.Text(c, tr(c, "graphIntro")).TextColor(t.TextMuted).Wrap()
 	ui.Row(c).FillWidth().MinWidth(0).Wrap().Gap(t.Space(2)).Children(func() {
-		if components.Button(c, tr(c, "gallery.graph_add"), components.ButtonOutline).Clicked() {
+		if components.Button(c, tr(c, "graphAdd"), components.ButtonOutline).Clicked() {
 			d.added++
 		}
 		for _, count := range graphBulkCounts {
-			if components.Button(c, fmt.Sprintf(tr(c, "gallery.graph_add_many"), count), components.ButtonOutline).Clicked() {
+			if components.Button(c, msg(c).GraphAddMany(count), components.ButtonOutline).Clicked() {
 				d.added += count
 			}
 		}
-		if d.added > 0 && components.Button(c, tr(c, "gallery.graph_reset"), components.ButtonGhost).Clicked() {
+		if d.added > 0 && components.Button(c, tr(c, "graphReset"), components.ButtonGhost).Clicked() {
 			d.added = 0
 		}
-		if components.Button(c, tr(c, "gallery.graph_fit"), components.ButtonOutline).Clicked() {
+		if components.Button(c, tr(c, "graphFit"), components.ButtonOutline).Clicked() {
 			d.view.Fit()
 		}
-		label := "gallery.chart_empty"
+		label := "chartEmpty"
 		if d.empty {
-			label = "gallery.chart_restore"
+			label = "chartRestore"
 		}
 		if components.Button(c, tr(c, label), components.ButtonGhost).Clicked() {
 			d.empty = !d.empty
@@ -178,22 +179,22 @@ func controlGraph(c *ui.Context, s *controlState, _ string) {
 	}
 	ui.Column(c).FillWidth().Grow(1).MinWidth(0).MinHeight(240).Radius(t.Radius*1.5).Background(t.Surface).Border(1, t.Border.Alpha(.5)).Clip().Children(func() {
 		graph.View(c, &d.view, data, graph.Options{
-			Label:     fmt.Sprintf(tr(c, "gallery.graph_label"), len(data.Nodes), len(data.Edges)),
-			EmptyText: tr(c, "gallery.graph_empty"),
+			Label:     msg(c).GraphLabel(len(data.Nodes), len(data.Edges)),
+			EmptyText: tr(c, "graphEmpty"),
 			Open:      func(id string) { d.opened = id },
 			Overlay:   func(c *ui.Context) { graphSettings(c, d) },
 		})
 	})
-	opened := tr(c, "gallery.graph_hint")
+	opened := tr(c, "graphHint")
 	if title, ok := titles[d.opened]; ok {
-		opened = fmt.Sprintf(tr(c, "gallery.graph_opened"), title)
+		opened = msg(c).GraphOpened(title)
 	}
 	components.Text(c, opened).TextColor(t.TextMuted)
 }
 
 func graphSettings(c *ui.Context, d *graphDemoState) {
 	t := c.Theme()
-	label := tr(c, "gallery.graph_settings")
+	label := tr(c, "graphSettings")
 	anchor := components.Button(c, "", components.ButtonSecondary).Label(label).Padding(t.Space(1.5))
 	anchor.Children(func() { components.Icon(c, lucide.Ellipsis).Size(16, 16) })
 	if anchor.Clicked() {
@@ -203,10 +204,10 @@ func graphSettings(c *ui.Context, d *graphDemoState) {
 		panel.Label(label).Width(288)
 		ui.Row(c).FillWidth().AlignItems(ui.Start).Gap(t.Space(3)).Children(func() {
 			ui.Column(c).Grow(1).MinWidth(0).Gap(t.Space(0.5)).Children(func() {
-				components.Text(c, tr(c, "gallery.graph_attachments"))
-				components.Text(c, tr(c, "gallery.graph_attachments_hint")).FontSize(t.FontSize - 1).TextColor(t.TextMuted).Wrap()
+				components.Text(c, tr(c, "graphAttachments"))
+				components.Text(c, tr(c, "graphAttachmentsHint")).FontSize(t.FontSize - 1).TextColor(t.TextMuted).Wrap()
 			})
-			components.Switch(c, &d.attachments, tr(c, "gallery.graph_attachments"), components.SwitchOptions{HideLabel: true})
+			components.Switch(c, &d.attachments, tr(c, "graphAttachments"), components.SwitchOptions{HideLabel: true})
 		})
 	})
 }

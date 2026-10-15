@@ -102,9 +102,9 @@ func TestMenuLanguageSwitch(t *testing.T) {
 		}, 320, 240)
 		var err error
 		if variant == "Right-click" {
-			err = tt.RightClick(g.text("gallery.right_click_here"))
+			err = tt.RightClick(g.text("rightClickHere"))
 		} else {
-			err = tt.Click(g.text("gallery.actions"))
+			err = tt.Click(g.text("actions"))
 		}
 		if err != nil {
 			t.Fatal(err)

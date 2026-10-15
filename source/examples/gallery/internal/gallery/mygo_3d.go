@@ -507,6 +507,6 @@ func example3D(c *ui.Context, s *demoState) {
 	t := c.Theme()
 	d := &s.scene3d
 	d.init()
-	components.Text(c, tr(c, "gallery.scene3d_hint")).TextColor(t.TextMuted).Wrap()
-	game.View(c, d).Height(360).FillWidth().Label(tr(c, "gallery.scene3d_view"))
+	components.Text(c, tr(c, "scene3dHint")).TextColor(t.TextMuted).Wrap()
+	game.View(c, d).Height(360).FillWidth().Label(tr(c, "scene3dView"))
 }

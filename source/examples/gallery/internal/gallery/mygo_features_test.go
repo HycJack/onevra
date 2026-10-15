@@ -25,10 +25,10 @@ func TestTransformedEditorAndPopover(t *testing.T) {
 		for _, dark := range []bool{false, true} {
 			g, s, tt := featureTester("Transforms", "Editable controls", lang, 280)
 			tt.SetDark(dark)
-			if err := tt.Click(g.text("gallery.transform_scale")); err != nil {
+			if err := tt.Click(g.text("transformScale")); err != nil {
 				t.Fatal(err)
 			}
-			if err := tt.Click(g.text("gallery.transform_note")); err != nil {
+			if err := tt.Click(g.text("transformNote")); err != nil {
 				t.Fatal(err)
 			}
 			mods, _ := commandShortcut()
@@ -37,14 +37,14 @@ func TestTransformedEditorAndPopover(t *testing.T) {
 			if s.text != "Edited note" {
 				t.Fatalf("transformed input = %q", s.text)
 			}
-			if err := tt.Click(g.text("gallery.show_popover")); err != nil {
+			if err := tt.Click(g.text("showPopover")); err != nil {
 				t.Fatal(err)
 			}
-			if !s.open || !tt.HasText(g.text("gallery.popover_content")) {
+			if !s.open || !tt.HasText(g.text("popoverContent")) {
 				t.Fatal("transformed anchor did not open")
 			}
-			anchor, _ := tt.Find(g.text("gallery.show_popover"))
-			panel, _ := tt.Find(g.text("gallery.popover_content"))
+			anchor, _ := tt.Find(g.text("showPopover"))
+			panel, _ := tt.Find(g.text("popoverContent"))
 			if panel.Y < anchor.Y || panel.X < 0 || panel.X+panel.W > 280 {
 				t.Fatalf("popover placement = %+v", panel)
 			}
@@ -59,15 +59,15 @@ func TestTransformedEditorAndPopover(t *testing.T) {
 func TestMotionReplayWithReducedMotion(t *testing.T) {
 	g, s, tt := featureTester("Motion", "Keyframes", "en", 280)
 	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
-	before, ok := tt.Find(g.text("gallery.motion_tile"))
+	before, ok := tt.Find(g.text("motionTile"))
 	if !ok {
 		t.Fatal("missing animated tile")
 	}
 	for range 2 {
-		if err := tt.Click(g.text("gallery.motion_replay")); err != nil {
+		if err := tt.Click(g.text("motionReplay")); err != nil {
 			t.Fatal(err)
 		}
-		after, _ := tt.Find(g.text("gallery.motion_tile"))
+		after, _ := tt.Find(g.text("motionTile"))
 		if after != before {
 			t.Fatalf("reduced motion replay moved tile: %+v -> %+v", before, after)
 		}
@@ -78,7 +78,7 @@ func TestMotionReplayWithReducedMotion(t *testing.T) {
 	g, s, tt = featureTester("Motion", "Springs", "zh-Hans", 280)
 	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
 	for _, want := range []bool{true, false} {
-		if err := tt.Click(g.text("gallery.motion_reverse")); err != nil {
+		if err := tt.Click(g.text("motionReverse")); err != nil {
 			t.Fatal(err)
 		}
 		if s.on != want {

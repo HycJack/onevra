@@ -2,7 +2,6 @@ package gallery
 
 import (
 	"bytes"
-	"fmt"
 	"image"
 	"image/color"
 	"image/draw"
@@ -46,19 +45,19 @@ func (a *trayDemo) localizedView(c *ui.Context) {
 	c.OnShortcut(ui.Cmd, ui.KeyQ, mygo.App.Quit)
 	ui.Column(c).Fill().Padding(20).Gap(12).Children(func() {
 		ui.Row(c).Gap(12).Children(func() {
-			components.Text(c, tr(c, "gallery.tray_notes")).FontSize(22).Bold().Grow(1)
-			components.Button(c, tr(c, "gallery.hide"), components.ButtonGhost).OnClick(a.win.Hide)
+			components.Text(c, tr(c, "trayNotes")).FontSize(22).Bold().Grow(1)
+			components.Button(c, tr(c, "hide"), components.ButtonGhost).OnClick(a.win.Hide)
 		})
-		components.Text(c, tr(c, "gallery.a_small_window_opened_from_the_tray")).TextColor(c.Theme().TextMuted)
+		components.Text(c, tr(c, "aSmallWindowOpenedFromTheTray")).TextColor(c.Theme().TextMuted)
 		components.TextBox(c, &a.note, components.TextBoxOptions{Multiline: true}).
-			Grow(1).Label(tr(c, "gallery.note")).Placeholder(tr(c, "gallery.write_a_quick_note")).AutoFocus()
+			Grow(1).Label(tr(c, "note")).Placeholder(tr(c, "writeAQuickNote")).AutoFocus()
 		ui.Row(c).Gap(8).Children(func() {
-			components.Button(c, tr(c, "gallery.clear"), components.ButtonOutline).
+			components.Button(c, tr(c, "clear"), components.ButtonOutline).
 				Disabled(a.note == "").OnClick(func() { a.note = "" })
 			ui.Spacer(c)
-			components.Button(c, tr(c, "gallery.quit"), components.ButtonSecondary).OnClick(mygo.App.Quit)
+			components.Button(c, tr(c, "quit"), components.ButtonSecondary).OnClick(mygo.App.Quit)
 		})
-		components.Text(c, tr(c, "gallery.kept_in_memory_until_you_quit_escape_hides_this_window")).
+		components.Text(c, tr(c, "keptInMemoryUntilYouQuitEscapeHidesThisWindow")).
 			FontSize(12).TextColor(c.Theme().TextMuted)
 	})
 }
@@ -107,14 +106,14 @@ func (a *trayDemo) start(owner *mygo.Window) error {
 	a.err = nil
 	var err error
 	a.tray, err = mygo.NewTray(mygo.TrayOptions{
-		Icon: trayIcon(), IconIsTemplate: true, ToolTip: a.text("gallery.tray_tooltip"),
+		Icon: trayIcon(), IconIsTemplate: true, ToolTip: a.text("trayTooltip"),
 	})
 	if err != nil {
 		a.err = err
 		return err
 	}
 	a.win = mygo.NewWindow(mygo.WindowOptions{
-		Title: a.text("gallery.gallery_tray_notes"), Width: 380, Height: 320,
+		Title: a.text("galleryTrayNotes"), Width: 380, Height: 320,
 		Hidden: true, Frameless: true, AlwaysOnTop: true, SkipTaskbar: true,
 		DisableResize: true, DisableMinimize: true,
 		DisableMaximize: true, DisableFullScreen: true,
@@ -193,26 +192,26 @@ func (g *Gallery) trayLocalized(c *ui.Context) {
 	d := &g.tray
 	components.ScrollView(c, components.ScrollViewOptions{}).Fill().Children(func() {
 		ui.Column(c).FillWidth().Padding(c.Theme().Space(6)).Gap(16).Children(func() {
-			components.Text(c, tr(c, "gallery.tray")).FontSize(22).Bold()
+			components.Text(c, tr(c, "tray")).FontSize(22).Bold()
 			instructions := "Left-click the tray icon to toggle the notes window. Right-click for its native menu."
 			if runtime.GOOS == "linux" {
 				instructions = "AppIndicator supports menus only. Choose Open notes from the tray menu."
 			}
 			components.Text(c, tr(c, instructions)).Wrap()
-			components.Text(c, tr(c, "gallery.escape_closing_the_notes_window_or_clicking_away_hides_it_notes_stay_i")).Wrap().TextColor(c.Theme().TextMuted)
+			components.Text(c, tr(c, "escapeClosingTheNotesWindowOrClickingAwayHidesItNotesStayI")).Wrap().TextColor(c.Theme().TextMuted)
 			ui.Row(c).Gap(8).Wrap().Children(func() {
 				if d.tray == nil {
-					if components.Button(c, tr(c, "gallery.enable_tray"), components.ButtonPrimary).Disabled(g.Shell == nil).Clicked() {
+					if components.Button(c, tr(c, "enableTray"), components.ButtonPrimary).Disabled(g.Shell == nil).Clicked() {
 						_ = d.start(g.Shell.Window())
 						g.updateLanguageWindows()
 					}
 				} else {
-					components.Button(c, tr(c, "gallery.open_notes"), components.ButtonPrimary).OnClick(d.show)
-					components.Button(c, tr(c, "gallery.disable_tray"), components.ButtonOutline).OnClick(d.close)
+					components.Button(c, tr(c, "openNotes"), components.ButtonPrimary).OnClick(d.show)
+					components.Button(c, tr(c, "disableTray"), components.ButtonOutline).OnClick(d.close)
 				}
 			})
 			if d.err != nil {
-				components.Text(c, fmt.Sprintf(tr(c, "gallery.tray_unavailable_s"), d.err.Error())).Wrap().TextColor(c.Theme().Danger)
+				components.Text(c, msg(c).TrayUnavailableS(d.err.Error())).Wrap().TextColor(c.Theme().Danger)
 			}
 		})
 	})
@@ -227,12 +226,12 @@ func (a *trayDemo) text(key string) string {
 
 func (a *trayDemo) buildMenu() *mygo.Menu {
 	return mygo.NewMenu([]*mygo.MenuItem{
-		{ID: "notes", Label: a.text("gallery.open_notes"), Click: func(*mygo.MenuItem, *mygo.Window) { a.show() }},
-		{ID: "gallery", Label: a.text("gallery.show_gallery"), Click: func(*mygo.MenuItem, *mygo.Window) {
+		{ID: "notes", Label: a.text("openNotes"), Click: func(*mygo.MenuItem, *mygo.Window) { a.show() }},
+		{ID: "gallery", Label: a.text("showGallery"), Click: func(*mygo.MenuItem, *mygo.Window) {
 			a.win.Hide()
 			a.owner.Show()
 		}},
 		mygo.Separator(),
-		{ID: "quit", Role: mygo.RoleQuit, Label: a.text("gallery.quit")},
+		{ID: "quit", Role: mygo.RoleQuit, Label: a.text("quit")},
 	})
 }

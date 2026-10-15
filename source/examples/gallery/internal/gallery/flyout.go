@@ -62,9 +62,9 @@ func (d *flyoutDemo) view(c *ui.Context) {
 			}
 		}
 		panel.Children(func() {
-			components.TextBox(c, &d.note, components.TextBoxOptions{}).Label(tr(c, "gallery.notes")).FillWidth().AutoFocus()
-			components.Text(c, tr(c, "gallery.flyout_dismiss")).Wrap().TextColor(t.TextMuted)
-			components.Button(c, tr(c, "gallery.close"), components.ButtonOutline).OnClick(func() {
+			components.TextBox(c, &d.note, components.TextBoxOptions{}).Label(tr(c, "notes")).FillWidth().AutoFocus()
+			components.Text(c, tr(c, "flyoutDismiss")).Wrap().TextColor(t.TextMuted)
+			components.Button(c, tr(c, "close"), components.ButtonOutline).OnClick(func() {
 				if d.window != nil {
 					d.window.Close()
 				}
@@ -75,8 +75,8 @@ func (d *flyoutDemo) view(c *ui.Context) {
 
 func exampleFlyout(c *ui.Context, s *demoState) {
 	d := &s.flyout
-	components.Text(c, tr(c, "gallery.flyout_description")).Wrap()
-	for i, label := range []string{"gallery.flyout_editor", "gallery.flyout_popover"} {
+	components.Text(c, tr(c, "flyoutDescription")).Wrap()
+	for i, label := range []string{"flyoutEditor", "flyoutPopover"} {
 		b := components.Button(c, tr(c, label), components.ButtonOutline).Disabled(d.gallery == nil || d.gallery.Shell == nil)
 		if b.Clicked() {
 			d.show(b.Bounds(), i == 1)

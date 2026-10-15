@@ -25,7 +25,7 @@ func main() {
 	a := &application{path: filepath.Join(dir, "config.yaml")}
 	a.config, err = loadConfig(a.path)
 	if err != nil {
-		a.report("load_error", err)
+		a.report("loadError", err)
 	}
 	// Start in the saved appearance rather than switching after launch.
 	mygo.Theme.SetSource(a.themeSource())

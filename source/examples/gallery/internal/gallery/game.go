@@ -126,6 +126,6 @@ func exampleGame(c *ui.Context, s *demoState) {
 	t := c.Theme()
 	d := &s.game
 	d.init()
-	components.Text(c, tr(c, "gallery.game_hint")).TextColor(t.TextMuted).Wrap()
-	game.View(c, d).Height(300).FillWidth().Radius(12).Clip().Label(tr(c, "gallery.game_scene"))
+	components.Text(c, tr(c, "gameHint")).TextColor(t.TextMuted).Wrap()
+	game.View(c, d).Height(300).FillWidth().Radius(12).Clip().Label(tr(c, "gameScene"))
 }

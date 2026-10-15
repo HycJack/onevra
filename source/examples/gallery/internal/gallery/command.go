@@ -39,8 +39,8 @@ func (g *Gallery) Commands(c *ui.Context) {
 		return
 	}
 	// Trailing content marks the application-level command among pages.
-	items := []command.Item{{ID: "settings", Title: tr(c, "gallery.settings"), Group: tr(c, "gallery.actions_navigation"), Icon: lucide.Settings(), Keywords: []string{"settings", "preferences"},
-		Trailing: func(c *ui.Context) { components.Badge(c, tr(c, "gallery.application")).AlignSelf(ui.Center) }}}
+	items := []command.Item{{ID: "settings", Title: tr(c, "settings"), Group: tr(c, "actionsNavigation"), Icon: lucide.Settings(), Keywords: []string{"settings", "preferences"},
+		Trailing: func(c *ui.Context) { components.Badge(c, tr(c, "application")).AlignSelf(ui.Center) }}}
 	for _, group := range navigationCatalog() {
 		for _, entry := range group.entries {
 			items = append(items, command.Item{
@@ -57,8 +57,8 @@ func (g *Gallery) Commands(c *ui.Context) {
 		command.CommandDialog(c, &g.commands.open, &g.commands.palette, items, command.Options{
 			InputSource:    inputSource,
 			ExpandOnSearch: g.config.CommandExpandOnSearch,
-			SearchLabel:    tr(c, "gallery.command_palette"), Placeholder: tr(c, "gallery.search_commands"),
-			ResultsLabel: tr(c, "gallery.commands"), EmptyText: tr(c, "gallery.no_matching_commands"),
+			SearchLabel:    tr(c, "commandPalette"), Placeholder: tr(c, "searchCommands"),
+			ResultsLabel: tr(c, "commands"), EmptyText: tr(c, "noMatchingCommands"),
 			OnActivate: func(id string) {
 				g.commands.open = false
 				if id == "settings" {
@@ -67,6 +67,6 @@ func (g *Gallery) Commands(c *ui.Context) {
 					g.page = pageFromKey(id)
 				}
 			},
-		}, components.DialogOptions{Label: tr(c, "gallery.command_palette")})
+		}, components.DialogOptions{Label: tr(c, "commandPalette")})
 	})
 }

@@ -1,12 +1,13 @@
 package main
 
 import (
+	"encoding/json"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 
 	"github.com/egoist/mygo/ui"
-	"go.yaml.in/yaml/v3"
 )
 
 func TestPreferences(t *testing.T) {
@@ -41,7 +42,7 @@ func TestPreferences(t *testing.T) {
 	// A save error must remain visible; it must not reset the user's live choice.
 	a := &application{config: want, path: filepath.Join(path, "impossible.yaml")}
 	a.changed()
-	if a.errorKey != "save_error" || a.config != want {
+	if a.errorKey != "saveError" || a.config != want {
 		t.Fatal("save failure was swallowed or reset preferences")
 	}
 }
@@ -117,26 +118,24 @@ func TestPanelToolbar(t *testing.T) {
 }
 
 func TestLanguages(t *testing.T) {
+	a := &application{config: defaultConfig(), note: "Keep this draft"}
 	for _, tc := range []struct{ choice, system, want string }{
 		{"system", "zh-CN", "zh-Hans"}, {"system", "zh-SG", "zh-Hans"}, {"system", "zh-TW", "en"},
 		{"system", "de-DE", "en"}, {"en", "zh-CN", "en"}, {"zh-Hans", "en-US", "zh-Hans"},
 	} {
-		if got := languageCode(tc.choice, tc.system); got != tc.want {
+		a.config.Language, a.locale = tc.choice, tc.system
+		if got := a.language(); got != tc.want {
 			t.Errorf("%+v: %s", tc, got)
 		}
 	}
-	catalogs := map[string]map[string]struct {
-		Other string `yaml:"other"`
-	}{}
+	catalogs := map[string]map[string]any{}
 	for _, code := range []string{"en", "zh-Hans"} {
-		data, err := localeFiles.ReadFile("locales/" + code + ".yaml")
+		data, err := os.ReadFile(filepath.Join("locales", code+".json"))
 		if err != nil {
 			t.Fatal(err)
 		}
-		var catalog map[string]struct {
-			Other string `yaml:"other"`
-		}
-		if err := yaml.Unmarshal(data, &catalog); err != nil {
+		var catalog map[string]any
+		if err := json.Unmarshal(data, &catalog); err != nil {
 			t.Fatal(err)
 		}
 		catalogs[code] = catalog
@@ -144,13 +143,19 @@ func TestLanguages(t *testing.T) {
 	if len(catalogs["en"]) != len(catalogs["zh-Hans"]) {
 		t.Fatal("catalog sizes differ")
 	}
-	a := &application{config: defaultConfig(), locale: "en-US", note: "Keep this draft"}
+	a.locale = "en-US"
 	for key := range catalogs["en"] {
-		for _, code := range []string{"en", "zh-Hans"} {
-			a.config.Language = code
-			if catalogs[code][key].Other == "" || a.text(key) == key {
-				t.Errorf("missing %s/%s", code, key)
-			}
+		if strings.HasPrefix(key, "@") {
+			continue
+		}
+		a.config.Language = "zh-Hans"
+		if catalogs["zh-Hans"][key] == nil || a.text(key) != catalogs["zh-Hans"][key] {
+			t.Errorf("missing zh-Hans/%s", key)
+		}
+	}
+	for _, value := range []string{"system", "en", "zh-Hans", "light", "dark", "dock", "tray", "both", "quit"} {
+		if _, ok := catalogs["en"][optionKey(value)]; !ok {
+			t.Errorf("no message for setting value %s", value)
 		}
 	}
 	before := a.note

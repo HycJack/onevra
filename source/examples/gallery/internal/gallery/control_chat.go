@@ -55,15 +55,15 @@ func newChatDemoState(now time.Time) *chatDemoState {
 func chatStatusLabel(c *ui.Context, status chat.Status) string {
 	switch status {
 	case chat.Completed:
-		return tr(c, "gallery.chat_completed")
+		return tr(c, "chatCompleted")
 	case chat.Failed:
-		return tr(c, "gallery.chat_failed")
+		return tr(c, "chatFailed")
 	case chat.Cancelled:
-		return tr(c, "gallery.chat_cancelled")
+		return tr(c, "chatCancelled")
 	case chat.Waiting:
-		return tr(c, "gallery.chat_waiting")
+		return tr(c, "chatWaiting")
 	default:
-		return tr(c, "gallery.chat_running")
+		return tr(c, "chatRunning")
 	}
 }
 
@@ -75,9 +75,9 @@ func controlChat(c *ui.Context, state *controlState, _ string) {
 	t := c.Theme()
 	ui.Column(c).Fill().MinWidth(0).Gap(t.Space(3)).Children(func() {
 		ui.Row(c).FillWidth().Shrink(0).Wrap().AlignItems(ui.Center).Gap(t.Space(2)).Padding(0, t.Space(4)).Children(func() {
-			components.Text(c, tr(c, "gallery.chat")).Bold().Grow(1)
+			components.Text(c, tr(c, "chat")).Bold().Grow(1)
 		})
-		chat.FloatingConversation(c, &s.layout, &s.conversation, tr(c, "gallery.chat_latest"), func(c *ui.Context) {
+		chat.FloatingConversation(c, &s.layout, &s.conversation, tr(c, "chatLatest"), func(c *ui.Context) {
 			for _, turn := range s.turns {
 				toolA, toolB := chat.Running, chat.Running
 				if turn.step >= 3 {
@@ -94,8 +94,8 @@ func controlChat(c *ui.Context, state *controlState, _ string) {
 						toolB = turn.status
 					}
 				}
-				steps := []chat.Step{{ID: "work", Title: tr(c, "gallery.chat_reasoning"), Group: &turn.group, Activities: []chat.Activity{
-					{ID: "summary", State: &turn.activities[0], Icon: lucide.Brain, Action: tr(c, "gallery.chat_think"), Status: chat.Completed,
+				steps := []chat.Step{{ID: "work", Title: tr(c, "chatReasoning"), Group: &turn.group, Activities: []chat.Activity{
+					{ID: "summary", State: &turn.activities[0], Icon: lucide.Brain, Action: tr(c, "chatThink"), Status: chat.Completed,
 						Content: func(c *ui.Context) {
 							components.Text(c, "I will inspect the source and check the examples in parallel.").Selectable()
 						}},
@@ -113,7 +113,7 @@ func controlChat(c *ui.Context, state *controlState, _ string) {
 				var final chat.View
 				if turn.answer != nil {
 					final = func(c *ui.Context) {
-						turn.answer.Render(c, markdown.MarkdownOptions{CopyCodeLabel: tr(c, "gallery.copy_code")}).FillWidth()
+						turn.answer.Render(c, markdown.MarkdownOptions{CopyCodeLabel: tr(c, "copyCode")}).FillWidth()
 					}
 				}
 				chat.Turn(c, &turn.state, chat.TurnOptions{
@@ -131,18 +131,18 @@ func controlChat(c *ui.Context, state *controlState, _ string) {
 			}
 		}, func(c *ui.Context) {
 			chat.GlassComposer(c, &s.layout, &s.draft, chat.ComposerOptions{
-				Label: tr(c, "gallery.chat_message"), Placeholder: tr(c, "gallery.chat_placeholder"),
-				SendLabel: tr(c, "gallery.chat_send"), StopLabel: tr(c, "gallery.chat_stop"),
+				Label: tr(c, "chatMessage"), Placeholder: tr(c, "chatPlaceholder"),
+				SendLabel: tr(c, "chatSend"), StopLabel: tr(c, "chatStop"),
 				Accessory: func(c *ui.Context) { chatDemoToolbar(c, s) },
 				Trailing: func(c *ui.Context) {
-					if chat.IconAction(c, tr(c, "gallery.chat_attach"), lucide.Paperclip).Clicked() {
+					if chat.IconAction(c, tr(c, "chatAttach"), lucide.Paperclip).Clicked() {
 						s.attachment = true
 					}
 				},
 				Attachments: func(c *ui.Context) {
 					if s.attachment {
 						components.Text(c, "context.md").TextColor(t.TextMuted)
-						if chat.IconAction(c, tr(c, "gallery.chat_remove_attachment"), lucide.X).Clicked() {
+						if chat.IconAction(c, tr(c, "chatRemoveAttachment"), lucide.X).Clicked() {
 							s.attachment = false
 						}
 					}
@@ -150,7 +150,7 @@ func controlChat(c *ui.Context, state *controlState, _ string) {
 				Footer: func(c *ui.Context) {
 					components.Icon(c, lucide.Folder).Size(t.Space(4), t.Space(4)).TextColor(t.TextMuted)
 					components.Text(c, "onevra").TextColor(t.TextMuted)
-					components.Text(c, tr(c, "gallery.chat_demo_context")).TextColor(t.TextMuted)
+					components.Text(c, tr(c, "chatDemoContext")).TextColor(t.TextMuted)
 				},
 			})
 		})

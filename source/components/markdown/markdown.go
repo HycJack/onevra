@@ -2,6 +2,7 @@ package markdown
 
 import (
 	"fmt"
+	"github.com/oneo-me/onevra/source/internal/l10n"
 	"strings"
 
 	"github.com/egoist/mygo/ui"
@@ -28,7 +29,7 @@ type MarkdownCodeBlock struct {
 // MarkdownOptions configures application-owned interactions and block views.
 type MarkdownOptions struct {
 	// CopyCodeLabel names the code-block copy button and its tooltip.
-	// Empty uses "Copy code". Copy preserves the source's trailing newline.
+	// Empty uses Onevra's localized "Copy code". Copy preserves the source's trailing newline.
 	CopyCodeLabel string
 	// CodeHeaders shows a language header and an always-available copy button.
 	// Header labels are excluded from document selection.
@@ -256,7 +257,7 @@ func (r *markdownRenderer) code(prepared markdownCode) {
 				components.Text(c, prepared.block.Language).Grow(1).TextColor(t.TextMuted)
 				label := r.options.CopyCodeLabel
 				if label == "" {
-					label = "Copy code"
+					label = l10n.In(c.Locale()).Text("copyCode")
 				}
 				b := components.Button(c, "", components.ButtonGhost).Label(label).Padding(t.Space(1.5)).Children(func() { components.Icon(c, lucide.Copy).Size(t.Space(4), t.Space(4)) })
 				components.Tooltip(c, b, label)
@@ -276,7 +277,7 @@ func (r *markdownRenderer) code(prepared markdownCode) {
 		if hovered {
 			label := r.options.CopyCodeLabel
 			if label == "" {
-				label = "Copy code"
+				label = l10n.In(c.Locale()).Text("copyCode")
 			}
 			button := components.Button(c, "", components.ButtonGhost).
 				Absolute().Top(t.Space(1.5)).Right(t.Space(1.5)).

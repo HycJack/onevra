@@ -1,116 +1,92 @@
 package gallery
 
 import (
-	"embed"
-	"fmt"
+	_ "embed"
+	"encoding/json"
 	"log"
 	"runtime"
-	"strings"
-	"time"
 
 	"github.com/egoist/mygo"
+	"github.com/egoist/mygo/i18n"
 	"github.com/egoist/mygo/ui"
-	"github.com/nicksnyder/go-i18n/v2/i18n"
-	"github.com/oneo-me/onevra/source/components"
-	"github.com/oneo-me/onevra/source/shells/sidebar"
-	"go.yaml.in/yaml/v3"
-	"golang.org/x/text/language"
+	"github.com/oneo-me/onevra/source/examples/gallery/internal/gallery/locales"
 )
 
-// Catalog IDs stay stable when English copy changes. Static UI uses IDs;
-// source lookup is only for existing demonstration metadata and variant names.
-// Neither form is used as a control key or persisted option value.
+// Message keys stay stable when English copy changes. Static UI uses keys;
+// English source lookup is only for existing demonstration metadata and
+// variant names. Neither form is used as a control key or persisted value.
 //
-//go:embed locales/*.yaml
-var localeFiles embed.FS
+//go:embed locales/en.json
+var englishCatalog []byte
 
-var englishMessages, sourceMessageIDs = loadEnglishMessages()
-var messages = loadMessages()
-
-func loadEnglishMessages() (map[string]string, map[string]string) {
-	data, err := localeFiles.ReadFile("locales/en.yaml")
-	if err != nil {
+// sourceKeys maps English source text to its message key.
+var sourceKeys = func() map[string]string {
+	var catalog map[string]any
+	if err := json.Unmarshal(englishCatalog, &catalog); err != nil {
 		panic(err)
 	}
-	var catalog map[string]struct {
-		Other string `yaml:"other"`
-	}
-	if err := yaml.Unmarshal(data, &catalog); err != nil {
-		panic(err)
-	}
-	english, sources := map[string]string{}, map[string]string{}
-	for id, message := range catalog {
-		english[id] = message.Other
-		// Contextual messages are addressed only by ID.
-		if id != "gallery.clear_glass_style" && id != "gallery.navigation_new" {
-			sources[message.Other] = id
+	keys := map[string]string{}
+	for key, message := range catalog {
+		text, ok := message.(string)
+		// Contextual messages are addressed only by key.
+		if !ok || key[0] == '@' || key == "clearGlassStyle" || key == "navigationNew" {
+			continue
 		}
+		keys[text] = key
 	}
-	return english, sources
-}
+	return keys
+}()
 
-func loadMessages() *i18n.Bundle {
-	b := i18n.NewBundle(language.English)
-	b.RegisterUnmarshalFunc("yaml", yaml.Unmarshal)
-	for _, code := range []string{"en", "zh-Hans"} {
-		data, err := localeFiles.ReadFile("locales/" + code + ".yaml")
-		if err != nil {
-			panic(err)
-		}
-		if _, err := b.ParseMessageFileBytes(data, code+".yaml"); err != nil {
-			panic(err)
-		}
-	}
-	return b
-}
-
-type translator struct {
-	code      string
-	localizer *i18n.Localizer
-}
+// A translator says the gallery's messages in the language Settings chose.
+type translator struct{ code string }
 
 func validLanguage(code string) bool { return code == "" || code == "en" || code == "zh-Hans" }
+
+// newTranslator resolves a choice, "" following the user's language, against
+// the languages of the catalog.
 func newTranslator(choice, system string) *translator {
 	code := choice
 	if !validLanguage(code) || code == "" {
-		code = "en"
-		tag, err := language.Parse(system)
-		if err == nil {
-			base, _ := tag.Base()
-			script, _ := tag.Script()
-			// Do not silently equate Traditional Chinese with Simplified Chinese.
-			if base.String() == "zh" && script.String() == "Hans" {
-				code = "zh-Hans"
-			}
+		code = i18n.Match([]string{system}, locales.Catalog.Languages())
+		if code == "" {
+			code = locales.Catalog.Source()
 		}
 	}
-	return &translator{code: code, localizer: i18n.NewLocalizer(messages, code, "en")}
+	return &translator{code: code}
 }
-func (t *translator) text(key string) string {
-	id := key
-	if sourceID, ok := sourceMessageIDs[key]; ok {
-		id = sourceID
+func (t *translator) messages() locales.Messages {
+	if t == nil {
+		return locales.In("")
 	}
-	fallback, ok := englishMessages[id]
-	if !ok {
+	return locales.In(t.code)
+}
+
+// text says the message of a key, or of English source text, without arguments.
+func (t *translator) text(key string) string {
+	if sourceKey, ok := sourceKeys[key]; ok {
+		key = sourceKey
+	}
+	if _, _, ok := locales.Catalog.Message("", key); !ok {
 		return key
 	}
-	if t == nil || t.code == "en" {
-		return fallback
+	code := ""
+	if t != nil {
+		code = t.code
 	}
-	text, err := t.localizer.Localize(&i18n.LocalizeConfig{MessageID: id, DefaultMessage: &i18n.Message{ID: id, Other: fallback}})
-	if err != nil && text == "" {
-		return fallback
-	}
-	return text
+	return locales.Catalog.Format(code, key, nil)
 }
-func (g *Gallery) text(source string) string { return g.language.text(source) }
+func (g *Gallery) text(source string) string  { return g.language.text(source) }
+func (g *Gallery) messages() locales.Messages { return g.language.messages() }
 
 type languageScopeKey struct{}
 
 func languageSlot(c *ui.Context) **translator {
 	return ui.Local(c.Root(), languageScopeKey{}, func() *translator { return nil })
 }
+
+// msg returns the typed messages in the language of the enclosing gallery scope.
+func msg(c *ui.Context) locales.Messages { return (*languageSlot(c)).messages() }
+
 func tr(c *ui.Context, source string) string { return (*languageSlot(c)).text(source) }
 
 func (g *Gallery) withLanguage(c *ui.Context, build func()) {
@@ -118,10 +94,12 @@ func (g *Gallery) withLanguage(c *ui.Context, build func()) {
 	previous := *slot
 	*slot = g.language
 	defer func() { *slot = previous }()
-	components.WithLocalization(c, g.componentWords(), build)
+	build()
 }
 func (g *Gallery) applyLanguage() {
 	g.language = newTranslator(g.config.Language, g.systemLanguage)
+	// MyGo's and Onevra's own strings follow the same choice.
+	mygo.App.SetLocale(g.config.Language)
 	g.updateLanguageWindows()
 }
 func (g *Gallery) chooseLanguage(choice string) {
@@ -138,104 +116,36 @@ func (g *Gallery) chooseLanguage(choice string) {
 }
 func (g *Gallery) updateLanguageWindows() {
 	if g.Shell != nil {
-		g.Shell.SetLabels(sidebar.Labels{
-			LeftToggle: g.text("gallery.toggle_sidebar"), LeftResize: g.text("gallery.resize_sidebar"),
-			Minimize: g.text("gallery.minimize_window"), Maximize: g.text("gallery.maximize_window"),
-			Restore: g.text("gallery.restore_window"), Close: g.text("gallery.close_window"),
-			CloseToast: g.text("gallery.close"),
-		})
 		if win := g.Shell.Window(); win != nil {
-			win.SetTitle(g.text("gallery.onevra_gallery"))
+			win.SetTitle(g.text("onevraGallery"))
 			win.Invalidate()
 		}
 	}
 	g.tray.localize = g.withLanguage
 	g.tray.translate = g.text
 	if g.tray.tray != nil {
-		g.tray.tray.SetToolTip(g.text("gallery.tray_tooltip"))
+		g.tray.tray.SetToolTip(g.text("trayTooltip"))
 	}
 	if g.tray.menu != nil {
-		g.tray.menu.ItemByID("notes").SetLabel(g.text("gallery.open_notes"))
-		g.tray.menu.ItemByID("gallery").SetLabel(g.text("gallery.show_gallery"))
-		g.tray.menu.ItemByID("quit").SetLabel(g.text("gallery.quit"))
+		g.tray.menu.ItemByID("notes").SetLabel(g.text("openNotes"))
+		g.tray.menu.ItemByID("gallery").SetLabel(g.text("showGallery"))
+		g.tray.menu.ItemByID("quit").SetLabel(g.text("quit"))
 		// AppIndicator retains a native snapshot rather than reading the menu on click.
 		if runtime.GOOS == "linux" && g.tray.tray != nil {
 			g.tray.tray.SetMenu(g.tray.menu)
 		}
 	}
 	if g.dock.menu != nil {
-		g.dock.menu.ItemByID("show-gallery").SetLabel(g.text("gallery.show_gallery"))
-		g.dock.menu.ItemByID("welcome").SetLabel(g.text("gallery.open_welcome"))
-		g.dock.menu.ItemByID("settings").SetLabel(g.text("gallery.open_settings"))
+		g.dock.menu.ItemByID("show-gallery").SetLabel(g.text("showGallery"))
+		g.dock.menu.ItemByID("welcome").SetLabel(g.text("openWelcome"))
+		g.dock.menu.ItemByID("settings").SetLabel(g.text("openSettings"))
 		// Refresh the native snapshot only while Gallery still owns the Dock menu.
 		if mygo.App.Dock.Menu() == g.dock.menu {
 			mygo.App.Dock.SetMenu(g.dock.menu)
 		}
 	}
 	if g.tray.win != nil {
-		g.tray.win.SetTitle(g.text("gallery.gallery_tray_notes"))
+		g.tray.win.SetTitle(g.text("galleryTrayNotes"))
 		g.tray.win.Invalidate()
 	}
-}
-
-func (g *Gallery) componentWords() components.Localization {
-	words := components.Localization{
-		Minimum: g.text("gallery.minimum"), Maximum: g.text("gallery.maximum"),
-		Today:                     g.text("gallery.today"),
-		ChooseMonth:               g.text("gallery.choose_month"),
-		ChooseYear:                g.text("gallery.choose_year"),
-		PreviousMonth:             g.text("gallery.previous_month"),
-		NextMonth:                 g.text("gallery.next_month"),
-		PreviousYear:              g.text("gallery.previous_year"),
-		NextYear:                  g.text("gallery.next_year"),
-		PreviousYears:             g.text("gallery.previous_years"),
-		NextYears:                 g.text("gallery.next_years"),
-		MonthSelection:            g.text("gallery.month_selection"),
-		YearSelection:             g.text("gallery.year_selection"),
-		ChooseTime:                g.text("gallery.choose_time"),
-		Hours:                     g.text("gallery.hours"),
-		Minutes:                   g.text("gallery.minutes"),
-		Divider:                   g.text("gallery.divider"),
-		SaturationBrightness:      g.text("gallery.saturation_and_brightness"),
-		Hue:                       g.text("gallery.hue"),
-		Opacity:                   g.text("gallery.opacity"),
-		ColorFormat:               g.text("gallery.color_format"),
-		CopyColor:                 g.text("gallery.copy_color"),
-		Red:                       g.text("gallery.red"),
-		Green:                     g.text("gallery.green"),
-		Blue:                      g.text("gallery.blue"),
-		HexColor:                  g.text("gallery.hex_color"),
-		OpacityPercent:            g.text("gallery.opacity_percent"),
-		HueDegrees:                g.text("gallery.hue_degrees"),
-		SaturationPercent:         g.text("gallery.saturation_percent"),
-		BrightnessPercent:         g.text("gallery.brightness_percent"),
-		LightnessPercent:          g.text("gallery.lightness_percent"),
-		Settings:                  g.text("gallery.settings"),
-		SearchSettings:            g.text("gallery.search_settings"),
-		SearchSettingsPlaceholder: g.text("gallery.search_settings_2"),
-		SettingsCategory:          g.text("gallery.settings_category"),
-		SearchResults:             g.text("gallery.search_results"),
-		NoSettings:                g.text("gallery.no_matching_settings_try_another_search"),
-		CloseToast:                g.text("gallery.close"),
-	}
-	words.NumberAction = func(action, label string) string {
-		source := map[string]string{"adjust": "gallery.adjust_s", "increase": "gallery.s_increase", "decrease": "gallery.s_decrease"}[action]
-		return strings.TrimSpace(fmt.Sprintf(g.text(source), label))
-	}
-	if g.language != nil && g.language.code == "zh-Hans" {
-		words.Weekdays = [7]string{"日", "一", "二", "三", "四", "五", "六"}
-		words.FormatDate = func(value time.Time, layout string) string {
-			switch layout {
-			case "January 2006":
-				return fmt.Sprintf("%d年%d月", value.Year(), value.Month())
-			case "January 2, 2006":
-				return fmt.Sprintf("%d年%d月%d日", value.Year(), value.Month(), value.Day())
-			case "Jan":
-				return fmt.Sprintf("%d月", value.Month())
-			default:
-				return value.Format(layout)
-			}
-		}
-	}
-	return words
 }

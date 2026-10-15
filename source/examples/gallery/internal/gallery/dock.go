@@ -37,16 +37,16 @@ func (g *Gallery) showFromDock() {
 
 func (g *Gallery) dockMenu() *mygo.Menu {
 	return mygo.NewMenu([]*mygo.MenuItem{
-		{ID: "show-gallery", Label: g.text("gallery.show_gallery"), Click: func(*mygo.MenuItem, *mygo.Window) {
+		{ID: "show-gallery", Label: g.text("showGallery"), Click: func(*mygo.MenuItem, *mygo.Window) {
 			g.showFromDock()
 		}},
 		mygo.Separator(),
-		{ID: "welcome", Label: g.text("gallery.open_welcome"), Click: func(*mygo.MenuItem, *mygo.Window) {
+		{ID: "welcome", Label: g.text("openWelcome"), Click: func(*mygo.MenuItem, *mygo.Window) {
 			g.page = welcomePage
 			g.settings.open = false
 			g.showFromDock()
 		}},
-		{ID: "settings", Label: g.text("gallery.open_settings"), Click: func(*mygo.MenuItem, *mygo.Window) {
+		{ID: "settings", Label: g.text("openSettings"), Click: func(*mygo.MenuItem, *mygo.Window) {
 			g.openSettingsFromMenu()
 		}},
 	})
@@ -70,18 +70,18 @@ func (g *Gallery) DockMenu(c *ui.Context) {
 func (g *Gallery) dockMenuLocalized(c *ui.Context) {
 	components.ScrollView(c, components.ScrollViewOptions{}).Fill().Children(func() {
 		ui.Column(c).FillWidth().Padding(c.Theme().Space(6)).Gap(16).Children(func() {
-			components.Text(c, tr(c, "gallery.dock_menu")).FontSize(22).Bold()
+			components.Text(c, tr(c, "dockMenu")).FontSize(22).Bold()
 			if runtime.GOOS != "darwin" {
-				components.Text(c, tr(c, "gallery.dock_menus_are_available_only_on_macos_use_desktop_tray_for_a_tray_men")).Wrap()
+				components.Text(c, tr(c, "dockMenusAreAvailableOnlyOnMacosUseDesktopTrayForATrayMen")).Wrap()
 				return
 			}
-			components.Text(c, tr(c, "gallery.enable_the_menu_then_right_click_gallery_s_dock_icon_show_gallery_open")).Wrap()
-			components.Text(c, tr(c, "gallery.the_menu_stays_available_when_you_navigate_away_disable_it_here_or_clo")).Wrap().TextColor(c.Theme().TextMuted)
+			components.Text(c, tr(c, "enableTheMenuThenRightClickGallerySDockIconShowGalleryOpen")).Wrap()
+			components.Text(c, tr(c, "theMenuStaysAvailableWhenYouNavigateAwayDisableItHereOrClo")).Wrap().TextColor(c.Theme().TextMuted)
 			if g.dock.menu == nil {
-				components.Button(c, tr(c, "gallery.enable_dock_menu"), components.ButtonPrimary).
+				components.Button(c, tr(c, "enableDockMenu"), components.ButtonPrimary).
 					Disabled(g.Shell == nil).OnClick(g.enableDockMenu)
 			} else {
-				components.Button(c, tr(c, "gallery.disable_dock_menu"), components.ButtonOutline).OnClick(g.dock.close)
+				components.Button(c, tr(c, "disableDockMenu"), components.ButtonOutline).OnClick(g.dock.close)
 			}
 		})
 	})

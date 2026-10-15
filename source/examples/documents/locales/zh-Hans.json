@@ -1,0 +1,13 @@
+{
+  "@@locale": "zh-Hans",
+  "note": "笔记",
+  "placeholder": "写点什么…",
+  "words": "{count} 个词",
+  "saved": "已保存",
+  "notSaved": "未保存",
+  "edited": "已编辑",
+  "readOnly": "只读",
+  "conflict": "其他应用修改了这篇笔记。保存以保留你的版本，或还原为对方的版本。",
+  "revert": "还原",
+  "save": "保存"
+}

@@ -26,7 +26,7 @@ func (g *Gallery) navigationItem(c *ui.Context, label string, icon *ui.SVG, page
 	if upstream && !mygoDirectUse(example) {
 		item.Children(func() {
 			ui.Spacer(c)
-			components.Text(c, tr(c, "gallery.bullet")).FontSize(c.Theme().Rem(1.4)).TextColor(c.Theme().TextMuted).SingleLine()
+			components.Text(c, tr(c, "bullet")).FontSize(c.Theme().Rem(1.4)).TextColor(c.Theme().TextMuted).SingleLine()
 		})
 	}
 	if newPages[pageKey(page)] {
@@ -35,7 +35,7 @@ func (g *Gallery) navigationItem(c *ui.Context, label string, icon *ui.SVG, page
 			if !upstream || mygoDirectUse(example) {
 				ui.Spacer(c)
 			}
-			components.Badge(c, tr(c, "gallery.navigation_new")).Background(t.Accent).TextColor(t.AccentText).AlignSelf(ui.Center)
+			components.Badge(c, tr(c, "navigationNew")).Background(t.Accent).TextColor(t.AccentText).AlignSelf(ui.Center)
 		})
 	}
 	if item.Clicked() {
@@ -62,5 +62,5 @@ func (g *Gallery) iconsLocalized(c *ui.Context) {
 				c.WriteClipboard(icon.name)
 			}
 		})
-	}).Label(tr(c, "gallery.icon_grid")).Fill().Padding(t.Space(4))
+	}).Label(tr(c, "iconGrid")).Fill().Padding(t.Space(4))
 }

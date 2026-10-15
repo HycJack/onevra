@@ -13,7 +13,6 @@ import (
 
 // All application state and native callbacks are owned by the UI thread.
 type application struct {
-	shells                                     []*plain.Shell
 	config                                     config
 	path, locale, note                         string
 	errorKey, errorDetail                      string
@@ -31,10 +30,12 @@ func (a *application) report(key string, err error) {
 }
 
 func (a *application) start() {
-	a.locale = mygo.App.Locale()
+	if preferred := mygo.App.PreferredLanguages(); len(preferred) > 0 {
+		a.locale = preferred[0]
+	}
 	if appKind != "desktop" {
 		if err := a.createTray(); err != nil {
-			a.report("tray_error", err)
+			a.report("trayError", err)
 		}
 	}
 	a.ready = true
@@ -197,8 +198,8 @@ func (a *application) finishWelcome() {
 func (a *application) changed() {
 	if a.path != "" {
 		if err := saveConfig(a.path, a.config); err != nil {
-			a.report("save_error", err)
-		} else if a.errorKey == "save_error" || a.errorKey == "load_error" {
+			a.report("saveError", err)
+		} else if a.errorKey == "saveError" || a.errorKey == "loadError" {
 			a.errorKey, a.errorDetail = "", ""
 		}
 	}
@@ -213,15 +214,13 @@ func (a *application) changed() {
 
 func (a *application) refresh() {
 	mygo.Theme.SetSource(a.themeSource())
-	for _, shell := range a.shells {
-		shell.SetLabels(a.windowLabels())
-	}
+	a.applyLanguage()
 	a.installMenus()
 	for _, item := range []struct {
 		win   *mygo.Window
 		title string
 	}{
-		{a.main, "title"}, {a.panel, "panel_title"}, {a.settings, "settings"}, {a.welcome, "welcome"},
+		{a.main, "title"}, {a.panel, "panelTitle"}, {a.settings, "settings"}, {a.welcome, "welcome"},
 	} {
 		if item.win != nil {
 			item.win.SetTitle(a.text(item.title))
@@ -233,13 +232,8 @@ func (a *application) refresh() {
 	}
 }
 
-func (a *application) windowLabels() plain.Labels {
-	return plain.Labels{Minimize: a.text("minimize_window"), Maximize: a.text("maximize_window"), Restore: a.text("restore_window"), Close: a.text("close_window")}
-}
-
 func (a *application) newWindow(options plain.ShellOptions) *mygo.Window {
-	options.Theme, options.Labels = theme.Onevra, a.windowLabels()
+	options.Theme = theme.Onevra
 	shell := plain.NewShell(options)
-	a.shells = append(a.shells, shell)
 	return shell.Window()
 }

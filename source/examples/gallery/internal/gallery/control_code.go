@@ -37,7 +37,7 @@ func controlCode(c *ui.Context, _ *controlState, _ string) {
 			ui.Column(c).Key(sample.language).FillWidth().MinWidth(0).Gap(t.Space(2)).Children(func() {
 				ui.Row(c).AlignItems(ui.Center).Gap(t.Space(2)).Children(func() {
 					components.Text(c, sample.language).Grow(1).TextColor(t.TextMuted)
-					if components.Button(c, tr(c, "gallery.copy_code"), components.ButtonGhost).Clicked() {
+					if components.Button(c, tr(c, "copyCode"), components.ButtonGhost).Clicked() {
 						c.WriteClipboard(sample.document.Text())
 					}
 				})

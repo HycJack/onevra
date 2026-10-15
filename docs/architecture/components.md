@@ -46,7 +46,7 @@ The [graph component](../../source/components/graph/graph.go) draws a force-dire
 
 Layout, camera, hover and reveal advance in `Draw` on the UI thread. Initial ticks run in per-frame budgets before showing; Reduced Motion settles at once.
 
-[Gestures](../../source/components/gesture/gesture.go): wheels and pinches zoom, touchpads pan. MyGo 0.4.8 neither tells smoothed mice from touchpads nor reports pinches; a macOS adapter reads scroll phases and observes magnify events.
+[Gestures](../../source/components/gesture/gesture.go): wheels and pinches zoom, touchpads pan. MyGo 0.5.1 neither tells smoothed mice from touchpads nor reports pinches; a macOS adapter reads scroll phases and observes magnify events.
 
 ### Commands
 
@@ -100,9 +100,9 @@ The [gallery example](../../source/examples/gallery/internal/gallery/control_cha
 
 ## Localization
 
-Applications own language choice and translation catalogs. `components.WithLocalization` supplies component-owned labels and date presentation within a synchronous, window-local build scope; components retain English defaults outside it. Explicit control labels still belong to the caller. Nested scopes restore their enclosing values and do not introduce global language state or change element identity. Calendar presentation can change without changing stored dates, time zones or selection semantics; numeric editors retain their canonical numeric syntax.
+Component and Shell control names are a MyGo library catalog in namespace `onevra` ([l10n](../../source/internal/l10n/en.json)), in English and Simplified Chinese. They follow the window's language (`ui.Context.Locale`, set with `mygo.App.SetLocale`); applications change or add translations with `onevra.<key>` messages in their own catalogs. Calendar dates and the first weekday follow the user's regional formats, as MyGo's date controls do.
 
-Shell accepts updated control labels without recreating its window. Applications must keep keys and selection values independent of translated text and request a new frame after changing language. This scope does not translate MyGo's internal widgets, OS surfaces, native menus or user-provided content. It provides no automatic RTL layout mirroring.
+`components.WithLocalization` and Shell label options override the catalog; the scope is synchronous, window-local and restores its enclosing values. Explicit control labels belong to the caller. Calendar presentation never changes stored dates, time zones or selection; numeric editors keep canonical numeric syntax. Keep keys and selection values independent of translated text.
 
 ## Page container and layout
 

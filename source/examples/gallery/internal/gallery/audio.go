@@ -1,7 +1,6 @@
 package gallery
 
 import (
-	"fmt"
 	"math"
 	"time"
 
@@ -117,7 +116,7 @@ func padSamples() []float32 {
 func exampleAudio(c *ui.Context, s *demoState) {
 	t := c.Theme()
 	d := &s.audio
-	components.Text(c, tr(c, "gallery.audio_notes")).Bold().TextColor(t.TextMuted)
+	components.Text(c, tr(c, "audioNotes")).Bold().TextColor(t.TextMuted)
 	ui.Row(c).Gap(t.Space(2)).Wrap().Children(func() {
 		for _, note := range audioNotes {
 			if components.Button(c, note.name, components.ButtonSecondary).Key(note.name).Clicked() {
@@ -125,9 +124,9 @@ func exampleAudio(c *ui.Context, s *demoState) {
 			}
 		}
 	})
-	label := tr(c, "gallery.audio_play_loop")
+	label := tr(c, "audioPlayLoop")
 	if d.looping {
-		label = tr(c, "gallery.audio_pause_loop")
+		label = tr(c, "audioPauseLoop")
 	}
 	ui.Row(c).Children(func() {
 		if components.Button(c, label, components.ButtonPrimary).Key("loop").Clicked() {
@@ -139,7 +138,7 @@ func exampleAudio(c *ui.Context, s *demoState) {
 		id     string
 		value  *float64
 		lo, hi float64
-	}{{"gallery.volume", &d.volume, 0, 1}, {"gallery.audio_pan", &d.pan, -1, 1}} {
+	}{{"volume", &d.volume, 0, 1}, {"audioPan", &d.pan, -1, 1}} {
 		ui.Row(c).Key(slider.id).FillWidth().MaxWidth(t.Space(100)).Gap(t.Space(3)).AlignItems(ui.Center).Children(func() {
 			name := tr(c, slider.id)
 			components.Text(c, name).Width(t.Space(14)).Shrink(0).SingleLine()
@@ -152,6 +151,6 @@ func exampleAudio(c *ui.Context, s *demoState) {
 		d.mix()
 	}
 	if err := audio.Err(); d.output && err != nil {
-		components.Text(c, fmt.Sprintf(tr(c, "gallery.audio_unavailable"), err)).TextColor(t.Danger).Wrap()
+		components.Text(c, msg(c).AudioUnavailable(err.Error())).TextColor(t.Danger).Wrap()
 	}
 }

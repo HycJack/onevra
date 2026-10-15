@@ -1,8 +1,6 @@
 package gallery
 
 import (
-	"fmt"
-
 	"github.com/egoist/mygo/ui"
 	"github.com/egoist/mygo/ui/editor"
 	"github.com/oneo-me/onevra/source/components"
@@ -54,10 +52,10 @@ func exampleCodeEditor(c *ui.Context, s *demoState) {
 	if s.code == nil {
 		s.code = &editor.State{Buffer: editorBuffer(editorSample), DiffBase: editorBuffer(editorSample), WrapGuides: []int{80}}
 	}
-	s.code.Label = tr(c, "gallery.code_editor_label")
+	s.code.Label = tr(c, "codeEditorLabel")
 	editor.View(c, s.code).Height(320).FillWidth().Radius(8).Clip()
 	pos := s.code.CursorPos()
-	components.Text(c, fmt.Sprintf(tr(c, "gallery.code_editor_position"), pos.Line+1, pos.Col+1)).TextColor(c.Theme().TextMuted)
+	components.Text(c, msg(c).CodeEditorPosition(pos.Line+1, pos.Col+1)).TextColor(c.Theme().TextMuted)
 }
 
 func exampleDiffViewer(c *ui.Context, s *demoState) {
@@ -69,5 +67,5 @@ func exampleDiffViewer(c *ui.Context, s *demoState) {
 	}
 	editor.DiffView(c, s.diff).Height(360).FillWidth().Radius(8).Clip()
 	added, deleted := s.diff.Stats()
-	components.Text(c, fmt.Sprintf(tr(c, "gallery.diff_viewer_stats"), added, deleted)).TextColor(c.Theme().TextMuted)
+	components.Text(c, msg(c).DiffViewerStats(added, deleted)).TextColor(c.Theme().TextMuted)
 }

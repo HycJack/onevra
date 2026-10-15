@@ -14,10 +14,10 @@ func TestNotificationsHeadless(t *testing.T) {
 	for _, language := range []string{"en", "zh-Hans"} {
 		g := &Gallery{page: notificationsPage, language: newTranslator(language, "en")}
 		tt := ui.NewTester(g.View, 360, 600)
-		if !tt.HasText(g.text("gallery.system_notifications")) {
+		if !tt.HasText(g.text("systemNotifications")) {
 			t.Fatal("missing localized notification page", tt.Texts())
 		}
-		_ = tt.Click(g.text("gallery.notification_send"))
+		_ = tt.Click(g.text("notificationSend"))
 		g.sendNotification()
 		if g.notification.current != nil || g.notification.pending || g.notification.status != "" {
 			t.Fatal("headless rendering and actions must not send native notifications")

@@ -5,5 +5,9 @@
   "out": "../../../dist/menubar",
   "macos": {
     "minimumSystemVersion": "13.0"
+  },
+  "i18n": {
+    "dir": "locales",
+    "source": "en"
   }
 }

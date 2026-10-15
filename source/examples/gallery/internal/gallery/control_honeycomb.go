@@ -38,7 +38,7 @@ var honeycombDemoPool = []honeycombDemoEntry{
 	{"settings", lucide.Settings, ui.RGB(110, 110, 122)},
 	{"downloads", lucide.Download, ui.RGB(56, 148, 214)},
 	{"favorites", lucide.Star, ui.RGB(224, 86, 92)},
-	{"messages", lucide.MessageSquare, ui.RGB(66, 176, 176)},
+	{"inbox", lucide.MessageSquare, ui.RGB(66, 176, 176)},
 	{"mail", lucide.Mail, ui.RGB(120, 176, 92)},
 	{"bookmarks", lucide.Bookmark, ui.RGB(196, 108, 148)},
 	{"archive", lucide.Archive, ui.RGB(158, 138, 96)},
@@ -57,7 +57,7 @@ func honeycombDefaults() []honeycombDemoItem {
 }
 
 func honeycombLabel(c *ui.Context, item honeycombDemoItem) string {
-	label := tr(c, "gallery."+item.labelKey)
+	label := tr(c, item.labelKey)
 	if item.suffix > 0 {
 		label = fmt.Sprintf("%s %d", label, item.suffix)
 	}
@@ -122,16 +122,16 @@ func controlHoneycomb(c *ui.Context, s *controlState, _ string) {
 			},
 		}
 		if item.id == selected {
-			selectedLabel = fmt.Sprintf(tr(c, "gallery.selected_s"), label)
+			selectedLabel = msg(c).SelectedS(label)
 		}
 	}
 	ui.Column(c).Key("honeycomb-demo").FillWidth().Grow(1).MinWidth(0).MinHeight(0).Gap(t.Space(3)).Children(func() {
-		components.Text(c, tr(c, "gallery.honeycomb_hint")).TextColor(t.TextMuted).Wrap().Shrink(0)
+		components.Text(c, tr(c, "honeycombHint")).TextColor(t.TextMuted).Wrap().Shrink(0)
 		ui.Row(c).FillWidth().MinWidth(0).Wrap().Gap(t.Space(2)).Shrink(0).Children(func() {
-			if components.Button(c, tr(c, "gallery.honeycomb_add"), components.ButtonOutline).Clicked() {
+			if components.Button(c, tr(c, "honeycombAdd"), components.ButtonOutline).Clicked() {
 				honeycombAdd(s)
 			}
-			if components.Button(c, tr(c, "gallery.honeycomb_remove"), components.ButtonOutline).Clicked() {
+			if components.Button(c, tr(c, "honeycombRemove"), components.ButtonOutline).Clicked() {
 				honeycombRemove(s)
 			}
 		})

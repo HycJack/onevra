@@ -1,0 +1,17 @@
+{
+  "@@locale": "en",
+  "note": "Note",
+  "placeholder": "Write a note…",
+  "words": "{count, plural, one {# word} other {# words}}",
+  "@words": {
+    "description": "The status line's word count.",
+    "placeholders": { "count": { "type": "int" } }
+  },
+  "saved": "Saved",
+  "notSaved": "Not saved",
+  "edited": "Edited",
+  "readOnly": "Read-only",
+  "conflict": "Another app changed this note. Save to keep yours, or revert to theirs.",
+  "revert": "Revert",
+  "save": "Save"
+}

@@ -86,13 +86,13 @@ func exampleCanvas(c *ui.Context, s *demoState) {
 		})
 	}
 	ui.Row(c).Gap(t.Space(4)).Wrap().Children(func() {
-		tile("smooth", tr(c, "gallery.canvas_smooth"), func(p *ui.Painter, r ui.Rect) {
+		tile("smooth", tr(c, "canvasSmooth"), func(p *ui.Painter, r ui.Rect) {
 			p.ImageRegion(d.smooth, spriteFrame(frame), inset(r, 12), options)
 		})
-		tile("pixelated", tr(c, "gallery.canvas_pixelated"), func(p *ui.Painter, r ui.Rect) {
+		tile("pixelated", tr(c, "canvasPixelated"), func(p *ui.Painter, r ui.Rect) {
 			p.ImageRegion(d.pixelated, spriteFrame(frame), inset(r, 12), options)
 		})
-		tile("layer", tr(c, "gallery.canvas_layer"), func(p *ui.Painter, r ui.Rect) {
+		tile("layer", tr(c, "canvasLayer"), func(p *ui.Painter, r ui.Rect) {
 			// Redraw the offscreen layer only when its content changes.
 			key := frame * 2
 			if s.on {
@@ -120,13 +120,13 @@ func exampleCanvas(c *ui.Context, s *demoState) {
 		})
 	})
 	ui.Row(c).Gap(t.Space(3)).Wrap().AlignItems(ui.Center).Children(func() {
-		if components.Button(c, tr(c, "gallery.canvas_next_frame"), components.ButtonSecondary).Clicked() {
+		if components.Button(c, tr(c, "canvasNextFrame"), components.ButtonSecondary).Clicked() {
 			s.index = (s.index + 1) % spriteFrames
 		}
-		components.Checkbox(c, &s.on, tr(c, "gallery.canvas_mirror"))
+		components.Checkbox(c, &s.on, tr(c, "canvasMirror"))
 	})
 	ui.Row(c).FillWidth().MaxWidth(t.Space(100)).Gap(t.Space(3)).AlignItems(ui.Center).Children(func() {
-		name := tr(c, "gallery.canvas_rotation")
+		name := tr(c, "canvasRotation")
 		components.Text(c, name).Shrink(0).SingleLine()
 		components.Slider(c, &s.value, 0, 360).Label(name).Grow(1).MinWidth(0)
 	})

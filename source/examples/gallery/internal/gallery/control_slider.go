@@ -13,5 +13,5 @@ func controlSlider(c *ui.Context, s *controlState, variant string) {
 	if variant == "Range" || variant == "Stepped range" {
 		opts.Range = &s.high
 	}
-	components.Slider(c, &s.value, 0, 100, opts).Label(tr(c, "gallery.volume")).FillWidth().MinWidth(0)
+	components.Slider(c, &s.value, 0, 100, opts).Label(tr(c, "volume")).FillWidth().MinWidth(0)
 }

@@ -1,18 +1,17 @@
 package gallery
 
 import (
-	"fmt"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
 )
 
 func controlColorView(c *ui.Context, s *controlState, _ string) {
-	components.ColorView(c, &s.color).Label(tr(c, "gallery.color"))
+	components.ColorView(c, &s.color).Label(tr(c, "color"))
 }
 
 func controlColorPicker(c *ui.Context, s *controlState, variant string) {
 	p := components.ColorPicker(c, &s.color)
-	p.Label(fmt.Sprintf(tr(c, "gallery.s_color"), tr(c, variant)))
+	p.Label(msg(c).ColorOf(tr(c, variant)))
 	switch variant {
 	case "Outlined":
 		p.Size(72, 36).Border(2, c.Theme().Accent).Radius(2).Padding(4)
