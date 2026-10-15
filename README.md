@@ -6,6 +6,14 @@ Onevra is a Go component library for native desktop applications, built on [MyGo
 
 ![Onevra Gallery main interface with sidebar navigation and the Welcome page](docs/images/gallery.png)
 
+## Design principles
+
+Onevra builds on MyGo rather than replacing it:
+
+- **Refine built-in components**: adjust the styling of MyGo's built-in components, and merge and simplify them into a smaller, consistent API.
+- **Fill the gaps**: provide components that MyGo does not officially support.
+- **Defer to upstream**: when MyGo officially provides a feature or component that Onevra already offers, Onevra may remove its own version and switch to MyGo's.
+
 ## Additional components
 
 Building on MyGo's native UI capabilities, Onevra adds composed components for common application scenarios:

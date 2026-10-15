@@ -6,6 +6,14 @@ Onevra 是基于 [MyGo](https://github.com/egoist/mygo) 的原生桌面 Go 组�
 
 ![Onevra Gallery 主界面，包含侧边导航和欢迎页](docs/images/gallery.png)
 
+## 设计原则
+
+Onevra 构建在 MyGo 之上，而不是取代它：
+
+- **微调内置组件**：微调 MyGo 内置组件的风格，并将其合并、简化为更精简一致的 API。
+- **补齐缺失组件**：提供 MyGo 官方不支持的组件。
+- **优先采用官方实现**：当 MyGo 官方提供了 Onevra 已有的功能或组件时，Onevra 可能会移除自己的版本，转而使用 MyGo 官方版本。
+
 ## 补充组件
 
 在 MyGo 官方提供的原生 UI 能力之上，Onevra 重点补充面向应用场景的组合组件：
