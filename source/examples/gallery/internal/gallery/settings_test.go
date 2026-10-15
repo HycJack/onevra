@@ -9,7 +9,7 @@ import (
 )
 
 func TestPixelGridPreference(t *testing.T) {
-	g := &Gallery{configPath: filepath.Join(t.TempDir(), "config.yaml")}
+	g := &Gallery{configPath: filepath.Join(t.TempDir(), "config.json")}
 	g.config.Theme = "system"
 	g.settings.open, g.settings.view.Category = true, "appearance"
 	tt := ui.NewTester(g.Settings, 820, 600)
@@ -158,7 +158,7 @@ func TestSettingsSearchAndGeometry(t *testing.T) {
 }
 
 func TestCommandPreferencesPersistAndApply(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "config.yaml")
+	path := filepath.Join(t.TempDir(), "config.json")
 	config, err := LoadConfig(path)
 	if err != nil {
 		t.Fatal(err)

@@ -1,6 +1,7 @@
 package gallery
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"log"
@@ -9,17 +10,16 @@ import (
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/icons/lucide"
-	"go.yaml.in/yaml/v3"
 )
 
 // Config holds application preferences, separate from transient window state.
 type Config struct {
-	Theme            mygo.ThemeSource `yaml:"theme"`
-	Language         string           `yaml:"language,omitempty"`
-	DisablePixelGrid bool             `yaml:"disablePixelGrid,omitempty"`
+	Theme            mygo.ThemeSource `json:"theme"`
+	Language         string           `json:"language,omitempty"`
+	DisablePixelGrid bool             `json:"disablePixelGrid,omitempty"`
 	// Zero values preserve automatic ABC selection and initially visible results.
-	DisableCommandABC     bool `yaml:"disableCommandABC,omitempty"`
-	CommandExpandOnSearch bool `yaml:"commandExpandOnSearch,omitempty"`
+	DisableCommandABC     bool `json:"disableCommandABC,omitempty"`
+	CommandExpandOnSearch bool `json:"commandExpandOnSearch,omitempty"`
 }
 
 func validTheme(source mygo.ThemeSource) bool {
@@ -36,7 +36,7 @@ func LoadConfig(path string) (Config, error) {
 		return fallback, err
 	}
 	config := fallback
-	if err := yaml.Unmarshal(data, &config); err != nil {
+	if err := json.Unmarshal(data, &config); err != nil {
 		return fallback, err
 	}
 	if !validTheme(config.Theme) {
@@ -55,7 +55,7 @@ func SaveConfig(path string, config Config) error {
 	if !validLanguage(config.Language) {
 		return fmt.Errorf("unknown language %q", config.Language)
 	}
-	return saveYAML(path, config)
+	return saveJSON(path, config)
 }
 
 // Configure loads preferences before window creation. A nonempty override

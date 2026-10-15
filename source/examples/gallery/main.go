@@ -34,9 +34,9 @@ func main() {
 			override = mygo.ThemeSource(*theme)
 		}
 	})
-	g.Configure(filepath.Join(configDir, "config.yaml"), override)
+	g.Configure(filepath.Join(configDir, "config.json"), override)
 	mygo.App.WhenReady(func() {
-		win := g.NewPersistent(filepath.Join(configDir, "state.yaml")).Window()
+		win := g.NewPersistent(filepath.Join(configDir, "state.json")).Window()
 		if menu := g.ApplicationMenu(); menu != nil {
 			mygo.App.SetMenu(menu)
 		}

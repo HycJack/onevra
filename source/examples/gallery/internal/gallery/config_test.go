@@ -11,7 +11,7 @@ import (
 )
 
 func TestConfig(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "preferences", "config.yaml")
+	path := filepath.Join(t.TempDir(), "preferences", "config.json")
 	config, err := LoadConfig(path)
 	if err != nil || config.Theme != mygo.ThemeSystem {
 		t.Fatalf("missing: %+v, %v", config, err)
@@ -22,15 +22,15 @@ func TestConfig(t *testing.T) {
 			t.Fatal(err)
 		}
 		data, err := os.ReadFile(path)
-		if err != nil || string(data) != "theme: "+string(source)+"\n" {
-			t.Fatalf("expected YAML config: %s, %v", data, err)
+		if err != nil || string(data) != "{\n  \"theme\": \""+string(source)+"\"\n}" {
+			t.Fatalf("expected JSON config: %s, %v", data, err)
 		}
 		got, err := LoadConfig(path)
 		if err != nil || got != want {
 			t.Fatalf("round trip: %+v, %v", got, err)
 		}
 	}
-	for _, data := range []string{`{}`, `theme: "unknown"`, `theme: 123`, `{`} {
+	for _, data := range []string{`{}`, `{"theme": "unknown"}`, `{"theme": 123}`, `{`} {
 		if err := os.WriteFile(path, []byte(data), 0600); err != nil {
 			t.Fatal(err)
 		}
@@ -42,7 +42,7 @@ func TestConfig(t *testing.T) {
 	if err := SaveConfig(path, Config{Theme: "invalid"}); err == nil {
 		t.Fatal("accepted invalid theme")
 	}
-	if err := SaveConfig(filepath.Join(path, "config.yaml"), Config{Theme: mygo.ThemeLight}); err == nil {
+	if err := SaveConfig(filepath.Join(path, "config.json"), Config{Theme: mygo.ThemeLight}); err == nil {
 		t.Fatal("expected write error")
 	}
 	if _, err := LoadConfig(filepath.Dir(path)); err == nil {
@@ -56,7 +56,7 @@ func TestNativeThemeMenu(t *testing.T) {
 	}
 	previous := mygo.Theme.Source()
 	defer mygo.Theme.SetSource(previous)
-	path := filepath.Join(t.TempDir(), "config.yaml")
+	path := filepath.Join(t.TempDir(), "config.json")
 	if err := SaveConfig(path, Config{Theme: mygo.ThemeDark, Language: "en"}); err != nil {
 		t.Fatal(err)
 	}

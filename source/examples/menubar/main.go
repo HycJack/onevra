@@ -22,7 +22,7 @@ func main() {
 	}
 	dir := filepath.Join(base, "onevra-examples", appKind)
 	mygo.App.SetPath(mygo.PathUserData, dir)
-	a := &application{path: filepath.Join(dir, "config.yaml")}
+	a := &application{path: filepath.Join(dir, "config.json")}
 	a.config, err = loadConfig(a.path)
 	if err != nil {
 		a.report("loadError", err)

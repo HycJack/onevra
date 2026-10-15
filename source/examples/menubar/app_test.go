@@ -11,7 +11,7 @@ import (
 )
 
 func TestPreferences(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "app", "config.yaml")
+	path := filepath.Join(t.TempDir(), "app", "config.json")
 	got, err := loadConfig(path)
 	if err != nil || got != defaultConfig() {
 		t.Fatalf("missing config: %+v, %v", got, err)
@@ -25,7 +25,7 @@ func TestPreferences(t *testing.T) {
 	if err != nil || got != want {
 		t.Fatalf("round trip: %+v, %v", got, err)
 	}
-	if err := os.WriteFile(path, []byte("language: future\nappearance: unknown\ncloseAction: invisible\n"), 0600); err != nil {
+	if err := os.WriteFile(path, []byte(`{"language": "future", "appearance": "unknown", "closeAction": "invisible"}`), 0600); err != nil {
 		t.Fatal(err)
 	}
 	got, err = loadConfig(path)
@@ -40,7 +40,7 @@ func TestPreferences(t *testing.T) {
 		t.Fatalf("corrupt config: %+v, %v", got, err)
 	}
 	// A save error must remain visible; it must not reset the user's live choice.
-	a := &application{config: want, path: filepath.Join(path, "impossible.yaml")}
+	a := &application{config: want, path: filepath.Join(path, "impossible.json")}
 	a.changed()
 	if a.errorKey != "saveError" || a.config != want {
 		t.Fatal("save failure was swallowed or reset preferences")

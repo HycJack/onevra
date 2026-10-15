@@ -28,11 +28,11 @@ func TestGalleryVersionMatchesPackaging(t *testing.T) {
 }
 
 func TestStateStorage(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "config", "state.yaml")
+	path := filepath.Join(t.TempDir(), "config", "state.json")
 	if state, err := LoadState(path); err != nil || state != (State{}) {
 		t.Fatalf("missing: %+v %v", state, err)
 	}
-	want := State{Window: &WindowState{X: -900, Width: 1000, Height: 700, Maximized: true}, SidebarWidth: 312.5, SelectedItem: "controls/Button"}
+	want := State{Window: &mygo.WindowState{X: -900, Width: 1000, Height: 700, Maximized: true}, SidebarWidth: 312.5, SelectedItem: "controls/Button"}
 	for _, width := range []float32{312.5, 400} {
 		want.SidebarWidth = width
 		want.SidebarCollapsed = width == 400
@@ -40,27 +40,27 @@ func TestStateStorage(t *testing.T) {
 			t.Fatal(err)
 		}
 		data, err := os.ReadFile(path)
-		if err != nil || !strings.Contains(string(data), "sidebar_width:") {
-			t.Fatalf("expected YAML state: %s, %v", data, err)
+		if err != nil || !strings.Contains(string(data), `"sidebarWidth":`) {
+			t.Fatalf("expected JSON state: %s, %v", data, err)
 		}
 		got, err := LoadState(path)
 		if err != nil || !reflect.DeepEqual(got, want) {
 			t.Fatalf("round trip: %+v %v", got, err)
 		}
 	}
-	if err := os.WriteFile(path, []byte("sidebar_width: 300\nwindow: ["), 0600); err != nil {
+	if err := os.WriteFile(path, []byte(`{"sidebarWidth": 300, "window": [`), 0600); err != nil {
 		t.Fatal(err)
 	}
 	if state, err := LoadState(path); err == nil || state != (State{}) {
 		t.Fatalf("corrupt: %+v %v", state, err)
 	}
-	if err := SaveState(filepath.Join(path, "state.yaml"), want); err == nil {
+	if err := SaveState(filepath.Join(path, "state.json"), want); err == nil {
 		t.Fatal("expected write failure")
 	}
 }
 
 func TestWindowStateStore(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "state.yaml")
+	path := filepath.Join(t.TempDir(), "state.json")
 	state := State{SidebarWidth: 300, SelectedItem: "controls/Button"}
 	store := windowStateStore{path, &state}
 	if states, err := store.LoadWindowStates(); states != nil || err != nil {
@@ -71,7 +71,7 @@ func TestWindowStateStore(t *testing.T) {
 		t.Fatal(err)
 	}
 	got, err := LoadState(path)
-	if err != nil || got.Window == nil || mygo.WindowState(*got.Window) != saved || got.SidebarWidth != 300 || got.SelectedItem != "controls/Button" {
+	if err != nil || got.Window == nil || *got.Window != saved || got.SidebarWidth != 300 || got.SelectedItem != "controls/Button" {
 		t.Fatalf("saved state: %+v %v", got, err)
 	}
 	states, err := windowStateStore{path, &got}.LoadWindowStates()
@@ -84,14 +84,13 @@ func TestWindowStateStore(t *testing.T) {
 }
 
 func TestStateSidebarDefaults(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "state.yaml")
-	if err := os.WriteFile(path, []byte(`# Partial presentation state
-sidebar_width: 300`), 0600); err != nil {
+	path := filepath.Join(t.TempDir(), "state.json")
+	if err := os.WriteFile(path, []byte(`{"sidebarWidth": 300}`), 0600); err != nil {
 		t.Fatal(err)
 	}
 	state, err := LoadState(path)
 	if err != nil || state.SidebarCollapsed || state.SidebarWidth != 300 {
-		t.Fatalf("legacy state: %+v %v", state, err)
+		t.Fatalf("partial state: %+v %v", state, err)
 	}
 }
 
@@ -119,7 +118,7 @@ func TestNativeState(t *testing.T) {
 	// MyGo loads window states once per process and saves only changes, so
 	// each iteration uses different bounds.
 	for i, collapsed := range []bool{true, false} {
-		path := filepath.Join(t.TempDir(), "state.yaml")
+		path := filepath.Join(t.TempDir(), "state.json")
 		var want State
 		mygo.RunOnMain(func() {
 			g := &Gallery{}
@@ -133,7 +132,7 @@ func TestNativeState(t *testing.T) {
 			s.SetLeftExpanded(!collapsed)
 			g.page = controlPageStart()
 			b := s.Window().Bounds()
-			want = State{Window: &WindowState{X: b.X, Y: b.Y, Width: b.Width, Height: b.Height}, SidebarWidth: 315.5, SidebarCollapsed: collapsed, SelectedItem: pageKey(g.page)}
+			want = State{Window: &mygo.WindowState{X: b.X, Y: b.Y, Width: b.Width, Height: b.Height}, SidebarWidth: 315.5, SidebarCollapsed: collapsed, SelectedItem: pageKey(g.page)}
 			s.Window().Close()
 		})
 		got, err := LoadState(path)

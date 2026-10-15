@@ -38,7 +38,7 @@ func TestNativeLauncher(t *testing.T) {
 	if os.Getenv("ONEVRA_NATIVE_SMOKE") != "1" || os.Getenv("ONEVRA_NATIVE_FOREGROUND") != "1" {
 		t.Skip("requires ONEVRA_NATIVE_SMOKE=1 and ONEVRA_NATIVE_FOREGROUND=1")
 	}
-	a := &application{config: defaultConfig(), path: filepath.Join(t.TempDir(), "config.yaml")}
+	a := &application{config: defaultConfig(), path: filepath.Join(t.TempDir(), "config.json")}
 	mygo.RunOnMain(func() {
 		a.start()
 		if a.panel == nil {

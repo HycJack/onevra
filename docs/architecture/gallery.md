@@ -10,8 +10,8 @@ The [entry point](../../source/examples/gallery/main.go) owns startup, appearanc
 
 Production startup stores application data under `~/.oneo/onevra`. The disk-free `Gallery.New` path keeps examples and native tests isolated from real settings.
 
-- `state.yaml` retains window geometry, sidebar width and expansion, the named navigation route and the last shown application version. Window geometry, including maximized and full-screen state, goes through MyGo's window-state store; Gallery only maps it into this file.
-- `config.yaml` retains appearance, language, command-palette preferences and the page-grid preference. Changes apply and save immediately.
+- `state.json` retains window geometry, sidebar width and expansion, the named navigation route and the last shown application version. Window geometry, including maximized and full-screen state, goes through MyGo's window-state store; Gallery only maps it into this file.
+- `config.json` retains appearance, language, command-palette preferences and the page-grid preference. Changes apply and save immediately.
 - Interactive example values remain in memory, isolated between pages and variants. User content is never persisted.
 
 Unknown routes and unreadable files fall back to defaults; read and save errors are logged. MyGo centers a restored window that would not show on any connected display. An explicit `-theme` launch argument temporarily overrides the saved appearance without rewriting it.

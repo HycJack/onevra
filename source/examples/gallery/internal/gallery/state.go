@@ -1,6 +1,7 @@
 package gallery
 
 import (
+	"encoding/json"
 	"errors"
 	"log"
 	"os"
@@ -8,29 +9,19 @@ import (
 
 	"github.com/egoist/mygo"
 	"github.com/oneo-me/onevra/source/shells/sidebar"
-	"go.yaml.in/yaml/v3"
 )
 
 // State contains only presentation state, never interactive demo values.
 type State struct {
-	Window           *WindowState `yaml:"window,omitempty"`
-	SidebarWidth     float32      `yaml:"sidebar_width,omitempty"`
-	SidebarCollapsed bool         `yaml:"sidebar_collapsed"`
-	SelectedItem     string       `yaml:"selected_item,omitempty"`
-}
-
-type WindowState struct {
-	X          int  `yaml:"x"`
-	Y          int  `yaml:"y"`
-	Width      int  `yaml:"width"`
-	Height     int  `yaml:"height"`
-	Maximized  bool `yaml:"maximized,omitempty"`
-	FullScreen bool `yaml:"full_screen,omitempty"`
+	Window           *mygo.WindowState `json:"window,omitempty"`
+	SidebarWidth     float32           `json:"sidebarWidth,omitempty"`
+	SidebarCollapsed bool              `json:"sidebarCollapsed"`
+	SelectedItem     string            `json:"selectedItem,omitempty"`
 }
 
 const mainWindowStateKey = "main"
 
-// windowStateStore keeps MyGo's state of the main window in state.yaml.
+// windowStateStore keeps MyGo's state of the main window in state.json.
 // MyGo calls it on the main thread, as are the gallery's own saves.
 type windowStateStore struct {
 	path  string
@@ -42,7 +33,7 @@ func (s windowStateStore) LoadWindowStates() (map[string]mygo.WindowState, error
 	if w == nil {
 		return nil, nil
 	}
-	return map[string]mygo.WindowState{mainWindowStateKey: mygo.WindowState(*w)}, nil
+	return map[string]mygo.WindowState{mainWindowStateKey: *w}, nil
 }
 
 func (s windowStateStore) SaveWindowStates(states map[string]mygo.WindowState) error {
@@ -50,8 +41,7 @@ func (s windowStateStore) SaveWindowStates(states map[string]mygo.WindowState) e
 	if !ok {
 		return nil
 	}
-	state := WindowState(w)
-	s.state.Window = &state
+	s.state.Window = &w
 	return SaveState(s.path, *s.state)
 }
 
@@ -64,7 +54,7 @@ func LoadState(path string) (State, error) {
 		return State{}, err
 	}
 	var state State
-	if err := yaml.Unmarshal(data, &state); err != nil {
+	if err := json.Unmarshal(data, &state); err != nil {
 		return State{}, err
 	}
 	return state, nil
@@ -72,12 +62,12 @@ func LoadState(path string) (State, error) {
 
 // SaveState replaces the file only after a complete write in the same directory.
 func SaveState(path string, state State) error {
-	return saveYAML(path, state)
+	return saveJSON(path, state)
 }
 
-// saveYAML atomically replaces an application-owned YAML file.
-func saveYAML(path string, value any) error {
-	data, err := yaml.Marshal(value)
+// saveJSON atomically replaces an application-owned JSON file.
+func saveJSON(path string, value any) error {
+	data, err := json.MarshalIndent(value, "", "  ")
 	if err != nil {
 		return err
 	}

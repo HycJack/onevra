@@ -1,21 +1,20 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"os"
 	"path/filepath"
-
-	"go.yaml.in/yaml/v3"
 )
 
 // Preferences belong to this application, not to Onevra or its window shell.
 type config struct {
-	Language    string `yaml:"language"`
-	Appearance  string `yaml:"appearance"`
-	CloseAction string `yaml:"closeAction"`
-	Silent      bool   `yaml:"silent"`
-	Panel       bool   `yaml:"panel"`
-	Welcomed    bool   `yaml:"welcomed"`
+	Language    string `json:"language"`
+	Appearance  string `json:"appearance"`
+	CloseAction string `json:"closeAction"`
+	Silent      bool   `json:"silent"`
+	Panel       bool   `json:"panel"`
+	Welcomed    bool   `json:"welcomed"`
 }
 
 func defaultConfig() config {
@@ -48,7 +47,7 @@ func loadConfig(path string) (config, error) {
 	if err != nil {
 		return c, err
 	}
-	if err := yaml.Unmarshal(data, &c); err != nil {
+	if err := json.Unmarshal(data, &c); err != nil {
 		return defaultConfig(), err
 	}
 	c.normalize()
@@ -57,7 +56,7 @@ func loadConfig(path string) (config, error) {
 
 // Replace the file atomically so an interrupted save leaves the old preferences.
 func saveConfig(path string, c config) error {
-	data, err := yaml.Marshal(c)
+	data, err := json.MarshalIndent(c, "", "  ")
 	if err != nil {
 		return err
 	}

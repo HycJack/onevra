@@ -123,7 +123,7 @@ func TestLanguageCatalogs(t *testing.T) {
 }
 
 func TestLanguageSwitchRetainsState(t *testing.T) {
-	g := &Gallery{page: welcomePage, config: Config{Theme: mygo.ThemeDark}, configPath: filepath.Join(t.TempDir(), "config.yaml")}
+	g := &Gallery{page: welcomePage, config: Config{Theme: mygo.ThemeDark}, configPath: filepath.Join(t.TempDir(), "config.json")}
 	state := g.controlState("Select", "Selected")
 	tt := ui.NewTester(g.Welcome, 820, 900)
 	if !tt.HasText("Small components. Real possibilities.") {
@@ -308,8 +308,8 @@ func TestLanguageSwitchPreservesEditorFocus(t *testing.T) {
 }
 
 func TestLanguageConfigValidation(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "config.yaml")
-	if err := os.WriteFile(path, []byte("theme: dark\nlanguage: unknown\n"), 0600); err != nil {
+	path := filepath.Join(t.TempDir(), "config.json")
+	if err := os.WriteFile(path, []byte(`{"theme": "dark", "language": "unknown"}`), 0600); err != nil {
 		t.Fatal(err)
 	}
 	config, err := LoadConfig(path)
