@@ -94,6 +94,8 @@ var mygoHandled = map[string]mygoDecision{
 	"MenuButton":    {Replacement: "components.Button / Menu", Reason: "Compose components.Button(...).Menu(...) as demonstrated under Menus; no separate component"},
 	"PrimaryButton": {Replacement: "components.Button / ButtonPrimary", Reason: "A button variant, not a separate component"},
 	"Link":          {Replacement: "components.Button / ButtonLink", Reason: "An inline button variant"},
+
+	"Installed apps": {Reason: "Demonstrated by the launcher example under source/examples/launcher; the gallery hosts no launcher page"},
 }
 
 // These primitives remain composition building blocks, without standalone examples.
@@ -119,7 +121,6 @@ var mygoDirectExamples = map[string]string{
 	"Secrets":             "Use MyGo Secrets directly for the system credential store; no Onevra storage layer",
 	"Recent documents":    "Use MyGo recent documents and the jump list directly; applications own their files",
 	"File watching":       "Use MyGo WatchFiles directly; applications own the watched paths and their lifetime",
-	"Installed apps":      "Use MyGo Shell.InstalledApps, FileIcon, LaunchApp and panel windows directly for launchers",
 	"Fonts":               "Use MyGo FontFamilies directly; applications own font choices",
 	"System appearance":   "Use MyGo desktop preferences directly; Onevra themes already follow text scale and contrast",
 	"Languages & formats": "Use MyGo locales, regions and package i18n directly for language and formatting",
@@ -147,10 +148,12 @@ var mygoNativeMenus = map[string]string{
 	"Menu":        "ui/menu.go",
 }
 
-// Reviewed subpackages outside the top-level styled-widget scanner.
+// Reviewed subpackages and application examples outside the top-level
+// styled-widget scanner. The value names where the API lives or is demonstrated.
 var mygoSubpackages = map[string]string{
 	"Charts": "ui/chart", "Code editor": "ui/editor", "Diff viewer": "ui/editor",
 	"Rich text editor": "ui/richtext", "Markdown stream": "ui/markdown",
+	"Installed apps": "examples/launcher",
 }
 
 type mygoComponent struct{ Name, Source string }

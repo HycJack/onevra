@@ -21,7 +21,6 @@ var newPages = map[string]bool{
 	"mygo/Secrets":                true,
 	"mygo/Recent documents":       true,
 	"mygo/File watching":          true,
-	"mygo/Installed apps":         true,
 	"mygo/Fonts":                  true,
 	"mygo/System appearance":      true,
 	"mygo/Languages & formats":    true,

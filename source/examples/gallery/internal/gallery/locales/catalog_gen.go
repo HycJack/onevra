@@ -6756,86 +6756,6 @@ func (msgs Messages) WatchEmpty() string {
 	return Catalog.Format(msgs.locale, "watchEmpty", nil)
 }
 
-// AppsLoad says "Find installed apps"
-// in the language the app shows.
-func AppsLoad() string { return In(i18n.Locale()).AppsLoad() }
-
-// AppsLoad says "Find installed apps"
-// in the language of msgs.
-func (msgs Messages) AppsLoad() string {
-	return Catalog.Format(msgs.locale, "appsLoad", nil)
-}
-
-// AppsShowPanel says "Show floating panel"
-// in the language the app shows.
-func AppsShowPanel() string { return In(i18n.Locale()).AppsShowPanel() }
-
-// AppsShowPanel says "Show floating panel"
-// in the language of msgs.
-func (msgs Messages) AppsShowPanel() string {
-	return Catalog.Format(msgs.locale, "appsShowPanel", nil)
-}
-
-// AppsHidePanel says "Hide floating panel"
-// in the language the app shows.
-func AppsHidePanel() string { return In(i18n.Locale()).AppsHidePanel() }
-
-// AppsHidePanel says "Hide floating panel"
-// in the language of msgs.
-func (msgs Messages) AppsHidePanel() string {
-	return Catalog.Format(msgs.locale, "appsHidePanel", nil)
-}
-
-// AppsHint says "Lists the apps installed on this computer with their icons, as a launcher searches them."
-// in the language the app shows.
-func AppsHint() string { return In(i18n.Locale()).AppsHint() }
-
-// AppsHint says "Lists the apps installed on this computer with their icons, as a launcher searches them."
-// in the language of msgs.
-func (msgs Messages) AppsHint() string {
-	return Catalog.Format(msgs.locale, "appsHint", nil)
-}
-
-// AppsSearch says "Search apps"
-// in the language the app shows.
-func AppsSearch() string { return In(i18n.Locale()).AppsSearch() }
-
-// AppsSearch says "Search apps"
-// in the language of msgs.
-func (msgs Messages) AppsSearch() string {
-	return Catalog.Format(msgs.locale, "appsSearch", nil)
-}
-
-// AppsLaunchNamed says "Open {name}"
-// in the language the app shows.
-func AppsLaunchNamed(name string) string { return In(i18n.Locale()).AppsLaunchNamed(name) }
-
-// AppsLaunchNamed says "Open {name}"
-// in the language of msgs.
-func (msgs Messages) AppsLaunchNamed(name string) string {
-	return Catalog.Format(msgs.locale, "appsLaunchNamed", map[string]any{"name": name})
-}
-
-// AppsPanelTitle says "Launcher panel"
-// in the language the app shows.
-func AppsPanelTitle() string { return In(i18n.Locale()).AppsPanelTitle() }
-
-// AppsPanelTitle says "Launcher panel"
-// in the language of msgs.
-func (msgs Messages) AppsPanelTitle() string {
-	return Catalog.Format(msgs.locale, "appsPanelTitle", nil)
-}
-
-// AppsPanelHint says "A panel floats above other apps, as Spotlight does. Press Escape to close it."
-// in the language the app shows.
-func AppsPanelHint() string { return In(i18n.Locale()).AppsPanelHint() }
-
-// AppsPanelHint says "A panel floats above other apps, as Spotlight does. Press Escape to close it."
-// in the language of msgs.
-func (msgs Messages) AppsPanelHint() string {
-	return Catalog.Format(msgs.locale, "appsPanelHint", nil)
-}
-
 // FontsSearch says "Search fonts"
 // in the language the app shows.
 func FontsSearch() string { return In(i18n.Locale()).FontsSearch() }
@@ -7084,16 +7004,6 @@ func ComponentFileWatching() string { return In(i18n.Locale()).ComponentFileWatc
 // in the language of msgs.
 func (msgs Messages) ComponentFileWatching() string {
 	return Catalog.Format(msgs.locale, "componentFileWatching", nil)
-}
-
-// ComponentInstalledApps says "Installed apps"
-// in the language the app shows.
-func ComponentInstalledApps() string { return In(i18n.Locale()).ComponentInstalledApps() }
-
-// ComponentInstalledApps says "Installed apps"
-// in the language of msgs.
-func (msgs Messages) ComponentInstalledApps() string {
-	return Catalog.Format(msgs.locale, "componentInstalledApps", nil)
 }
 
 // ComponentFonts says "Fonts"

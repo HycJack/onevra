@@ -92,7 +92,6 @@ var navigationIcons = map[string]func() *ui.SVG{
 	"Secrets":             lucide.KeyRound,
 	"Recent documents":    lucide.FileClock,
 	"File watching":       lucide.FolderSync,
-	"Installed apps":      lucide.LayoutGrid,
 	"Fonts":               lucide.Type,
 	"System appearance":   lucide.Contrast,
 	"Languages & formats": lucide.Languages,

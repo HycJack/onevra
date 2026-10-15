@@ -34,13 +34,6 @@ type systemDemo struct {
 	watchErr    string
 	watchStop   context.CancelFunc
 
-	apps        []mygo.InstalledApp
-	appsLoading bool
-	appsErr     string
-	appQuery    string
-	icons       map[string]*ui.Bitmap
-	panel       *mygo.Window
-
 	fontQuery string
 	monospace bool
 
@@ -72,10 +65,6 @@ func (d *systemDemo) close() {
 		d.networkOff = nil
 	}
 	d.stopWatching()
-	if d.panel != nil {
-		d.panel.Close()
-		d.panel = nil
-	}
 }
 
 func systemRow(c *ui.Context, label, value string) {
@@ -282,107 +271,6 @@ func exampleFileWatching(c *ui.Context, s *demoState) {
 			components.Text(c, e.Path).Grow(1).Wrap()
 		})
 	}
-}
-
-func exampleInstalledApps(c *ui.Context, s *demoState) {
-	d, m := &s.system, msg(c)
-	ui.Row(c).Gap(8).Children(func() {
-		if components.Button(c, m.AppsLoad(), components.ButtonPrimary).Disabled(d.appsLoading).Clicked() && d.native {
-			d.appsLoading = true
-			d.background(func() func() {
-				apps, err := mygo.Shell.InstalledApps()
-				return func() {
-					d.apps, d.appsLoading = apps, false
-					d.appsErr = ""
-					if err != nil {
-						d.appsErr = err.Error()
-					}
-				}
-			})
-		}
-		label := m.AppsShowPanel()
-		if d.panel != nil {
-			label = m.AppsHidePanel()
-		}
-		if components.Button(c, label, components.ButtonOutline).Clicked() && d.native {
-			d.togglePanel(m)
-		}
-	})
-	if d.appsErr != "" {
-		components.Text(c, m.SystemError(d.appsErr)).Wrap().TextColor(c.Theme().Danger)
-	}
-	if len(d.apps) == 0 {
-		components.Text(c, m.AppsHint()).Wrap().TextColor(c.Theme().TextMuted)
-		return
-	}
-	components.TextBox(c, &d.appQuery, components.TextBoxOptions{}).Label(m.AppsSearch()).Placeholder(m.AppsSearch()).FillWidth()
-	shown := 0
-	for _, app := range d.apps {
-		if shown == 30 {
-			break
-		}
-		if d.appQuery != "" && !strings.Contains(strings.ToLower(app.Name), strings.ToLower(d.appQuery)) {
-			continue
-		}
-		shown++
-		ui.Row(c).Key(app.ID).FillWidth().Gap(10).AlignItems(ui.Center).Children(func() {
-			if icon := d.icon(app.Path); icon != nil {
-				components.Image(c, icon).Size(24, 24)
-			} else {
-				ui.Box(c).Size(24, 24)
-			}
-			components.Text(c, app.Name).Grow(1).SingleLine()
-			if components.Button(c, m.Open(), components.ButtonGhost).Label(m.AppsLaunchNamed(app.Name)).Clicked() {
-				go mygo.Shell.LaunchApp(app)
-			}
-		})
-	}
-}
-
-// icon returns an app's cached icon, loading it in the background once.
-func (d *systemDemo) icon(path string) *ui.Bitmap {
-	if d.icons == nil {
-		d.icons = map[string]*ui.Bitmap{}
-	}
-	if icon, ok := d.icons[path]; ok {
-		return icon
-	}
-	d.icons[path] = nil
-	d.background(func() func() {
-		data, err := mygo.Shell.FileIcon(path, 48)
-		var icon *ui.Bitmap
-		if err == nil {
-			icon, _ = ui.DecodeBitmap(data)
-		}
-		return func() { d.icons[path] = icon }
-	})
-	return nil
-}
-
-// togglePanel shows a launcher-style panel, which floats above other apps.
-func (d *systemDemo) togglePanel(m locales.Messages) {
-	if d.panel != nil {
-		d.panel.Close()
-		d.panel = nil
-		return
-	}
-	var panel *mygo.Window
-	panel = mygo.NewWindow(mygo.WindowOptions{Title: m.AppsPanelTitle(), Width: 420, Height: 160, Panel: true,
-		Content: ui.View(func(c *ui.Context) {
-			c.OnShortcut(0, ui.KeyEscape, func() { panel.Close() })
-			ui.Column(c).Fill().Padding(20).Gap(10).Children(func() {
-				components.Text(c, m.AppsPanelTitle()).Bold().FontSize(18)
-				components.Text(c, m.AppsPanelHint()).Wrap().TextColor(c.Theme().TextMuted)
-			})
-		})})
-	panel.OnClosed(func() {
-		if d.panel == panel {
-			d.panel = nil
-			d.update(func() {})
-		}
-	})
-	d.panel = panel
-	panel.Show()
 }
 
 func exampleFonts(c *ui.Context, s *demoState) {

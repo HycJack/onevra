@@ -9,7 +9,7 @@ import (
 func TestSystemPagesRenderHeadless(t *testing.T) {
 	pages := map[string]string{
 		"Network": "networkOffline", "Secrets": "secretsSave", "Recent documents": "recentEmpty",
-		"File watching": "watchEmpty", "Installed apps": "appsHint", "Fonts": "fontsMonospaced",
+		"File watching": "watchEmpty", "Fonts": "fontsMonospaced",
 		"System appearance": "appearanceReduceMotion", "Languages & formats": "languagesShown",
 	}
 	for name, key := range pages {

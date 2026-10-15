@@ -1042,21 +1042,6 @@
   "watchStop": "Stop watching",
   "watchFolder": "Watched folder",
   "watchEmpty": "Changes to files in the folder appear here.",
-  "appsLoad": "Find installed apps",
-  "appsShowPanel": "Show floating panel",
-  "appsHidePanel": "Hide floating panel",
-  "appsHint": "Lists the apps installed on this computer with their icons, as a launcher searches them.",
-  "appsSearch": "Search apps",
-  "appsLaunchNamed": "Open {name}",
-  "@appsLaunchNamed": {
-    "placeholders": {
-      "name": {
-        "type": "String"
-      }
-    }
-  },
-  "appsPanelTitle": "Launcher panel",
-  "appsPanelHint": "A panel floats above other apps, as Spotlight does. Press Escape to close it.",
   "fontsSearch": "Search fonts",
   "fontsMonospaced": "Monospaced only",
   "fontsSample": "The quick brown fox 敏捷的棕色狐狸",
@@ -1089,7 +1074,6 @@
   "componentSecrets": "Secrets",
   "componentRecentDocuments": "Recent documents",
   "componentFileWatching": "File watching",
-  "componentInstalledApps": "Installed apps",
   "componentFonts": "Fonts",
   "componentSystemAppearance": "System appearance",
   "componentLanguages": "Languages & formats",
