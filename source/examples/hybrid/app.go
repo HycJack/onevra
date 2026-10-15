@@ -22,6 +22,8 @@ type application struct {
 	tray                                       *mygo.Tray
 	trayMenu                                   *mygo.Menu
 	settingsState                              components.SettingsState
+	mainTab                                    int
+	panelTab                                   int
 }
 
 func (a *application) report(key string, err error) {
@@ -72,7 +74,7 @@ func (a *application) showMain() {
 	if a.main == nil {
 		a.main = a.newWindow(plain.ShellOptions{
 			Title: a.text("title"), Width: 760, Height: 560, MinWidth: 360, MinHeight: 400,
-			Hidden: true, Content: a.mainView,
+			Hidden: true, Content: a.mainView, HeaderLeading: a.headerLeading, HeaderActions: a.headerActions,
 		})
 		a.main.OnClose(a.closeMain)
 	}
@@ -170,7 +172,7 @@ func (a *application) showWelcome() {
 	if a.welcome == nil {
 		a.welcome = a.newWindow(plain.ShellOptions{
 			Title: a.text("welcome"), Width: 460, Height: 340, MinWidth: 360, MinHeight: 300,
-			Hidden: true, Content: a.welcomeView,
+			Hidden: true, Content: a.welcomeView, HeaderActions: a.headerActions,
 		})
 		a.welcome.OnClose(func(e *mygo.CloseEvent) {
 			if a.quitting {

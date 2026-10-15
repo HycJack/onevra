@@ -20,7 +20,7 @@ func TestButtonPreview(t *testing.T) {
 			if _, ok := tt.Find("Button"); !ok || tt.HasText("Default") {
 				t.Fatal("button section must use the component name")
 			}
-			for _, label := range []string{"Primary", "Secondary", "Outline", "Ghost", "Link"} {
+			for _, label := range []string{"Primary", "Secondary", "Outline", "Ghost", "Link", "Toolbar"} {
 				r, ok := tt.Find(label)
 				if !ok || r.X < 20 || r.X+r.W > float32(width)-20 {
 					t.Fatalf("%s overflows preview: %+v", label, r)
@@ -29,7 +29,7 @@ func TestButtonPreview(t *testing.T) {
 					t.Fatal(err)
 				}
 			}
-			if g.controlState("Button", "Button").button.clicks != [5]int{1, 1, 1, 1, 1} {
+			if g.controlState("Button", "Button").button.clicks != [6]int{1, 1, 1, 1, 1, 1} {
 				t.Fatal("preview lost button interactions")
 			}
 		}
@@ -64,7 +64,7 @@ func TestButtonTogglePreview(t *testing.T) {
 			if !s.on || s.toggles[1] {
 				t.Fatal("toggle preview did not update independent values")
 			}
-			if g.controlState("Button", "Button").button.clicks != [5]int{} {
+			if g.controlState("Button", "Button").button.clicks != [6]int{} {
 				t.Fatal("toggle state leaked into other button examples")
 			}
 			if pageFromKey("controls/ToggleButton") != lucidePage {
@@ -83,7 +83,7 @@ func TestControlButtonWrap(t *testing.T) {
 				ui.Column(c).Fill().Gap(12).Children(func() { controlButton(c, s, "Default") })
 			}, width, 300)
 			var previous ui.Rect
-			for i, label := range []string{"Primary", "Secondary", "Outline", "Ghost", "Link"} {
+			for i, label := range []string{"Primary", "Secondary", "Outline", "Ghost", "Link", "Toolbar"} {
 				r, ok := tt.Find(label)
 				if !ok {
 					t.Fatalf("missing button %s", label)
@@ -104,7 +104,7 @@ func TestControlButtonWrap(t *testing.T) {
 					t.Fatal(err)
 				}
 			}
-			if s.button.clicks != [5]int{1, 1, 1, 1, 1} {
+			if s.button.clicks != [6]int{1, 1, 1, 1, 1, 1} {
 				t.Fatalf("unexpected per-button clicks: %v", s.button.clicks)
 			}
 		}
@@ -154,7 +154,7 @@ func TestButtonIndependentCounts(t *testing.T) {
 	tt := ui.NewTester(func(c *ui.Context) {
 		controlButton(c, s, "Button")
 	}, 540, 300)
-	labels := []string{"Primary", "Secondary", "Outline", "Ghost", "Link"}
+	labels := []string{"Primary", "Secondary", "Outline", "Ghost", "Link", "Toolbar"}
 	for i, label := range labels {
 		for range i + 1 {
 			if err := tt.Click(label); err != nil {

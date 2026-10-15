@@ -69,6 +69,32 @@ func TestClosePolicy(t *testing.T) {
 	}
 }
 
+func TestPanelToolbar(t *testing.T) {
+	a := &application{config: defaultConfig(), note: "Draft"}
+	tt := ui.NewTester(a.panelView, 360, 300)
+	if !tt.HasText(a.text("note")) {
+		t.Fatal(tt.Texts())
+	}
+	for _, label := range []string{a.text("copy"), a.text("settings")} {
+		if _, ok := tt.Find(label); !ok {
+			t.Fatalf("missing %s action: %v", label, tt.Texts())
+		}
+	}
+	if err := tt.Click(a.text("about")); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if a.panelTab != 1 || !tt.HasText(a.text("title")) || a.note != "Draft" {
+		t.Fatalf("tab=%d note=%q", a.panelTab, a.note)
+	}
+	if err := tt.Click(a.text("copy")); err != nil {
+		t.Fatal(err)
+	}
+	if got := tt.Clipboard(); got != "Draft" {
+		t.Fatalf("clipboard=%q", got)
+	}
+}
+
 func TestLanguages(t *testing.T) {
 	for _, tc := range []struct{ choice, system, want string }{
 		{"system", "zh-CN", "zh-Hans"}, {"system", "zh-SG", "zh-Hans"}, {"system", "zh-TW", "en"},

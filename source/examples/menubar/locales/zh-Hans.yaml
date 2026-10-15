@@ -4,12 +4,16 @@ description:
   other: "记录你的想法。在设置中选择应用的启动与关闭行为。"
 settings:
   other: "设置…"
+close_settings:
+  other: "关闭设置"
 quit:
   other: "退出"
 open:
   other: "打开主窗口"
 panel_title:
   other: "速记"
+about:
+  other: "关于"
 open_panel:
   other: "打开速记"
 note:
@@ -18,8 +22,6 @@ placeholder:
   other: "写点什么…"
 session_note:
   other: "笔记仅在本次运行期间保留。"
-done:
-  other: "完成"
 welcome:
   other: "在菜单栏找到我"
 welcome_body:

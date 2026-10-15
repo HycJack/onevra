@@ -7,7 +7,6 @@ var mygoCatalog = unhandledMyGoExamples(mygoExamples)
 var mygoExamples = []mygoExample{
 	{"Transforms", "Layout & containers", exampleTransforms},
 	{"Motion", "Layout & containers", exampleMotion},
-	{"Segmented", "Actions & navigation", exampleSegmented},
 	{"CheckboxGroup", "Selection & values", exampleCheckboxGroup},
 	{"RadioGroup", "Selection & values", exampleRadioGroup},
 	{"StepSlider", "Selection & values", exampleStepSlider},

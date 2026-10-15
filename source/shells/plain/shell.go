@@ -28,6 +28,15 @@ type ShellOptions struct {
 	StateKey string
 	// Hidden allows the application to install lifecycle handlers before showing.
 	Hidden bool
+	// HeaderLeading builds optional leading header content, such as a segmented
+	// tab list. It replaces the header title, which remains the native window
+	// title; build a title inside it if the header should also show one. It runs
+	// on the UI thread and must not start background work.
+	HeaderLeading func(*ui.Context)
+	// HeaderActions builds optional trailing controls at the right of the
+	// header, before the Windows caption buttons, such as a Settings action. It
+	// runs on the UI thread and must not start background work.
+	HeaderActions func(*ui.Context)
 	// Content is automatically inset below the draggable window-control area.
 	// Dialogs inherit its drag strip and remain relative to the whole window.
 	Content func(*ui.Context)
@@ -164,7 +173,16 @@ func (s *Shell) view(c *ui.Context) {
 			}
 			ui.Row(c).Key("header").Absolute().Top(0).Left(0).Right(0).Height(height).
 				Padding(6, max(8, bar.Right), 6, leftInset).AlignItems(ui.Center).DragWindow().Children(func() {
-				s.headerTitle(c)
+				if s.options.HeaderLeading != nil {
+					ui.Row(c).Key("header-leading").Grow(1).MinWidth(0).FillHeight().AlignItems(ui.Center).Clip().Children(func() {
+						s.options.HeaderLeading(c)
+					})
+				} else {
+					s.headerTitle(c)
+				}
+				if s.options.HeaderActions != nil {
+					ui.Row(c).Key("header-actions").Shrink(0).Gap(4).Children(func() { s.options.HeaderActions(c) })
+				}
 				if runtime.GOOS == "windows" {
 					s.captionButtons(c)
 				}

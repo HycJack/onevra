@@ -56,11 +56,6 @@ func exampleTextAreaBuffer(c *ui.Context, s *demoState) {
 	ui.TextAreaBuffer(c, s.buffer).Label(tr(c, "gallery.notes")).Placeholder(tr(c, "gallery.write_some_notes")).ReadOnly(s.readOnly).Height(140).FillWidth()
 }
 
-func exampleSegmented(c *ui.Context, s *demoState) {
-	ui.Segmented(c, &s.index, tr(c, "gallery.list"), tr(c, "gallery.grid")).Label(tr(c, "gallery.view_mode"))
-	components.Text(c, tr(c, []string{"List view selected", "Grid view selected"}[s.index]))
-}
-
 func exampleCheckboxGroup(c *ui.Context, s *demoState) {
 	ui.CheckboxGroup(c, tr(c, "gallery.notifications"), func() {
 		components.Checkbox(c, &s.on, tr(c, "gallery.email"))

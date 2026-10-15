@@ -10,7 +10,7 @@ import (
 )
 
 func TestButtonVariantsClick(t *testing.T) {
-	variants := []ButtonVariant{ButtonPrimary, ButtonSecondary, ButtonOutline, ButtonGhost, ButtonLink}
+	variants := []ButtonVariant{ButtonPrimary, ButtonSecondary, ButtonOutline, ButtonGhost, ButtonLink, ButtonToolbar}
 	for _, dark := range []bool{false, true} {
 		for _, variant := range variants {
 			clicked := false
@@ -30,8 +30,34 @@ func TestButtonVariantsClick(t *testing.T) {
 	}
 }
 
+func TestButtonToolbarFace(t *testing.T) {
+	for _, dark := range []bool{false, true} {
+		face, hover, _, _ := toolbarFace(theme.Palette(dark))
+		tt := ui.NewTester(func(c *ui.Context) {
+			c.SetTheme(theme.Palette(dark))
+			Button(c, "Copy", ButtonToolbar)
+		}, 300, 100)
+		r, ok := tt.Find("Copy")
+		if !ok {
+			t.Fatal("button not found")
+		}
+		// Inside the horizontal padding, clear of the label glyphs and border.
+		sample := func() ui.Color {
+			p := tt.Image().RGBAAt(int(r.X+4), int(r.Y+r.H/2))
+			return ui.Color{R: p.R, G: p.G, B: p.B, A: p.A}
+		}
+		if got := sample(); got.R != face.R || got.G != face.G || got.B != face.B {
+			t.Fatalf("dark=%v: face %v, want %v", dark, got, face)
+		}
+		tt.Move(r.X+r.W/2, r.Y+r.H/2)
+		if got := sample(); got.R != hover.R || got.G != hover.G || got.B != hover.B {
+			t.Fatalf("dark=%v: hover face %v, want %v", dark, got, hover)
+		}
+	}
+}
+
 func TestButtonCursorOverridesParent(t *testing.T) {
-	for _, variant := range []ButtonVariant{ButtonPrimary, ButtonSecondary, ButtonOutline, ButtonGhost, ButtonLink} {
+	for _, variant := range []ButtonVariant{ButtonPrimary, ButtonSecondary, ButtonOutline, ButtonGhost, ButtonLink, ButtonToolbar} {
 		tt := ui.NewTester(func(c *ui.Context) {
 			c.SetTheme(theme.LightPalette())
 			ui.Row(c).Fill().Cursor(ui.CursorText).Children(func() {

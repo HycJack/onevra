@@ -10,7 +10,7 @@ import (
 // in ui.Toolbar. Applications own the label and handle Clicked on the result.
 // The face is transparent at rest; hover and press use translucent text color.
 func IconButton(c *ui.Context, icon *ui.SVG, label string) ui.Element {
-	return iconButton(c, icon, label, c.Theme().Rem(1.25))
+	return components.IconButton(c, icon, label, components.IconButtonPlain)
 }
 
 // iconButton varies the glyph size without shrinking the hit target.

@@ -69,6 +69,53 @@ func TestClosePolicy(t *testing.T) {
 	}
 }
 
+func TestMainTabs(t *testing.T) {
+	if appKind == "menubar" {
+		t.Skip("the menu bar example has no main window")
+	}
+	a := &application{config: defaultConfig(), note: "Draft"}
+	tt := ui.NewTester(a.headerLeading, 400, 60)
+	if !tt.HasText(a.text("note")) || tt.HasText(a.text("description")) {
+		t.Fatal(tt.Texts())
+	}
+	if err := tt.Click(a.text("about")); err != nil {
+		t.Fatal(err)
+	}
+	if a.mainTab != 1 {
+		t.Fatalf("tab=%d", a.mainTab)
+	}
+	tt = ui.NewTester(a.mainView, 760, 560)
+	if !tt.HasText(a.text("description")) || a.note != "Draft" {
+		t.Fatalf("note=%q %v", a.note, tt.Texts())
+	}
+}
+
+func TestPanelToolbar(t *testing.T) {
+	if appKind == "menubar" {
+		t.Skip("the menu bar example tests its panel separately")
+	}
+	a := &application{config: defaultConfig(), note: "Draft"}
+	tt := ui.NewTester(a.panelView, 360, 300)
+	for _, label := range []string{a.text("copy"), a.text("settings")} {
+		if _, ok := tt.Find(label); !ok {
+			t.Fatalf("missing %s action: %v", label, tt.Texts())
+		}
+	}
+	if err := tt.Click(a.text("about")); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if a.panelTab != 1 || !tt.HasText(a.text("title")) || a.note != "Draft" {
+		t.Fatalf("tab=%d note=%q", a.panelTab, a.note)
+	}
+	if err := tt.Click(a.text("copy")); err != nil {
+		t.Fatal(err)
+	}
+	if got := tt.Clipboard(); got != "Draft" {
+		t.Fatalf("clipboard=%q", got)
+	}
+}
+
 func TestLanguages(t *testing.T) {
 	for _, tc := range []struct{ choice, system, want string }{
 		{"system", "zh-CN", "zh-Hans"}, {"system", "zh-SG", "zh-Hans"}, {"system", "zh-TW", "en"},
@@ -110,12 +157,12 @@ func TestLanguages(t *testing.T) {
 	if appKind != "menubar" {
 		a.config.Language = "en"
 		tt := ui.NewTester(a.mainView, 760, 560)
-		if !tt.HasText(a.text("title")) {
+		if !tt.HasText(a.text("note")) {
 			t.Fatal(tt.Texts())
 		}
 		a.config.Language = "zh-Hans"
 		tt = ui.NewTester(a.mainView, 760, 560)
-		if !tt.HasText(a.text("title")) {
+		if !tt.HasText(a.text("note")) {
 			t.Fatal(tt.Texts())
 		}
 	}

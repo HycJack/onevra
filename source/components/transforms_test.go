@@ -51,7 +51,7 @@ func TestScaledTabsUnderline(t *testing.T) {
 		tt := ui.NewTester(func(c *ui.Context) {
 			c.SetTheme(theme.Palette(dark))
 			ui.Column(c).Scale(1.5, 1.5).TransformOrigin(0, 0).Children(func() {
-				parts := Tabs(c, &selected, "General", "Appearance")
+				parts := Tabs(c, &selected, TabsUnderline, "General", "Appearance")
 				list = parts.List.Bounds()
 			})
 		}, 500, 130)

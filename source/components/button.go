@@ -16,6 +16,10 @@ const (
 	ButtonGhost
 	// ButtonLink is inline text with an underline on hover.
 	ButtonLink
+	// ButtonToolbar is a raised toolbar control whose capsule and shadow match
+	// the chosen segment of a segmented tab list, with a hairline edge that
+	// keeps it readable outside a track.
+	ButtonToolbar
 )
 
 // Button creates a labeled button in the Onevra style with a single standard
@@ -42,6 +46,8 @@ func styleButton(c *ui.Context, b ui.Element, variant ButtonVariant) ui.Element 
 	t := c.Theme()
 	b.Padding(t.Space(1.5), t.Space(3.5))
 	bg, hover, pressed, fg, border := t.Surface, t.SurfaceHover, t.SurfacePressed, t.Text, t.Border
+	radius := t.Radius
+	var shadow ui.Color
 	switch variant {
 	case ButtonPrimary:
 		bg, hover, pressed, fg, border = t.Accent, t.AccentHover, t.AccentPressed, t.AccentText, ui.Color{}
@@ -52,6 +58,11 @@ func styleButton(c *ui.Context, b ui.Element, variant ButtonVariant) ui.Element 
 		bg, border = ui.Color{}, t.Border
 	case ButtonGhost:
 		bg, border = ui.Color{}, ui.Color{}
+	case ButtonToolbar:
+		// The capsule matches the chosen segment of a segmented tab list, with a
+		// hairline edge that keeps it readable off a track.
+		bg, hover, pressed, shadow = toolbarFace(t)
+		fg, border, radius = t.Text, t.Border.Alpha(0.8), t.Space(20)
 	}
 	if !b.IsDisabled() {
 		switch {
@@ -65,5 +76,11 @@ func styleButton(c *ui.Context, b ui.Element, variant ButtonVariant) ui.Element 
 		border = bg
 	}
 	// A transparent Ghost border reserves the same space as the filled variants.
-	return b.Radius(t.Radius).Background(bg).TextColor(fg).Border(1, border)
+	b.Radius(radius).Background(bg).TextColor(fg).Border(1, border)
+	if variant == ButtonToolbar {
+		// A toolbar button needs less lift than a chosen tab, which separates
+		// itself from the track behind it.
+		b.Shadow(0, 1, 2, 0, shadow.Alpha(0.5))
+	}
+	return b
 }

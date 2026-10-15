@@ -6,7 +6,7 @@ import (
 )
 
 type buttonExampleState struct {
-	clicks [5]int
+	clicks [6]int
 }
 
 func controlButton(c *ui.Context, s *controlState, variant string) {
@@ -21,6 +21,7 @@ func controlButton(c *ui.Context, s *controlState, variant string) {
 		}{
 			{"Primary", components.ButtonPrimary}, {"Secondary", components.ButtonSecondary},
 			{"Outline", components.ButtonOutline}, {"Ghost", components.ButtonGhost}, {"Link", components.ButtonLink},
+			{"Toolbar", components.ButtonToolbar},
 		} {
 			// Key the parent so changing the count never changes button identity.
 			ui.Box(c).Key(variant.name).Children(func() {

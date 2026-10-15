@@ -60,7 +60,7 @@ var mygoHandled = map[string]mygoDecision{
 	"SidebarSection":   {Replacement: "components.Sidebar", Reason: "Onevra sidebar section headings"},
 	"SidebarItem":      {Replacement: "components.Sidebar", Reason: "Onevra sidebar navigation items"},
 
-	"Segmented":       {Reason: "No Onevra segmented control component is needed"},
+	"Segmented":       {Replacement: "components.Tabs", Reason: "Onevra Tabs with TabsSegmented, a macOS segmented style"},
 	"CheckboxGroup":   {Reason: "No separate Onevra checkbox group component is needed"},
 	"RadioGroup":      {Reason: "No separate Onevra radio group component is needed; upstream grouping remains a composition building block"},
 	"Toggle":          {Replacement: "components.ToggleButton", Reason: "Onevra toggle button styling"},

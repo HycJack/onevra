@@ -426,8 +426,6 @@ gallery.grid:
   other: "网格"
 gallery.grid_items:
   other: 网格项目
-gallery.grid_view_selected:
-  other: 已选择网格视图
 gallery.hello_world:
   other: "Hello, world. 你好，世界。こんにちは \U0001F30D"
 gallery.hex_color:
@@ -542,8 +540,6 @@ gallery.liquid_glass:
   other: 液态玻璃
 gallery.list:
   other: "列表"
-gallery.list_view_selected:
-  other: 已选择列表视图
 gallery.loading:
   other: 加载中
 gallery.loading_terminal:
@@ -814,6 +810,8 @@ gallery.selected_item_d:
   other: 已选项目：%d
 gallery.selected_s:
   other: 已选择：%s
+gallery.segmented_control:
+  other: 分段控件
 gallery.selection_values:
   other: 选择与数值
 gallery.selects:
@@ -928,6 +926,8 @@ gallery.unable_to_load_avatar_jpeg:
   other: 无法加载 avatar.jpeg
 gallery.unchecked:
   other: 未勾选
+gallery.underline:
+  other: 下划线
 gallery.undo:
   other: 撤销
 gallery.uniform:
@@ -942,8 +942,6 @@ gallery.version_s:
   other: 版本 %s
 gallery.vertical:
   other: 垂直
-gallery.view_mode:
-  other: 视图模式
 gallery.volume:
   other: 音量
 gallery.web_view_unavailable:
@@ -984,6 +982,8 @@ gallery.your_password_is_updated:
   other: 你的密码已更新。
 gallery.toggle_smart_notifications:
   other: 切换智能通知
+gallery.toolbar:
+  other: 工具栏
 gallery.actions_navigation:
   other: 操作与导航
 gallery.date_time:

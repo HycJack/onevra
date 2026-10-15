@@ -46,7 +46,7 @@ func main() {
 }
 ```
 
-- Create windows only after `mygo.App.WhenReady`. Choose `shells/plain` for a single content area, which shows `Title` in its header, or `shells/sidebar` for sidebar navigation; use `shell.Window()` for native events instead of adding a second lifecycle. Pass `Hidden: true` when lifecycle handlers or content must be prepared before showing.
+- Create windows only after `mygo.App.WhenReady`. Choose `shells/plain` for a single content area, which shows `Title` in its header, or `shells/sidebar` for sidebar navigation; use `shell.Window()` for native events instead of adding a second lifecycle. Pass `Hidden: true` when lifecycle handlers or content must be prepared before showing. Put a view switcher, such as `components.Tabs`, in `plain.ShellOptions.HeaderLeading` and window-level actions, such as a Settings button, in `plain.ShellOptions.HeaderActions`; they sit at the left and right of the header.
 - Builders run synchronously on the UI thread every frame. Keep state in retained application values passed by pointer (`components.Checkbox(c, &agreed, "I agree")`); never start background work, I/O or parsing inside a builder. Do background work elsewhere and apply results on the main thread, then request a frame.
 - Element handles are valid only for the current build pass. Bind a `ui.Handle` for identity or geometry across frames.
 - The application owns the theme. Choose light/dark/system with `mygo.Theme.SetSource` (before `App.Run` for a saved preference). Pass `Theme: theme.Onevra` (or a function returning your own `*ui.Theme`) in Shell options; without a Shell, call `theme.Apply(c)` or `c.SetTheme` at the top of the root builder. Components never call `Context.SetTheme`.
@@ -59,14 +59,14 @@ Use Onevra's control whenever one exists; it replaces MyGo's styled widget of th
 
 | Need | Use |
 | --- | --- |
-| Button, link, primary button, menu button | `components.Button` with a variant; `.Menu(...)` for menus |
+| Button, icon button, link, primary button, menu button | `components.Button` with a variant; `components.IconButton` for icon-only actions with a tooltip, plain or raised; `ButtonToolbar` matches `TabsSegmented`'s chosen segment; `.Menu(...)` for menus |
 | Text, editable text, rich inline text | `components.Text`, `components.RichText` |
 | Text input, text area, search field | `components.TextBox`, `components.TextBoxBuffer` |
 | Checkbox, switch, radio, toggle | `components.Checkbox`, `Switch`, `Radio`, `ToggleButton` |
 | Select, combobox, autocomplete | `components.Select` (searchable), `components.NativeSelect` |
 | Number, slider, date, time, color | `NumberInput`, `Slider`, `Calendar`/`CalendarPicker`, `TimePicker`, `ColorPicker`/`ColorView` |
 | Scroll, list, grid, tree, outline, table | `ScrollView`, `List`, `GridView`, `Tree`, `TreeVirtualized`, `Table`, `TableVirtualized` |
-| Tabs, accordion, collapsible, split, breadcrumbs, sidebar | The Onevra component of the same name |
+| Tabs, accordion, collapsible, split, breadcrumbs, sidebar | The Onevra component of the same name; `components.Tabs` takes `TabsUnderline` or `TabsSegmented` |
 | Circular item picker in a magnified honeycomb | `components.Honeycomb` |
 | Modal, alert, popover, tooltip | `Dialog`, `AlertDialog`, `Popover`, `Tooltip` |
 | Toast | MyGo's `c.Toast`, `ToastAction`, `AddToast`; Shell builds them with `components.Toasts`, which standalone hosts call themselves; place them with `ShellOptions.Toasts` (`components.ToastOptions`). `ui.Toast.Type` takes `components.ToastInfo`/`Success`/`Warning`/`Error` |
@@ -84,7 +84,7 @@ Use MyGo directly for:
 - Specialized charts and continuous/time axes from `ui/chart`, and element transforms and motion methods. Use `LayoutBounds` for layout calculations and local pointer coordinates; `Element.Bounds` includes visual transforms.
 - Native menus and context menus, `Flyout`, `WebView`, `ui/editor` code and diff views, and every MyGo plugin, including Glass. Do not write Onevra-style replacements.
 - MyGo's unstyled bases when building a new reusable control.
-- A MyGo widget with no Onevra equivalent. Onevra intentionally omits Divider, Avatar, Meter, Form, Field, Toolbar, OutlineTable, Segmented and TokenField: compose dividers from Box or borders before reaching for the upstream widget.
+- A MyGo widget with no Onevra equivalent. Onevra intentionally omits Divider, Avatar, Meter, Form, Field, Toolbar, OutlineTable and TokenField: compose dividers from Box or borders before reaching for the upstream widget. For a segmented control, use `components.Tabs` with `TabsSegmented` instead of `ui.Segmented`.
 
 Charts accept application-owned data and formatting, with generic empty and detail slots. Keep series/slice IDs stable and state separate per chart; `chart.State{Index: -1}` starts unselected. Prepare large datasets outside builders; these views do not downsample or virtualize data. Graphs keep layout and camera in one retained `graph.State` per view and need stable node IDs.
 

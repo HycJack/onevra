@@ -4,7 +4,7 @@ Each shell style lives in its own package under `shells/`, without a shared faca
 
 The [components package](../../source/components/doc.go) provides common controls independently of Shell. Sidebar Shell also provides icon buttons for titlebar and toolbar actions. Both packages compose MyGo directly.
 
-Shell reuses the common Icon component; components remain independent of Shell.
+Shell reuses the common Icon and IconButton components; components remain independent of Shell.
 
 Common controls expose at most one visual variant axis, such as button style. Each control has one theme-scaled standard size rather than a separate size enumeration. Interaction and value states are not visual variants.
 
@@ -106,7 +106,7 @@ Shell accepts updated control labels without recreating its window. Applications
 
 ## Page container and layout
 
-Plain Shell hides the system title bar and automatically places its content below a draggable strip with native macOS/Linux controls or Onevra caption buttons on Windows. Its opaque theme background covers the whole window, including the strip. Applications do not add another header inset. Caption-label updates preserve the window and its content. Dialogs inherit the strip's drag behavior and clearance. The starter applications use this shell for main, settings and introduction windows; their transient tray panels are MyGo flyouts shown as system popovers, drawn by the application where the platform provides no popover material.
+Plain Shell hides the system title bar and places content below a draggable strip with native macOS/Linux window controls or Onevra caption buttons on Windows; its opaque theme background covers the whole window, including the strip, with no header inset. `ShellOptions.HeaderLeading` replaces the header title with leading content and `HeaderActions` builds trailing controls before the Windows caption buttons. Transient tray panels are MyGo flyouts shown as system popovers, drawn by the application where the platform lacks one.
 
 The sidebar page container reserves space for system window controls and overlays a transparent draggable header with a Lucide sidebar control. The toggle keeps additional clearance from macOS traffic lights. Its default page contains a collapsible left sidebar and a flexible main region.
 

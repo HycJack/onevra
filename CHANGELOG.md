@@ -4,6 +4,10 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Breaking: `components.Tabs` takes a `TabsVariant` before its labels. Pass `components.TabsUnderline` for the previous accent-underline look, or `components.TabsSegmented` for a macOS-style segmented control: a raised, shadowed thumb over a capsule track with a heavier chosen label, replacing `ui.Segmented`.
+- Add `components.ButtonToolbar`, a raised, shadowed control that matches `TabsSegmented`'s chosen segment, for actions beside a segmented tab list.
+- Add `components.IconButton`, an icon-only button with an accessible label and tooltip, in a plain or raised toolbar style; `sidebar.IconButton` now shares it. The starter applications use raised icon actions in their toolbars and settings header and a plain `×` to close Settings.
+- Add `plain.ShellOptions.HeaderLeading` and `HeaderActions`, leading and trailing header controls. The desktop and hybrid examples put their segmented Note and About tabs in `HeaderLeading` and their Settings action in `HeaderActions`.
 - Show the window title in `shells/plain`'s header, so a window without the default title bar still displays it. The header follows `Window().SetTitle`, including later language changes.
 - Add the official website at <https://oneo-me.github.io/onevra/>, covering the component set, theming, installation and common questions in English and Simplified Chinese.
 - Add `components.Honeycomb`, a picker that arranges round images or generated content in a magnified honeycomb on the surface of a ball: drag or scroll to pan, or Tab through the items, and the item nearest the middle is chosen and ringed in its own color or the theme's accent. Applications own the items, decoded images, labels, selected ID and the action a choice triggers.

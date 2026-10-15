@@ -115,6 +115,40 @@ func TestCaptionAndLiveUpdates(t *testing.T) {
 	}
 }
 
+func TestHeaderActionsSitInTheHeader(t *testing.T) {
+	clicked := false
+	var height float32
+	s := newShell(ShellOptions{Title: "Draft", Content: func(c *ui.Context) { height = HeaderHeight(c) }, HeaderActions: func(c *ui.Context) {
+		components.Button(c, "Settings", components.ButtonToolbar).OnClick(func() { clicked = true })
+	}})
+	tt := ui.NewTester(s.view, 760, 560)
+	r, ok := tt.Find("Settings")
+	if !ok || r.Y+r.H > height || r.X < 400 {
+		t.Fatalf("header action misplaced: %+v / %v", r, height)
+	}
+	if err := tt.Click("Settings"); err != nil {
+		t.Fatal(err)
+	}
+	if !clicked {
+		t.Fatal("header action did not click")
+	}
+}
+
+func TestHeaderLeadingReplacesTitle(t *testing.T) {
+	var height float32
+	s := newShell(ShellOptions{Title: "Draft", Content: func(c *ui.Context) { height = HeaderHeight(c) }, HeaderLeading: func(c *ui.Context) {
+		components.Button(c, "Note", components.ButtonToolbar)
+	}})
+	tt := ui.NewTester(s.view, 760, 560)
+	r, ok := tt.Find("Note")
+	if !ok || r.Y+r.H > height || r.X > 100 {
+		t.Fatalf("leading content misplaced: %+v / %v", r, height)
+	}
+	if tt.HasText("Draft") {
+		t.Fatal("leading content did not replace the header title")
+	}
+}
+
 func TestShellBuildsLocalizedToasts(t *testing.T) {
 	closed := 0
 	s := newShell(ShellOptions{Labels: Labels{CloseToast: "Dismiss"}, Content: func(c *ui.Context) {

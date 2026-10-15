@@ -4,12 +4,16 @@ description:
   other: "A small space for your ideas. Open Settings to choose how the app starts and closes."
 settings:
   other: "Settings…"
+close_settings:
+  other: "Close settings"
 quit:
   other: "Quit"
 open:
   other: "Open main window"
 panel_title:
   other: "Quick note"
+about:
+  other: "About"
 open_panel:
   other: "Open quick note"
 note:
@@ -18,8 +22,6 @@ placeholder:
   other: "Write something…"
 session_note:
   other: "Notes stay in memory until you quit."
-done:
-  other: "Done"
 welcome:
   other: "Find me in the menu bar"
 welcome_body:

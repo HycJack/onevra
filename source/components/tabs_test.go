@@ -10,27 +10,25 @@ import (
 )
 
 func TestTabsClick(t *testing.T) {
-	for _, dark := range []bool{false, true} {
-		mode := false
-		if dark {
-			mode = true
-		}
-		selected := 0
-		tt := ui.NewTester(func(c *ui.Context) {
-			c.SetTheme(theme.Palette(mode))
-			Tabs(c, &selected, "General", "Appearance", "Advanced")
-		}, 400, 100)
-		if err := tt.Click("Appearance"); err != nil {
-			t.Fatal(err)
-		}
-		if selected != 1 {
-			t.Errorf("dark=%v: selected=%d, want 1", dark, selected)
-		}
-		if err := tt.Click("Advanced"); err != nil {
-			t.Fatal(err)
-		}
-		if selected != 2 {
-			t.Errorf("dark=%v: selected=%d, want 2", dark, selected)
+	for _, variant := range []TabsVariant{TabsUnderline, TabsSegmented} {
+		for _, dark := range []bool{false, true} {
+			selected := 0
+			tt := ui.NewTester(func(c *ui.Context) {
+				c.SetTheme(theme.Palette(dark))
+				Tabs(c, &selected, variant, "General", "Appearance", "Advanced")
+			}, 400, 100)
+			if err := tt.Click("Appearance"); err != nil {
+				t.Fatal(err)
+			}
+			if selected != 1 {
+				t.Errorf("variant=%v dark=%v: selected=%d, want 1", variant, dark, selected)
+			}
+			if err := tt.Click("Advanced"); err != nil {
+				t.Fatal(err)
+			}
+			if selected != 2 {
+				t.Errorf("variant=%v dark=%v: selected=%d, want 2", variant, dark, selected)
+			}
 		}
 	}
 }
@@ -41,7 +39,7 @@ func TestTabsIndicatorAnimation(t *testing.T) {
 		var list ui.Rect
 		tt := ui.NewTester(func(c *ui.Context) {
 			c.SetTheme(theme.Palette(mode))
-			parts := Tabs(c, &selected, "General", "Appearance", "Advanced")
+			parts := Tabs(c, &selected, TabsUnderline, "General", "Appearance", "Advanced")
 			parts.List.Draw(func(_ *ui.Painter, r ui.Rect) { list = r })
 		}, 400, 100)
 		underline := func() (int, int) {
@@ -104,12 +102,107 @@ func TestTabsIndicatorAnimation(t *testing.T) {
 	}
 }
 
-func TestTabsHoverDoesNotChangeAppearance(t *testing.T) {
+// TestTabsSegmentedThumb checks that the chosen segment is drawn on the theme's
+// raised surface and that its label still paints over the thumb.
+func TestTabsSegmentedThumb(t *testing.T) {
+	for _, dark := range []bool{false, true} {
+		selected := 0
+		tt := ui.NewTester(func(c *ui.Context) {
+			c.SetTheme(theme.Palette(dark))
+			Tabs(c, &selected, TabsSegmented, "General", "Appearance", "Advanced")
+		}, 400, 100)
+		tt.SetPreferences(ui.Preferences{ReduceMotion: true})
+		pal := theme.Palette(dark)
+		want := pal.Surface
+		if dark {
+			want = pal.SurfaceHover
+		}
+		above := func(label string) ui.Color {
+			t.Helper()
+			r, ok := tt.Find(label)
+			if !ok {
+				t.Fatalf("missing %s", label)
+			}
+			p := tt.Image().RGBAAt(int(r.X+r.W/2), int(r.Y-2))
+			return ui.Color{R: p.R, G: p.G, B: p.B, A: p.A}
+		}
+		thumb := above("General")
+		if thumb.R != want.R || thumb.G != want.G || thumb.B != want.B {
+			t.Fatalf("dark=%v: chosen segment %v, want %v", dark, thumb, want)
+		}
+		// The label paints over the thumb, so the text box is not one flat color.
+		r, _ := tt.Find("General")
+		img := tt.Image()
+		flat := img.RGBAAt(int(r.X+r.W/2), int(r.Y-2))
+		text := false
+		for y := int(r.Y); y < int(r.Y+r.H) && !text; y++ {
+			for x := int(r.X); x < int(r.X+r.W); x++ {
+				if c := img.RGBAAt(x, y); c != flat {
+					text = true
+					break
+				}
+			}
+		}
+		if !text {
+			t.Fatal("chosen label is hidden behind the thumb")
+		}
+		// The thumb follows the choice, and the other segments show the track.
+		selected = 2
+		tt.Frame()
+		if moved := above("Advanced"); moved.R != want.R || moved.G != want.G || moved.B != want.B {
+			t.Fatalf("dark=%v: thumb did not follow selection: %v", dark, moved)
+		}
+		if track := above("General"); track.R == want.R && track.G == want.G && track.B == want.B {
+			t.Fatal("old segment kept the thumb")
+		}
+	}
+}
+
+// TestTabsSegmentedThumbAnimation checks that the thumb moves to the chosen
+// segment instead of jumping there, and finishes when the frame settles.
+func TestTabsSegmentedThumbAnimation(t *testing.T) {
+	selected := 0
+	tt := ui.NewTester(func(c *ui.Context) {
+		c.SetTheme(theme.LightPalette())
+		Tabs(c, &selected, TabsSegmented, "General", "Appearance", "Advanced")
+	}, 400, 100)
+	tt.Frame()
+	thumb := theme.LightPalette().Surface
+	isThumb := func(label string) bool {
+		t.Helper()
+		r, ok := tt.Find(label)
+		if !ok {
+			t.Fatalf("missing %s", label)
+		}
+		p := tt.Image().RGBAAt(int(r.X+r.W/2), int(r.Y-2))
+		return p.R == thumb.R && p.G == thumb.G && p.B == thumb.B
+	}
+	if !isThumb("General") {
+		t.Fatal("thumb not on the chosen tab")
+	}
+	selected = 2
+	tt.Frame()
+	if isThumb("Advanced") {
+		t.Fatal("thumb jumped to the choice instead of animating")
+	}
+	time.Sleep(tabsIndicatorDuration + 20*time.Millisecond)
+	tt.Frame()
+	if !isThumb("Advanced") {
+		t.Fatal("thumb did not reach the chosen tab")
+	}
+	if isThumb("General") {
+		t.Fatal("thumb remained on the old tab")
+	}
+}
+
+// TestTabsSegmentedHoverDoesNotChangeAppearance keeps the segmented look free of
+// hover faces, as the underline variant is.
+func TestTabsSegmentedHoverDoesNotChangeAppearance(t *testing.T) {
 	for _, mode := range []bool{false, true} {
 		selected := 0
 		tt := ui.NewTester(func(c *ui.Context) {
 			c.SetTheme(theme.Palette(mode))
-			Tabs(c, &selected, "General", "Appearance")
+			Tabs(c, &selected, TabsSegmented, "General", "Appearance")
 		}, 400, 100)
 		before := bytes.Clone(tt.Image().Pix)
 		for _, label := range []string{"General", "Appearance"} {
@@ -126,24 +219,28 @@ func TestTabsHoverDoesNotChangeAppearance(t *testing.T) {
 }
 
 func TestTabsEmpty(t *testing.T) {
-	selected := 0
-	tt := ui.NewTester(func(c *ui.Context) { Tabs(c, &selected) }, 400, 100)
-	tt.Frame()
+	for _, variant := range []TabsVariant{TabsUnderline, TabsSegmented} {
+		selected := 0
+		tt := ui.NewTester(func(c *ui.Context) { Tabs(c, &selected, variant) }, 400, 100)
+		tt.Frame()
+	}
 }
 
 func TestTabsKeyboard(t *testing.T) {
-	selected := 0
-	tt := ui.NewTester(func(c *ui.Context) {
-		c.SetTheme(theme.LightPalette())
-		Tabs(c, &selected, "General", "Appearance", "Advanced")
-	}, 400, 100)
-	tt.Key(0, ui.KeyTab)
-	tt.Key(0, ui.KeyRight)
-	if selected != 1 {
-		t.Errorf("Right chose %d, want 1", selected)
-	}
-	tt.Key(0, ui.KeyLeft)
-	if selected != 0 {
-		t.Errorf("Left chose %d, want 0", selected)
+	for _, variant := range []TabsVariant{TabsUnderline, TabsSegmented} {
+		selected := 0
+		tt := ui.NewTester(func(c *ui.Context) {
+			c.SetTheme(theme.LightPalette())
+			Tabs(c, &selected, variant, "General", "Appearance", "Advanced")
+		}, 400, 100)
+		tt.Key(0, ui.KeyTab)
+		tt.Key(0, ui.KeyRight)
+		if selected != 1 {
+			t.Errorf("variant=%v: Right chose %d, want 1", variant, selected)
+		}
+		tt.Key(0, ui.KeyLeft)
+		if selected != 0 {
+			t.Errorf("variant=%v: Left chose %d, want 0", variant, selected)
+		}
 	}
 }

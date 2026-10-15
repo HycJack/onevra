@@ -4,6 +4,7 @@ import (
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
+	"github.com/oneo-me/onevra/source/icons/lucide"
 	"github.com/oneo-me/onevra/source/shells/plain"
 	"github.com/oneo-me/onevra/source/theme"
 	"runtime"
@@ -61,7 +62,7 @@ func (a *application) panelView(c *ui.Context) {
 		// The popover material shows on macOS; elsewhere the flyout is
 		// transparent and the panel draws its own surface.
 		c.Root().Background(ui.Transparent)
-		panel := ui.Column(c).Fill().Padding(20).Gap(12)
+		panel := ui.Column(c).Fill().Padding(16).Gap(12)
 		if !c.Vibrancy() {
 			panel.Background(c.Theme().Surface)
 			switch runtime.GOOS {
@@ -73,11 +74,40 @@ func (a *application) panelView(c *ui.Context) {
 			}
 		}
 		panel.Children(func() {
-			components.Text(c, a.text("panel_title")).FontSize(20).Bold()
-			components.TextBox(c, &a.note, components.TextBoxOptions{Multiline: true}).Grow(1).Label(a.text("note")).Placeholder(a.text("placeholder")).AutoFocus()
-			components.Text(c, a.text("session_note")).Wrap().FontSize(11)
+			a.panelToolbar(c)
+			switch a.panelTab {
+			case 1:
+				components.Text(c, a.text("title")).FontSize(18).Bold()
+				components.Text(c, a.text("description")).Wrap().FontSize(12).TextColor(c.Theme().TextMuted)
+			default:
+				components.TextBox(c, &a.note, components.TextBoxOptions{Multiline: true}).Grow(1).Label(a.text("note")).Placeholder(a.text("placeholder")).AutoFocus()
+				components.Text(c, a.text("session_note")).Wrap().FontSize(11)
+			}
 		})
 	})
+}
+
+// panelToolbar groups a segmented view switcher on the left and icon actions on
+// the right of one toolbar row.
+func (a *application) panelToolbar(c *ui.Context) {
+	t := c.Theme()
+	ui.Row(c).FillWidth().AlignItems(ui.Center).Gap(t.Space(2)).Children(func() {
+		components.Tabs(c, &a.panelTab, components.TabsSegmented, a.text("note"), a.text("about"))
+		ui.Spacer(c)
+		if components.IconButton(c, lucide.Copy(), a.text("copy"), components.IconButtonToolbar).Clicked() {
+			c.WriteClipboard(a.note)
+		}
+		if components.IconButton(c, lucide.Settings(), a.text("settings"), components.IconButtonToolbar).Clicked() {
+			a.openSettings()
+		}
+	})
+}
+
+// headerActions puts the settings action at the right of the title bar.
+func (a *application) headerActions(c *ui.Context) {
+	if components.IconButton(c, lucide.Settings(), a.text("settings"), components.IconButtonToolbar).Clicked() {
+		a.openSettings()
+	}
 }
 
 func (a *application) welcomeView(c *ui.Context) {
@@ -92,7 +122,6 @@ func (a *application) welcomeView(c *ui.Context) {
 				components.Text(c, a.text(key)).Wrap()
 				a.feedback(c)
 				components.Button(c, a.text("continue"), components.ButtonPrimary).OnClick(a.finishWelcome)
-				components.Button(c, a.text("settings"), components.ButtonSecondary).OnClick(a.openSettings)
 			})
 		})
 	})
@@ -153,13 +182,13 @@ func (a *application) settingsView(c *ui.Context, width float32) {
 		components.Settings(c, &a.settingsState, []components.SettingsCategory{{ID: "general", Title: a.text("general"), Groups: []components.SettingsGroup{{ID: "preferences", Items: items}}}}, components.SettingsOptions{
 			Narrow: width < 620,
 			HeaderActions: func(c *ui.Context) {
-				components.Button(c, a.text("done"), components.ButtonGhost).OnClick(func() {
+				if components.IconButton(c, lucide.X(), a.text("close_settings"), components.IconButtonPlain).Clicked() {
 					if appKind == "menubar" {
 						a.settings.Close()
 					} else {
 						a.settingsOpen = false
 					}
-				})
+				}
 			},
 		})
 		a.feedback(c)

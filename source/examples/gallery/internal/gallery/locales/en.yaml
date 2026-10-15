@@ -426,8 +426,6 @@ gallery.grid:
   other: Grid
 gallery.grid_items:
   other: Grid items
-gallery.grid_view_selected:
-  other: Grid view selected
 gallery.hello_world:
   other: "Hello, world. 你好，世界。こんにちは \U0001F30D"
 gallery.hex_color:
@@ -542,8 +540,6 @@ gallery.liquid_glass:
   other: Liquid Glass
 gallery.list:
   other: List
-gallery.list_view_selected:
-  other: List view selected
 gallery.loading:
   other: Loading
 gallery.loading_terminal:
@@ -814,6 +810,8 @@ gallery.selected_item_d:
   other: 'Selected item: %d'
 gallery.selected_s:
   other: 'Selected: %s'
+gallery.segmented_control:
+  other: Segmented control
 gallery.selection_values:
   other: Selection & values
 gallery.selects:
@@ -928,6 +926,8 @@ gallery.unable_to_load_avatar_jpeg:
   other: Unable to load avatar.jpeg
 gallery.unchecked:
   other: Unchecked
+gallery.underline:
+  other: Underline
 gallery.undo:
   other: Undo
 gallery.uniform:
@@ -942,8 +942,6 @@ gallery.version_s:
   other: Version %s
 gallery.vertical:
   other: Vertical
-gallery.view_mode:
-  other: View mode
 gallery.volume:
   other: Volume
 gallery.web_view_unavailable:
@@ -984,6 +982,8 @@ gallery.your_password_is_updated:
   other: Your password is updated.
 gallery.toggle_smart_notifications:
   other: Toggle smart notifications
+gallery.toolbar:
+  other: Toolbar
 gallery.actions_navigation:
   other: Actions & navigation
 gallery.date_time:
