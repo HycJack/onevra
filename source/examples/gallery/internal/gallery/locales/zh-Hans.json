@@ -588,7 +588,7 @@
   "componentGameLoop": "游戏循环",
   "groupCodeDiffs": "代码与差异",
   "groupGames": "游戏",
-  "navigationNew": "新增",
+  "newComponents": "新增组件",
   "navigationMyGo": "MyGo",
   "codeEditorLabel": "源代码",
   "codeEditorPosition": "第 {line} 行，第 {column} 列",

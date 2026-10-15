@@ -2,7 +2,6 @@ package gallery
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 	"time"
 
@@ -171,63 +170,61 @@ func TestCodeAndGameGroups(t *testing.T) {
 	}
 }
 
-func TestNewPagesHighlighted(t *testing.T) {
+func TestNewComponentsGroup(t *testing.T) {
+	groups := navigationCatalog()
+	if len(groups) < 2 || groups[0].label != "Overview" || groups[1].label != newGroupLabel || !groups[1].index {
+		t.Fatalf("New components group must follow Overview: %v", groups)
+	}
+	want := map[galleryPage]bool{}
 	for key := range newPages {
 		if pageKey(pageFromKey(key)) != key {
 			t.Fatalf("new page %q has no route", key)
 		}
+		want[pageFromKey(key)] = true
 	}
+	if len(groups[1].entries) != len(want) {
+		t.Fatalf("New components group has %d entries, want %d", len(groups[1].entries), len(want))
+	}
+	// The index repeats pages that stay in their purpose groups for browsing.
+	purpose := map[galleryPage]bool{}
+	for _, group := range groups {
+		if group.index {
+			continue
+		}
+		for _, entry := range group.entries {
+			purpose[entry.page] = true
+		}
+	}
+	for _, entry := range groups[1].entries {
+		if !want[entry.page] {
+			t.Fatalf("unexpected New components entry: %s", entry.label)
+		}
+		if !purpose[entry.page] {
+			t.Fatalf("%s left its purpose group", entry.label)
+		}
+		delete(want, entry.page)
+	}
+	if len(want) != 0 {
+		t.Fatalf("missing New components entries: %v", want)
+	}
+}
+
+func TestNewComponentsGroupRenders(t *testing.T) {
 	for _, lang := range []string{"en", "zh-Hans"} {
 		g := &Gallery{language: newTranslator(lang, "en")}
 		tt := ui.NewTester(g.Left, 220, 6000)
-		badge := g.text("navigationNew")
-		texts, got := tt.Texts(), 0
-		for i, text := range texts {
-			if text != badge {
-				continue
-			}
-			got++
-			// The badge follows its item's label, after any upstream markers.
-			j := i - 1
-			for texts[j] == "•" || texts[j] == g.text("navigationMyGo") {
-				j--
-			}
-			label := texts[j]
-			found := false
-			for key := range newPages {
-				found = found || g.text(sourceKeys[routeLabel(key)]) == label
-			}
-			if !found {
-				t.Fatalf("%s badge follows %q", lang, label)
-			}
-		}
-		if got != len(newPages) {
-			t.Fatalf("%s: %d badges, want %d", lang, got, len(newPages))
-		}
-	}
-}
-
-func TestNewestBadgeCentered(t *testing.T) {
-	for key := range newPages {
-		g := &Gallery{}
-		page := pageFromKey(key)
-		label := routeLabel(key)
-		tt := ui.NewTester(func(c *ui.Context) {
-			g.withLanguage(c, func() { g.navigationItem(c, label, nil, page) })
-		}, 220, 80)
-		text, _ := tt.Find(label)
-		badge, ok := tt.Find(g.text("navigationNew"))
+		index, ok := tt.Find(g.text(newGroupLabel))
 		if !ok {
-			t.Fatalf("%s has no badge", key)
+			t.Fatalf("%s: missing New components group", lang)
 		}
-		if d := (badge.Y + badge.H/2) - (text.Y + text.H/2); d > .5 || d < -.5 {
-			t.Fatalf("%s badge is off center by %v: badge %+v, label %+v", key, d, badge, text)
+		lucide, ok := tt.Find(g.text("Lucide"))
+		if !ok || index.Y >= lucide.Y {
+			t.Fatalf("%s: New components group is not above the icon library", lang)
+		}
+		for _, entry := range newNavigationEntries() {
+			if !tt.HasText(g.text(entry.label)) {
+				t.Fatalf("%s: missing %s", lang, entry.label)
+			}
 		}
 	}
-}
-
-// routeLabel is the source label of a route key such as "mygo/Canvas".
-func routeLabel(key string) string {
-	_, label, _ := strings.Cut(key, "/")
-	return label
 }

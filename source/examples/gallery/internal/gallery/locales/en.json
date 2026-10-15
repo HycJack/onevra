@@ -890,7 +890,7 @@
   "componentGameLoop": "Game loop",
   "groupCodeDiffs": "Code & diffs",
   "groupGames": "Games",
-  "navigationNew": "New",
+  "newComponents": "New components",
   "navigationMyGo": "MyGo",
   "codeEditorLabel": "Source code",
   "codeEditorPosition": "Line {line}, column {column}",

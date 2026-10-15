@@ -5980,14 +5980,14 @@ func (msgs Messages) GroupGames() string {
 	return Catalog.Format(msgs.locale, "groupGames", nil)
 }
 
-// NavigationNew says "New"
+// NewComponents says "New components"
 // in the language the app shows.
-func NavigationNew() string { return In(i18n.Locale()).NavigationNew() }
+func NewComponents() string { return In(i18n.Locale()).NewComponents() }
 
-// NavigationNew says "New"
+// NewComponents says "New components"
 // in the language of msgs.
-func (msgs Messages) NavigationNew() string {
-	return Catalog.Format(msgs.locale, "navigationNew", nil)
+func (msgs Messages) NewComponents() string {
+	return Catalog.Format(msgs.locale, "newComponents", nil)
 }
 
 // NavigationMyGo says "MyGo"

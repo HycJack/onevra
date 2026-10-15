@@ -22,21 +22,14 @@ type iconEntry struct {
 func (g *Gallery) navigationItem(c *ui.Context, label string, icon *ui.SVG, page galleryPage) {
 	display := tr(c, label)
 	item := components.SidebarItem(c, display, icon, g.page == page).Key(page)
-	example, upstream := mygoExampleFor(page)
-	isNew := newPages[pageKey(page)]
-	if upstream || isNew {
+	if example, upstream := mygoExampleFor(page); upstream {
 		t := c.Theme()
 		item.Children(func() {
 			ui.Spacer(c)
 			// Pages demonstrating MyGo's own components carry its name.
-			if upstream {
-				components.Text(c, tr(c, "navigationMyGo")).FontSize(t.Rem(.75)).TextColor(t.TextMuted).SingleLine().Shrink(0)
-			}
-			if upstream && !mygoDirectUse(example) {
+			components.Text(c, tr(c, "navigationMyGo")).FontSize(t.Rem(.75)).TextColor(t.TextMuted).SingleLine().Shrink(0)
+			if !mygoDirectUse(example) {
 				components.Text(c, tr(c, "bullet")).FontSize(t.Rem(1.4)).TextColor(t.TextMuted).SingleLine()
-			}
-			if isNew {
-				components.Badge(c, tr(c, "navigationNew")).Background(t.Accent).TextColor(t.AccentText).AlignSelf(ui.Center)
 			}
 		})
 	}

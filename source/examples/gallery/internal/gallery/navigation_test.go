@@ -3,6 +3,7 @@ package gallery
 import (
 	"bytes"
 	"math"
+	"slices"
 	"testing"
 
 	"github.com/egoist/mygo/ui"
@@ -18,7 +19,7 @@ func TestNavigationSpacing(t *testing.T) {
 		t.Fatalf("first group must follow the search field at the shell's safe content edge: %v", first)
 	}
 	item, _ := tt.Find("Welcome")
-	next, _ := tt.Find("Icon library")
+	next, _ := tt.Find(newGroupLabel)
 	if gap := next.Y - item.Y - item.H; math.Abs(float64(gap-12)) > 0.001 {
 		t.Fatalf("group gap = %v, want 12", gap)
 	}
@@ -28,12 +29,29 @@ func TestNavigationGroupOrder(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.Left, 220, 6000)
 	var bottom float32
-	for _, label := range []string{"Overview", "Welcome", "Icon library", "Lucide", "Desktop", "Tray", "Dock menu", "System notifications", "Plugins", "Terminal", "Actions & navigation", "Buttons", "Text input", "Selection & values", "Date & time", "Color", "Content display", "Markdown", "Chat", "Code & diffs", "Code", "Code editor", "Diff viewer", "Charts", "Bar chart", "Layout & containers", "Feedback & overlays", "Games", "Canvas", "Game loop"} {
-		r, ok := tt.Find(label)
+	for _, group := range navigationCatalog() {
+		r, ok := tt.Find(g.text(group.label))
 		if !ok || r.Y < bottom {
-			t.Fatalf("%s missing or out of order: %v (previous bottom %v)", label, r, bottom)
+			t.Fatalf("%s missing or out of order: %v (previous bottom %v)", group.label, r, bottom)
 		}
 		bottom = r.Y + r.H
+	}
+	// Entries repeat in the New components index, so their order is checked in
+	// the render order rather than by the position of a unique label.
+	texts := tt.Texts()
+	consume := func(label string) {
+		t.Helper()
+		i := slices.Index(texts, label)
+		if i < 0 {
+			t.Fatalf("missing or unordered entry: %s", label)
+		}
+		texts = texts[i+1:]
+	}
+	for _, group := range navigationCatalog() {
+		consume(g.text(group.label))
+		for _, entry := range group.entries {
+			consume(g.text(entry.label))
+		}
 	}
 	if tt.HasText("Onevra controls") || tt.HasText("Components") || tt.HasText("MyGo components") {
 		t.Fatal("obsolete component group is still visible")
@@ -49,35 +67,44 @@ func TestNavigationMyGoMarkers(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.Left, 220, 6000)
 	texts := tt.Texts()
-	upstream := map[string]bool{}
-	pending := 0
+	names := map[string]bool{}
 	for _, example := range mygoCatalog {
-		upstream[example.name] = !mygoDirectUse(example)
-		if !mygoDirectUse(example) {
-			pending++
-		}
+		names[example.name] = true
 	}
 	badges, markers := 0, 0
 	for i, text := range texts {
 		switch text {
 		case "MyGo":
 			// Every MyGo page carries the badge directly after its label.
-			if _, ok := upstream[texts[i-1]]; !ok {
+			if !names[texts[i-1]] {
 				t.Fatalf("MyGo badge follows non-MyGo item: %q", texts[i-1])
 			}
 			badges++
 		case "•":
-			if texts[i-1] != "MyGo" || !upstream[texts[i-2]] {
+			if texts[i-1] != "MyGo" || !names[texts[i-2]] {
 				t.Fatalf("pending marker follows %q %q", texts[i-2], texts[i-1])
 			}
 			markers++
 		}
 	}
-	if badges != len(mygoCatalog) {
-		t.Fatalf("got %d MyGo badges, want %d", badges, len(mygoCatalog))
+	wantBadges, wantMarkers := 0, 0
+	for _, group := range navigationCatalog() {
+		for _, entry := range group.entries {
+			example, ok := mygoExampleFor(entry.page)
+			if !ok {
+				continue
+			}
+			wantBadges++
+			if !mygoDirectUse(example) {
+				wantMarkers++
+			}
+		}
 	}
-	if markers != pending {
-		t.Fatalf("got %d pending markers, want %d", markers, pending)
+	if badges != wantBadges {
+		t.Fatalf("got %d MyGo badges, want %d", badges, wantBadges)
+	}
+	if markers != wantMarkers {
+		t.Fatalf("got %d pending markers, want %d", markers, wantMarkers)
 	}
 }
 
@@ -137,17 +164,28 @@ func TestNavigationIcons(t *testing.T) {
 func TestNavigationCatalog(t *testing.T) {
 	all := navigationCatalog()
 	count := 0
-	seen := map[galleryPage]bool{}
+	purpose := map[galleryPage]bool{}
+	indexed := map[galleryPage]bool{}
 	for _, group := range all {
 		count += len(group.entries)
 		for _, entry := range group.entries {
-			if seen[entry.page] {
+			if group.index {
+				indexed[entry.page] = true
+				continue
+			}
+			if purpose[entry.page] {
 				t.Fatalf("duplicate navigation destination: %s", entry.label)
 			}
-			seen[entry.page] = true
+			purpose[entry.page] = true
 		}
 	}
-	if count != 5+len(controlCatalog)+len(mygoCatalog) {
+	// The New components index only repeats pages of the purpose groups.
+	for page := range indexed {
+		if !purpose[page] {
+			t.Fatalf("indexed page %d is missing from its purpose group", page)
+		}
+	}
+	if count != 5+len(controlCatalog)+len(mygoCatalog)+len(newNavigationEntries()) {
 		t.Fatalf("missing catalog entries: %d", count)
 	}
 }

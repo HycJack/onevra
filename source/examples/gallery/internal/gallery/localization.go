@@ -29,7 +29,7 @@ var sourceKeys = func() map[string]string {
 	for key, message := range catalog {
 		text, ok := message.(string)
 		// Contextual messages are addressed only by key.
-		if !ok || key[0] == '@' || key == "clearGlassStyle" || key == "navigationNew" {
+		if !ok || key[0] == '@' || key == "clearGlassStyle" {
 			continue
 		}
 		keys[text] = key
