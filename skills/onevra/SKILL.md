@@ -51,7 +51,7 @@ func main() {
 - Element handles are valid only for the current build pass. Bind a `ui.Handle` for identity or geometry across frames.
 - The application owns the theme. Choose light/dark/system with `mygo.Theme.SetSource` (before `App.Run` for a saved preference). Pass `Theme: theme.Onevra` (or a function returning your own `*ui.Theme`) in Shell options; without a Shell, call `theme.Apply(c)` or `c.SetTheme` at the top of the root builder. Components never call `Context.SetTheme`.
 - Keep application messages in MyGo catalogs (`i18n` in `mygo.json`, typed functions from `mygo generate`) and pass translated labels explicitly. Component-owned labels follow the window's language from Onevra's catalog; change them with `onevra.<key>` messages, or override a scope with `components.WithLocalization`. Keep keys and stored values independent of translated text.
-- Complex views each have their own package in `components/chart`, `components/graph`, `components/command`, `components/code`, `components/markdown` and `components/chat`. Keep their documents and results in retained state, prepared outside builders.
+- Complex views each have their own package in `components/chart`, `components/graph`, `components/command` and `components/chat`. Keep their documents and results in retained state, prepared outside builders.
 
 ## Choosing controls
 
@@ -82,7 +82,7 @@ Use MyGo directly for:
 
 - Layout primitives: `ui.Box`, `Column`, `Row`, `Spacer`, `Grid`, `Overlay`, and `ui.Textf` for formatted display text.
 - Specialized charts and continuous/time axes from `ui/chart`, and element transforms, motion methods and timelines. Use `LayoutBounds` for layout calculations and local pointer coordinates; `Element.Bounds` includes visual transforms.
-- Native menus and context menus, `Flyout`, `WebView`, `ui/editor` code and diff views, the `ui/richtext` editor, `ui/markdown` streaming replies, and every MyGo plugin, including Glass. Do not write Onevra-style replacements.
+- Native menus and context menus, `Flyout`, `WebView`, `ui/editor` code, snippet and diff views, the `ui/richtext` editor, `ui/markdown` documents and streaming replies, and every MyGo plugin, including Glass. Do not write Onevra-style replacements.
 - MyGo's unstyled bases when building a new reusable control.
 - A MyGo widget with no Onevra equivalent. Onevra intentionally omits Divider, Avatar, Meter, Form, Field, Toolbar, OutlineTable and TokenField: compose dividers from Box or borders before reaching for the upstream widget. For a segmented control, use `components.Tabs` with `TabsSegmented` instead of `ui.Segmented`.
 

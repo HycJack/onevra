@@ -22,7 +22,7 @@ func TestChatStaticPreview(t *testing.T) {
 	for range 10 {
 		tt.Frame()
 	}
-	if len(s.chat.turns) != 1 || turn.status != chat.Completed || turn.answer == nil {
+	if len(s.chat.turns) != 1 || turn.status != chat.Completed || turn.answer == "" {
 		t.Fatal("static preview changed across frames")
 	}
 	tt.Scroll(120, 140, 0, -5000)

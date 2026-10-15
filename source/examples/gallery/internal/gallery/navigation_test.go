@@ -112,7 +112,7 @@ func TestNavigationSelectionAndHover(t *testing.T) {
 	for _, dark := range []bool{false, true} {
 		t.Run(map[bool]string{false: "light", true: "dark"}[dark], func(t *testing.T) {
 			g := &Gallery{}
-			tt := ui.NewTester(g.Left, 220, 1400)
+			tt := ui.NewTester(g.Left, 220, 1600)
 			tt.SetDark(dark)
 			for _, label := range []string{"Lucide", "Buttons"} {
 				tt.Move(219, 479)

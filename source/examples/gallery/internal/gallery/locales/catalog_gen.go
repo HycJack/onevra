@@ -1408,16 +1408,6 @@ func (msgs Messages) Copies0f(count float64) string {
 	return Catalog.Format(msgs.locale, "copies0f", map[string]any{"count": count})
 }
 
-// CopyCode says "Copy code"
-// in the language the app shows.
-func CopyCode() string { return In(i18n.Locale()).CopyCode() }
-
-// CopyCode says "Copy code"
-// in the language of msgs.
-func (msgs Messages) CopyCode() string {
-	return Catalog.Format(msgs.locale, "copyCode", nil)
-}
-
 // Count says "Count"
 // in the language the app shows.
 func Count() string { return In(i18n.Locale()).Count() }

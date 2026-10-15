@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/egoist/mygo/ui"
+	"github.com/egoist/mygo/ui/markdown"
 	"github.com/oneo-me/onevra/source/components"
 	"github.com/oneo-me/onevra/source/components/chat"
 )
@@ -29,7 +30,7 @@ var chatDemoArtifacts = []chat.SummaryItem{
 	{ID: "styles", Label: "styles.go", Metadata: chatDemoMetrics(7, 2)},
 }
 
-func chatDemoResults(c *ui.Context, turn *chatDemoTurn) {
+func chatDemoResults(c *ui.Context, s *chatDemoState, turn *chatDemoTurn) {
 	if turn.status != chat.Completed {
 		return
 	}
@@ -43,7 +44,7 @@ func chatDemoResults(c *ui.Context, turn *chatDemoTurn) {
 	if turn.showReview {
 		ui.Column(c).FillWidth().MinWidth(0).Gap(c.Theme().Space(2)).Children(func() {
 			components.Text(c, tr(c, "chatSampleDiff")).TextColor(c.Theme().TextMuted)
-			turn.review.Render(c).FillWidth()
+			markdown.View(c, turn.review, &s.markdown).FillWidth()
 			if components.Button(c, tr(c, "chatCloseReview"), components.ButtonGhost).Clicked() {
 				turn.showReview = false
 			}

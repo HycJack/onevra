@@ -51,6 +51,5 @@
   "searchCommandsPlaceholder": "搜索命令…",
   "noMatchingCommands": "没有匹配的命令",
   "loading": "正在加载…",
-  "commands": "命令",
-  "copyCode": "复制代码"
+  "commands": "命令"
 }

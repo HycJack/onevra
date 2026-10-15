@@ -16,6 +16,7 @@ var newPages = map[string]bool{
 	"controls/Relationship graph": true,
 	"controls/Honeycomb":          true,
 	"mygo/Rich text editor":       true,
+	"mygo/Markdown":               true,
 	"mygo/Markdown stream":        true,
 	"mygo/System information":     true,
 	"mygo/Recent documents":       true,

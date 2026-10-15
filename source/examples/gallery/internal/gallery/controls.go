@@ -71,8 +71,6 @@ var controlCatalog = []controlExample{
 	{"AlertDialog", "AlertDialog", "Feedback & overlays", []string{"Confirmation", "Notice"}, controlAlertDialog},
 	{"Badge", "Badge", "Feedback & overlays", []string{"Default", "Accent"}, controlBadge},
 	{"Toast", "Toast", "Feedback & overlays", []string{"Status", "Actions", "Progress"}, controlToast},
-	{"Code", "Code", "Code & diffs", []string{"Default"}, controlCode},
-	{"Markdown", "Markdown", "Content display", []string{"Default"}, controlMarkdown},
 	{"Chat", "Chat", "Content display", []string{"Default"}, controlChat},
 	{"RichText", "RichText", "Content display", []string{"Default"}, controlRichText},
 	{"Breadcrumbs", "Breadcrumbs", "Actions & navigation", []string{"Default"}, controlBreadcrumbs},
@@ -165,10 +163,6 @@ func (g *Gallery) controlsLocalized(c *ui.Context, example controlExample) {
 	}
 	components.ScrollView(c, components.ScrollViewOptions{}).Key("controls-" + example.name).Fill().Children(func() {
 		ui.Column(c).FillWidth().MinWidth(0).Padding(t.Space(6)).Gap(t.Space(6)).Children(func() {
-			if example.name == "Markdown" {
-				example.build(c, g.controlState(example.name, "Default"), "Default")
-				return
-			}
 			if example.name == "TextBox" || example.name == "TextBoxBuffer" {
 				catalog := textBoxControlCatalog
 				if example.name == "TextBoxBuffer" {
@@ -223,7 +217,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 			for _, variant := range example.variants {
 				cell := ui.Column(c).Key(variant).MinWidth(0).MaxWidthPercent(100).Gap(12)
 				switch example.name {
-				case "Text", "GridView", "Markdown", "Code", "Bar chart", "Line chart", "Area chart", "Stacked bar chart", "Donut chart", "Relationship graph":
+				case "Text", "GridView", "Bar chart", "Line chart", "Area chart", "Stacked bar chart", "Donut chart", "Relationship graph":
 					cell.FillWidth()
 				case "TextBox", "TextBox (multiline)", "TextBoxBuffer", "TextBoxBuffer (multiline)", "NumberInput", "Slider", "Sidebar", "List", "Split", "ScrollView", "Progress", "Accordion", "Collapsible", "PixelGrid":
 					cell.Width(240)

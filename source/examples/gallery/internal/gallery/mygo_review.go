@@ -125,9 +125,10 @@ var mygoDirectExamples = map[string]string{
 	"Game loop":          "Use the MyGo game plugin directly for fixed-step loops, cameras and gamepads; no Onevra game runtime",
 	"3D renderer":        "Use MyGo bitmaps and the game loop directly for a CPU software rasterizer; no Onevra 3D layer",
 	"Code editor":        "Use MyGo's ui/editor directly for editable code views; its default look follows the frame theme and every part is an application-replaceable slot",
-	"Diff viewer":        "Use MyGo's ui/editor diff viewer directly for code review; Onevra owns read-only snippet highlighting, not the editable viewport",
+	"Diff viewer":        "Use MyGo's ui/editor diff viewer directly for code review",
 	"Rich text editor":   "Use MyGo's ui/richtext directly for attributed text editing; Onevra RichText composes read-only inline text, not an editor",
-	"Markdown stream":    "Use MyGo's ui/markdown directly for streaming replies; Onevra components/markdown remains the styled document view",
+	"Markdown":           "Use MyGo's ui/markdown directly for documents; applications own images, links and custom code blocks through its options",
+	"Markdown stream":    "Use MyGo's ui/markdown directly for streaming replies",
 }
 
 // mygoDirectUse reports examples of MyGo APIs used directly, which the sidebar
@@ -148,7 +149,7 @@ var mygoNativeMenus = map[string]string{
 // styled-widget scanner. The value names where the API lives or is demonstrated.
 var mygoSubpackages = map[string]string{
 	"Charts": "ui/chart", "Code editor": "ui/editor", "Diff viewer": "ui/editor",
-	"Rich text editor": "ui/richtext", "Markdown stream": "ui/markdown",
+	"Rich text editor": "ui/richtext", "Markdown": "ui/markdown", "Markdown stream": "ui/markdown",
 	"Installed apps": "examples/launcher",
 }
 

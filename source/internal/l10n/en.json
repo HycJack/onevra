@@ -72,6 +72,5 @@
   "searchCommandsPlaceholder": "Search commands…",
   "noMatchingCommands": "No matching commands",
   "loading": "Loading…",
-  "commands": "Commands",
-  "copyCode": "Copy code"
+  "commands": "Commands"
 }

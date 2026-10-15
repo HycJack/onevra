@@ -19,8 +19,6 @@ Onevra builds on MyGo rather than replacing it:
 Building on MyGo's native UI capabilities, Onevra adds composed components for common application scenarios:
 
 - **Conversation interfaces**: bring message turns, tool activity, folded summaries and attachment input together into a complete chat interface.
-- **Markdown rendering**: provide selectable document views with code highlighting, images and custom code-block content.
-- **Code highlighting**: provide read-only code views with light and dark themes, usable independently or within Markdown and conversations.
 
 - **Lucide icons**: provide SVG icons for MyGo through named accessors, loaded on demand with configurable sizing and inherited text color.
 
@@ -136,7 +134,7 @@ components.Checkbox(c, &agreed, "I agree")
 components.Switch(c, &wifi, "Wi-Fi")
 ```
 
-Components read the frame theme and work independently of Shell; a standalone window installs its theme with `c.SetTheme` or `theme.Apply` at the top of its builder. See the [component contract](source/components/doc.go) and [theme usage](source/theme/doc.go). Complex components each have a separate package under `components/`: `chart`, `graph`, `gesture`, `command`, `code`, `markdown` and `chat`. See [complex component composition](docs/architecture/components.md#complex-component-composition).
+Components read the frame theme and work independently of Shell; a standalone window installs its theme with `c.SetTheme` or `theme.Apply` at the top of its builder. See the [component contract](source/components/doc.go) and [theme usage](source/theme/doc.go). Complex components each have a separate package under `components/`: `chart`, `graph`, `gesture`, `command` and `chat`. See [complex component composition](docs/architecture/components.md#complex-component-composition).
 
 ## Contributing
 

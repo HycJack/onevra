@@ -19,8 +19,6 @@ Onevra 构建在 MyGo 之上，而不是取代它：
 在 MyGo 官方提供的原生 UI 能力之上，Onevra 重点补充面向应用场景的组合组件：
 
 - **对话界面**：将消息轮次、工具执行过程、折叠摘要和附件输入组合成完整的聊天界面。
-- **Markdown 渲染**：提供可选择文本的文档视图，支持代码高亮、图片及自定义代码块内容。
-- **代码高亮**：提供适配浅深色主题的只读代码视图，可独立使用，也可用于 Markdown 和对话内容。
 
 - **Lucide 图标**：提供可直接用于 MyGo 的 SVG 图标，通过具名函数按需加载，支持尺寸设置与文字颜色继承。
 
@@ -136,7 +134,7 @@ components.Checkbox(c, &agreed, "I agree")
 components.Switch(c, &wifi, "Wi-Fi")
 ```
 
-组件读取当前帧主题，可脱离 Shell 独立使用；独立窗口在构建函数开头通过 `c.SetTheme` 或 `theme.Apply` 安装主题。参见[组件契约](source/components/doc.go)和[主题用法](source/theme/doc.go)。复杂组件各自在 `components/` 下保留独立包：`chart`、`graph`、`gesture`、`command`、`code`、`markdown` 和 `chat`。详见[复杂组件组合](docs/architecture/components.md#complex-component-composition)。
+组件读取当前帧主题，可脱离 Shell 独立使用；独立窗口在构建函数开头通过 `c.SetTheme` 或 `theme.Apply` 安装主题。参见[组件契约](source/components/doc.go)和[主题用法](source/theme/doc.go)。复杂组件各自在 `components/` 下保留独立包：`chart`、`graph`、`gesture`、`command` 和 `chat`。详见[复杂组件组合](docs/architecture/components.md#complex-component-composition)。
 
 ## 参与开发
 

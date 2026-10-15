@@ -60,12 +60,12 @@ func TestMessages(t *testing.T) {
 }
 
 func TestApplicationOverrides(t *testing.T) {
-	app, err := i18n.NewCatalog(fstest.MapFS{"en.json": {Data: []byte(`{"onevra.copyCode": "Copy snippet"}`)}}, "en")
+	app, err := i18n.NewCatalog(fstest.MapFS{"en.json": {Data: []byte(`{"onevra.commands": "Actions"}`)}}, "en")
 	if err != nil {
 		t.Fatal(err)
 	}
 	i18n.Register(app)
-	if got := In("en").Text("copyCode"); got != "Copy snippet" {
-		t.Fatalf("an app's onevra.copyCode: %q", got)
+	if got := In("en").Text("commands"); got != "Actions" {
+		t.Fatalf("an app's onevra.commands: %q", got)
 	}
 }

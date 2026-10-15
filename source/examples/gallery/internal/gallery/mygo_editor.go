@@ -46,9 +46,19 @@ func editorBuffer(text string) *editor.Buffer {
 	return b
 }
 
-// exampleCodeEditor shows edits against the original text in the gutter.
+// exampleCodeEditor shows edits against the original text in the gutter, or a
+// highlighted read-only snippet as tall as its lines.
 // Buffers live in page memory and are never written to disk.
 func exampleCodeEditor(c *ui.Context, s *demoState) {
+	if s.variant == "Read only" {
+		if s.code == nil {
+			s.code = &editor.State{Buffer: editorBuffer(editorSample), ReadOnly: true, FitContent: true,
+				LineNumbers: editor.LineNumbersOff, NoFolding: true, NoActiveLine: true, NoIndentGuides: true}
+		}
+		s.code.Label = tr(c, "codeEditorLabel")
+		editor.View(c, s.code).FillWidth().Radius(8).Clip()
+		return
+	}
 	if s.code == nil {
 		s.code = &editor.State{Buffer: editorBuffer(editorSample), DiffBase: editorBuffer(editorSample), WrapGuides: []int{80}}
 	}

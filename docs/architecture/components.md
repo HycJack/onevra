@@ -60,27 +60,13 @@ Hosts may retain the selected source instead. Unavailable sources leave search u
 
 See the [input-source lifecycle API](../../source/components/command/input_source.go).
 
-### Read-only code
+### Code and Markdown
 
-The [code component](../../source/components/code/code.go) tokenizes explicitly named languages with Chroma and renders retained spans through Onevra RichText and MyGo's text engine. Applications retain immutable documents outside frame builders; parsing can run in application-owned background work. Theme changes select prepared palettes without re-tokenization. Adjacent tokens sharing an appearance are merged, and a code block remains one text node rather than a UI element per token. Unknown languages, failed lexers and inputs exceeding highlighting limits retain their complete plain text.
-
-This path targets code snippets and Markdown blocks. It preserves MyGo selection across the document, so it does not virtualize individual lines. Highlighting limits bound lexer input and styling, not the layout cost of arbitrarily large files or a hard regex execution deadline. Large-file viewers need a separate viewport strategy and an explicit whole-document selection contract. Editable code and diff views stay with MyGo's `ui/editor` and are used directly; see the [Gallery code-and-diff examples](gallery.md).
-
-### Markdown
-
-[Markdown component](../../source/components/markdown/doc.go) parses CommonMark and GFM syntax into Onevra text and MyGo layout primitives. MyGo owns a single selection across the rendered document, including default code blocks. Parsing prepares fenced-code highlighting through the code component; indented code remains plain text.
-
-Hosts retain parsed documents between source changes and provide ordinary scrolling so offscreen paragraphs remain selectable. Raw HTML stays literal. Standalone image paragraphs display application-supplied decoded bitmaps, shrinking to fit the document width; missing images and inline images retain alternative text.
-
-Image loading and caching remain application-owned, and rendering performs no file or network I/O.
-
-Applications may replace fenced code blocks with synchronous view builders selected by language, while retaining state and asynchronous work outside rendering. Custom text participates in the surrounding selection unless its builder chooses a separate selection scope or excludes it. Optional code headers expose language labels and keyboard-reachable copying without including the header in document selection.
-
-Applications also own link activation; the component never opens destinations automatically. See the [gallery example](../../source/examples/gallery/internal/gallery/control_markdown.go) for an interactive embedded view.
+Onevra has no code or Markdown component. Applications use MyGo's `ui/markdown` for documents and streaming replies, and `ui/editor` for editable code, diffs and read-only snippets (`State.ReadOnly` with `FitContent`). Markdown options own images, link activation and custom code-block views; links open by default unless `OnLink` is set. See the [Gallery examples](gallery.md#retained-examples).
 
 ### Conversations
 
-The [chat component](../../source/components/chat/chat.go) composes conversation scrolling, turns, activity groups and a multiline composer whose proportions follow Waku's transcript. Applications own ordered steps with stable identities, stream updates, localized labels and summaries, retained Markdown documents and request lifecycles. A turn shows the prompt, then intermediate prose and activity groups, then an explicit final response; a completed tool never implicitly completes its turn. Builders run synchronously and perform no network or file work.
+The [chat component](../../source/components/chat/chat.go) composes conversation scrolling, turns, activity groups and a multiline composer whose proportions follow Waku's transcript. Applications own ordered steps with stable identities, stream updates, localized labels and summaries, Markdown content and request lifecycles. A turn shows the prompt, then intermediate prose and activity groups, then an explicit final response; a completed tool never implicitly completes its turn. Builders run synchronously and perform no network or file work.
 
 An activity group opens while it is the live tail of a running turn and closes once it settles, unless the user chose otherwise. Each activity is a compact row with an optional bounded detail viewport, prose or monospace, that keeps its own disclosure and scroll state. Successful turns with a final response fold their steps behind a centered summary row without building hidden content; running turns end with a pulsing working row.
 

@@ -29,6 +29,8 @@ func mygoVariants(name string) []string {
 	switch name {
 	case "Motion":
 		return []string{"Springs", "Keyframes", "Timeline", "Animated pose", "Draggable"}
+	case "Code editor":
+		return []string{"Editable", "Read only"}
 	case "Diff viewer":
 		return []string{"Side by side", "Unified"}
 	case "Transforms":
@@ -149,7 +151,7 @@ func (g *Gallery) myGoLocalized(c *ui.Context, example mygoExample) {
 						components.Text(c, tr(c, variant)).Bold().TextColor(t.TextMuted)
 					}
 					ui.Column(c).FillWidth().MinWidth(0).Gap(12).Disabled(variant == "Disabled").Children(func() {
-						if variant == "Read only" && s.buffer == nil {
+						if variant == "Read only" && (example.name == "TextInput" || example.name == "TextArea") {
 							if example.name == "TextInput" {
 								components.TextBox(c, &s.text, components.TextBoxOptions{ReadOnly: true}).Label(tr(c, "name")).FillWidth()
 							} else {

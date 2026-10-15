@@ -11,7 +11,7 @@ import (
 
 func TestCodeEditorExample(t *testing.T) {
 	for _, lang := range []string{"en", "zh-Hans"} {
-		g, s, tt := featureTester("Code editor", "Default", lang, 540)
+		g, s, tt := featureTester("Code editor", "Editable", lang, 540)
 		if s.code == nil || s.code.DiffBase == nil || s.code.Label != g.text("codeEditorLabel") {
 			t.Fatalf("editor state: %+v", s.code)
 		}
@@ -152,7 +152,7 @@ func TestNewMyGoReviewEntries(t *testing.T) {
 }
 
 func TestCodeAndGameGroups(t *testing.T) {
-	want := map[string][]string{"Code & diffs": {"Code", "Code editor", "Diff viewer"}, "Games": {"Canvas", "Game loop", "3D renderer"}}
+	want := map[string][]string{"Code & diffs": {"Code editor", "Diff viewer"}, "Games": {"Canvas", "Game loop", "3D renderer"}}
 	for _, group := range navigationCatalog() {
 		if entries, ok := want[group.label]; ok {
 			var got []string

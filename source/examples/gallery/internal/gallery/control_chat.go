@@ -5,25 +5,25 @@ import (
 	"time"
 
 	"github.com/egoist/mygo/ui"
+	"github.com/egoist/mygo/ui/markdown"
 	"github.com/oneo-me/onevra/source/components"
 	"github.com/oneo-me/onevra/source/components/chat"
-	"github.com/oneo-me/onevra/source/components/markdown"
 	"github.com/oneo-me/onevra/source/icons/lucide"
 )
 
-const chatDemoAnswer = "The review is complete.\n\n- **Two tools** ran concurrently and completed in a different order.\n- Execution details remain available above.\n- The final answer stays visible after the process folds.\n\n```go\n// Keep parsed documents outside the frame builder.\ndocument.Render(c)\n```"
+const chatDemoAnswer = "The review is complete.\n\n- **Two tools** ran concurrently and completed in a different order.\n- Execution details remain available above.\n- The final answer stays visible after the process folds.\n\n```go\n// Share one Options value across a conversation.\nmarkdown.View(c, reply, &s.markdown)\n```"
 
 type chatDemoTurn struct {
 	id, prompt     string
 	state          chat.TurnState
 	status         chat.Status
 	step           int
-	answer         *markdown.MarkdownDocument
+	answer         string
 	started, ended time.Time
 	activities     [3]chat.ActivityState
 	group          chat.GroupState
 	summary        chat.SummaryState
-	review         *markdown.MarkdownDocument
+	review         string
 	showReview     bool
 	attached       bool
 }
@@ -35,6 +35,7 @@ type chatDemoState struct {
 	draft         string
 	model, effort string
 	attachment    bool
+	markdown      markdown.Options
 }
 
 func newChatDemoState(now time.Time) *chatDemoState {
@@ -42,9 +43,9 @@ func newChatDemoState(now time.Time) *chatDemoState {
 		model: "Demo model", effort: "Medium",
 		turns: []*chatDemoTurn{{
 			id: "sample", prompt: "Review this component and explain the results.",
-			step: 20, status: chat.Completed, answer: markdown.ParseMarkdown(chatDemoAnswer),
+			step: 20, status: chat.Completed, answer: chatDemoAnswer,
 			started: now.Add(-561 * time.Second), ended: now,
-			review:     markdown.ParseMarkdown("```diff\n- renderEveryBlock()\n+ renderVisibleBlocks()\n```"),
+			review:     "```diff\n- renderEveryBlock()\n+ renderVisibleBlocks()\n```",
 			activities: [3]chat.ActivityState{{Expanded: true}, {}, {}},
 		}},
 	}
@@ -111,9 +112,9 @@ func controlChat(c *ui.Context, state *controlState, _ string) {
 						}},
 				}}}
 				var final chat.View
-				if turn.answer != nil {
+				if turn.answer != "" {
 					final = func(c *ui.Context) {
-						turn.answer.Render(c, markdown.MarkdownOptions{CopyCodeLabel: tr(c, "copyCode")}).FillWidth()
+						markdown.View(c, turn.answer, &s.markdown).FillWidth()
 					}
 				}
 				chat.Turn(c, &turn.state, chat.TurnOptions{
@@ -125,7 +126,7 @@ func controlChat(c *ui.Context, state *controlState, _ string) {
 						components.Text(c, turn.prompt).Selectable()
 					},
 					Final: final, Steps: steps, Working: chatTurnSummary(c, turn),
-					Footer:   func(c *ui.Context) { chatDemoResults(c, turn) },
+					Footer:   func(c *ui.Context) { chatDemoResults(c, s, turn) },
 					HoldOpen: !s.conversation.AtLatest(),
 				})
 			}
