@@ -177,7 +177,7 @@ func (a *application) settingsView(c *ui.Context, width float32) {
 	}
 	ui.Column(c).Fill().Children(func() {
 		components.Settings(c, &a.settingsState, []components.SettingsCategory{{ID: "general", Title: a.text("general"), Groups: []components.SettingsGroup{{ID: "preferences", Items: items}}}}, components.SettingsOptions{
-			Narrow: width < 620,
+			Narrow: width < 620, HideSearch: true, HideSidebar: true,
 			HeaderActions: func(c *ui.Context) {
 				if components.IconButton(c, lucide.X(), a.text("closeSettings"), components.IconButtonPlain).Clicked() {
 					if appKind == "menubar" {

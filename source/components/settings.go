@@ -54,6 +54,19 @@ type SettingsItem struct {
 	Keywords               []string
 	Build                  func(c *ui.Context)
 	DescriptionContent     func(c *ui.Context)
+	// Leading builds content before the title and description, such as an
+	// icon, avatar or status indicator.
+	Leading func(c *ui.Context)
+	// Stacked places Build below the text across the row's width, for wide
+	// controls such as text boxes, sliders and option lists. Narrow layouts
+	// always stack.
+	Stacked bool
+	// Content replaces the whole row with application-built content spanning
+	// its width, such as a profile card, preview, banner or list; Leading,
+	// Build and the displayed title and description are not used. Title,
+	// Description and Keywords remain the row's search metadata. Like Build,
+	// it runs only when visible.
+	Content func(c *ui.Context)
 }
 
 // SettingsOptions controls presentation without imposing a window or dialog.
@@ -65,6 +78,13 @@ type SettingsOptions struct {
 	Title, SearchLabel, SearchPlaceholder, CategoryLabel, ResultsTitle, EmptyText string
 	// HeaderActions builds optional trailing actions, such as a dialog close button.
 	HeaderActions func(c *ui.Context)
+	// HideSearch removes the search field; Query is then ignored.
+	HideSearch bool
+	// HideSidebar removes category navigation, both the sidebar and the narrow
+	// category selector, and shows every category on one page, each under its
+	// title when there are several. To navigate from application UI instead,
+	// pass only the selected category.
+	HideSidebar bool
 }
 
 // SettingsResult identifies an item by slice indices in the supplied catalog.
@@ -141,6 +161,13 @@ func Settings(c *ui.Context, state *SettingsState, categories []SettingsCategory
 	search := func() {
 		TextBox(c, &state.Query, TextBoxOptions{LeadingIcon: lucide.Search()}).Label(opts.SearchLabel).Placeholder(opts.SearchPlaceholder).FillWidth().MinWidth(0)
 	}
+	query := state.Query
+	if opts.HideSearch {
+		query = ""
+	}
+	searching := strings.TrimSpace(query) != ""
+	// all shows every category: search results, or a page without navigation.
+	all := searching || opts.HideSidebar
 	heading := func(title string, actions bool) {
 		ui.Row(c).FillWidth().MinHeight(t.Space(14)).Shrink(0).Padding(t.Space(3), t.Space(4)).Gap(t.Space(2)).Children(func() {
 			Text(c, title).Bold()
@@ -151,10 +178,12 @@ func Settings(c *ui.Context, state *SettingsState, categories []SettingsCategory
 		})
 	}
 	return ui.Row(c).Fill().MinWidth(0).Gap(0).Children(func() {
-		if !opts.Narrow {
+		if !opts.Narrow && !opts.HideSidebar {
 			ui.Column(c).Width(t.Space(54)).FillHeight().Shrink(0).Background(t.Text.Alpha(.035)).Children(func() {
 				heading(opts.Title, false)
-				ui.Column(c).FillWidth().Padding(0, t.Space(3), t.Space(4), t.Space(3)).Children(search)
+				if !opts.HideSearch {
+					ui.Column(c).FillWidth().Padding(0, t.Space(3), t.Space(4), t.Space(3)).Children(search)
+				}
 				ScrollView(c, ScrollViewOptions{}).Fill().Children(func() {
 					Sidebar(c).Children(func() {
 						for start := 0; start < len(categories); {
@@ -195,16 +224,18 @@ func Settings(c *ui.Context, state *SettingsState, categories []SettingsCategory
 		}
 		ui.Column(c).Fill().MinWidth(0).Children(func() {
 			title := opts.Title
-			if !opts.Narrow && selected >= 0 {
+			if !opts.Narrow && !opts.HideSidebar && selected >= 0 {
 				title = categories[selected].Title
 			}
-			if strings.TrimSpace(state.Query) != "" {
+			if searching {
 				title = opts.ResultsTitle
 			}
 			heading(title, true)
-			if opts.Narrow {
+			selector := opts.Narrow && !opts.HideSidebar && selected >= 0
+			inlineSearch := (opts.Narrow || opts.HideSidebar) && !opts.HideSearch
+			if selector || inlineSearch {
 				ui.Column(c).FillWidth().Padding(0, t.Space(3), t.Space(3), t.Space(3)).Gap(t.Space(2)).Children(func() {
-					if selected >= 0 {
+					if selector {
 						sel := Select(c, &state.Category)
 						sel.Trigger.Label(opts.CategoryLabel).FillWidth().Children(func() { Text(c, categories[selected].Title).SingleLine() })
 						sel.Popup(func(panel ui.Element) {
@@ -221,24 +252,25 @@ func Settings(c *ui.Context, state *SettingsState, categories []SettingsCategory
 							}
 						}
 					}
-					search()
+					if inlineSearch {
+						search()
+					}
 				})
 			}
-			searching := strings.TrimSpace(state.Query) != ""
-			results := SearchSettings(categories, state.Query)
+			results := SearchSettings(categories, query)
 			ScrollView(c, ScrollViewOptions{}).Fill().Children(func() {
 				ui.Column(c).Key(state.Category).FillWidth().MinWidth(0).Padding(t.Space(5)).Gap(t.Space(5)).Children(func() {
 					count, lastCategory, lastGroup := 0, -1, -1
 					for _, result := range results {
-						if !searching && result.Category != selected {
+						if !all && result.Category != selected {
 							continue
 						}
 						category := categories[result.Category]
 						group := category.Groups[result.Group]
 						item := group.Items[result.Item]
 						if lastCategory != result.Category {
-							if searching {
-								Text(c, category.Title)
+							if searching || (all && len(categories) > 1) {
+								Text(c, category.Title).Bold()
 							}
 							if category.Description != "" {
 								Text(c, category.Description).TextColor(t.TextMuted).Wrap()
@@ -257,22 +289,39 @@ func Settings(c *ui.Context, state *SettingsState, categories []SettingsCategory
 						}
 						lastCategory, lastGroup = result.Category, result.Group
 						count++
+						key := struct{ Category, Group, Item string }{category.ID, group.ID, item.ID}
+						if item.Content != nil {
+							ui.Column(c).Key(key).FillWidth().MinWidth(0).Children(func() { item.Content(c) })
+							continue
+						}
 						var row ui.Element
-						if opts.Narrow {
+						if opts.Narrow || item.Stacked {
 							row = ui.Column(c)
 						} else {
 							row = ui.Row(c)
 						}
-						row.Key(struct{ Category, Group, Item string }{category.ID, group.ID, item.ID}).FillWidth().MinWidth(0).Gap(t.Space(3)).Children(func() {
-							ui.Column(c).FillWidth().Shrink(1).MinWidth(0).Gap(t.Space(1)).Children(func() {
-								Text(c, item.Title).Wrap()
-								switch {
-								case item.DescriptionContent != nil:
-									ui.RichText(c).FillWidth().TextColor(t.TextMuted).FontSize(t.Rem(.875)).Wrap().Children(func() { item.DescriptionContent(c) })
-								case item.Description != "":
-									Text(c, item.Description).TextColor(t.TextMuted).FontSize(t.Rem(.875)).Wrap()
-								}
-							})
+						row.Key(key).FillWidth().MinWidth(0).Gap(t.Space(3)).Children(func() {
+							text := func() {
+								ui.Column(c).FillWidth().Shrink(1).MinWidth(0).Gap(t.Space(1)).Children(func() {
+									if item.Title != "" {
+										Text(c, item.Title).Wrap()
+									}
+									switch {
+									case item.DescriptionContent != nil:
+										ui.RichText(c).FillWidth().TextColor(t.TextMuted).FontSize(t.Rem(.875)).Wrap().Children(func() { item.DescriptionContent(c) })
+									case item.Description != "":
+										Text(c, item.Description).TextColor(t.TextMuted).FontSize(t.Rem(.875)).Wrap()
+									}
+								})
+							}
+							if item.Leading != nil {
+								ui.Row(c).FillWidth().Shrink(1).MinWidth(0).AlignItems(ui.Center).Gap(t.Space(3)).Children(func() {
+									ui.Row(c).Shrink(0).AlignItems(ui.Center).Children(func() { item.Leading(c) })
+									text()
+								})
+							} else {
+								text()
+							}
 							if item.Build != nil {
 								item.Build(c)
 							}

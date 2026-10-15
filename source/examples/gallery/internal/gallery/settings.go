@@ -2,6 +2,7 @@ package gallery
 
 import (
 	"runtime"
+	"time"
 
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
@@ -12,10 +13,23 @@ import (
 
 // Template values are session-only; application preferences are persisted.
 type settingsState struct {
-	open, initialized bool
-	view              components.SettingsState
-	smart             bool
-	channels          []string
+	open, initialized       bool
+	view                    components.SettingsState
+	hideSearch, hideSidebar bool
+	smart                   bool
+	channels                []string
+	quietStart, quietEnd    time.Time
+	displayName, bio        string
+	profileColor            ui.Color
+	scale                   float64
+	density                 string
+	fontSize                float64
+	tabWidth                int
+	lineNumbers, wordWrap   bool
+	minimap                 bool
+	cacheGB                 float64
+	downloads               string
+	upToDate                bool
 }
 
 var notificationRows = []struct{ group, title, description, channel string }{
@@ -35,6 +49,12 @@ func (s *settingsState) initialize() {
 		return
 	}
 	s.initialized, s.smart = true, true
+	s.quietStart = time.Date(2000, 1, 1, 22, 0, 0, 0, time.Local)
+	s.quietEnd = time.Date(2000, 1, 1, 7, 0, 0, 0, time.Local)
+	s.displayName, s.profileColor = "Alex Morgan", ui.RGB(99, 102, 241)
+	s.scale, s.density = 100, "comfortable"
+	s.fontSize, s.tabWidth, s.lineNumbers, s.wordWrap = 13, 4, true, true
+	s.cacheGB, s.downloads = 2.4, "~/Downloads/Onevra"
 	for _, row := range notificationRows {
 		s.channels = append(s.channels, row.channel)
 	}
@@ -57,7 +77,7 @@ func (g *Gallery) settingsLocalized(c *ui.Context) {
 	components.Dialog(c, &g.settings.open, components.DialogOptions{Label: tr(c, "settings"), Inset: inset}, func(panel ui.Element) {
 		panel.Width(width).Height(min(t.Space(180), h*.85)).Padding(0).Gap(0).Clip()
 		components.Settings(c, &g.settings.view, g.settingsCategories(), components.SettingsOptions{
-			Narrow: width < t.Space(170),
+			Narrow: width < t.Space(170), HideSearch: g.settings.hideSearch, HideSidebar: g.settings.hideSidebar,
 			HeaderActions: func(c *ui.Context) {
 				if sidebar.IconButton(c, lucide.X(), tr(c, "closeSettings")).Clicked() {
 					g.settings.open = false
@@ -88,6 +108,16 @@ func (g *Gallery) settingsCategories() []components.SettingsCategory {
 				},
 				Build: func(c *ui.Context) {
 					components.Switch(c, &g.settings.smart, g.text("toggleSmartNotifications"), components.SwitchOptions{HideLabel: true})
+				},
+			}, {
+				ID: "quiet-hours", Title: g.text("quietHours"), Description: g.text("quietHoursDescription"), Keywords: []string{"do not disturb", "勿扰"},
+				Leading: func(c *ui.Context) { settingsGlyph(c, lucide.Moon()) },
+				Build: func(c *ui.Context) {
+					ui.Row(c).Shrink(0).AlignItems(ui.Center).Gap(c.Theme().Space(2)).Children(func() {
+						components.TimePicker(c, &g.settings.quietStart).Label(g.text("quietHoursStart"))
+						components.Text(c, "–").TextColor(c.Theme().TextMuted)
+						components.TimePicker(c, &g.settings.quietEnd).Label(g.text("quietHoursEnd"))
+					})
 				},
 			}},
 		}},
@@ -124,7 +154,7 @@ func (g *Gallery) settingsCategories() []components.SettingsCategory {
 						c.Invalidate()
 					}
 				},
-			}}}, g.commandSettingsGroup()}},
+			}}}, g.commandSettingsGroup(), g.layoutSettingsGroup()}},
 		{ID: "appearance", Title: g.text("appearance"), Section: g.text("application"), Icon: lucide.Palette(),
 			Groups: []components.SettingsGroup{{ID: "theme", Items: []components.SettingsItem{{
 				ID: "theme", Title: g.text("theme"), Description: g.text("appliesImmediatelyAndFollowsTheToolbarThemeMenu"), Keywords: []string{"System", "Light", "Dark", g.text("system"), g.text("light"), g.text("dark")},
@@ -147,7 +177,13 @@ func (g *Gallery) settingsCategories() []components.SettingsCategory {
 				},
 			}}}},
 		},
+		// Template categories stay together under their own section.
+		g.accountSettings(),
 		notifications,
+		g.layoutSettings(),
+		g.editorSettings(),
+		g.storageSettings(),
+		g.aboutSettings(),
 	}
 }
 

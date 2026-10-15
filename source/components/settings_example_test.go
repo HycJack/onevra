@@ -19,6 +19,10 @@ func ExampleSettings() {
 		}, Items: []components.SettingsItem{{
 			ID: "desktop", Title: "Desktop notifications", Keywords: []string{"alerts"},
 			Build: func(c *ui.Context) { components.Switch(c, &enabled, "Enable desktop notifications") },
+		}, {
+			// Content builds the whole row; its title still matches searches.
+			ID: "preview", Title: "Preview", Keywords: []string{"sample"},
+			Content: func(c *ui.Context) { components.Text(c, "A notification preview").Wrap() },
 		}}}},
 	}}
 	view := func(c *ui.Context) {

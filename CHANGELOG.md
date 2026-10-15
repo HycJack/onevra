@@ -9,6 +9,8 @@ User-facing updates for Onevra library consumers.
 - Breaking: rename `command.CommandPalette` to `command.CommandView`.
 - Add `command.Options.Filter` and `command.State.Focus`.
 - Return command results to the top when they change.
+- Add `HideSearch` and `HideSidebar` to `components.SettingsOptions`.
+- Add `Leading`, `Stacked` and `Content` to `components.SettingsItem`.
 
 ## [0.2026.10] - 2026-10-15
 

@@ -258,3 +258,83 @@ func TestSettingsCategoryImage(t *testing.T) {
 		t.Fatalf("navigation to the image category: %v %+v", err, state)
 	}
 }
+
+func TestSettingsHideSearchAndSidebar(t *testing.T) {
+	for _, narrow := range []bool{false, true} {
+		state := SettingsState{Query: "dark"}
+		opts := SettingsOptions{Narrow: narrow, HideSearch: true}
+		tt := ui.NewTester(func(c *ui.Context) { Settings(c, &state, settingsFixture(), opts) }, 800, 600)
+		tt.Frame()
+		if _, ok := tt.Find("Search settings"); ok || !tt.HasText("Alerts") || tt.HasText("Theme") || narrow == tt.HasText("Appearance") {
+			t.Fatalf("narrow %v: hidden search: %v", narrow, tt.Texts())
+		}
+		// Without navigation every category shares one page under its title.
+		opts = SettingsOptions{Narrow: narrow, HideSidebar: true}
+		state.Query = ""
+		tt.Frame()
+		if _, ok := tt.Find("Settings category"); ok || !tt.HasText("Alerts") || !tt.HasText("Theme") || !tt.HasText("Account") || !tt.HasText("Appearance") {
+			t.Fatalf("narrow %v: hidden sidebar: %v", narrow, tt.Texts())
+		}
+		alerts, _ := tt.Find("Alerts")
+		if field, ok := tt.Find("Search settings"); !ok || field.Y >= alerts.Y {
+			t.Fatalf("narrow %v: search not above the rows: %v", narrow, tt.Texts())
+		}
+		state.Query = "dark"
+		tt.Frame()
+		if tt.HasText("Alerts") || !tt.HasText("Theme") || !tt.HasText("Search results") {
+			t.Fatalf("narrow %v: search without sidebar: %v", narrow, tt.Texts())
+		}
+		// A single category drops its redundant title.
+		state.Query = ""
+		single := settingsFixture()[:1]
+		tt = ui.NewTester(func(c *ui.Context) { Settings(c, &state, single, opts) }, 800, 600)
+		tt.Frame()
+		if tt.HasText("Account") || !tt.HasText("Alerts") || !tt.HasText("Settings") {
+			t.Fatalf("narrow %v: single category: %v", narrow, tt.Texts())
+		}
+	}
+}
+
+func TestSettingsItemSlots(t *testing.T) {
+	for _, narrow := range []bool{false, true} {
+		state := SettingsState{}
+		catalog := settingsFixture()
+		name, clicks := "", 0
+		items := &catalog[0].Groups[0].Items
+		(*items)[0].Leading = func(c *ui.Context) { Text(c, "Mark") }
+		*items = append(*items,
+			SettingsItem{ID: "name", Title: "Display name", Stacked: true, Build: func(c *ui.Context) {
+				TextBox(c, &name, TextBoxOptions{}).Label("Name field").FillWidth()
+			}},
+			SettingsItem{ID: "profile", Title: "Profile card", Keywords: []string{"avatar"}, Content: func(c *ui.Context) {
+				if Button(c, "Edit profile", ButtonSecondary).Clicked() {
+					clicks++
+				}
+			}},
+		)
+		tt := ui.NewTester(func(c *ui.Context) { Settings(c, &state, catalog, SettingsOptions{Narrow: narrow}) }, 800, 600)
+		tt.Frame()
+		mark, _ := tt.Find("Mark")
+		alerts, ok := tt.Find("Alerts")
+		if !ok || mark.X+mark.W > alerts.X || mark.Y > alerts.Y+alerts.H {
+			t.Fatalf("narrow %v: leading not before the title: %+v %+v", narrow, mark, alerts)
+		}
+		title, _ := tt.Find("Display name")
+		field, ok := tt.Find("Name field")
+		if !ok || field.Y < title.Y+title.H || field.X > title.X {
+			t.Fatalf("narrow %v: stacked control not below its title: %+v %+v", narrow, title, field)
+		}
+		// Content replaces the displayed title but keeps it as search metadata.
+		if tt.HasText("Profile card") {
+			t.Fatal("content row showed its title", tt.Texts())
+		}
+		if err := tt.Click("Edit profile"); err != nil || clicks != 1 {
+			t.Fatalf("content not interactive: %v %d", err, clicks)
+		}
+		state.Query = "avatar"
+		tt.Frame()
+		if !tt.HasText("Edit profile") || tt.HasText("Alerts") {
+			t.Fatal("content row not searchable", tt.Texts())
+		}
+	}
+}

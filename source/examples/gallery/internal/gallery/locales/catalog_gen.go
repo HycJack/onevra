@@ -7355,3 +7355,463 @@ func Inbox() string { return In(i18n.Locale()).Inbox() }
 func (msgs Messages) Inbox() string {
 	return Catalog.Format(msgs.locale, "inbox", nil)
 }
+
+// SettingsLayout says "Settings layout"
+// in the language the app shows.
+func SettingsLayout() string { return In(i18n.Locale()).SettingsLayout() }
+
+// SettingsLayout says "Settings layout"
+// in the language of msgs.
+func (msgs Messages) SettingsLayout() string {
+	return Catalog.Format(msgs.locale, "settingsLayout", nil)
+}
+
+// ShowSearch says "Show search"
+// in the language the app shows.
+func ShowSearch() string { return In(i18n.Locale()).ShowSearch() }
+
+// ShowSearch says "Show search"
+// in the language of msgs.
+func (msgs Messages) ShowSearch() string {
+	return Catalog.Format(msgs.locale, "showSearch", nil)
+}
+
+// ShowSearchDescription says "Short settings pages may not need a search field."
+// in the language the app shows.
+func ShowSearchDescription() string { return In(i18n.Locale()).ShowSearchDescription() }
+
+// ShowSearchDescription says "Short settings pages may not need a search field."
+// in the language of msgs.
+func (msgs Messages) ShowSearchDescription() string {
+	return Catalog.Format(msgs.locale, "showSearchDescription", nil)
+}
+
+// ToggleSettingsSearch says "Toggle settings search"
+// in the language the app shows.
+func ToggleSettingsSearch() string { return In(i18n.Locale()).ToggleSettingsSearch() }
+
+// ToggleSettingsSearch says "Toggle settings search"
+// in the language of msgs.
+func (msgs Messages) ToggleSettingsSearch() string {
+	return Catalog.Format(msgs.locale, "toggleSettingsSearch", nil)
+}
+
+// ShowSidebar says "Show sidebar"
+// in the language the app shows.
+func ShowSidebar() string { return In(i18n.Locale()).ShowSidebar() }
+
+// ShowSidebar says "Show sidebar"
+// in the language of msgs.
+func (msgs Messages) ShowSidebar() string {
+	return Catalog.Format(msgs.locale, "showSidebar", nil)
+}
+
+// ShowSidebarDescription says "Without the sidebar, every category appears on one page."
+// in the language the app shows.
+func ShowSidebarDescription() string { return In(i18n.Locale()).ShowSidebarDescription() }
+
+// ShowSidebarDescription says "Without the sidebar, every category appears on one page."
+// in the language of msgs.
+func (msgs Messages) ShowSidebarDescription() string {
+	return Catalog.Format(msgs.locale, "showSidebarDescription", nil)
+}
+
+// ToggleSettingsSidebar says "Toggle settings sidebar"
+// in the language the app shows.
+func ToggleSettingsSidebar() string { return In(i18n.Locale()).ToggleSettingsSidebar() }
+
+// ToggleSettingsSidebar says "Toggle settings sidebar"
+// in the language of msgs.
+func (msgs Messages) ToggleSettingsSidebar() string {
+	return Catalog.Format(msgs.locale, "toggleSettingsSidebar", nil)
+}
+
+// Identity says "Identity"
+// in the language the app shows.
+func Identity() string { return In(i18n.Locale()).Identity() }
+
+// Identity says "Identity"
+// in the language of msgs.
+func (msgs Messages) Identity() string {
+	return Catalog.Format(msgs.locale, "identity", nil)
+}
+
+// DisplayName says "Display name"
+// in the language the app shows.
+func DisplayName() string { return In(i18n.Locale()).DisplayName() }
+
+// DisplayName says "Display name"
+// in the language of msgs.
+func (msgs Messages) DisplayName() string {
+	return Catalog.Format(msgs.locale, "displayName", nil)
+}
+
+// DisplayNameDescription says "Shown to people in your workspace."
+// in the language the app shows.
+func DisplayNameDescription() string { return In(i18n.Locale()).DisplayNameDescription() }
+
+// DisplayNameDescription says "Shown to people in your workspace."
+// in the language of msgs.
+func (msgs Messages) DisplayNameDescription() string {
+	return Catalog.Format(msgs.locale, "displayNameDescription", nil)
+}
+
+// Bio says "Bio"
+// in the language the app shows.
+func Bio() string { return In(i18n.Locale()).Bio() }
+
+// Bio says "Bio"
+// in the language of msgs.
+func (msgs Messages) Bio() string {
+	return Catalog.Format(msgs.locale, "bio", nil)
+}
+
+// BioDescription says "A few words about yourself."
+// in the language the app shows.
+func BioDescription() string { return In(i18n.Locale()).BioDescription() }
+
+// BioDescription says "A few words about yourself."
+// in the language of msgs.
+func (msgs Messages) BioDescription() string {
+	return Catalog.Format(msgs.locale, "bioDescription", nil)
+}
+
+// ProfileColor says "Profile color"
+// in the language the app shows.
+func ProfileColor() string { return In(i18n.Locale()).ProfileColor() }
+
+// ProfileColor says "Profile color"
+// in the language of msgs.
+func (msgs Messages) ProfileColor() string {
+	return Catalog.Format(msgs.locale, "profileColor", nil)
+}
+
+// ProfileColorDescription says "Used for your avatar and mentions."
+// in the language the app shows.
+func ProfileColorDescription() string { return In(i18n.Locale()).ProfileColorDescription() }
+
+// ProfileColorDescription says "Used for your avatar and mentions."
+// in the language of msgs.
+func (msgs Messages) ProfileColorDescription() string {
+	return Catalog.Format(msgs.locale, "profileColorDescription", nil)
+}
+
+// QuietHours says "Quiet hours"
+// in the language the app shows.
+func QuietHours() string { return In(i18n.Locale()).QuietHours() }
+
+// QuietHours says "Quiet hours"
+// in the language of msgs.
+func (msgs Messages) QuietHours() string {
+	return Catalog.Format(msgs.locale, "quietHours", nil)
+}
+
+// QuietHoursDescription says "Silence notifications between these times."
+// in the language the app shows.
+func QuietHoursDescription() string { return In(i18n.Locale()).QuietHoursDescription() }
+
+// QuietHoursDescription says "Silence notifications between these times."
+// in the language of msgs.
+func (msgs Messages) QuietHoursDescription() string {
+	return Catalog.Format(msgs.locale, "quietHoursDescription", nil)
+}
+
+// QuietHoursStart says "Quiet hours start"
+// in the language the app shows.
+func QuietHoursStart() string { return In(i18n.Locale()).QuietHoursStart() }
+
+// QuietHoursStart says "Quiet hours start"
+// in the language of msgs.
+func (msgs Messages) QuietHoursStart() string {
+	return Catalog.Format(msgs.locale, "quietHoursStart", nil)
+}
+
+// QuietHoursEnd says "Quiet hours end"
+// in the language the app shows.
+func QuietHoursEnd() string { return In(i18n.Locale()).QuietHoursEnd() }
+
+// QuietHoursEnd says "Quiet hours end"
+// in the language of msgs.
+func (msgs Messages) QuietHoursEnd() string {
+	return Catalog.Format(msgs.locale, "quietHoursEnd", nil)
+}
+
+// InterfaceScale says "Interface scale"
+// in the language the app shows.
+func InterfaceScale() string { return In(i18n.Locale()).InterfaceScale() }
+
+// InterfaceScale says "Interface scale"
+// in the language of msgs.
+func (msgs Messages) InterfaceScale() string {
+	return Catalog.Format(msgs.locale, "interfaceScale", nil)
+}
+
+// InterfaceScaleDescription says "Preview only; the gallery keeps its size."
+// in the language the app shows.
+func InterfaceScaleDescription() string { return In(i18n.Locale()).InterfaceScaleDescription() }
+
+// InterfaceScaleDescription says "Preview only; the gallery keeps its size."
+// in the language of msgs.
+func (msgs Messages) InterfaceScaleDescription() string {
+	return Catalog.Format(msgs.locale, "interfaceScaleDescription", nil)
+}
+
+// Density says "Density"
+// in the language the app shows.
+func Density() string { return In(i18n.Locale()).Density() }
+
+// Density says "Density"
+// in the language of msgs.
+func (msgs Messages) Density() string {
+	return Catalog.Format(msgs.locale, "density", nil)
+}
+
+// DensityDescription says "Spacing between list rows."
+// in the language the app shows.
+func DensityDescription() string { return In(i18n.Locale()).DensityDescription() }
+
+// DensityDescription says "Spacing between list rows."
+// in the language of msgs.
+func (msgs Messages) DensityDescription() string {
+	return Catalog.Format(msgs.locale, "densityDescription", nil)
+}
+
+// Compact says "Compact"
+// in the language the app shows.
+func Compact() string { return In(i18n.Locale()).Compact() }
+
+// Compact says "Compact"
+// in the language of msgs.
+func (msgs Messages) Compact() string {
+	return Catalog.Format(msgs.locale, "compact", nil)
+}
+
+// Comfortable says "Comfortable"
+// in the language the app shows.
+func Comfortable() string { return In(i18n.Locale()).Comfortable() }
+
+// Comfortable says "Comfortable"
+// in the language of msgs.
+func (msgs Messages) Comfortable() string {
+	return Catalog.Format(msgs.locale, "comfortable", nil)
+}
+
+// Spacious says "Spacious"
+// in the language the app shows.
+func Spacious() string { return In(i18n.Locale()).Spacious() }
+
+// Spacious says "Spacious"
+// in the language of msgs.
+func (msgs Messages) Spacious() string {
+	return Catalog.Format(msgs.locale, "spacious", nil)
+}
+
+// Editor says "Editor"
+// in the language the app shows.
+func Editor() string { return In(i18n.Locale()).Editor() }
+
+// Editor says "Editor"
+// in the language of msgs.
+func (msgs Messages) Editor() string {
+	return Catalog.Format(msgs.locale, "editor", nil)
+}
+
+// FontSize says "Font size"
+// in the language the app shows.
+func FontSize() string { return In(i18n.Locale()).FontSize() }
+
+// FontSize says "Font size"
+// in the language of msgs.
+func (msgs Messages) FontSize() string {
+	return Catalog.Format(msgs.locale, "fontSize", nil)
+}
+
+// FontSizeDescription says "Point size used for code."
+// in the language the app shows.
+func FontSizeDescription() string { return In(i18n.Locale()).FontSizeDescription() }
+
+// FontSizeDescription says "Point size used for code."
+// in the language of msgs.
+func (msgs Messages) FontSizeDescription() string {
+	return Catalog.Format(msgs.locale, "fontSizeDescription", nil)
+}
+
+// TabWidth says "Tab width"
+// in the language the app shows.
+func TabWidth() string { return In(i18n.Locale()).TabWidth() }
+
+// TabWidth says "Tab width"
+// in the language of msgs.
+func (msgs Messages) TabWidth() string {
+	return Catalog.Format(msgs.locale, "tabWidth", nil)
+}
+
+// TabWidthDescription says "Spaces per indentation level."
+// in the language the app shows.
+func TabWidthDescription() string { return In(i18n.Locale()).TabWidthDescription() }
+
+// TabWidthDescription says "Spaces per indentation level."
+// in the language of msgs.
+func (msgs Messages) TabWidthDescription() string {
+	return Catalog.Format(msgs.locale, "tabWidthDescription", nil)
+}
+
+// EditorDisplay says "Display"
+// in the language the app shows.
+func EditorDisplay() string { return In(i18n.Locale()).EditorDisplay() }
+
+// EditorDisplay says "Display"
+// in the language of msgs.
+func (msgs Messages) EditorDisplay() string {
+	return Catalog.Format(msgs.locale, "editorDisplay", nil)
+}
+
+// EditorDisplayDescription says "Choose what appears around your code."
+// in the language the app shows.
+func EditorDisplayDescription() string { return In(i18n.Locale()).EditorDisplayDescription() }
+
+// EditorDisplayDescription says "Choose what appears around your code."
+// in the language of msgs.
+func (msgs Messages) EditorDisplayDescription() string {
+	return Catalog.Format(msgs.locale, "editorDisplayDescription", nil)
+}
+
+// LineNumbers says "Line numbers"
+// in the language the app shows.
+func LineNumbers() string { return In(i18n.Locale()).LineNumbers() }
+
+// LineNumbers says "Line numbers"
+// in the language of msgs.
+func (msgs Messages) LineNumbers() string {
+	return Catalog.Format(msgs.locale, "lineNumbers", nil)
+}
+
+// WordWrap says "Word wrap"
+// in the language the app shows.
+func WordWrap() string { return In(i18n.Locale()).WordWrap() }
+
+// WordWrap says "Word wrap"
+// in the language of msgs.
+func (msgs Messages) WordWrap() string {
+	return Catalog.Format(msgs.locale, "wordWrap", nil)
+}
+
+// Minimap says "Minimap"
+// in the language the app shows.
+func Minimap() string { return In(i18n.Locale()).Minimap() }
+
+// Minimap says "Minimap"
+// in the language of msgs.
+func (msgs Messages) Minimap() string {
+	return Catalog.Format(msgs.locale, "minimap", nil)
+}
+
+// Storage says "Storage"
+// in the language the app shows.
+func Storage() string { return In(i18n.Locale()).Storage() }
+
+// Storage says "Storage"
+// in the language of msgs.
+func (msgs Messages) Storage() string {
+	return Catalog.Format(msgs.locale, "storage", nil)
+}
+
+// StorageUsage says "Storage usage"
+// in the language the app shows.
+func StorageUsage() string { return In(i18n.Locale()).StorageUsage() }
+
+// StorageUsage says "Storage usage"
+// in the language of msgs.
+func (msgs Messages) StorageUsage() string {
+	return Catalog.Format(msgs.locale, "storageUsage", nil)
+}
+
+// StorageCache says "Cache"
+// in the language the app shows.
+func StorageCache() string { return In(i18n.Locale()).StorageCache() }
+
+// StorageCache says "Cache"
+// in the language of msgs.
+func (msgs Messages) StorageCache() string {
+	return Catalog.Format(msgs.locale, "storageCache", nil)
+}
+
+// StorageOther says "Other"
+// in the language the app shows.
+func StorageOther() string { return In(i18n.Locale()).StorageOther() }
+
+// StorageOther says "Other"
+// in the language of msgs.
+func (msgs Messages) StorageOther() string {
+	return Catalog.Format(msgs.locale, "storageOther", nil)
+}
+
+// ClearCache says "Clear cache"
+// in the language the app shows.
+func ClearCache() string { return In(i18n.Locale()).ClearCache() }
+
+// ClearCache says "Clear cache"
+// in the language of msgs.
+func (msgs Messages) ClearCache() string {
+	return Catalog.Format(msgs.locale, "clearCache", nil)
+}
+
+// ClearCacheDescription says "Removes downloaded previews; documents are kept."
+// in the language the app shows.
+func ClearCacheDescription() string { return In(i18n.Locale()).ClearCacheDescription() }
+
+// ClearCacheDescription says "Removes downloaded previews; documents are kept."
+// in the language of msgs.
+func (msgs Messages) ClearCacheDescription() string {
+	return Catalog.Format(msgs.locale, "clearCacheDescription", nil)
+}
+
+// DownloadLocation says "Download location"
+// in the language the app shows.
+func DownloadLocation() string { return In(i18n.Locale()).DownloadLocation() }
+
+// DownloadLocation says "Download location"
+// in the language of msgs.
+func (msgs Messages) DownloadLocation() string {
+	return Catalog.Format(msgs.locale, "downloadLocation", nil)
+}
+
+// DownloadLocationDescription says "New exports are saved to this folder."
+// in the language the app shows.
+func DownloadLocationDescription() string { return In(i18n.Locale()).DownloadLocationDescription() }
+
+// DownloadLocationDescription says "New exports are saved to this folder."
+// in the language of msgs.
+func (msgs Messages) DownloadLocationDescription() string {
+	return Catalog.Format(msgs.locale, "downloadLocationDescription", nil)
+}
+
+// AboutGallery says "Components for native Go desktop applications."
+// in the language the app shows.
+func AboutGallery() string { return In(i18n.Locale()).AboutGallery() }
+
+// AboutGallery says "Components for native Go desktop applications."
+// in the language of msgs.
+func (msgs Messages) AboutGallery() string {
+	return Catalog.Format(msgs.locale, "aboutGallery", nil)
+}
+
+// CheckForUpdates says "Check for updates"
+// in the language the app shows.
+func CheckForUpdates() string { return In(i18n.Locale()).CheckForUpdates() }
+
+// CheckForUpdates says "Check for updates"
+// in the language of msgs.
+func (msgs Messages) CheckForUpdates() string {
+	return Catalog.Format(msgs.locale, "checkForUpdates", nil)
+}
+
+// UpToDate says "You're up to date."
+// in the language the app shows.
+func UpToDate() string { return In(i18n.Locale()).UpToDate() }
+
+// UpToDate says "You're up to date."
+// in the language of msgs.
+func (msgs Messages) UpToDate() string {
+	return Catalog.Format(msgs.locale, "upToDate", nil)
+}
