@@ -1,0 +1,14 @@
+{
+  "name": "Onevra Launcher",
+  "identifier": "me.oneo.onevra.examples.launcher",
+  "version": "0.1.0",
+  "out": "../../../dist/launcher",
+  "macos": {
+    "minimumSystemVersion": "13.0",
+    "infoPlist": { "LSUIElement": true }
+  },
+  "i18n": {
+    "dir": "locales",
+    "source": "en"
+  }
+}

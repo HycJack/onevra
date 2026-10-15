@@ -27,16 +27,17 @@ cd source
 go run ./examples/gallery
 ```
 
-Append `-theme light` or `-theme dark` to preview an appearance. Four smaller applications are also available; run these commands from `source/`:
+Append `-theme light` or `-theme dark` to preview an appearance. Five smaller applications are also available; run these commands from `source/`:
 
 | Example | Purpose | Command |
 | --- | --- | --- |
 | Desktop | A main window with settings | `go run ./examples/desktop` |
 | Menu bar | A tray application with a quick-note panel | `go run ./examples/menubar` |
 | Hybrid | A main window and tray, with optional background startup | `go run ./examples/hybrid` |
+| Launcher | A Spotlight-style panel that searches and opens installed apps | `go run ./examples/launcher` |
 | Documents | A document-based notes editor | `go run ./examples/documents` |
 
-Each template includes localization and its own packaging configuration; the first three also keep preferences. See [starter applications](docs/build.md#starter-applications) for copying and adapting one. Windows and Linux still require their own [native review](docs/build.md#native-review).
+Each template includes localization and its own packaging configuration; all but the document editor keep preferences. See [starter applications](docs/build.md#starter-applications) for copying and adapting one. Windows and Linux still require their own [native review](docs/build.md#native-review).
 
 ## Getting started
 
