@@ -5,7 +5,6 @@ import (
 	"errors"
 	"path/filepath"
 	"runtime"
-	"slices"
 	"strings"
 	"time"
 
@@ -464,47 +463,6 @@ func formats(c *ui.Context) (i18n.Region, string) {
 		r.Locale = ""
 	}
 	return r, r.FormatLocale(lang)
-}
-
-func exampleWebData(c *ui.Context, s *demoState) {
-	d, m := &s.system, msg(c)
-	available := false
-	if d.native {
-		available = mygo.WebViewAvailable()
-	}
-	systemRow(c, m.WebDataAvailable(), yesNo(m, available))
-	ui.Row(c).Gap(8).Children(func() {
-		if components.Button(c, m.WebDataList(), components.ButtonPrimary).Clicked() {
-			d.background(func() func() {
-				cookies, err := mygo.Cookies.List(mygo.CookieFilter{})
-				return func() { d.cookies, d.cookieStatus = cookies, cookieResult(m, err) }
-			})
-		}
-		if components.Button(c, m.WebDataSet(), components.ButtonOutline).Clicked() {
-			d.background(func() func() {
-				err := mygo.Cookies.Set(mygo.Cookie{Name: "onevra_gallery", Value: "demo", Domain: "example.com", Expires: time.Now().Add(time.Hour)})
-				cookies, listErr := mygo.Cookies.List(mygo.CookieFilter{})
-				return func() { d.cookies, d.cookieStatus = cookies, cookieResult(m, errors.Join(err, listErr)) }
-			})
-		}
-		if components.Button(c, m.WebDataClear(), components.ButtonOutline).Clicked() {
-			d.background(func() func() {
-				err := mygo.Cookies.Clear()
-				return func() { d.cookies, d.cookieStatus = nil, cookieResult(m, err) }
-			})
-		}
-	})
-	if d.cookieStatus != "" {
-		components.Text(c, d.cookieStatus).Wrap().TextColor(c.Theme().TextMuted)
-	}
-	cookies := slices.Clone(d.cookies)
-	slices.SortFunc(cookies, func(a, b mygo.Cookie) int { return strings.Compare(a.Domain+a.Name, b.Domain+b.Name) })
-	for i, cookie := range cookies {
-		if i == 30 {
-			break
-		}
-		systemRow(c, cookie.Domain, cookie.Name)
-	}
 }
 
 func cookieResult(m locales.Messages, err error) string {

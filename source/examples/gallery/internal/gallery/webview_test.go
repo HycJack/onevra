@@ -31,6 +31,22 @@ func TestWebViewHeadlessShowsPlaceholder(t *testing.T) {
 	if !tt.HasText("Web views need a native window.") {
 		t.Fatalf("missing placeholder: %q", tt.Texts())
 	}
+	// The app's cookies belong to the same demonstration: the data the
+	// system web engine keeps for its pages.
+	for _, key := range []string{"componentWebData", "webDataAvailable", "webDataList", "webDataSet", "webDataClear"} {
+		if !tt.HasText(g.text(key)) {
+			t.Errorf("missing %s in %q", key, tt.Texts())
+		}
+	}
+}
+
+// TestWebDataRouteMergesIntoWebView restores a selection saved before the Web
+// data page merged into the WebView page.
+func TestWebDataRouteMergesIntoWebView(t *testing.T) {
+	g := webViewGallery()
+	if pageFromKey("mygo/Web data") != g.page {
+		t.Fatal("Web data selection must restore the WebView page")
+	}
 }
 
 func TestWebViewCreatedOnce(t *testing.T) {

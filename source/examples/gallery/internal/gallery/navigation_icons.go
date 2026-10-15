@@ -96,7 +96,6 @@ var navigationIcons = map[string]func() *ui.SVG{
 	"Fonts":               lucide.Type,
 	"System appearance":   lucide.Contrast,
 	"Languages & formats": lucide.Languages,
-	"Web data":            lucide.Cookie,
 	"Canvas":              lucide.Brush,
 	"Code editor":         lucide.SquareCode,
 	"Rich text editor":    lucide.NotebookPen,

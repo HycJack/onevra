@@ -10,7 +10,7 @@ func TestSystemPagesRenderHeadless(t *testing.T) {
 	pages := map[string]string{
 		"Network": "networkOffline", "Secrets": "secretsSave", "Recent documents": "recentEmpty",
 		"File watching": "watchEmpty", "Installed apps": "appsHint", "Fonts": "fontsMonospaced",
-		"System appearance": "appearanceReduceMotion", "Languages & formats": "languagesShown", "Web data": "webDataAvailable",
+		"System appearance": "appearanceReduceMotion", "Languages & formats": "languagesShown",
 	}
 	for name, key := range pages {
 		for _, lang := range []string{"en", "zh-Hans"} {

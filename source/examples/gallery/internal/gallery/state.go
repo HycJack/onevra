@@ -142,6 +142,8 @@ func pageFromKey(key string) galleryPage {
 	switch key {
 	case "mygo/Charts":
 		key = "controls/Bar chart"
+	case "mygo/Web data":
+		key = "mygo/WebView"
 	case "controls/TextField", "controls/TextArea", "controls/TextBox (multiline)":
 		key = "controls/TextBox"
 	case "controls/Checkbox", "controls/Switch", "controls/Radio":

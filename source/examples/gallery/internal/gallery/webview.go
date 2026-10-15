@@ -2,9 +2,13 @@ package gallery
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"html/template"
 	"log"
+	"slices"
+	"strings"
+	"time"
 
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/ui"
@@ -41,12 +45,18 @@ func (g *Gallery) newWebView() (*mygo.WebView, error) {
 	return g.Shell.Window().NewWebView(mygo.WebViewOptions{})
 }
 
+// webViewBaseURL gives the demonstration page a real origin, so the page's
+// document.cookie and the native Cookies module share one store.
+const webViewBaseURL = "https://example.com/"
+
 var webViewPage = template.Must(template.New("page").Parse(`<!doctype html>
 <html lang="{{.Lang}}"><head><meta charset="utf-8"><style>
 body { margin: 0; padding: 24px; font: 14px/1.5 -apple-system, "Segoe UI", system-ui, sans-serif;
 	background: {{.Background}}; color: {{.Text}}; }
 h1 { margin: 0 0 8px; font-size: 20px; }
+h2 { margin: 24px 0 8px; font-size: 16px; }
 p { margin: 0 0 16px; color: {{.Muted}}; }
+code { font: 12px/1.5 ui-monospace, Menlo, monospace; color: {{.Muted}}; }
 .row { display: flex; gap: 8px; align-items: center; }
 input, button { font: inherit; padding: 6px 10px; border-radius: 6px; border: 1px solid {{.Border}};
 	background: transparent; color: inherit; }
@@ -59,6 +69,21 @@ button { background: {{.Accent}}; color: {{.AccentText}}; border-color: transpar
 	<button onclick="count.value = Number(count.value) + 1">{{.Count}}</button>
 	<output id="count">0</output>
 </div>
+<h2>{{.Cookies}}</h2>
+<p><code id="jar"></code></p>
+<div class="row">
+	<button onclick="setCookie()">{{.CookieSet}}</button>
+</div>
+<script>
+function showJar() {
+	document.getElementById("jar").textContent = document.cookie || "(empty)";
+}
+function setCookie() {
+	document.cookie = "from_page=" + Math.random().toString(36).slice(2, 6) + "; path=/; max-age=3600";
+	showJar();
+}
+showJar();
+</script>
 </body></html>`))
 
 func cssColor(c ui.Color) template.CSS {
@@ -82,6 +107,8 @@ func webViewHTML(c *ui.Context) string {
 		"Body":        tr(c, "theSystemWebEngineRendersThisPageNativePopoversDialogsAnd"),
 		"Placeholder": tr(c, "typeIntoThePage"),
 		"Count":       tr(c, "count"),
+		"Cookies":     tr(c, "webViewCookies"),
+		"CookieSet":   tr(c, "webViewCookieSet"),
 	})
 	return b.String()
 }
@@ -89,45 +116,105 @@ func webViewHTML(c *ui.Context) string {
 func exampleWebView(c *ui.Context, s *demoState) {
 	t := c.Theme()
 	d := &s.webView
-	if d.err != nil {
+	switch {
+	case d.err != nil:
 		components.Text(c, tr(c, "webViewUnavailable")).Bold()
 		components.Text(c, d.err.Error()).TextColor(t.Danger).Wrap()
-		return
-	}
-	if d.view == nil {
+	case d.view == nil:
 		components.Text(c, tr(c, "webViewsNeedANativeWindow")).TextColor(t.TextMuted).Wrap()
-		return
-	}
-	if html := webViewHTML(c); d.loaded != html {
-		d.loaded = html
-		// Fill with the new theme until the reloaded page paints, not white.
-		if err := d.view.SetBackgroundColor(string(cssColor(t.Background))); err != nil {
-			log.Printf("Set web view background: %v", err)
+	default:
+		if html := webViewHTML(c); d.loaded != html {
+			d.loaded = html
+			// Fill with the new theme until the reloaded page paints, not white.
+			if err := d.view.SetBackgroundColor(string(cssColor(t.Background))); err != nil {
+				log.Printf("Set web view background: %v", err)
+			}
+			d.view.Page().LoadHTML(html, webViewBaseURL)
 		}
-		d.view.Page().LoadHTML(html, "")
-	}
-	ui.Row(c).Gap(t.Space(2)).AlignItems(ui.Center).Children(func() {
-		if components.Button(c, tr(c, "reloadPage"), components.ButtonSecondary).Clicked() {
-			d.view.Page().LoadHTML(d.loaded, "")
-		}
-		anchor := components.Button(c, tr(c, "overThePage"), components.ButtonOutline)
-		if anchor.Clicked() {
-			d.menu = !d.menu
-		}
-		components.Popover(c, anchor, &d.menu, func(panel ui.Element) {
-			components.Text(c, tr(c, "nativeUiPaintedAfterTheWebViewShowsOverItsPage")).Wrap().MaxWidth(t.Space(60))
+		ui.Row(c).Gap(t.Space(2)).AlignItems(ui.Center).Children(func() {
+			if components.Button(c, tr(c, "reloadPage"), components.ButtonSecondary).Clicked() {
+				d.view.Page().LoadHTML(d.loaded, webViewBaseURL)
+			}
+			anchor := components.Button(c, tr(c, "overThePage"), components.ButtonOutline)
+			if anchor.Clicked() {
+				d.menu = !d.menu
+			}
+			components.Popover(c, anchor, &d.menu, func(panel ui.Element) {
+				components.Text(c, tr(c, "nativeUiPaintedAfterTheWebViewShowsOverItsPage")).Wrap().MaxWidth(t.Space(60))
+			})
 		})
-	})
-	var frame ui.Element
-	if d.covered {
-		// Glass materials cannot see a web page under them, so a modal layer
-		// over the window would show a hole. Hide the web view, keeping its
-		// page, behind a box of the page's background meanwhile.
-		frame = ui.Box(c).Background(t.Background)
-	} else {
-		frame = ui.WebView(c, d.view)
+		var frame ui.Element
+		if d.covered {
+			// Glass materials cannot see a web page under them, so a modal layer
+			// over the window would show a hole. Hide the web view, keeping its
+			// page, behind a box of the page's background meanwhile.
+			frame = ui.Box(c).Background(t.Background)
+		} else {
+			frame = ui.WebView(c, d.view)
+		}
+		frame.FillWidth().Height(320).Radius(t.Radius*1.5).Border(1, t.Border).Children(func() {
+			components.Badge(c, "HTML").Absolute().Top(t.Space(3)).Right(t.Space(3))
+		})
 	}
-	frame.FillWidth().Height(320).Radius(t.Radius*1.5).Border(1, t.Border).Children(func() {
-		components.Badge(c, "HTML").Absolute().Top(t.Space(3)).Right(t.Space(3))
+	webDataExample(c, s, t)
+}
+
+// webDataExample reads and changes the cookies of the app's pages: the data
+// the system web engine keeps for every window's page. Setting and clearing
+// from Go refresh the page's own view of document.cookie afterwards.
+func webDataExample(c *ui.Context, s *demoState, t *ui.Theme) {
+	d := &s.system
+	m := msg(c)
+	components.Text(c, m.ComponentWebData()).Bold().TextColor(t.TextMuted)
+	available := false
+	if d.native {
+		available = mygo.WebViewAvailable()
+	}
+	systemRow(c, m.WebDataAvailable(), yesNo(m, available))
+	ui.Row(c).Gap(8).Children(func() {
+		if components.Button(c, m.WebDataList(), components.ButtonPrimary).Clicked() {
+			d.background(func() func() {
+				cookies, err := mygo.Cookies.List(mygo.CookieFilter{})
+				return func() { d.cookies, d.cookieStatus = cookies, cookieResult(m, err) }
+			})
+		}
+		if components.Button(c, m.WebDataSet(), components.ButtonOutline).Clicked() {
+			d.background(func() func() {
+				err := mygo.Cookies.Set(mygo.Cookie{Name: "onevra_gallery", Value: "demo", Domain: "example.com", Expires: time.Now().Add(time.Hour)})
+				cookies, listErr := mygo.Cookies.List(mygo.CookieFilter{})
+				return func() {
+					d.cookies, d.cookieStatus = cookies, cookieResult(m, errors.Join(err, listErr))
+					showPageJar(s)
+				}
+			})
+		}
+		if components.Button(c, m.WebDataClear(), components.ButtonOutline).Clicked() {
+			d.background(func() func() {
+				err := mygo.Cookies.Clear()
+				return func() {
+					d.cookies, d.cookieStatus = nil, cookieResult(m, err)
+					showPageJar(s)
+				}
+			})
+		}
 	})
+	if d.cookieStatus != "" {
+		components.Text(c, d.cookieStatus).Wrap().TextColor(t.TextMuted)
+	}
+	cookies := slices.Clone(d.cookies)
+	slices.SortFunc(cookies, func(a, b mygo.Cookie) int { return strings.Compare(a.Domain+a.Name, b.Domain+b.Name) })
+	for i, cookie := range cookies {
+		if i == 30 {
+			break
+		}
+		systemRow(c, cookie.Domain, cookie.Name+"="+cookie.Value)
+	}
+}
+
+// showPageJar asks the web view's page to show document.cookie again, so a
+// cookie set or cleared by Go shows in the page's own view of the store.
+func showPageJar(s *demoState) {
+	if v := s.webView.view; v != nil {
+		v.Page().Eval("showJar()")
+	}
 }

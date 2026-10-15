@@ -4300,6 +4300,26 @@ func (msgs Messages) Volume() string {
 	return Catalog.Format(msgs.locale, "volume", nil)
 }
 
+// WebViewCookieSet says "Set a cookie from the page"
+// in the language the app shows.
+func WebViewCookieSet() string { return In(i18n.Locale()).WebViewCookieSet() }
+
+// WebViewCookieSet says "Set a cookie from the page"
+// in the language of msgs.
+func (msgs Messages) WebViewCookieSet() string {
+	return Catalog.Format(msgs.locale, "webViewCookieSet", nil)
+}
+
+// WebViewCookies says "Cookies"
+// in the language the app shows.
+func WebViewCookies() string { return In(i18n.Locale()).WebViewCookies() }
+
+// WebViewCookies says "Cookies"
+// in the language of msgs.
+func (msgs Messages) WebViewCookies() string {
+	return Catalog.Format(msgs.locale, "webViewCookies", nil)
+}
+
 // WebViewUnavailable says "Web view unavailable"
 // in the language the app shows.
 func WebViewUnavailable() string { return In(i18n.Locale()).WebViewUnavailable() }

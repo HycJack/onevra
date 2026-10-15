@@ -672,6 +672,8 @@
   },
   "vertical": "Vertical",
   "volume": "Volume",
+  "webViewCookieSet": "Set a cookie from the page",
+  "webViewCookies": "Cookies",
   "webViewUnavailable": "Web view unavailable",
   "webViewsNeedANativeWindow": "Web views need a native window.",
   "welcome": "Welcome",

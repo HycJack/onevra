@@ -73,5 +73,4 @@ var mygoExamples = []mygoExample{
 	{"Fonts", "Desktop", exampleFonts},
 	{"System appearance", "Desktop", exampleSystemAppearance},
 	{"Languages & formats", "Desktop", exampleLanguages},
-	{"Web data", "Desktop", exampleWebData},
 }

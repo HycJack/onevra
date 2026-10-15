@@ -421,6 +421,8 @@
   "versionS": "版本 {version}",
   "vertical": "垂直",
   "volume": "音量",
+  "webViewCookieSet": "从页面设置 Cookie",
+  "webViewCookies": "Cookie",
   "webViewUnavailable": "网页视图不可用",
   "webViewsNeedANativeWindow": "网页视图需要原生窗口。",
   "welcome": "欢迎",

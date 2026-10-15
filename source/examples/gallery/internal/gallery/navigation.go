@@ -25,7 +25,6 @@ var newPages = map[string]bool{
 	"mygo/Fonts":                  true,
 	"mygo/System appearance":      true,
 	"mygo/Languages & formats":    true,
-	"mygo/Web data":               true,
 }
 
 type navigationEntry struct {
