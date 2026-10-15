@@ -135,6 +135,9 @@ func (g *Gallery) updateLanguageWindows() {
 			g.tray.tray.SetMenu(g.tray.menu)
 		}
 	}
+	if g.appMenu != nil {
+		g.appMenu.ItemByID("settings").SetLabel(g.text("settingsMenu"))
+	}
 	if g.dock.menu != nil {
 		g.dock.menu.ItemByID("show-gallery").SetLabel(g.text("showGallery"))
 		g.dock.menu.ItemByID("welcome").SetLabel(g.text("openWelcome"))

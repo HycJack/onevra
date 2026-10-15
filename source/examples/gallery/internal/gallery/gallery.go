@@ -17,6 +17,7 @@ type Gallery struct {
 	settings       settingsState
 	tray           trayDemo
 	dock           dockDemo
+	appMenu        *mygo.Menu
 	notification   notificationDemo
 	language       *translator
 	systemLanguage string

@@ -8,15 +8,16 @@ import (
 
 // ApplicationMenu returns the gallery's macOS menu bar. The entry point owns
 // installation and application lifetime. Other platforms retain their defaults.
+// Role items follow MyGo's locale; the gallery relabels its own items.
 func (g *Gallery) ApplicationMenu() *mygo.Menu {
 	if runtime.GOOS != "darwin" {
 		return nil
 	}
-	return mygo.NewMenu([]*mygo.MenuItem{
+	g.appMenu = mygo.NewMenu([]*mygo.MenuItem{
 		{Role: mygo.RoleAppMenu, Submenu: []*mygo.MenuItem{
 			{Role: mygo.RoleAbout},
 			mygo.Separator(),
-			{ID: "settings", Label: "Settings…", Accelerator: "Cmd+,", Click: func(*mygo.MenuItem, *mygo.Window) {
+			{ID: "settings", Label: g.text("settingsMenu"), Accelerator: "Cmd+,", Click: func(*mygo.MenuItem, *mygo.Window) {
 				g.openSettingsFromMenu()
 			}},
 			mygo.Separator(),
@@ -33,6 +34,7 @@ func (g *Gallery) ApplicationMenu() *mygo.Menu {
 		{Role: mygo.RoleViewMenu},
 		{Role: mygo.RoleWindowMenu},
 	})
+	return g.appMenu
 }
 
 // Application and Dock menus target their owner, not a possibly unrelated

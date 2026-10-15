@@ -3686,6 +3686,16 @@ func (msgs Messages) Settings() string {
 	return Catalog.Format(msgs.locale, "settings", nil)
 }
 
+// SettingsMenu says "Settings…"
+// in the language the app shows.
+func SettingsMenu() string { return In(i18n.Locale()).SettingsMenu() }
+
+// SettingsMenu says "Settings…"
+// in the language of msgs.
+func (msgs Messages) SettingsMenu() string {
+	return Catalog.Format(msgs.locale, "settingsMenu", nil)
+}
+
 // SharedNotes says "Shared notes"
 // in the language the app shows.
 func SharedNotes() string { return In(i18n.Locale()).SharedNotes() }

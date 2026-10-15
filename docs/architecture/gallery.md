@@ -74,7 +74,7 @@ Gallery offers English, Simplified Chinese and Follow system. The saved preferen
 
 Gallery's messages are MyGo catalogs (`locales/en.json` and `zh-Hans.json`) whose typed functions `mygo generate` writes into the `locales` package. Stable message keys remain independent of source copy, route IDs, widget keys and stored values. Formatted messages use the typed functions; static text uses keys, and existing demonstration metadata resolves through the English catalog. Choosing a language also calls `mygo.App.SetLocale`, so MyGo's and Onevra's [own strings](components.md#localization) follow. Language changes preserve drafts, selection, dialog state and navigation.
 
-Keep both catalogs equivalent and preserve ICU placeholders; regenerate the functions after editing them. Translate complete messages, component display names and application-owned menus. API and icon identifiers, filenames and editable fixture content remain unchanged. Installed menus update without losing callbacks or ownership.
+Keep both catalogs equivalent and preserve ICU placeholders; regenerate the functions after editing them. Translate complete messages, component display names and every menu item Gallery labels itself; MyGo translates role items. API and icon identifiers, filenames and editable fixture content remain unchanged. Installed menus update without losing callbacks or ownership.
 
 ## Component review
 

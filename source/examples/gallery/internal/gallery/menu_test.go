@@ -56,6 +56,10 @@ func TestApplicationMenu(t *testing.T) {
 	if !tt.HasText("Theme") {
 		t.Fatal("settings dialog did not render", tt.Texts())
 	}
+	g.chooseLanguage("zh-Hans")
+	if settings.Label != "设置…" {
+		t.Fatalf("settings menu not translated: %q", settings.Label)
+	}
 }
 
 func TestNativeApplicationMenu(t *testing.T) {
