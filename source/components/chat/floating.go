@@ -94,8 +94,15 @@ func FloatingConversationWith(c *ui.Context, layout *FloatingConversationState, 
 			if b.Hovered() {
 				tint = t.Background.Alpha(.85)
 			}
+			// A soft lift separates the floating control from the transcript it
+			// covers without reading as a hard edge.
+			shadow := ui.RGBA(0, 0, 0, 0.08)
+			if t.Dark {
+				shadow = ui.RGBA(0, 0, 0, 0.22)
+			}
 			b.Border(0, ui.Transparent).TextColor(t.Text).
-				Material(glass.Glass{Style: glass.Regular, Tint: tint, Interactive: true})
+				Material(glass.Glass{Style: glass.Regular, Tint: tint, Interactive: true}).
+				Shadow(0, 1, 2, 0, shadow)
 			b.Children(func() { components.Icon(c, lucide.ArrowDown).Size(16, 16) })
 			components.Tooltip(c, b, jumpLabel)
 			if b.Clicked() {
