@@ -120,6 +120,7 @@ var mygoDirectExamples = map[string]string{
 	"System information": "Use MyGo Network, Secrets, FontFamilies, desktop preferences and locales directly; applications own their reactions, choices and storage",
 	"Recent documents":   "Use MyGo recent documents and the jump list directly; applications own their files",
 	"File watching":      "Use MyGo WatchFiles directly; applications own the watched paths and their lifetime",
+	"Global shortcuts":   "Use MyGo GlobalShortcut directly; applications own the accelerators, their conflicts and what a press does",
 	"Audio":              "Use MyGo audio directly for decoding, mixing and device output; applications own sounds and player lifetime",
 	"Canvas":             "Use MyGo painters, offscreen canvases, bitmap regions and pixelated bitmaps directly; no Onevra drawing layer",
 	"Game loop":          "Use the MyGo game plugin directly for fixed-step loops, cameras and gamepads; no Onevra game runtime",

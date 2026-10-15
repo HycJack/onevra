@@ -34,6 +34,11 @@ type systemDemo struct {
 	watchErr    string
 	watchStop   context.CancelFunc
 
+	shortcut, shortcutDraft, shortcutErr string
+	shortcutFront                        bool
+	shortcutPresses                      int
+	shortcutLast                         time.Time
+
 	fontQuery  string
 	monospace  bool
 	fontFamily string
@@ -68,6 +73,7 @@ func (d *systemDemo) close() {
 		d.networkOff = nil
 	}
 	d.stopWatching()
+	d.unregisterShortcut()
 }
 
 func systemRow(c *ui.Context, label, value string) {

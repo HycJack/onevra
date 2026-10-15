@@ -6756,6 +6756,86 @@ func (msgs Messages) WatchEmpty() string {
 	return Catalog.Format(msgs.locale, "watchEmpty", nil)
 }
 
+// ShortcutAccelerator says "Shortcut"
+// in the language the app shows.
+func ShortcutAccelerator() string { return In(i18n.Locale()).ShortcutAccelerator() }
+
+// ShortcutAccelerator says "Shortcut"
+// in the language of msgs.
+func (msgs Messages) ShortcutAccelerator() string {
+	return Catalog.Format(msgs.locale, "shortcutAccelerator", nil)
+}
+
+// ShortcutRegister says "Register"
+// in the language the app shows.
+func ShortcutRegister() string { return In(i18n.Locale()).ShortcutRegister() }
+
+// ShortcutRegister says "Register"
+// in the language of msgs.
+func (msgs Messages) ShortcutRegister() string {
+	return Catalog.Format(msgs.locale, "shortcutRegister", nil)
+}
+
+// ShortcutUnregister says "Unregister"
+// in the language the app shows.
+func ShortcutUnregister() string { return In(i18n.Locale()).ShortcutUnregister() }
+
+// ShortcutUnregister says "Unregister"
+// in the language of msgs.
+func (msgs Messages) ShortcutUnregister() string {
+	return Catalog.Format(msgs.locale, "shortcutUnregister", nil)
+}
+
+// ShortcutBringToFront says "Bring Gallery to the front when pressed"
+// in the language the app shows.
+func ShortcutBringToFront() string { return In(i18n.Locale()).ShortcutBringToFront() }
+
+// ShortcutBringToFront says "Bring Gallery to the front when pressed"
+// in the language of msgs.
+func (msgs Messages) ShortcutBringToFront() string {
+	return Catalog.Format(msgs.locale, "shortcutBringToFront", nil)
+}
+
+// ShortcutRegistered says "Registered shortcut"
+// in the language the app shows.
+func ShortcutRegistered() string { return In(i18n.Locale()).ShortcutRegistered() }
+
+// ShortcutRegistered says "Registered shortcut"
+// in the language of msgs.
+func (msgs Messages) ShortcutRegistered() string {
+	return Catalog.Format(msgs.locale, "shortcutRegistered", nil)
+}
+
+// ShortcutPresses says "Presses"
+// in the language the app shows.
+func ShortcutPresses() string { return In(i18n.Locale()).ShortcutPresses() }
+
+// ShortcutPresses says "Presses"
+// in the language of msgs.
+func (msgs Messages) ShortcutPresses() string {
+	return Catalog.Format(msgs.locale, "shortcutPresses", nil)
+}
+
+// ShortcutLastPressed says "Last pressed"
+// in the language the app shows.
+func ShortcutLastPressed() string { return In(i18n.Locale()).ShortcutLastPressed() }
+
+// ShortcutLastPressed says "Last pressed"
+// in the language of msgs.
+func (msgs Messages) ShortcutLastPressed() string {
+	return Catalog.Format(msgs.locale, "shortcutLastPressed", nil)
+}
+
+// ShortcutHint says "Global shortcuts work while another app is focused. Write accelerators such as CmdOrCtrl+Shift+Space; another app may…"
+// in the language the app shows.
+func ShortcutHint() string { return In(i18n.Locale()).ShortcutHint() }
+
+// ShortcutHint says "Global shortcuts work while another app is focused. Write accelerators such as CmdOrCtrl+Shift+Space; another app may…"
+// in the language of msgs.
+func (msgs Messages) ShortcutHint() string {
+	return Catalog.Format(msgs.locale, "shortcutHint", nil)
+}
+
 // FontsSearch says "Search fonts"
 // in the language the app shows.
 func FontsSearch() string { return In(i18n.Locale()).FontsSearch() }
@@ -7044,6 +7124,16 @@ func ComponentFileWatching() string { return In(i18n.Locale()).ComponentFileWatc
 // in the language of msgs.
 func (msgs Messages) ComponentFileWatching() string {
 	return Catalog.Format(msgs.locale, "componentFileWatching", nil)
+}
+
+// ComponentGlobalShortcuts says "Global shortcuts"
+// in the language the app shows.
+func ComponentGlobalShortcuts() string { return In(i18n.Locale()).ComponentGlobalShortcuts() }
+
+// ComponentGlobalShortcuts says "Global shortcuts"
+// in the language of msgs.
+func (msgs Messages) ComponentGlobalShortcuts() string {
+	return Catalog.Format(msgs.locale, "componentGlobalShortcuts", nil)
 }
 
 // ComponentSystemInformation says "System information"

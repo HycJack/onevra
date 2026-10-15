@@ -20,6 +20,7 @@ var newPages = map[string]bool{
 	"mygo/System information": true,
 	"mygo/Recent documents":   true,
 	"mygo/File watching":      true,
+	"mygo/Global shortcuts":   true,
 }
 
 type navigationEntry struct {

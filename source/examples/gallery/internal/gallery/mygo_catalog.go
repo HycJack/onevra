@@ -69,4 +69,5 @@ var mygoExamples = []mygoExample{
 	{"System information", "Desktop", exampleSystemInformation},
 	{"Recent documents", "Desktop", exampleRecentDocuments},
 	{"File watching", "Desktop", exampleFileWatching},
+	{"Global shortcuts", "Desktop", exampleGlobalShortcuts},
 }
