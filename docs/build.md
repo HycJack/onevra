@@ -92,7 +92,7 @@ GOWORK=off go build -o ../dist/onevra-gallery ./examples/gallery
 (cd .. && git diff --check)
 ```
 
-Run checks locally before submitting changes. The only [GitHub Actions workflow](../.github/workflows/release.yml) creates a Release when a version tag is pushed; it runs no builds or tests. A successful cross-build is not native platform acceptance.
+Run checks locally before submitting changes. While iterating, test only the affected packages, for example `GOWORK=off go test ./components -run '^TestButton'`; the full race check takes several minutes, mostly in the gallery package. The only [GitHub Actions workflow](../.github/workflows/release.yml) creates a Release when a version tag is pushed; it runs no builds or tests. A successful cross-build is not native platform acceptance.
 
 The formatting check should produce no output. Use a `.exe` output suffix on Windows. `GOWORK=off` checks that the module works independently of external workspaces.
 

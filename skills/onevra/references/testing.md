@@ -1,6 +1,6 @@
 # Hidden tests
 
-`go test ./...` must never show a window, take focus, add a Dock icon or touch real user settings. Use three layers, from most to least frequent:
+`go test ./...` must never show a window, take focus, add a Dock icon or touch real user settings. Test the behavior the application owns and bugs it fixes; layout, copy and styling adjustments need no new tests. Extend existing tests before adding new ones, and keep them fast: no real-time waits or repeated full-window frames. Use three layers, from most to least frequent:
 
 1. **Logic tests** for preferences, policies, language resolution and other decisions. Keep them as plain functions or methods on an application struct whose paths and dependencies tests can replace, so no MyGo runtime is needed.
 2. **Headless UI tests** with `ui.NewTester`. These render builders off screen and drive input without a desktop session. This is the default for component and view behavior.
@@ -35,7 +35,7 @@ func TestSaveButton(t *testing.T) {
 - Inspect menus with `Menu` and `ChooseMenuItem`, screen-reader output with `Announcements`, pointer shape with `Cursor`, and clipboard or opened URLs with their accessors instead of system services.
 - After changing state outside the builder, call `tt.Frame()` before asserting. Use `SetSize`, `SetScale`, `SetDark` and `SetPreferences` for narrow layouts, scaling, appearance and reduced motion.
 - Assert appearance with `tt.Image().RGBAAt(x, y)` relative to another rendering, such as enabled versus disabled, rather than hard-coded colors.
-- Cover both themes when a change affects appearance. Read the version-matched `Tester` methods in MyGo's `ui/` before relying on one.
+- Cover both themes when a change affects theme-dependent colors. Read the version-matched `Tester` methods in MyGo's `ui/` before relying on one.
 
 ## Native smoke tests
 
