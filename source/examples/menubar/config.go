@@ -12,17 +12,12 @@ type config struct {
 	Language    string `json:"language"`
 	Appearance  string `json:"appearance"`
 	CloseAction string `json:"closeAction"`
-	Silent      bool   `json:"silent"`
 	Panel       bool   `json:"panel"`
 	Welcomed    bool   `json:"welcomed"`
 }
 
 func defaultConfig() config {
-	action := "dock"
-	if appKind == "hybrid" {
-		action = "tray"
-	}
-	return config{Language: "system", Appearance: "system", CloseAction: action, Panel: true}
+	return config{Language: "system", Appearance: "system", CloseAction: "dock", Panel: true}
 }
 
 func (c *config) normalize() {
@@ -32,7 +27,7 @@ func (c *config) normalize() {
 	if c.Appearance != "light" && c.Appearance != "dark" {
 		c.Appearance = "system"
 	}
-	valid := c.CloseAction == "quit" || c.CloseAction == "dock" && appKind == "desktop" || (c.CloseAction == "tray" || c.CloseAction == "both") && appKind == "hybrid"
+	valid := c.CloseAction == "quit" || c.CloseAction == "dock" && appKind == "desktop"
 	if !valid {
 		c.CloseAction = defaultConfig().CloseAction
 	}
@@ -88,8 +83,5 @@ func keepRunning(c config, platform string, trayAvailable bool) bool {
 	if appKind == "menubar" {
 		return trayAvailable
 	}
-	if appKind == "desktop" {
-		return platform == "darwin" && c.CloseAction == "dock"
-	}
-	return c.CloseAction != "quit" && trayAvailable
+	return platform == "darwin" && c.CloseAction == "dock"
 }

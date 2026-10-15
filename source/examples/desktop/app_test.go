@@ -17,7 +17,7 @@ func TestPreferences(t *testing.T) {
 		t.Fatalf("missing config: %+v, %v", got, err)
 	}
 	want := defaultConfig()
-	want.Language, want.Appearance, want.Panel, want.Welcomed, want.Silent = "zh-Hans", "dark", false, true, true
+	want.Language, want.Appearance, want.Panel, want.Welcomed = "zh-Hans", "dark", false, true
 	if err := saveConfig(path, want); err != nil {
 		t.Fatal(err)
 	}
@@ -59,8 +59,6 @@ func TestClosePolicy(t *testing.T) {
 					want = platform == "darwin" && action == "dock"
 				case "menubar":
 					want = tray
-				case "hybrid":
-					want = action != "quit" && tray
 				}
 				if got := keepRunning(c, platform, tray); got != want {
 					t.Errorf("%s/%s/tray=%v: %v", platform, action, tray, got)

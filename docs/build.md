@@ -25,12 +25,11 @@ For an unpackaged run on any supported desktop, use `go run ./examples/gallery -
 
 ## Starter applications
 
-Six independent applications provide small starting points alongside Gallery. From `source/`, run one of:
+Five independent applications provide small starting points alongside Gallery. From `source/`, run one of:
 
 ```sh
 GOWORK=off go run ./examples/desktop
 GOWORK=off go run ./examples/menubar
-GOWORK=off go run ./examples/hybrid
 GOWORK=off go run ./examples/launcher
 GOWORK=off go run ./examples/documents
 GOWORK=off go run ./examples/games/lawn
@@ -40,16 +39,15 @@ GOWORK=off go run ./examples/games/lawn
 | --- | --- | --- |
 | [Desktop](../source/examples/desktop/main.go) | Shows the main window. On macOS, closing it keeps the app in the Dock by default; Settings can change this to quit. Other platforms quit on close. | Dialog inside the main window |
 | [Menu bar](../source/examples/menubar/main.go) | Shows a first-launch introduction, then runs from its tray icon without a main window. The quick-note panel is optional. | Independent window |
-| [Hybrid](../source/examples/hybrid/main.go) | Shows the main window and tray icon. Optional silent startup leaves the window uncreated until needed. Closing can retain the tray, retain both tray and macOS Dock, or quit. | Dialog inside the main window |
 | [Launcher](../source/examples/launcher/main.go) | Runs without a Dock icon or a main window, with a tray icon and a global shortcut. The panel floats over other apps and hides on Escape or loss of focus; the app keeps running in the background. | Independent window |
 | [Documents](../source/examples/documents/main.go) | A notes editor of Markdown and text files on `mygo.NewDocuments`: MyGo owns the File menu, a window per note, autosave, recovery and changes by other apps. | None; follows the system language |
 | [Lawn defense](../source/examples/games/lawn/main.go) | A pixel-art tower-defense game on MyGo's game plugin, offscreen canvas and audio plugin: the round, its short effects and a looping tune are synthesized in memory, so the example ships no assets. Closing the window quits. | None; follows the system language |
 
 The main, settings and introduction windows use `shells/plain`, with native window controls and the window title over an integrated draggable header instead of a default title bar. Launcher's panel is a MyGo panel window, so it floats over other apps and takes the keyboard without activating the launcher; its search and results are a `command.CommandView`. Tray panels are MyGo flyouts shown as system popovers, anchored to the tray icon; where the platform provides no popover material, the panel draws its own surface.
 
-Opening an already running application activates its existing instance. Desktop and hybrid restore and focus the main window even after silent startup or minimization. Menu bar shows its introduction until acknowledged, then its panel or settings. Explicit Quit always exits, regardless of window-close preferences. The examples use MyGo's single-instance lock and native activation events; they do not implement their own IPC or native runtime.
+Opening an already running application activates its existing instance. Desktop restores and focuses its main window, including after minimization. Menu bar shows its introduction until acknowledged, then its panel or settings. Explicit Quit always exits, regardless of window-close preferences. The examples use MyGo's single-instance lock and native activation events; they do not implement their own IPC or native runtime.
 
-On macOS and Windows, left-click toggles the quick-note panel and right-click opens settings and quit actions; hybrid also offers Open main window. The panel holds only the note; Settings stays in the tray menu. Disabling the panel makes left-click open settings, an application-owned action that can be replaced when adapting the template. Escape, close and loss of focus hide the panel. Linux uses AppIndicator menu actions instead of direct clicks and requires the desktop support described in [Tray example](#tray-example). If icon creation fails, an accessible window displays the error; closing it exits rather than leaving an inaccessible background process.
+On macOS and Windows, left-click toggles the quick-note panel and right-click opens settings and quit actions. The panel holds only the note; Settings stays in the tray menu. Disabling the panel makes left-click open settings, an application-owned action that can be replaced when adapting the template. Escape, close and loss of focus hide the panel. Linux uses AppIndicator menu actions instead of direct clicks and requires the desktop support described in [Tray example](#tray-example). If icon creation fails, an accessible window displays the error; closing it exits rather than leaving an inaccessible background process.
 
 English, Simplified Chinese and Follow system apply to application content, settings, window titles and menus; each example's messages are a MyGo catalog under `locales/`, and the choice also calls `mygo.App.SetLocale`, so MyGo's and Onevra's own strings and role menu items follow it. Unsupported system languages fall back to English. Preferences and the menu bar introduction acknowledgement are saved as JSON in `config.json` under `os.UserConfigDir()/onevra-examples/<example>/`; each example has its own directory. Writes replace the file atomically. Read failures use defaults and save failures leave changes active for the current session, with feedback in the interface. Note text is intentionally session-only.
 
@@ -61,11 +59,11 @@ For native lifecycle checks and settings captures, run from `source/` in a deskt
 
 ```sh
 ONEVRA_NATIVE_SMOKE=1 ONEVRA_NATIVE_FOREGROUND=1 ONEVRA_SCREENSHOTS="$PWD/../dist/template-preview" \
-  GOWORK=off go test -p 1 ./examples/desktop ./examples/menubar ./examples/hybrid ./examples/launcher \
+  GOWORK=off go test -p 1 ./examples/desktop ./examples/menubar ./examples/launcher \
   -run '^TestNative' -count=1 -timeout 45s
 ```
 
-The tests exercise startup, close-to-hide, restoration, settings hosting, language updates, panel-free and silent startup, and quit cleanup. The launcher test additionally toggles its panel, filters a sample app and captures both appearances. In a packaged app, also review actual Dock and tray clicks, opening the application again, right-click dismissal followed by left-click, keyboard shortcuts, focus, accessibility, both languages and themes, and panel placement across displays. Programmatic callbacks and content captures do not establish those native interactions. Windows and Linux require their own desktop review.
+The tests exercise startup, close-to-hide, restoration, settings hosting, language updates, panel-free startup, and quit cleanup. The launcher test additionally toggles its panel, filters a sample app and captures both appearances. In a packaged app, also review actual Dock and tray clicks, opening the application again, right-click dismissal followed by left-click, keyboard shortcuts, focus, accessibility, both languages and themes, and panel placement across displays. Programmatic callbacks and content captures do not establish those native interactions. Windows and Linux require their own desktop review.
 
 ## Tray example
 

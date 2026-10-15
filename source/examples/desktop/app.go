@@ -48,10 +48,8 @@ func (a *application) start() {
 		} else if a.tray == nil {
 			a.openSettings()
 		}
-	case appKind == "desktop" || !a.config.Silent || a.tray == nil:
-		a.showMain()
 	default:
-		a.updateDock()
+		a.showMain()
 	}
 	if a.pendingOpen {
 		a.pendingOpen = false
@@ -104,8 +102,7 @@ func (a *application) updateDock() {
 	if runtime.GOOS != "darwin" {
 		return
 	}
-	visible := a.main != nil && a.main.IsVisible()
-	if appKind == "desktop" || appKind == "hybrid" && (visible || a.config.CloseAction == "both" || a.tray == nil) || appKind == "menubar" && a.tray == nil {
+	if appKind == "desktop" || appKind == "menubar" && a.tray == nil {
 		mygo.App.Dock.Show()
 	} else {
 		mygo.App.Dock.Hide()
@@ -136,7 +133,7 @@ func (a *application) reopen() {
 	}
 }
 
-// Settings is an action, not a required window type. Desktop/hybrid embed the
+// Settings is an action, not a required window type. Desktop embeds the
 // same settings surface in a Dialog; the windowless example gives it a window.
 func (a *application) openSettings() {
 	a.hidePanel()

@@ -25,9 +25,6 @@ func (a *application) installMenus() {
 		if a.config.Panel {
 			items = append(items, a.action("openPanel", a.showPanel))
 		}
-		if appKind == "hybrid" {
-			items = append(items, a.action("open", a.showMain))
-		}
 		items = append(items, a.action("settings", a.openSettings), mygo.Separator(), a.action("quit", mygo.App.Quit))
 		a.trayMenu = mygo.NewMenu(items)
 		// AppIndicator only reports menu actions, not left/right button events.

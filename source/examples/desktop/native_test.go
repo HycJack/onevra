@@ -59,7 +59,7 @@ func TestNativeLifecycle(t *testing.T) {
 			if a.main == nil || !a.main.IsVisible() {
 				t.Error("startup did not show main window")
 			}
-			if runtime.GOOS == "darwin" || appKind == "hybrid" {
+			if runtime.GOOS == "darwin" {
 				a.main.Close()
 			} else {
 				a.main.Hide()
@@ -162,7 +162,7 @@ func TestNativeBackgroundStartup(t *testing.T) {
 		t.Skip("desktop always starts with its main window")
 	}
 	a := &application{config: defaultConfig()}
-	a.config.Silent, a.config.Welcomed, a.config.Panel = true, true, false
+	a.config.Welcomed, a.config.Panel = true, false
 	mygo.RunOnMain(func() {
 		a.start()
 		defer func() {
@@ -182,39 +182,18 @@ func TestNativeBackgroundStartup(t *testing.T) {
 			t.Error("background startup created a window")
 		}
 		a.reopen()
-		if appKind == "hybrid" {
-			if a.main == nil || !a.main.IsVisible() {
-				t.Error("reopen did not override silent startup")
-			}
-			a.config.CloseAction = "both"
-			a.changed()
-			a.main.Close()
-			if a.main.IsVisible() || a.tray == nil {
-				t.Error("close lost tray or kept window")
-			}
-			a.showMain()
-			a.main.Minimize()
-			a.reopen()
-			if a.main.IsMinimized() || !a.main.IsVisible() {
-				t.Error("reopen did not restore minimized window")
-			}
-		} else {
-			if a.main != nil || a.panel != nil || a.settings == nil || !a.settings.IsVisible() {
-				t.Error("panel-free reopen must open settings")
-			}
-			first := a.settings
-			a.openSettings()
-			if a.settings != first {
-				t.Error("settings opened a duplicate window")
-			}
+		if a.main != nil || a.panel != nil || a.settings == nil || !a.settings.IsVisible() {
+			t.Error("panel-free reopen must open settings")
+		}
+		first := a.settings
+		a.openSettings()
+		if a.settings != first {
+			t.Error("settings opened a duplicate window")
 		}
 		// Losing the tray must leave an accessible fallback, never an invisible app.
 		a.destroyTray()
 		a.openSettings()
-		if appKind == "hybrid" && (!a.main.IsVisible() || !a.settingsOpen) {
-			t.Error("missing fallback dialog")
-		}
-		if appKind == "menubar" && !a.settings.IsVisible() {
+		if !a.settings.IsVisible() {
 			t.Error("missing fallback window")
 		}
 	})

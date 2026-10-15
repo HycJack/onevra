@@ -33,13 +33,12 @@ cd source
 go run ./examples/gallery
 ```
 
-追加 `-theme light` 或 `-theme dark` 可预览指定外观。另外提供六个小型应用，在 `source/` 中运行：
+追加 `-theme light` 或 `-theme dark` 可预览指定外观。另外提供五个小型应用，在 `source/` 中运行：
 
 | 示例 | 用途 | 命令 |
 | --- | --- | --- |
 | Desktop | 带设置界面的主窗口应用 | `go run ./examples/desktop` |
 | Menu bar | 带便笺面板的托盘应用 | `go run ./examples/menubar` |
-| Hybrid | 主窗口与托盘组合，可选后台启动 | `go run ./examples/hybrid` |
 | Launcher | Spotlight 风格的浮层，搜索并打开已安装应用 | `go run ./examples/launcher` |
 | Documents | 基于文档的笔记编辑器 | `go run ./examples/documents` |
 | Lawn defense | 像素风塔防游戏 | `go run ./examples/games/lawn` |

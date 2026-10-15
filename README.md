@@ -33,13 +33,12 @@ cd source
 go run ./examples/gallery
 ```
 
-Append `-theme light` or `-theme dark` to preview an appearance. Six smaller applications are also available; run these commands from `source/`:
+Append `-theme light` or `-theme dark` to preview an appearance. Five smaller applications are also available; run these commands from `source/`:
 
 | Example | Purpose | Command |
 | --- | --- | --- |
 | Desktop | A main window with settings | `go run ./examples/desktop` |
 | Menu bar | A tray application with a quick-note panel | `go run ./examples/menubar` |
-| Hybrid | A main window and tray, with optional background startup | `go run ./examples/hybrid` |
 | Launcher | A Spotlight-style panel that searches and opens installed apps | `go run ./examples/launcher` |
 | Documents | A document-based notes editor | `go run ./examples/documents` |
 | Lawn defense | A pixel-art tower-defense game | `go run ./examples/games/lawn` |

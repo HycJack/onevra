@@ -149,24 +149,12 @@ func (a *application) settingsView(c *ui.Context, width float32) {
 	}
 	if appKind != "menubar" {
 		choices := []string{"quit"}
-		if appKind == "hybrid" {
-			choices = []string{"tray", "quit"}
-			if runtime.GOOS == "darwin" {
-				choices = []string{"tray", "both", "quit"}
-			}
-		} else if runtime.GOOS == "darwin" {
+		if runtime.GOOS == "darwin" {
 			choices = []string{"dock", "quit"}
 		}
 		if len(choices) > 1 {
 			items = append(items, components.SettingsItem{ID: "close", Title: a.text("closeAction"), Build: func(c *ui.Context) { a.selectSetting(c, &a.config.CloseAction, "closeAction", choices) }})
 		}
-	}
-	if appKind == "hybrid" {
-		items = append(items, components.SettingsItem{ID: "silent", Title: a.text("silent"), Description: a.text("silentHint"), Build: func(c *ui.Context) {
-			if components.Switch(c, &a.config.Silent, a.text("silent"), components.SwitchOptions{HideLabel: true}).Changed() {
-				a.changed()
-			}
-		}})
 	}
 	if appKind != "desktop" {
 		items = append(items, components.SettingsItem{ID: "panel", Title: a.text("panel"), Description: a.text("panelHint"), Build: func(c *ui.Context) {
