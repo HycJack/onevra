@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+## [0.2026.10] - 2026-10-15
+
 - Add a Lawn defense example under `source/examples/lawn`: a pixel-art tower-defense game on MyGo's game plugin, offscreen canvas and audio plugin, with the round, its short effects and a looping tune synthesized in memory so it ships no assets. It is framed by `shells/plain` and Onevra status controls, and its messages are a MyGo catalog in English and Simplified Chinese. The game is no longer a gallery page.
 - Add a Launcher starter application under `source/examples/launcher`: a Spotlight-style panel that searches the installed apps with `mygo.Shell.InstalledApps`, draws their icons and opens the chosen one, summoned by a configurable global shortcut and living in the tray without a Dock icon. Its Onevra content composes `components.TextBox`, `components.List`, `components.Image` and `components.Settings`, and its messages are a MyGo catalog in English and Simplified Chinese. The gallery no longer hosts an installed-apps page.
 - Breaking: `components.Tabs` takes a `TabsVariant` before its labels. Pass `components.TabsUnderline` for the previous accent-underline look, or `components.TabsSegmented` for a macOS-style segmented control: a raised, shadowed thumb over a capsule track with a heavier chosen label, replacing `ui.Segmented`.
