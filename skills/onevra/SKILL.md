@@ -14,7 +14,7 @@ go list -m -f '{{.Dir}}' github.com/oneo-me/onevra/source   # Onevra source and 
 go list -m -f '{{.Dir}}' github.com/egoist/mygo              # MyGo docs/ and ui/
 ```
 
-Run these inside the application module (`source/`); add `GOWORK=off` there when checking that the module builds independently. The Onevra module directory also contains runnable starter applications under `examples/desktop`, `examples/menubar`, `examples/hybrid`, `examples/launcher`, `examples/documents` and `examples/lawn`; copy their structure rather than inventing a lifecycle.
+Run these inside the application module (`source/`); add `GOWORK=off` there when checking that the module builds independently. The Onevra module directory also contains runnable starter applications under `examples/desktop`, `examples/menubar`, `examples/hybrid`, `examples/launcher`, `examples/documents` and `examples/games/lawn`; copy their structure rather than inventing a lifecycle.
 
 ## Basic usage
 

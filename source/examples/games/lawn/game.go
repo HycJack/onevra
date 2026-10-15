@@ -10,7 +10,7 @@ import (
 	"github.com/egoist/mygo/plugins/game"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
-	"github.com/oneo-me/onevra/source/examples/lawn/locales"
+	"github.com/oneo-me/onevra/source/examples/games/lawn/locales"
 )
 
 // The lawn is a logical screen of whole pixels: a seed bar above five rows

@@ -8,5 +8,5 @@
 /source/examples/*/gallery
 /source/examples/*/hybrid
 /source/examples/*/launcher
-/source/examples/*/lawn
+/source/examples/*/*/lawn
 /source/examples/*/menubar

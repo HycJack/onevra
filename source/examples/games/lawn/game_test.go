@@ -8,7 +8,7 @@ import (
 
 	"github.com/egoist/mygo/audio"
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/source/examples/lawn/locales"
+	"github.com/oneo-me/onevra/source/examples/games/lawn/locales"
 	"github.com/oneo-me/onevra/source/theme"
 )
 

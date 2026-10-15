@@ -52,9 +52,9 @@ tasks:
       cwd: source
       env:
         GOWORK: "off"
-  - label: Run lawn example
+  - label: Run games/lawn example
     command: go
-    args: [run, ./examples/lawn]
+    args: [run, ./examples/games/lawn]
     options:
       cwd: source
       env:

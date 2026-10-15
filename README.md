@@ -42,7 +42,7 @@ Append `-theme light` or `-theme dark` to preview an appearance. Six smaller app
 | Hybrid | A main window and tray, with optional background startup | `go run ./examples/hybrid` |
 | Launcher | A Spotlight-style panel that searches and opens installed apps | `go run ./examples/launcher` |
 | Documents | A document-based notes editor | `go run ./examples/documents` |
-| Lawn defense | A pixel-art tower-defense game | `go run ./examples/lawn` |
+| Lawn defense | A pixel-art tower-defense game | `go run ./examples/games/lawn` |
 
 Each template includes localization and its own packaging configuration; all but the document editor and the game keep preferences. See [starter applications](docs/build.md#starter-applications) for copying and adapting one. Windows and Linux still require their own [native review](docs/build.md#native-review).
 
