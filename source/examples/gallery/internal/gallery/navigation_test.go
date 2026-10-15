@@ -49,31 +49,35 @@ func TestNavigationMyGoMarkers(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.Left, 220, 6000)
 	texts := tt.Texts()
-	markers := 0
-	want := 0
+	upstream := map[string]bool{}
+	pending := 0
 	for _, example := range mygoCatalog {
+		upstream[example.name] = !mygoDirectUse(example)
 		if !mygoDirectUse(example) {
-			want++
+			pending++
 		}
 	}
+	badges, markers := 0, 0
 	for i, text := range texts {
-		if text != "•" {
-			continue
-		}
-		markers++
-		if i == 0 {
-			t.Fatal("marker has no preceding item")
-		}
-		found := false
-		for _, example := range mygoCatalog {
-			found = found || (!mygoDirectUse(example) && texts[i-1] == example.name)
-		}
-		if !found {
-			t.Fatalf("marker follows non-MyGo item: %q", texts[i-1])
+		switch text {
+		case "MyGo":
+			// Every MyGo page carries the badge directly after its label.
+			if _, ok := upstream[texts[i-1]]; !ok {
+				t.Fatalf("MyGo badge follows non-MyGo item: %q", texts[i-1])
+			}
+			badges++
+		case "•":
+			if texts[i-1] != "MyGo" || !upstream[texts[i-2]] {
+				t.Fatalf("pending marker follows %q %q", texts[i-2], texts[i-1])
+			}
+			markers++
 		}
 	}
-	if markers != want {
-		t.Fatalf("got %d MyGo markers, want %d", markers, want)
+	if badges != len(mygoCatalog) {
+		t.Fatalf("got %d MyGo badges, want %d", badges, len(mygoCatalog))
+	}
+	if markers != pending {
+		t.Fatalf("got %d pending markers, want %d", markers, pending)
 	}
 }
 

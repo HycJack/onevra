@@ -589,6 +589,7 @@
   "groupCodeDiffs": "代码与差异",
   "groupGames": "游戏",
   "navigationNew": "新增",
+  "navigationMyGo": "MyGo",
   "codeEditorLabel": "源代码",
   "codeEditorPosition": "第 {line} 行，第 {column} 列",
   "diffViewerSideBySide": "并排",

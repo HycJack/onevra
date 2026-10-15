@@ -23,19 +23,21 @@ func (g *Gallery) navigationItem(c *ui.Context, label string, icon *ui.SVG, page
 	display := tr(c, label)
 	item := components.SidebarItem(c, display, icon, g.page == page).Key(page)
 	example, upstream := mygoExampleFor(page)
-	if upstream && !mygoDirectUse(example) {
-		item.Children(func() {
-			ui.Spacer(c)
-			components.Text(c, tr(c, "bullet")).FontSize(c.Theme().Rem(1.4)).TextColor(c.Theme().TextMuted).SingleLine()
-		})
-	}
-	if newPages[pageKey(page)] {
+	isNew := newPages[pageKey(page)]
+	if upstream || isNew {
 		t := c.Theme()
 		item.Children(func() {
-			if !upstream || mygoDirectUse(example) {
-				ui.Spacer(c)
+			ui.Spacer(c)
+			// Pages demonstrating MyGo's own components carry its name.
+			if upstream {
+				components.Text(c, tr(c, "navigationMyGo")).FontSize(t.Rem(.75)).TextColor(t.TextMuted).SingleLine().Shrink(0)
 			}
-			components.Badge(c, tr(c, "navigationNew")).Background(t.Accent).TextColor(t.AccentText).AlignSelf(ui.Center)
+			if upstream && !mygoDirectUse(example) {
+				components.Text(c, tr(c, "bullet")).FontSize(t.Rem(1.4)).TextColor(t.TextMuted).SingleLine()
+			}
+			if isNew {
+				components.Badge(c, tr(c, "navigationNew")).Background(t.Accent).TextColor(t.AccentText).AlignSelf(ui.Center)
+			}
 		})
 	}
 	if item.Clicked() {

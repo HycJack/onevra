@@ -187,11 +187,12 @@ func TestNewPagesHighlighted(t *testing.T) {
 				continue
 			}
 			got++
-			// The badge follows its item's label, or the label's upstream marker.
-			label := texts[i-1]
-			if label == "•" {
-				label = texts[i-2]
+			// The badge follows its item's label, after any upstream markers.
+			j := i - 1
+			for texts[j] == "•" || texts[j] == g.text("navigationMyGo") {
+				j--
 			}
+			label := texts[j]
 			found := false
 			for key := range newPages {
 				found = found || g.text(sourceKeys[routeLabel(key)]) == label

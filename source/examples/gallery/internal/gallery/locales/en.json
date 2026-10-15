@@ -891,6 +891,7 @@
   "groupCodeDiffs": "Code & diffs",
   "groupGames": "Games",
   "navigationNew": "New",
+  "navigationMyGo": "MyGo",
   "codeEditorLabel": "Source code",
   "codeEditorPosition": "Line {line}, column {column}",
   "@codeEditorPosition": {

@@ -5990,6 +5990,16 @@ func (msgs Messages) NavigationNew() string {
 	return Catalog.Format(msgs.locale, "navigationNew", nil)
 }
 
+// NavigationMyGo says "MyGo"
+// in the language the app shows.
+func NavigationMyGo() string { return In(i18n.Locale()).NavigationMyGo() }
+
+// NavigationMyGo says "MyGo"
+// in the language of msgs.
+func (msgs Messages) NavigationMyGo() string {
+	return Catalog.Format(msgs.locale, "navigationMyGo", nil)
+}
+
 // CodeEditorLabel says "Source code"
 // in the language the app shows.
 func CodeEditorLabel() string { return In(i18n.Locale()).CodeEditorLabel() }
