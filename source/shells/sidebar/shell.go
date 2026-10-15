@@ -20,7 +20,7 @@ type ShellOptions struct {
 	// can later call Window().Show or Window().ShowInactive.
 	Hidden bool
 	// Window dimensions and constraints are outer DIPs. Non-positive width and
-	// height default to 820 and 600, respectively, for both initial and minimum
+	// height default to 820 and 740, respectively, for both initial and minimum
 	// sizes. Explicit positive values override each default independently.
 	// Initial dimensions are raised to the corresponding minimum if needed.
 	Width, Height, MinWidth, MinHeight int
@@ -101,7 +101,7 @@ func NewShell(options ShellOptions) *Shell {
 
 const (
 	defaultWindowWidth  = 820
-	defaultWindowHeight = 600
+	defaultWindowHeight = 740
 )
 
 func newShell(options ShellOptions) *Shell {
