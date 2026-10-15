@@ -17,13 +17,9 @@ var newPages = map[string]bool{
 	"controls/Honeycomb":          true,
 	"mygo/Rich text editor":       true,
 	"mygo/Markdown stream":        true,
-	"mygo/Network":                true,
-	"mygo/Secrets":                true,
+	"mygo/System information":     true,
 	"mygo/Recent documents":       true,
 	"mygo/File watching":          true,
-	"mygo/Fonts":                  true,
-	"mygo/System appearance":      true,
-	"mygo/Languages & formats":    true,
 }
 
 type navigationEntry struct {

@@ -144,6 +144,8 @@ func pageFromKey(key string) galleryPage {
 		key = "controls/Bar chart"
 	case "mygo/Web data":
 		key = "mygo/WebView"
+	case "mygo/Network", "mygo/Secrets", "mygo/Fonts", "mygo/System appearance", "mygo/Languages & formats":
+		key = "mygo/System information"
 	case "controls/TextField", "controls/TextArea", "controls/TextBox (multiline)":
 		key = "controls/TextBox"
 	case "controls/Checkbox", "controls/Switch", "controls/Radio":

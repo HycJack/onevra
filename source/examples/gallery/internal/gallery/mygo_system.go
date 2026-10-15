@@ -34,8 +34,11 @@ type systemDemo struct {
 	watchErr    string
 	watchStop   context.CancelFunc
 
-	fontQuery string
-	monospace bool
+	fontQuery  string
+	monospace  bool
+	fontFamily string
+
+	systemTab int
 
 	cookies      []mygo.Cookie
 	cookieStatus string
@@ -273,25 +276,80 @@ func exampleFileWatching(c *ui.Context, s *demoState) {
 	}
 }
 
+// exampleSystemInformation gathers what an application reads from the system
+// it runs on, one tab each: the desktop's appearance and settings, its fonts,
+// the user's languages and regional formats, the network state and the
+// credential store.
+func exampleSystemInformation(c *ui.Context, s *demoState) {
+	d, m, t := &s.system, msg(c), c.Theme()
+	components.Tabs(c, &d.systemTab, components.TabsSegmented,
+		m.AppearanceTab(), m.ComponentFonts(), m.LanguagesTab(), m.ComponentNetwork(), m.ComponentSecrets())
+	ui.Column(c).Key(d.systemTab).FillWidth().Gap(t.Space(3)).Children(func() {
+		switch d.systemTab {
+		case 1:
+			exampleFonts(c, s)
+		case 2:
+			exampleLanguages(c, s)
+		case 3:
+			exampleNetwork(c, s)
+		case 4:
+			exampleSecrets(c, s)
+		default:
+			exampleSystemAppearance(c, s)
+		}
+	})
+}
+
+// exampleFonts chooses a family from a drop-down and previews the sample text
+// in it. The list is long, so it is searched and scrolled inside a bounded
+// popup; the monospaced filter sits beside the trigger, where it applies on
+// reopening.
 func exampleFonts(c *ui.Context, s *demoState) {
-	d, m := &s.system, msg(c)
-	components.TextBox(c, &d.fontQuery, components.TextBoxOptions{}).Label(m.FontsSearch()).Placeholder(m.FontsSearch()).FillWidth()
-	components.Checkbox(c, &d.monospace, m.FontsMonospaced())
+	d, m, t := &s.system, msg(c), c.Theme()
 	families := ui.FontFamilies()
-	shown := 0
-	for _, family := range families {
-		if d.monospace && !family.Monospaced || d.fontQuery != "" && !strings.Contains(strings.ToLower(family.Name), strings.ToLower(d.fontQuery)) {
-			continue
+	if d.fontFamily == "" {
+		switch {
+		case t.Font != "":
+			d.fontFamily = t.Font
+		case len(families) > 0:
+			d.fontFamily = families[0].Name
 		}
-		if shown++; shown > 40 {
-			break
-		}
-		ui.Column(c).Key(family.Name).FillWidth().Gap(2).Children(func() {
-			components.Text(c, family.Name).TextColor(c.Theme().TextMuted).FontSize(12)
-			components.Text(c, m.FontsSample()).Font(family.Name).FontSize(18).SingleLine()
-		})
 	}
-	components.Text(c, m.FontsCount(len(families))).TextColor(c.Theme().TextMuted)
+	ui.Row(c).FillWidth().Gap(t.Space(2)).AlignItems(ui.Center).Children(func() {
+		sel := components.Select(c, &d.fontFamily)
+		sel.Trigger.Label(m.FontsFamily()).Grow(1).Children(func() {
+			components.Text(c, d.fontFamily).SingleLine()
+		})
+		sel.Popup(func(panel ui.Element) {
+			panel.MinWidth(t.Rem(16))
+			sel.SearchField(&d.fontQuery).Label(m.FontsSearch()).Placeholder(m.FontsSearch())
+			// Bound the list and scroll it: a font list is long, and the popup
+			// must not grow past the window.
+			list := components.ScrollView(c, components.ScrollViewOptions{}).FillWidth().MaxHeight(t.Space(70))
+			list.Children(func() {
+				shown := 0
+				for _, family := range families {
+					if d.monospace && !family.Monospaced {
+						continue
+					}
+					if d.fontQuery != "" && !strings.Contains(strings.ToLower(family.Name), strings.ToLower(d.fontQuery)) {
+						continue
+					}
+					if shown++; shown > 40 {
+						break
+					}
+					item := sel.Item(family.Name).Label(family.Name)
+					item.Children(func() { components.Text(c, family.Name).Font(family.Name).SingleLine() })
+				}
+				if shown == 0 {
+					components.Text(c, m.FontsNoMatch()).Padding(t.Space(2)).TextColor(t.TextMuted)
+				}
+			})
+		})
+		components.Checkbox(c, &d.monospace, m.FontsMonospaced())
+	})
+	components.Text(c, m.FontsSample()).Font(d.fontFamily).FontSize(t.Rem(1.4)).SingleLine()
+	components.Text(c, m.FontsCount(len(families))).TextColor(t.TextMuted)
 }
 
 func exampleSystemAppearance(c *ui.Context, s *demoState) {

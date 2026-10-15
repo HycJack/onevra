@@ -6766,6 +6766,26 @@ func (msgs Messages) FontsSearch() string {
 	return Catalog.Format(msgs.locale, "fontsSearch", nil)
 }
 
+// FontsFamily says "Font family"
+// in the language the app shows.
+func FontsFamily() string { return In(i18n.Locale()).FontsFamily() }
+
+// FontsFamily says "Font family"
+// in the language of msgs.
+func (msgs Messages) FontsFamily() string {
+	return Catalog.Format(msgs.locale, "fontsFamily", nil)
+}
+
+// FontsNoMatch says "No matching fonts"
+// in the language the app shows.
+func FontsNoMatch() string { return In(i18n.Locale()).FontsNoMatch() }
+
+// FontsNoMatch says "No matching fonts"
+// in the language of msgs.
+func (msgs Messages) FontsNoMatch() string {
+	return Catalog.Format(msgs.locale, "fontsNoMatch", nil)
+}
+
 // FontsMonospaced says "Monospaced only"
 // in the language the app shows.
 func FontsMonospaced() string { return In(i18n.Locale()).FontsMonospaced() }
@@ -6794,6 +6814,16 @@ func FontsCount(count int) string { return In(i18n.Locale()).FontsCount(count) }
 // in the language of msgs.
 func (msgs Messages) FontsCount(count int) string {
 	return Catalog.Format(msgs.locale, "fontsCount", map[string]any{"count": count})
+}
+
+// AppearanceTab says "Appearance"
+// in the language the app shows.
+func AppearanceTab() string { return In(i18n.Locale()).AppearanceTab() }
+
+// AppearanceTab says "Appearance"
+// in the language of msgs.
+func (msgs Messages) AppearanceTab() string {
+	return Catalog.Format(msgs.locale, "appearanceTab", nil)
 }
 
 // AppearanceAccent says "Accent color"
@@ -6854,6 +6884,16 @@ func AppearanceHint() string { return In(i18n.Locale()).AppearanceHint() }
 // in the language of msgs.
 func (msgs Messages) AppearanceHint() string {
 	return Catalog.Format(msgs.locale, "appearanceHint", nil)
+}
+
+// LanguagesTab says "Language"
+// in the language the app shows.
+func LanguagesTab() string { return In(i18n.Locale()).LanguagesTab() }
+
+// LanguagesTab says "Language"
+// in the language of msgs.
+func (msgs Messages) LanguagesTab() string {
+	return Catalog.Format(msgs.locale, "languagesTab", nil)
 }
 
 // LanguagesShown says "Language shown"
@@ -7004,6 +7044,16 @@ func ComponentFileWatching() string { return In(i18n.Locale()).ComponentFileWatc
 // in the language of msgs.
 func (msgs Messages) ComponentFileWatching() string {
 	return Catalog.Format(msgs.locale, "componentFileWatching", nil)
+}
+
+// ComponentSystemInformation says "System information"
+// in the language the app shows.
+func ComponentSystemInformation() string { return In(i18n.Locale()).ComponentSystemInformation() }
+
+// ComponentSystemInformation says "System information"
+// in the language of msgs.
+func (msgs Messages) ComponentSystemInformation() string {
+	return Catalog.Format(msgs.locale, "componentSystemInformation", nil)
 }
 
 // ComponentFonts says "Fonts"
