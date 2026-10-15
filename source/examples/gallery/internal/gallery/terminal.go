@@ -91,7 +91,6 @@ func (g *Gallery) Close() {
 		s.webView.close()
 		s.audio.close()
 		s.system.close()
-		s.lawn.closeMusic()
 		s.flyout.close()
 	}
 }

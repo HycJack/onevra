@@ -23,7 +23,6 @@ type demoState struct {
 	system          systemDemo
 	canvas          canvasDemo
 	game            gameDemo
-	lawn            lawnDemo
 	scene3d         scene3D
 	code            *editor.State
 	diff            *editor.DiffState

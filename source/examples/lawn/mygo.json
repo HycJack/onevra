@@ -1,0 +1,13 @@
+{
+  "name": "Onevra Lawn Defense",
+  "identifier": "me.oneo.onevra.examples.lawn",
+  "version": "0.1.0",
+  "out": "../../../dist/lawn",
+  "macos": {
+    "minimumSystemVersion": "13.0"
+  },
+  "i18n": {
+    "dir": "locales",
+    "source": "en"
+  }
+}

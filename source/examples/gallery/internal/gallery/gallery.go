@@ -191,12 +191,6 @@ func (g *Gallery) viewLocalized(c *ui.Context) {
 	var content ui.Element
 	_, control := controlExampleFor(g.page)
 	example, upstream := mygoExampleFor(g.page)
-	// The lawn game's background music belongs to its page alone.
-	if example.name != "Lawn defense" {
-		if s := g.mygoStates["Lawn defense"]; s != nil {
-			s.lawn.stopMusic()
-		}
-	}
 	if !g.config.DisablePixelGrid && (control || upstream && example.name != "Terminal") {
 		content = components.PixelGrid(c, components.PixelGridOptions{Spacing: 22, MajorEvery: -1}).Column()
 	} else {

@@ -1,0 +1,15 @@
+{
+  "@@locale": "zh-Hans",
+  "title": "Onevra 草坪保卫战",
+  "lawnHint": "收集落下的阳光，点选种子卡片或按 1–3，再种到草坪上。向日葵产生阳光，豌豆射手沿所在行射击，坚果墙挡住僵尸。右键或 Esc 取消选择，R 重新开始。",
+  "lawnScene": "草坪",
+  "lawnPlaying": "守护草坪",
+  "lawnPaused": "已暂停：点击草坪继续",
+  "lawnLost": "僵尸吃掉了你的脑子！",
+  "lawnWon": "你守住了草坪！",
+  "lawnDefeated": "已消灭僵尸：{defeated} / {total}",
+  "lawnDefeatedEndless": "已消灭僵尸：{defeated}",
+  "lawnEndless": "无尽模式",
+  "lawnMusic": "音乐",
+  "lawnRestart": "重新开始游戏"
+}

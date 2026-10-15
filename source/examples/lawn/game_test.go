@@ -1,4 +1,4 @@
-package gallery
+package main
 
 import (
 	"math"
@@ -8,6 +8,8 @@ import (
 
 	"github.com/egoist/mygo/audio"
 	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/source/examples/lawn/locales"
+	"github.com/oneo-me/onevra/source/theme"
 )
 
 func TestLawnSprites(t *testing.T) {
@@ -37,14 +39,19 @@ func TestLawnSprites(t *testing.T) {
 	}
 }
 
-// lawnTester shows the game page and lets its loop run a few steps.
-func lawnTester(t *testing.T, lang string) (*Gallery, *lawnDemo, *ui.Tester, func(x, y float32)) {
-	g, s, tt := featureTester("Lawn defense", "Default", lang, 400)
-	d := &s.lawn
+// lawnTester shows the game view and lets its loop run a few steps.
+func lawnTester(t *testing.T, lang string) (*lawnDemo, *ui.Tester, func(x, y float32)) {
+	t.Helper()
+	d := &lawnDemo{}
+	tt := ui.NewTester(func(c *ui.Context) {
+		theme.Apply(c)
+		ui.Column(c).FillWidth().Padding(16).Gap(12).Children(func() { d.view(c) })
+	}, 400, 480)
+	tt.SetLocale(lang)
 	// Real frame times vary, so no sun or zombie arrives by itself.
 	d.nextSun, d.nextSpawn = 1<<30, 1<<30
 	advance(tt)
-	view, ok := tt.Find(g.text("lawnScene"))
+	view, ok := tt.Find(locales.In(lang).LawnScene())
 	if !ok {
 		t.Fatal("missing lawn view")
 	}
@@ -52,7 +59,7 @@ func lawnTester(t *testing.T, lang string) (*Gallery, *lawnDemo, *ui.Tester, fun
 	click := func(x, y float32) {
 		tt.ClickAt(view.X+d.fitX+x/d.fitK, view.Y+d.fitY+y/d.fitK)
 	}
-	return g, d, tt, click
+	return d, tt, click
 }
 
 // advance runs a frame; the tester paints up to 20 for the running game,
@@ -63,7 +70,7 @@ func advance(tt *ui.Tester) {
 }
 
 func TestLawnPlanting(t *testing.T) {
-	_, d, tt, click := lawnTester(t, "en")
+	d, tt, click := lawnTester(t, "en")
 	if d.state != lawnPlaying || d.sun != 150 || d.fitK == 0 {
 		t.Fatalf("start: state %v, sun %d, fit %v", d.state, d.sun, d.fitK)
 	}
@@ -101,7 +108,7 @@ func TestLawnPlanting(t *testing.T) {
 }
 
 func TestLawnRecharge(t *testing.T) {
-	_, d, _, _ := lawnTester(t, "en")
+	d, _, _ := lawnTester(t, "en")
 	d.sun, d.selected = 500, lawnWallNut
 	d.click(lawnTileX(2)+8, lawnTileY(1)+8)
 	if d.recharge[lawnWallNut] != lawnSeeds[lawnWallNut].recharge || d.ready(lawnWallNut) {
@@ -121,7 +128,7 @@ func TestLawnRecharge(t *testing.T) {
 }
 
 func TestLawnDefense(t *testing.T) {
-	g, d, tt, _ := lawnTester(t, "zh-Hans")
+	d, tt, _ := lawnTester(t, "zh-Hans")
 	d.plants[3][0] = &lawnPlant{lawnPeashooter, 300, 1}
 	d.plants[3][5] = &lawnPlant{lawnWallNut, lawnSeeds[lawnWallNut].health, 0}
 	d.zombies = []*lawnZombie{{row: 3, x: lawnRight, health: lawnZombieHealth}}
@@ -139,13 +146,13 @@ func TestLawnDefense(t *testing.T) {
 		t.Fatal("the zombie never reached the wall-nut")
 	}
 	advance(tt)
-	if !tt.HasText(g.messages().LawnDefeated(1, lawnZombies)) {
+	if !tt.HasText(locales.In("zh-Hans").LawnDefeated(1, lawnZombies)) {
 		t.Fatalf("missing defeated count: %q", tt.Texts())
 	}
 }
 
 func TestLawnMowersAndDefeat(t *testing.T) {
-	g, d, tt, _ := lawnTester(t, "en")
+	d, tt, _ := lawnTester(t, "en")
 	d.nextSpawn = 1 << 30
 	d.zombies = []*lawnZombie{{row: 0, x: lawnLeft, health: lawnZombieHealth}, {row: 0, x: lawnLeft + 60, health: lawnZombieHealth}}
 	for range 2 * lawnSecond {
@@ -159,10 +166,10 @@ func TestLawnMowersAndDefeat(t *testing.T) {
 		d.step()
 	}
 	advance(tt)
-	if d.state != lawnLost || !tt.HasText(g.text("lawnLost")) {
+	if d.state != lawnLost || !tt.HasText(locales.In("en").LawnLost()) {
 		t.Fatalf("state %v: %q", d.state, tt.Texts())
 	}
-	if err := tt.Click(g.text("lawnRestart")); err != nil {
+	if err := tt.Click(locales.In("en").LawnRestart()); err != nil {
 		t.Fatal(err)
 	}
 	// The button took the keyboard, so the new round waits for the lawn.
@@ -172,7 +179,7 @@ func TestLawnMowersAndDefeat(t *testing.T) {
 }
 
 func TestLawnLevel(t *testing.T) {
-	_, d, _, _ := lawnTester(t, "en")
+	d, _, _ := lawnTester(t, "en")
 	d.nextSpawn = newLawnWorld(false).nextSpawn
 	for range 12 * 60 * lawnSecond {
 		if d.spawned == lawnZombies {
@@ -193,12 +200,12 @@ func TestLawnLevel(t *testing.T) {
 }
 
 func TestLawnEndlessMode(t *testing.T) {
-	g, d, tt, _ := lawnTester(t, "en")
+	d, tt, _ := lawnTester(t, "en")
 	// Turning on endless mode after losing restarts the round in the new
 	// mode, since the switch takes the keyboard.
 	d.setState(lawnLost)
 	advance(tt)
-	if err := tt.Click(g.text("lawnEndless")); err != nil {
+	if err := tt.Click(locales.In("en").LawnEndless()); err != nil {
 		t.Fatal(err)
 	}
 	if !d.endless || d.state == lawnLost {
@@ -214,13 +221,13 @@ func TestLawnEndlessMode(t *testing.T) {
 		t.Fatalf("endless: spawned %d, %d zombies, state %v", d.spawned, len(d.zombies), d.state)
 	}
 	advance(tt)
-	if !tt.HasText(g.messages().LawnDefeatedEndless(d.defeated)) {
+	if !tt.HasText(locales.In("en").LawnDefeatedEndless(d.defeated)) {
 		t.Fatalf("missing endless defeated count: %q", tt.Texts())
 	}
 }
 
 func TestLawnAudio(t *testing.T) {
-	_, d, _, _ := lawnTester(t, "en")
+	d, _, _ := lawnTester(t, "en")
 	if d.output {
 		t.Fatal("headless lawn opened audio output")
 	}
@@ -239,7 +246,7 @@ func TestLawnAudio(t *testing.T) {
 }
 
 func TestLawnMusic(t *testing.T) {
-	_, d, _, _ := lawnTester(t, "en")
+	d, _, _ := lawnTester(t, "en")
 	if !d.sfx.musicOn {
 		t.Fatal("background music did not default on")
 	}
@@ -278,7 +285,7 @@ func TestLawnMusic(t *testing.T) {
 }
 
 func TestLawnMusicToggle(t *testing.T) {
-	_, d, _, _ := lawnTester(t, "en")
+	d, _, _ := lawnTester(t, "en")
 	if !d.musicShouldPlay() {
 		t.Fatal("music should play while a round is underway")
 	}
@@ -299,12 +306,12 @@ func TestLawnMusicToggle(t *testing.T) {
 }
 
 func TestLawnPausesWithoutFocus(t *testing.T) {
-	g, d, tt, click := lawnTester(t, "en")
+	d, tt, click := lawnTester(t, "en")
 	tt.SetFocused(false)
 	advance(tt)
 	steps := d.steps
 	advance(tt)
-	if d.state != lawnPaused || d.steps != steps || !tt.HasText(g.text("lawnPaused")) {
+	if d.state != lawnPaused || d.steps != steps || !tt.HasText(locales.In("en").LawnPaused()) {
 		t.Fatalf("state %v, steps %d then %d", d.state, steps, d.steps)
 	}
 	// Returning to the window returns to the game.
@@ -315,7 +322,7 @@ func TestLawnPausesWithoutFocus(t *testing.T) {
 	}
 	// Another control takes the keyboard; the click back on the lawn
 	// resumes without planting.
-	if err := tt.Click(g.text("lawnRestart")); err != nil {
+	if err := tt.Click(locales.In("en").LawnRestart()); err != nil {
 		t.Fatal(err)
 	}
 	advance(tt)
@@ -327,5 +334,21 @@ func TestLawnPausesWithoutFocus(t *testing.T) {
 	advance(tt)
 	if d.state != lawnPlaying || d.plants[0][4] != nil {
 		t.Fatalf("resuming: state %v, plant %+v", d.state, d.plants[0][4])
+	}
+}
+
+// TestLawnMessages checks that the example's catalog covers both languages.
+func TestLawnMessages(t *testing.T) {
+	for _, lang := range []string{"en", "zh-Hans"} {
+		m := locales.In(lang)
+		if m.Title() == "" || m.LawnHint() == "" || m.LawnScene() == "" {
+			t.Fatalf("%s: missing messages", lang)
+		}
+		if got := m.LawnDefeated(2, 100); got == "" {
+			t.Fatalf("%s: empty defeated count", lang)
+		}
+	}
+	if locales.In("zh-Hans").LawnRestart() == locales.In("en").LawnRestart() {
+		t.Fatal("translations are not distinct")
 	}
 }

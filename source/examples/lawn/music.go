@@ -1,4 +1,4 @@
-package gallery
+package main
 
 import (
 	"io"
@@ -9,8 +9,8 @@ import (
 
 // The lawn tune is a short, brooding loop in A minor for the game: a
 // pulsing bass, a soft chord pad, a music-box arpeggio, a whistled lead
-// and a light drum kit. It is composed and played as it goes, so the page
-// ships no audio resources, and its decoder is endless: the same eight
+// and a light drum kit. It is composed and played as it goes, so the
+// example ships no audio resources, and its decoder is endless: the same eight
 // bars repeat until the player stops.
 const (
 	lawnTuneRate = 32000
@@ -194,7 +194,7 @@ func (d *lawnDemo) musicShouldPlay() bool {
 	return d.sfx != nil && d.sfx.musicOn && d.state != lawnWon && d.state != lawnLost
 }
 
-// closeMusic releases the loop, as when its page is no longer shown.
+// closeMusic releases the loop, as when the game's window closes.
 func (d *lawnDemo) closeMusic() {
 	d.stopMusic()
 	if d.sfx != nil {

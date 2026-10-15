@@ -27,7 +27,7 @@ cd source
 go run ./examples/gallery
 ```
 
-Append `-theme light` or `-theme dark` to preview an appearance. Five smaller applications are also available; run these commands from `source/`:
+Append `-theme light` or `-theme dark` to preview an appearance. Six smaller applications are also available; run these commands from `source/`:
 
 | Example | Purpose | Command |
 | --- | --- | --- |
@@ -36,8 +36,9 @@ Append `-theme light` or `-theme dark` to preview an appearance. Five smaller ap
 | Hybrid | A main window and tray, with optional background startup | `go run ./examples/hybrid` |
 | Launcher | A Spotlight-style panel that searches and opens installed apps | `go run ./examples/launcher` |
 | Documents | A document-based notes editor | `go run ./examples/documents` |
+| Lawn defense | A pixel-art tower-defense game | `go run ./examples/lawn` |
 
-Each template includes localization and its own packaging configuration; all but the document editor keep preferences. See [starter applications](docs/build.md#starter-applications) for copying and adapting one. Windows and Linux still require their own [native review](docs/build.md#native-review).
+Each template includes localization and its own packaging configuration; all but the document editor and the game keep preferences. See [starter applications](docs/build.md#starter-applications) for copying and adapting one. Windows and Linux still require their own [native review](docs/build.md#native-review).
 
 ## Getting started
 

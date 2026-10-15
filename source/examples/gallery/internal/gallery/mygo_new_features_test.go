@@ -153,7 +153,7 @@ func TestNewMyGoReviewEntries(t *testing.T) {
 }
 
 func TestCodeAndGameGroups(t *testing.T) {
-	want := map[string][]string{"Code & diffs": {"Code", "Code editor", "Diff viewer"}, "Games": {"Canvas", "Game loop", "Lawn defense", "3D renderer"}}
+	want := map[string][]string{"Code & diffs": {"Code", "Code editor", "Diff viewer"}, "Games": {"Canvas", "Game loop", "3D renderer"}}
 	for _, group := range navigationCatalog() {
 		if entries, ok := want[group.label]; ok {
 			var got []string

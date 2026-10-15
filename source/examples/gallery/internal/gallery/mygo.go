@@ -78,7 +78,6 @@ func (g *Gallery) mygoState(name, variant string, first bool) *demoState {
 	if name == "Canvas" {
 		s.value = 0
 	}
-	s.lawn.output = g.audioOutput
 	s.system.native, s.system.window = g.systemServices, g.window
 	s.game.gamepads = g.gamepads
 	s.flyout.gallery = g

@@ -25,7 +25,7 @@ For an unpackaged run on any supported desktop, use `go run ./examples/gallery -
 
 ## Starter applications
 
-Five independent applications provide small starting points alongside Gallery. From `source/`, run one of:
+Six independent applications provide small starting points alongside Gallery. From `source/`, run one of:
 
 ```sh
 GOWORK=off go run ./examples/desktop
@@ -33,6 +33,7 @@ GOWORK=off go run ./examples/menubar
 GOWORK=off go run ./examples/hybrid
 GOWORK=off go run ./examples/launcher
 GOWORK=off go run ./examples/documents
+GOWORK=off go run ./examples/lawn
 ```
 
 | Example | Startup and close behavior | Settings host |
@@ -42,6 +43,7 @@ GOWORK=off go run ./examples/documents
 | [Hybrid](../source/examples/hybrid/main.go) | Shows the main window and tray icon. Optional silent startup leaves the window uncreated until needed. Closing can retain the tray, retain both tray and macOS Dock, or quit. | Dialog inside the main window |
 | [Launcher](../source/examples/launcher/main.go) | Runs without a Dock icon or a main window, with a tray icon and a global shortcut. The panel floats over other apps and hides on Escape or loss of focus; the app keeps running in the background. | Independent window |
 | [Documents](../source/examples/documents/main.go) | A notes editor of Markdown and text files on `mygo.NewDocuments`: MyGo owns the File menu, a window per note, autosave, recovery and changes by other apps. | None; follows the system language |
+| [Lawn defense](../source/examples/lawn/main.go) | A pixel-art tower-defense game on MyGo's game plugin, offscreen canvas and audio plugin: the round, its short effects and a looping tune are synthesized in memory, so the example ships no assets. Closing the window quits. | None; follows the system language |
 
 The main, settings and introduction windows use `shells/plain`, with native window controls and the window title over an integrated draggable header instead of a default title bar. Launcher's panel is a MyGo panel window, so it floats over other apps and takes the keyboard without activating the launcher. Tray panels are MyGo flyouts shown as system popovers, anchored to the tray icon; where the platform provides no popover material, the panel draws its own surface.
 

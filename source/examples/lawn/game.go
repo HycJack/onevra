@@ -1,4 +1,4 @@
-package gallery
+package main
 
 import (
 	"image/color"
@@ -10,6 +10,7 @@ import (
 	"github.com/egoist/mygo/plugins/game"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
+	"github.com/oneo-me/onevra/source/examples/lawn/locales"
 )
 
 // The lawn is a logical screen of whole pixels: a seed bar above five rows
@@ -175,9 +176,8 @@ func newLawnWorld(endless bool) lawnWorld {
 	return w
 }
 
-// lawnDemo is the page's game.Game. Status shown by Onevra controls
-// outside the view rebuilds the page through invalidate, because the
-// loop only repaints.
+// lawnDemo is the game.Game. Status shown by Onevra controls outside the
+// view rebuilds it through invalidate, because the loop only repaints.
 type lawnDemo struct {
 	lawnWorld
 	sheet      *ui.Bitmap
@@ -657,38 +657,40 @@ func lawnNumber(cp *ui.Painter, n int, cx, y float32, c ui.Color) {
 	}
 }
 
-func exampleLawn(c *ui.Context, s *demoState) {
-	t := c.Theme()
-	d := &s.lawn
+// view shows the round with the controls that drive it. The loop only
+// repaints, so the status row is rebuilt through invalidate whenever the
+// round changes.
+func (d *lawnDemo) view(c *ui.Context) {
+	t, m := c.Theme(), locales.In(c.Locale())
 	d.init(c)
 	d.syncMusic()
-	components.Text(c, tr(c, "lawnHint")).TextColor(t.TextMuted).Wrap()
-	game.View(c, d).Height(320).FillWidth().Radius(12).Clip().Label(tr(c, "lawnScene"))
+	components.Text(c, m.LawnHint()).TextColor(t.TextMuted).Wrap()
+	game.View(c, d).Height(320).FillWidth().Radius(12).Clip().Label(m.LawnScene())
 	status := map[lawnState]string{
-		lawnPlaying: "lawnPlaying", lawnPaused: "lawnPaused",
-		lawnLost: "lawnLost", lawnWon: "lawnWon",
+		lawnPlaying: m.LawnPlaying(), lawnPaused: m.LawnPaused(),
+		lawnLost: m.LawnLost(), lawnWon: m.LawnWon(),
 	}[d.state]
 	ui.Row(c).Gap(t.Space(3)).Wrap().AlignItems(ui.Center).Children(func() {
-		components.Badge(c, tr(c, status))
+		components.Badge(c, status)
 		if d.endless {
-			components.Text(c, msg(c).LawnDefeatedEndless(d.defeated)).TextColor(t.TextMuted)
+			components.Text(c, m.LawnDefeatedEndless(d.defeated)).TextColor(t.TextMuted)
 		} else {
-			components.Text(c, msg(c).LawnDefeated(d.defeated, lawnZombies)).TextColor(t.TextMuted)
+			components.Text(c, m.LawnDefeated(d.defeated, lawnZombies)).TextColor(t.TextMuted)
 		}
 		// Switching modes restarts, so the round matches the chosen mode.
 		endless := d.endless
-		components.Switch(c, &endless, tr(c, "lawnEndless")).Changed()
+		components.Switch(c, &endless, m.LawnEndless()).Changed()
 		if endless != d.endless {
 			d.endless = endless
 			d.restart()
 		}
 		music := d.sfx.musicOn
-		components.Switch(c, &music, tr(c, "lawnMusic")).Changed()
+		components.Switch(c, &music, m.LawnMusic()).Changed()
 		if music != d.sfx.musicOn {
 			d.sfx.musicOn = music
 			d.syncMusic()
 		}
-		if components.Button(c, tr(c, "lawnRestart"), components.ButtonSecondary).Clicked() {
+		if components.Button(c, m.LawnRestart(), components.ButtonSecondary).Clicked() {
 			d.restart()
 		}
 	})

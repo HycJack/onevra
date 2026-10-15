@@ -103,7 +103,6 @@ var navigationIcons = map[string]func() *ui.SVG{
 	"Markdown stream":     lucide.MessageSquareText,
 	"Diff viewer":         lucide.Diff,
 	"Game loop":           lucide.Gamepad2,
-	"Lawn defense":        lucide.Sprout,
 	"3D renderer":         lucide.Cuboid,
 }
 

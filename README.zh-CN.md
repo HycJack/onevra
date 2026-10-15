@@ -27,7 +27,7 @@ cd source
 go run ./examples/gallery
 ```
 
-追加 `-theme light` 或 `-theme dark` 可预览指定外观。另外提供五个小型应用，在 `source/` 中运行：
+追加 `-theme light` 或 `-theme dark` 可预览指定外观。另外提供六个小型应用，在 `source/` 中运行：
 
 | 示例 | 用途 | 命令 |
 | --- | --- | --- |
@@ -36,8 +36,9 @@ go run ./examples/gallery
 | Hybrid | 主窗口与托盘组合，可选后台启动 | `go run ./examples/hybrid` |
 | Launcher | Spotlight 风格的浮层，搜索并打开已安装应用 | `go run ./examples/launcher` |
 | Documents | 基于文档的笔记编辑器 | `go run ./examples/documents` |
+| Lawn defense | 像素风塔防游戏 | `go run ./examples/lawn` |
 
-每个模板都包含多语言及独立打包配置，除文档编辑器外均包含偏好设置；复制与修改方式见[应用模板](docs/build.md#starter-applications)。Windows 和 Linux 仍需各自的[原生界面验证](docs/build.md#native-review)。
+每个模板都包含多语言及独立打包配置，除文档编辑器和游戏外均包含偏好设置；复制与修改方式见[应用模板](docs/build.md#starter-applications)。Windows 和 Linux 仍需各自的[原生界面验证](docs/build.md#native-review)。
 
 ## 开发者入门
 

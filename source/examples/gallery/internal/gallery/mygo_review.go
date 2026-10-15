@@ -127,7 +127,6 @@ var mygoDirectExamples = map[string]string{
 	"Audio":               "Use MyGo audio directly for decoding, mixing and device output; applications own sounds and player lifetime",
 	"Canvas":              "Use MyGo painters, offscreen canvases, bitmap regions and pixelated bitmaps directly; no Onevra drawing layer",
 	"Game loop":           "Use the MyGo game plugin directly for fixed-step loops, cameras and gamepads; no Onevra game runtime",
-	"Lawn defense":        "A small game on the MyGo game plugin and offscreen canvas, with Onevra controls for its status; no Onevra game runtime",
 	"3D renderer":         "Use MyGo bitmaps and the game loop directly for a CPU software rasterizer; no Onevra 3D layer",
 	"Code editor":         "Use MyGo's ui/editor directly for editable code views; its default look follows the frame theme and every part is an application-replaceable slot",
 	"Diff viewer":         "Use MyGo's ui/editor diff viewer directly for code review; Onevra owns read-only snippet highlighting, not the editable viewport",

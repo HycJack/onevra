@@ -1,4 +1,4 @@
-package gallery
+package main
 
 import (
 	"math"
@@ -7,8 +7,11 @@ import (
 	"github.com/egoist/mygo/audio"
 )
 
-// lawnAudio holds the game's effects, synthesized in memory so the page
-// ships no audio resources, and the background music's player. It is
+// audioRate is the sample rate of every effect and the music.
+const audioRate = 48000
+
+// lawnAudio holds the game's effects, synthesized in memory so the
+// example ships no audio resources, and the background music's player. It is
 // silent in headless views, which never open a device. Effects that can
 // sound many times a step, as a volley of peas or a mower's row, keep the
 // step of the last one to throttle them.

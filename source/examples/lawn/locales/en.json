@@ -1,0 +1,32 @@
+{
+  "@@locale": "en",
+  "title": "Onevra Lawn Defense",
+  "lawnHint": "Collect falling suns, pick a seed packet or press 1–3, then plant it on the lawn. Sunflowers make sun, peashooters fire along their row and wall-nuts hold zombies back. Right-click or Escape drops the seed; R restarts.",
+  "lawnScene": "Lawn",
+  "lawnPlaying": "Defend the lawn",
+  "lawnPaused": "Paused: click the lawn to continue",
+  "lawnLost": "The zombies ate your brains!",
+  "lawnWon": "You defended the lawn!",
+  "lawnDefeated": "Zombies defeated: {defeated} of {total}",
+  "@lawnDefeated": {
+    "placeholders": {
+      "defeated": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "lawnDefeatedEndless": "Zombies defeated: {defeated}",
+  "@lawnDefeatedEndless": {
+    "placeholders": {
+      "defeated": {
+        "type": "int"
+      }
+    }
+  },
+  "lawnEndless": "Endless mode",
+  "lawnMusic": "Music",
+  "lawnRestart": "Restart game"
+}
