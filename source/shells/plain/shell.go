@@ -46,16 +46,11 @@ type ShellOptions struct {
 	// on every frame, so it can follow application state; pass theme.Onevra
 	// for Onevra's palettes. Nil keeps MyGo's frame theme. Light or dark
 	// belongs to mygo.Theme.SetSource, which also covers native chrome.
-	Theme  func(*ui.Context) *ui.Theme
-	Labels Labels
+	Theme func(*ui.Context) *ui.Theme
 	// Toasts places the window's toasts; top placements also clear the
 	// window-control area.
 	Toasts components.ToastOptions
 }
-
-// Labels names the Windows caption buttons and each toast's close button.
-// Empty values use Onevra's catalog in the window's language.
-type Labels struct{ Minimize, Maximize, Restore, Close, CloseToast string }
 
 // Shell owns presentation only; Window exposes MyGo's original lifecycle API.
 type Shell struct {
@@ -116,9 +111,6 @@ func (s *Shell) nativeOptions() mygo.WindowOptions {
 
 // Window exposes native events and operations. Do not replace its content.
 func (s *Shell) Window() *mygo.Window { return s.window }
-
-// SetLabels updates caption accessibility names without changing their identity.
-func (s *Shell) SetLabels(labels Labels) { s.options.Labels = labels; s.refresh() }
 
 // SetToasts changes toast placement without recreating the window or toasts.
 func (s *Shell) SetToasts(options components.ToastOptions) { s.options.Toasts = options; s.refresh() }
@@ -194,14 +186,7 @@ func (s *Shell) view(c *ui.Context) {
 	if toasts.Placement.Top() {
 		toasts.Inset += height
 	}
-	components.WithLocalization(c, components.Localization{CloseToast: s.options.Labels.CloseToast}, func() { components.Toasts(c, toasts) })
-}
-
-func label(value, fallback string) string {
-	if value != "" {
-		return value
-	}
-	return fallback
+	components.Toasts(c, toasts)
 }
 
 func captionButton(c *ui.Context, icon *ui.SVG, name string) ui.Element {
@@ -212,19 +197,19 @@ func captionButton(c *ui.Context, icon *ui.SVG, name string) ui.Element {
 }
 
 func (s *Shell) captionButtons(c *ui.Context) {
-	o, w, m := s.options.Labels, s.host, l10n.In(c.Locale())
+	w, m := s.host, l10n.In(c.Locale())
 	ui.Row(c).Key("window-controls").Shrink(0).Gap(4).Children(func() {
-		if captionButton(c, lucide.Minus(), label(o.Minimize, m.Text("minimizeWindow"))).Clicked() && w != nil {
+		if captionButton(c, lucide.Minus(), m.Text("minimizeWindow")).Clicked() && w != nil {
 			w.Minimize()
 		}
-		icon, name := lucide.Square(), label(o.Maximize, m.Text("maximizeWindow"))
+		icon, name := lucide.Square(), m.Text("maximizeWindow")
 		if w != nil && w.IsMaximized() {
-			icon, name = lucide.Copy(), label(o.Restore, m.Text("restoreWindow"))
+			icon, name = lucide.Copy(), m.Text("restoreWindow")
 		}
 		if captionButton(c, icon, name).Clicked() && w != nil {
 			w.ToggleMaximize()
 		}
-		if captionButton(c, lucide.X(), label(o.Close, m.Text("closeWindow"))).Clicked() && w != nil {
+		if captionButton(c, lucide.X(), m.Text("closeWindow")).Clicked() && w != nil {
 			w.Close()
 		}
 	})

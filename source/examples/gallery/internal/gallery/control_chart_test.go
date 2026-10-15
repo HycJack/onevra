@@ -21,9 +21,6 @@ func TestChartPages(t *testing.T) {
 	if len(names) != 5 {
 		t.Fatalf("chart group = %v", names)
 	}
-	if pageFromKey("mygo/Charts") != pageFromKey("controls/Bar chart") {
-		t.Fatal("legacy chart route was not restored")
-	}
 	for _, language := range []string{"en", "zh-Hans"} {
 		g := &Gallery{language: newTranslator(language, "en")}
 		for _, name := range names {

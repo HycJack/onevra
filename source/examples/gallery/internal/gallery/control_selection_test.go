@@ -21,11 +21,6 @@ func TestSelectionNavigation(t *testing.T) {
 	if pageKey(g.page) != "controls/Selection" {
 		t.Fatal("incorrect selection route")
 	}
-	for _, name := range []string{"Checkbox", "Switch", "Radio", "Selection"} {
-		if pageFromKey("controls/"+name) != g.page {
-			t.Fatalf("saved route did not restore Selection: %s", name)
-		}
-	}
 }
 
 func TestSelectionInteractions(t *testing.T) {

@@ -4,6 +4,9 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Breaking: remove `components.Localization` and `components.WithLocalization`.
+- Breaking: remove Shell label overrides `sidebar.Labels`, `plain.Labels` and their `SetLabels` and label options.
+
 ## [0.2026.10] - 2026-10-15
 
 - Breaking: require MyGo 0.5.1.

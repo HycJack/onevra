@@ -416,12 +416,12 @@ func TestShellBuildsLocalizedToasts(t *testing.T) {
 		})
 	}})
 	s.host = &fakeWindow{}
-	s.SetLabels(Labels{CloseToast: "Dismiss"})
 	tt := ui.NewTester(s.view, 820, 600)
+	tt.SetLocale("zh-Hans")
 	if err := tt.Click("Save"); err != nil {
 		t.Fatal(err)
 	}
-	if err := tt.Click("Dismiss"); err != nil {
+	if err := tt.Click("关闭"); err != nil {
 		t.Fatal(err)
 	}
 	if closed != 1 {

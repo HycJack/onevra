@@ -66,7 +66,7 @@ type ToastOptions struct {
 // applications call it only in standalone hosts; the first options value
 // applies. A view that builds its own ToastViewportBase earlier in the frame
 // keeps its look. Toasts stack at the bottom center by default, each with an
-// optional action and a close button named by Localization.CloseToast.
+// optional action and a close button named by the "onevra.closeToast" message.
 func Toasts(c *ui.Context, options ...ToastOptions) ui.Element {
 	var o ToastOptions
 	if len(options) > 0 {

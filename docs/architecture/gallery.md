@@ -14,7 +14,7 @@ Production startup stores application data under `~/.oneo/onevra`. The disk-free
 - `config.yaml` retains appearance, language, command-palette preferences and the page-grid preference. Changes apply and save immediately.
 - Interactive example values remain in memory, isolated between pages and variants. User content is never persisted.
 
-Unknown routes and unreadable files fall back to defaults; read and save errors are logged. MyGo centers a restored window that would not show on any connected display. Only YAML filenames are read; older JSON files may be renamed because JSON is valid YAML. An explicit `-theme` launch argument temporarily overrides the saved appearance without rewriting it.
+Unknown routes and unreadable files fall back to defaults; read and save errors are logged. MyGo centers a restored window that would not show on any connected display. An explicit `-theme` launch argument temporarily overrides the saved appearance without rewriting it.
 
 Gallery's application version stays aligned with `mygo.json`.
 

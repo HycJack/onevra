@@ -2,3 +2,11 @@
 /.mygo/
 /source/**/.mygo/
 .DS_Store
+# Binaries from `go build` in an example directory
+/source/examples/*/desktop
+/source/examples/*/documents
+/source/examples/*/gallery
+/source/examples/*/hybrid
+/source/examples/*/launcher
+/source/examples/*/lawn
+/source/examples/*/menubar

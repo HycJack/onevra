@@ -88,7 +88,7 @@ The [gallery example](../../source/examples/gallery/internal/gallery/control_cha
 
 Component and Shell control names are a MyGo library catalog in namespace `onevra` ([l10n](../../source/internal/l10n/en.json)), in English and Simplified Chinese. They follow the window's language (`ui.Context.Locale`, set with `mygo.App.SetLocale`); applications change or add translations with `onevra.<key>` messages in their own catalogs. Calendar dates and the first weekday follow the user's regional formats, as MyGo's date controls do.
 
-`components.WithLocalization` and Shell label options override the catalog; the scope is synchronous, window-local and restores its enclosing values. Explicit control labels belong to the caller. Calendar presentation never changes stored dates, time zones or selection; numeric editors keep canonical numeric syntax. Keep keys and selection values independent of translated text.
+The catalog is the only source of these names; there is no per-scope or per-Shell override. Explicit control labels belong to the caller. Calendar presentation never changes stored dates, time zones or selection; numeric editors keep canonical numeric syntax. Keep keys and selection values independent of translated text.
 
 ## Page container and layout
 
@@ -136,7 +136,7 @@ Both shells build the viewport after their content, inside a localization scope 
 
 ## Native appearance
 
-MyGo and the operating system provide native window interaction semantics. On Windows, Shell uses MyGo's frameless window and composes rounded toolbar-style minimize, maximize/restore and close buttons in the shared header, including replacement pages. Labels are application-localizable; close requests retain MyGo's cancellable application lifecycle. Maximize/restore follows the actual window state; these buttons do not implement Windows' Snap Layouts flyout.
+MyGo and the operating system provide native window interaction semantics. On Windows, Shell uses MyGo's frameless window and composes rounded toolbar-style minimize, maximize/restore and close buttons in the shared header, including replacement pages. Their names come from the catalog; close requests retain MyGo's cancellable application lifecycle. Maximize/restore follows the actual window state; these buttons do not implement Windows' Snap Layouts flyout.
 
 Sidebar Shell requests a sidebar material on macOS and Mica on Windows. MyGo supports Windows system materials on Windows 11 22H2 and later; it owns compositor setup and native opaque fallback. Shell uses `Context.Vibrancy()` each frame, rather than the operating system or requested material, to decide whether to expose the backdrop.
 

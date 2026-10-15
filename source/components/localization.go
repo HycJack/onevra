@@ -8,17 +8,12 @@ import (
 	"github.com/oneo-me/onevra/source/internal/l10n"
 )
 
-// Localization overrides the text of component internals. Empty fields take
-// Onevra's catalog in the language the window shows (ui.Context.Locale),
-// which applications also change with "onevra.<key>" keys in their MyGo
-// catalogs. Dates and the first weekday default to the user's regional
-// formats, as MyGo's date controls follow them.
-// FormatDate receives a Go layout identifying the requested presentation:
-// "January 2006", "January 2, 2006", "Jan", or "2006-01-02".
-// NumberAction formats a complete accessible name for "adjust", "increase",
-// or "decrease", including the application-supplied field label.
+// localization holds the text of component internals from Onevra's catalog
+// in the language the window shows (ui.Context.Locale); applications change
+// it with "onevra.<key>" messages in their MyGo catalogs. Dates and the first
+// weekday follow the user's regional formats, as MyGo's date controls do.
 // Weekdays are Sunday-first.
-type Localization struct {
+type localization struct {
 	Minimum, Maximum          string
 	Today                     string
 	ChooseMonth               string
@@ -57,36 +52,14 @@ type Localization struct {
 	NoSettings                string
 	CloseToast                string
 	Weekdays                  [7]string
-	FirstWeekday              *time.Weekday
-	FormatDate                func(time.Time, string) string
-	NumberAction              func(action, label string) string
 
 	messages     l10n.Messages
 	region       i18n.Region
 	formatLocale string
 }
 
-type localizationKey struct{}
-
-func localizationSlot(c *ui.Context) *Localization {
-	return ui.Local(c.Root(), localizationKey{}, func() Localization { return Localization{} })
-}
-
-// WithLocalization supplies text to components built synchronously by build.
-// The scope is window-local, adds no elements, and restores the enclosing scope
-// even after a panic. Call during a UI build, on the UI thread; do not retain c.
-func WithLocalization(c *ui.Context, words Localization, build func()) {
-	current := localizationSlot(c)
-	previous := *current
-	*current = words
-	defer func() { *current = previous }()
-	if build != nil {
-		build()
-	}
-}
-
-func localized(c *ui.Context) Localization {
-	words := *localizationSlot(c)
+func localized(c *ui.Context) localization {
+	var words localization
 	m := l10n.In(c.Locale())
 	for _, field := range []struct {
 		value *string
@@ -109,18 +82,11 @@ func localized(c *ui.Context) Localization {
 		{&words.SettingsCategory, "settingsCategory"}, {&words.SearchResults, "searchResults"},
 		{&words.NoSettings, "noSettings"}, {&words.CloseToast, "closeToast"},
 	} {
-		if *field.value == "" {
-			*field.value = m.Text(field.key)
-		}
+		*field.value = m.Text(field.key)
 	}
 	words.messages = m
 	words.region, words.formatLocale = formats(c)
-	names := i18n.Weekdays(words.formatLocale, i18n.Short, true)
-	for i := range words.Weekdays {
-		if words.Weekdays[i] == "" {
-			words.Weekdays[i] = names[i]
-		}
-	}
+	words.Weekdays = i18n.Weekdays(words.formatLocale, i18n.Short, true)
 	return words
 }
 
@@ -140,13 +106,11 @@ func formats(c *ui.Context) (i18n.Region, string) {
 	return r, r.FormatLocale(lang)
 }
 
-// Date presentations, named by the Go layouts FormatDate receives.
+// Date presentations, named by Go layouts: "January 2006", "January 2, 2006",
+// "Jan" and "2006-01-02".
 var dateSkeletons = map[string]string{"January 2006": "yMMMM", "January 2, 2006": "yMMMMd", "2006-01-02": "yMd"}
 
-func (l Localization) date(value time.Time, layout string) string {
-	if l.FormatDate != nil {
-		return l.FormatDate(value, layout)
-	}
+func (l localization) date(value time.Time, layout string) string {
 	if layout == "Jan" {
 		return i18n.Months(l.formatLocale, i18n.Abbreviated, true)[value.Month()-1]
 	}
@@ -155,19 +119,14 @@ func (l Localization) date(value time.Time, layout string) string {
 	}
 	return value.Format(layout)
 }
-func (l Localization) numberAction(action, label string) string {
-	if l.NumberAction != nil {
-		return l.NumberAction(action, label)
-	}
+
+// numberAction names a numeric editor's "adjust", "increase" or "decrease"
+// control after the application-supplied field label.
+func (l localization) numberAction(action, label string) string {
 	key := map[string]string{"adjust": "numberAdjust", "increase": "numberIncrease"}[action]
 	if key == "" {
 		key = "numberDecrease"
 	}
 	return l.messages.Label(key, label)
 }
-func (l Localization) firstWeekday() time.Weekday {
-	if l.FirstWeekday != nil && *l.FirstWeekday >= time.Sunday && *l.FirstWeekday <= time.Saturday {
-		return *l.FirstWeekday
-	}
-	return l.region.FirstWeekday
-}
+func (l localization) firstWeekday() time.Weekday { return l.region.FirstWeekday }

@@ -13,33 +13,26 @@ type shellCaptionWindow interface {
 	Close()
 }
 
-func captionLabel(label, fallback string) string {
-	if label != "" {
-		return label
-	}
-	return fallback
-}
-
 func (s *Shell) captionButtons(c *ui.Context) {
 	w, _ := s.host.(shellCaptionWindow)
-	o, m := s.options, l10n.In(c.Locale())
+	m := l10n.In(c.Locale())
 	// Use a consistent compact glyph size without shrinking the hit targets.
 	iconSize := c.Theme().Rem(0.875)
 	ui.Row(c).Key("window-controls").Shrink(0).Gap(4).AlignItems(ui.Center).Children(func() {
 		// Asymmetric padding lowers the centered glyph by 2 DIPs at normal scale.
-		minimize := iconButton(c, lucide.Minus(), captionLabel(o.MinimizeLabel, m.Text("minimizeWindow")), iconSize).
+		minimize := iconButton(c, lucide.Minus(), m.Text("minimizeWindow"), iconSize).
 			Padding(c.Theme().Rem(0.25), 0, 0, 0)
 		if minimize.Clicked() && w != nil {
 			w.Minimize()
 		}
-		icon, label := lucide.Square(), captionLabel(o.MaximizeLabel, m.Text("maximizeWindow"))
+		icon, label := lucide.Square(), m.Text("maximizeWindow")
 		if w != nil && w.IsMaximized() {
-			icon, label = lucide.Copy(), captionLabel(o.RestoreLabel, m.Text("restoreWindow"))
+			icon, label = lucide.Copy(), m.Text("restoreWindow")
 		}
 		if iconButton(c, icon, label, iconSize).Clicked() && w != nil {
 			w.ToggleMaximize()
 		}
-		closeButton := iconButton(c, lucide.X(), captionLabel(o.CloseLabel, m.Text("closeWindow")), iconSize)
+		closeButton := iconButton(c, lucide.X(), m.Text("closeWindow"), iconSize)
 		if closeButton.Hovered() || closeButton.Pressed() {
 			closeButton.TextColor(ui.RGB(255, 255, 255))
 		}

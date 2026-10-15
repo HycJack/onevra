@@ -50,7 +50,7 @@ func main() {
 - Builders run synchronously on the UI thread every frame. Keep state in retained application values passed by pointer (`components.Checkbox(c, &agreed, "I agree")`); never start background work, I/O or parsing inside a builder. Do background work elsewhere and apply results on the main thread, then request a frame.
 - Element handles are valid only for the current build pass. Bind a `ui.Handle` for identity or geometry across frames.
 - The application owns the theme. Choose light/dark/system with `mygo.Theme.SetSource` (before `App.Run` for a saved preference). Pass `Theme: theme.Onevra` (or a function returning your own `*ui.Theme`) in Shell options; without a Shell, call `theme.Apply(c)` or `c.SetTheme` at the top of the root builder. Components never call `Context.SetTheme`.
-- Keep application messages in MyGo catalogs (`i18n` in `mygo.json`, typed functions from `mygo generate`) and pass translated labels explicitly. Component-owned labels follow the window's language from Onevra's catalog; change them with `onevra.<key>` messages, or override a scope with `components.WithLocalization`. Keep keys and stored values independent of translated text.
+- Keep application messages in MyGo catalogs (`i18n` in `mygo.json`, typed functions from `mygo generate`) and pass translated labels explicitly. Component-owned labels follow the window's language from Onevra's catalog; change them with `onevra.<key>` messages. Keep keys and stored values independent of translated text.
 - Complex views each have their own package in `components/chart`, `components/graph`, `components/command` and `components/chat`. Keep their documents and results in retained state, prepared outside builders.
 
 ## Choosing controls

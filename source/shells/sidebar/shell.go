@@ -57,14 +57,6 @@ type ShellOptions struct {
 	LeftMinWidth, LeftMaxWidth int
 	// The left sidebar starts open.
 	LeftCollapsed bool
-	// Labels allow applications to localize the sidebar controls.
-	LeftToggleLabel string
-	// LeftResizeLabel names the draggable, keyboard-accessible separator.
-	LeftResizeLabel string
-	// Windows caption button labels; empty values use Onevra's catalog.
-	MinimizeLabel, MaximizeLabel, RestoreLabel, CloseLabel string
-	// CloseToastLabel names each toast's close button; empty uses Onevra's catalog.
-	CloseToastLabel string
 	// Toasts places the window's toasts; top placements also clear the header.
 	Toasts components.ToastOptions
 	// Theme, when set, returns the frame's theme; Shell installs it before
@@ -241,7 +233,7 @@ func (s *Shell) view(c *ui.Context) {
 	if toasts.Placement.Top() {
 		toasts.Inset += HeaderHeight(c)
 	}
-	components.WithLocalization(c, components.Localization{CloseToast: s.options.CloseToastLabel}, func() { components.Toasts(c, toasts) })
+	components.Toasts(c, toasts)
 }
 
 // SetToasts changes toast placement without recreating the window or toasts.
@@ -330,7 +322,7 @@ func (s *Shell) build(c *ui.Context) {
 			AlignItems(ui.Center).Padding(6, rightInset, 6, leftInset).
 			DragWindow().Children(func() {
 			if page == nil {
-				if IconButton(c, lucide.PanelLeft(), captionLabel(s.options.LeftToggleLabel, l10n.In(c.Locale()).Text("toggleSidebar"))).Clicked() {
+				if IconButton(c, lucide.PanelLeft(), l10n.In(c.Locale()).Text("toggleSidebar")).Clicked() {
 					s.SetLeftExpanded(!s.leftOpen)
 				}
 				// Align the title with the main surface, but keep it beyond the
@@ -368,7 +360,7 @@ func (s *Shell) build(c *ui.Context) {
 // the separator rather than inserting another layout column.
 func (s *Shell) resizeHandle(c *ui.Context, width, maxWidth float32) {
 	handle := ui.Box(c).Key("left-resize").Absolute().Left(width - 3).Top(0).Bottom(0).Width(6).
-		Cursor(ui.CursorResizeEW).Focusable().Role(ui.RoleSplitter).Label(captionLabel(s.options.LeftResizeLabel, l10n.In(c.Locale()).Text("resizeSidebar")))
+		Cursor(ui.CursorResizeEW).Focusable().Role(ui.RoleSplitter).Label(l10n.In(c.Locale()).Text("resizeSidebar"))
 	next := width
 	if dx, _, held := handle.Dragged(); held {
 		handle.Focus()

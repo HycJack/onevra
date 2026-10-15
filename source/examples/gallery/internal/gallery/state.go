@@ -138,19 +138,6 @@ func pageFromKey(key string) galleryPage {
 	if key == "desktop/tray" {
 		return trayPage
 	}
-	// Restore the grouped page for selections saved before the merge.
-	switch key {
-	case "mygo/Charts":
-		key = "controls/Bar chart"
-	case "mygo/Web data":
-		key = "mygo/WebView"
-	case "mygo/Network", "mygo/Secrets", "mygo/Fonts", "mygo/System appearance", "mygo/Languages & formats":
-		key = "mygo/System information"
-	case "controls/TextField", "controls/TextArea", "controls/TextBox (multiline)":
-		key = "controls/TextBox"
-	case "controls/Checkbox", "controls/Switch", "controls/Radio":
-		key = "controls/Selection"
-	}
 	if key == "welcome" {
 		return welcomePage
 	}

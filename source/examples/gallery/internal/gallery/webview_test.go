@@ -40,15 +40,6 @@ func TestWebViewHeadlessShowsPlaceholder(t *testing.T) {
 	}
 }
 
-// TestWebDataRouteMergesIntoWebView restores a selection saved before the Web
-// data page merged into the WebView page.
-func TestWebDataRouteMergesIntoWebView(t *testing.T) {
-	g := webViewGallery()
-	if pageFromKey("mygo/Web data") != g.page {
-		t.Fatal("Web data selection must restore the WebView page")
-	}
-}
-
 func TestWebViewCreatedOnce(t *testing.T) {
 	g := webViewGallery()
 	defer g.Close()

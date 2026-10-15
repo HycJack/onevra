@@ -85,7 +85,7 @@ func TestContentAndDialogClearance(t *testing.T) {
 	}
 }
 
-func TestCaptionAndLiveUpdates(t *testing.T) {
+func TestCaptionActionsAndTheme(t *testing.T) {
 	s := newShell(ShellOptions{})
 	w := &testWindow{}
 	s.host = w
@@ -98,13 +98,12 @@ func TestCaptionAndLiveUpdates(t *testing.T) {
 	if w.minimized != 1 || w.closed != 1 || w.maximized {
 		t.Fatalf("caption actions: %+v", w)
 	}
-	s.SetLabels(Labels{Close: "关闭窗口"})
-	tt.Frame()
+	tt.SetLocale("zh-Hans")
 	if err := tt.Click("关闭窗口"); err != nil {
 		t.Fatal(err)
 	}
-	if w.closed != 2 || w.frames != 1 {
-		t.Fatalf("live updates: %+v", w)
+	if w.closed != 2 {
+		t.Fatalf("localized caption: %+v", w)
 	}
 	var dark bool
 	s.options.Theme = func(*ui.Context) *ui.Theme { return theme.DarkPalette() }
@@ -151,16 +150,17 @@ func TestHeaderLeadingReplacesTitle(t *testing.T) {
 
 func TestShellBuildsLocalizedToasts(t *testing.T) {
 	closed := 0
-	s := newShell(ShellOptions{Labels: Labels{CloseToast: "Dismiss"}, Content: func(c *ui.Context) {
+	s := newShell(ShellOptions{Content: func(c *ui.Context) {
 		if components.Button(c, "Save", components.ButtonPrimary).Clicked() {
 			c.AddToast(ui.Toast{Title: "Saved", Timeout: -1, OnClose: func() { closed++ }})
 		}
 	}})
 	tt := ui.NewTester(s.view, 760, 560)
+	tt.SetLocale("zh-Hans")
 	if err := tt.Click("Save"); err != nil {
 		t.Fatal(err)
 	}
-	if err := tt.Click("Dismiss"); err != nil {
+	if err := tt.Click("关闭"); err != nil {
 		t.Fatal(err)
 	}
 	if closed != 1 {

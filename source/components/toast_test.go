@@ -63,8 +63,9 @@ func TestToastsLocalizedCloseAndLeadingSlot(t *testing.T) {
 					Spinner(c, SpinnerRing)
 				}}})
 		}
-		WithLocalization(c, Localization{CloseToast: "关闭"}, func() { Toasts(c) })
+		Toasts(c)
 	}, 480, 360)
+	tt.SetLocale("zh-Hans")
 	if err := tt.Click("Upload"); err != nil {
 		t.Fatal(err)
 	}

@@ -24,7 +24,7 @@ func TestLeftWidthPersistence(t *testing.T) {
 	}
 }
 
-func TestLiveLabelsPreserveShell(t *testing.T) {
+func TestLanguageChangePreservesShell(t *testing.T) {
 	s := newShell(ShellOptions{LeftWidth: 220})
 	s.SetLeftWidth(300)
 	tt := ui.NewTester(s.view, 820, 600)
@@ -32,19 +32,17 @@ func TestLiveLabelsPreserveShell(t *testing.T) {
 	if _, ok := tt.Find("Toggle sidebar"); !ok {
 		t.Fatal("English label missing")
 	}
-	s.SetLabels(Labels{LeftToggle: "切换侧边栏", LeftResize: "调整宽度"})
-	tt.Frame()
-	if _, ok := tt.Find("切换侧边栏"); !ok {
+	tt.SetLocale("zh-Hans")
+	if _, ok := tt.Find("展开或收起侧边栏"); !ok {
 		t.Fatal("localized label missing")
 	}
-	if _, ok := tt.Find("调整宽度"); !ok {
+	if _, ok := tt.Find("调整侧边栏宽度"); !ok {
 		t.Fatal("localized resize label missing")
 	}
 	if s.LeftWidth() != 300 || !s.LeftExpanded() {
-		t.Fatal("label update reset sidebar")
+		t.Fatal("language change reset sidebar")
 	}
-	s.SetLabels(Labels{})
-	tt.Frame()
+	tt.SetLocale("en")
 	if _, ok := tt.Find("Toggle sidebar"); !ok {
 		t.Fatal("English defaults not restored")
 	}

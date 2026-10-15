@@ -20,11 +20,11 @@ func (w *captionWindow) IsMaximized() bool { return w.maximized }
 func (w *captionWindow) Close()            { w.closed++ }
 
 func TestCaptionActions(t *testing.T) {
-	s := newShell(ShellOptions{CloseLabel: "Dismiss"})
+	s := newShell(ShellOptions{})
 	w := &captionWindow{}
 	s.host = w
 	tt := ui.NewTester(s.captionButtons, 400, 48)
-	for _, label := range []string{"Minimize window", "Maximize window", "Restore window", "Dismiss"} {
+	for _, label := range []string{"Minimize window", "Maximize window", "Restore window", "Close window"} {
 		if err := tt.Click(label); err != nil {
 			t.Fatal(err)
 		}

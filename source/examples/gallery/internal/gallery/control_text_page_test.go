@@ -16,11 +16,6 @@ func TestTextBoxPageGrouping(t *testing.T) {
 	if !display.HasText("Count: 42") || display.HasText("TextBox") {
 		t.Fatal("Text page must contain only display text examples")
 	}
-	for _, key := range []string{"controls/TextField", "controls/TextArea"} {
-		if pageFromKey(key) != page {
-			t.Fatalf("saved route %s did not migrate to TextBox", key)
-		}
-	}
 	g := &Gallery{page: page}
 	nav := ui.NewTester(g.Left, 220, 1800)
 	if !nav.HasText("Text") || !nav.HasText("TextBox") || nav.HasText("Text fields") || nav.HasText("Text areas") || nav.HasText("Display text") {

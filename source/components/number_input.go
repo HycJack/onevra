@@ -15,7 +15,7 @@ type NumberInputControl struct {
 	ui.Element
 	input, increase, decrease, grip ui.Element
 	changed                         bool
-	words                           Localization
+	words                           localization
 }
 
 // Changed reports an input-driven value change, not initial clamping.
