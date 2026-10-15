@@ -8,7 +8,7 @@ import (
 )
 
 func TestControlPages(t *testing.T) {
-	if len(controlCatalog) != 47 {
+	if len(controlCatalog) != 48 {
 		t.Fatal("missing control examples")
 	}
 	for i, example := range controlCatalog {
@@ -272,6 +272,13 @@ func TestControlExampleInteractions(t *testing.T) {
 				case "Sidebar":
 					click("Files")
 					changed = s.index == 1
+				case "Honeycomb":
+					// The first pointer press of a fresh tester only activates its
+					// surface, so click once more to choose.
+					click("Images")
+					click("Images")
+					tt.Frame()
+					changed = s.honeycomb == "images"
 				case "Accordion":
 					click("General")
 					changed = s.toggles[0]
@@ -390,6 +397,54 @@ func TestControlVariantLayout(t *testing.T) {
 				}
 			}
 		}
+	}
+}
+
+func TestHoneycombExampleAddRemove(t *testing.T) {
+	s := (&Gallery{}).controlState("Honeycomb", "Empty")
+	tt := ui.NewTester(func(c *ui.Context) {
+		c.SetTheme(theme.LightPalette())
+		ui.Column(c).Fill().Gap(12).Children(func() { controlHoneycomb(c, s, "Default") })
+	}, 540, 900)
+	tt.Frame()
+	before := len(s.honeycombItems)
+	if before == 0 {
+		t.Fatal("no default items")
+	}
+	if err := tt.Click("Add item"); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if len(s.honeycombItems) != before+1 {
+		t.Fatalf("Add item left %d items", len(s.honeycombItems))
+	}
+	if added := s.honeycombItems[len(s.honeycombItems)-1]; s.honeycomb != added.id {
+		t.Fatalf("added item not selected: %q", s.honeycomb)
+	}
+	selected := func() bool {
+		for _, item := range s.honeycombItems {
+			if item.id == s.honeycomb {
+				return true
+			}
+		}
+		return false
+	}
+	// Remove until empty; the selection stays valid as items disappear.
+	for len(s.honeycombItems) > 0 {
+		count := len(s.honeycombItems)
+		if err := tt.Click("Remove item"); err != nil {
+			t.Fatal(err)
+		}
+		tt.Frame()
+		if len(s.honeycombItems) != count-1 {
+			t.Fatalf("Remove item left %d items", len(s.honeycombItems))
+		}
+		if len(s.honeycombItems) > 0 && !selected() {
+			t.Fatalf("selection %q lost after removal", s.honeycomb)
+		}
+	}
+	if s.honeycomb != "" {
+		t.Fatalf("empty honeycomb kept selection %q", s.honeycomb)
 	}
 }
 

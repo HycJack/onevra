@@ -6,6 +6,7 @@ User-facing updates for Onevra library consumers.
 
 - Show the window title in `shells/plain`'s header, so a window without the default title bar still displays it. The header follows `Window().SetTitle`, including later language changes.
 - Add the official website at <https://oneo-me.github.io/onevra/>, covering the component set, theming, installation and common questions in English and Simplified Chinese.
+- Add `components.Honeycomb`, a picker that arranges round images or generated content in a magnified honeycomb on the surface of a ball: drag or scroll to pan, or Tab through the items, and the item nearest the middle is chosen and ringed in its own color or the theme's accent. Applications own the items, decoded images, labels, selected ID and the action a choice triggers.
 
 ## [0.2026.9] - 2026-10-14
 

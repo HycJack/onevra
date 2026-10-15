@@ -67,6 +67,7 @@ Use Onevra's control whenever one exists; it replaces MyGo's styled widget of th
 | Number, slider, date, time, color | `NumberInput`, `Slider`, `Calendar`/`CalendarPicker`, `TimePicker`, `ColorPicker`/`ColorView` |
 | Scroll, list, grid, tree, outline, table | `ScrollView`, `List`, `GridView`, `Tree`, `TreeVirtualized`, `Table`, `TableVirtualized` |
 | Tabs, accordion, collapsible, split, breadcrumbs, sidebar | The Onevra component of the same name |
+| Circular item picker in a magnified honeycomb | `components.Honeycomb` |
 | Modal, alert, popover, tooltip | `Dialog`, `AlertDialog`, `Popover`, `Tooltip` |
 | Toast | MyGo's `c.Toast`, `ToastAction`, `AddToast`; Shell builds them with `components.Toasts`, which standalone hosts call themselves; place them with `ShellOptions.Toasts` (`components.ToastOptions`). `ui.Toast.Type` takes `components.ToastInfo`/`Success`/`Warning`/`Error` |
 | Progress, spinner, badge, rating, icon, image | The Onevra component of the same name; icons from `icons/lucide` |

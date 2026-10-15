@@ -13,6 +13,7 @@ var navigationGroups = []string{
 // versions.
 var newPages = map[string]bool{
 	"controls/Relationship graph": true,
+	"controls/Honeycomb":          true,
 }
 
 type navigationEntry struct {

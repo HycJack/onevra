@@ -180,6 +180,8 @@ gallery.component_glass:
   other: "玻璃效果"
 gallery.component_gridview:
   other: "网格视图"
+gallery.component_honeycomb:
+  other: "蜂窝选择"
 gallery.component_image:
   other: "图像"
 gallery.component_modal:
@@ -434,6 +436,32 @@ gallery.hide:
   other: 隐藏
 gallery.home:
   other: 主页
+gallery.honeycomb_hint:
+  other: 拖动、滚动或用 Tab 键浏览蜂窝，位于中间的条目会被选中。
+gallery.honeycomb_add:
+  other: 添加
+gallery.honeycomb_remove:
+  other: 移除
+gallery.archive:
+  other: 归档
+gallery.bookmarks:
+  other: 书签
+gallery.camera:
+  other: 相机
+gallery.cloud:
+  other: 云盘
+gallery.downloads:
+  other: 下载
+gallery.favorites:
+  other: 收藏
+gallery.lock:
+  other: 锁定
+gallery.mail:
+  other: 邮件
+gallery.messages:
+  other: 消息
+gallery.videos:
+  other: 视频
 gallery.horizontal:
   other: 水平
 gallery.hours:

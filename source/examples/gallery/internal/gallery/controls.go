@@ -35,6 +35,9 @@ type controlState struct {
 	toggles                [2]bool
 	value                  float64
 	high                   float64
+	honeycomb              string
+	honeycombItems         []honeycombDemoItem
+	honeycombNext          int
 	split                  float32
 	color                  ui.Color
 	day                    time.Time
@@ -95,6 +98,7 @@ var controlCatalog = []controlExample{
 	{"Tree", "Tree", "Content display", []string{"Tree", "TreeVirtualized"}, controlTree},
 	{"Table", "Table", "Content display", []string{"Table", "TableVirtualized"}, controlTable},
 	{"Sidebar", "Sidebar", "Actions & navigation", []string{"Default"}, controlSidebar},
+	{"Honeycomb", "Honeycomb", "Selection & values", []string{"Default"}, controlHoneycomb},
 	{"PixelGrid", "PixelGrid", "Layout & containers", []string{"Uniform", "Major lines"}, controlPixelGrid},
 	{"Split", "Split panes", "Layout & containers", []string{"Horizontal", "Vertical"}, controlSplit},
 	{"ScrollView", "Scroll views", "Layout & containers", []string{"Vertical", "Horizontal", "Both", "Insets"}, controlScrollView},
@@ -151,8 +155,8 @@ func (g *Gallery) controlsLocalized(c *ui.Context, example controlExample) {
 		example.build(c, g.controlState(example.name, "Default"), "Default")
 		return
 	}
-	if example.name == "Relationship graph" {
-		// The graph fills the page below its controls instead of scrolling.
+	if example.name == "Relationship graph" || example.name == "Honeycomb" {
+		// These views fill the page below their heading instead of scrolling.
 		ui.Column(c).Key("controls-" + example.name).Fill().MinWidth(0).MinHeight(0).Padding(t.Space(6)).Gap(12).Children(func() {
 			components.Text(c, tr(c, example.name)).Bold().TextColor(t.Text)
 			example.build(c, g.controlState(example.name, "Default"), "Default")

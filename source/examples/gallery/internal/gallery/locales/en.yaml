@@ -180,6 +180,8 @@ gallery.component_glass:
   other: "Glass"
 gallery.component_gridview:
   other: "GridView"
+gallery.component_honeycomb:
+  other: "Honeycomb"
 gallery.component_image:
   other: "Image"
 gallery.component_modal:
@@ -434,6 +436,32 @@ gallery.hide:
   other: Hide
 gallery.home:
   other: Home
+gallery.honeycomb_hint:
+  other: Drag, scroll or Tab through the honeycomb; the item in the middle is chosen.
+gallery.honeycomb_add:
+  other: Add item
+gallery.honeycomb_remove:
+  other: Remove item
+gallery.archive:
+  other: Archive
+gallery.bookmarks:
+  other: Bookmarks
+gallery.camera:
+  other: Camera
+gallery.cloud:
+  other: Cloud
+gallery.downloads:
+  other: Downloads
+gallery.favorites:
+  other: Favorites
+gallery.lock:
+  other: Lock
+gallery.mail:
+  other: Mail
+gallery.messages:
+  other: Messages
+gallery.videos:
+  other: Videos
 gallery.horizontal:
   other: Horizontal
 gallery.hours:
