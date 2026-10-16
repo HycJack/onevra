@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"math"
 	"testing"
+	"time"
 
 	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/source/icons/lucide"
 )
 
 func TestDialogLayers(t *testing.T) {
@@ -124,5 +126,54 @@ func TestDialogGeometryAndNotice(t *testing.T) {
 	}, 400, 400)
 	if notice.HasText("Cancel") || !notice.HasText("OK") {
 		t.Fatal("notice actions")
+	}
+}
+
+func TestDialogTransitions(t *testing.T) {
+	for _, nested := range []bool{false, true} {
+		outer, open := true, false
+		if !nested {
+			outer = false
+		}
+		tt := ui.NewTester(func(c *ui.Context) {
+			ui.Box(c).Fill().Background(ui.RGB(255, 255, 255))
+			inner := func() {
+				Dialog(c, &open, DialogOptions{Label: "Inner"}, func(ui.Element) {
+					Text(c, "Inner")
+					// Its paint callback must survive the exiting copy's later passes.
+					IconButton(c, lucide.Settings(), "Settings", IconButtonPlain)
+				})
+			}
+			if nested {
+				Dialog(c, &outer, DialogOptions{Label: "Outer"}, func(ui.Element) { inner() })
+			} else {
+				inner()
+			}
+		}, 400, 300)
+		dim := func() uint8 { return 255 - tt.Image().RGBAAt(2, 2).R }
+		tt.Frame()
+		base := dim()
+		open = true
+		tt.Frame()
+		if dim() > base {
+			t.Fatalf("nested=%v: backdrop did not fade in", nested)
+		}
+		tt.Advance(time.Second)
+		if r, ok := tt.Find("Settings"); ok {
+			tt.Move(r.X+r.W/2, r.Y+r.H/2)
+		}
+		shown := dim()
+		if shown <= base {
+			t.Fatalf("nested=%v: backdrop did not dim", nested)
+		}
+		open = false
+		tt.Frame()
+		if leaving := dim(); nested && leaving != base || !nested && leaving <= base {
+			t.Fatalf("nested=%v: dim right after closing %d, base %d", nested, leaving, base)
+		}
+		tt.Advance(time.Second)
+		if dim() != base || tt.HasText("Inner") {
+			t.Fatalf("nested=%v: exit did not finish", nested)
+		}
 	}
 }

@@ -38,6 +38,9 @@ type DialogOptions struct {
 func Dialog(c *ui.Context, open *bool, options DialogOptions, build func(panel ui.Element)) ui.Element {
 	var panel ui.Element
 	if !*open {
+		// Keep the overlay root alive so the next opening animates in and a
+		// layer that just closed has a parent for its exit.
+		ui.Overlay(c, func() {})
 		return panel
 	}
 	t := c.Theme()
@@ -56,11 +59,21 @@ func Dialog(c *ui.Context, open *bool, options DialogOptions, build func(panel u
 	}
 	dragHeight = min(max(0, dragHeight), max(0, h))
 	inset = max(inset, dragHeight)
+	// MyGo paints an exiting copy under its overlay siblings, so a nested
+	// layer closing above its parent would drop behind it: only outermost
+	// layers animate out.
+	depth := dialogDepth(c)
+	fade, pop := dialogFade, dialogPop
+	if *depth > 0 {
+		fade.Exit, pop.Exit = nil, nil
+	}
 	ui.Overlay(c, func() {
+		// The dim and the panel layer are separate so the panel can scale
+		// without revealing the dim's edges.
+		ui.Box(c).Absolute().Left(0).Top(0).Right(0).Bottom(0).
+			Background(ui.RGBA(0, 0, 0, .18)).Transition(fade)
 		back := ui.Column(c).Absolute().Left(0).Top(0).Right(0).Bottom(0).
-			AlignItems(ui.Center).Padding(inset).
-			Modal().Background(ui.RGBA(0, 0, 0, .18))
-		back.Transition(ui.ElementTransition{Duration: 180 * time.Millisecond, Colors: true, Enter: &ui.Motion{Opacity: 0}})
+			AlignItems(ui.Center).Padding(inset).Modal().Transition(pop)
 		clicked := back.Clicked()
 		escape := back.OverlayShortcut(0, ui.KeyEscape)
 		if clicked && !options.DisableBackdropClose || escape && !options.DisableEscapeClose {
@@ -78,6 +91,8 @@ func Dialog(c *ui.Context, open *bool, options DialogOptions, build func(panel u
 			panel.Clicked()
 			panel.Children(func() {
 				if build != nil {
+					*depth++
+					defer func() { *depth-- }()
 					build(panel)
 				}
 			})
@@ -91,6 +106,15 @@ func Dialog(c *ui.Context, open *bool, options DialogOptions, build func(panel u
 	})
 	return panel
 }
+
+// Dialog layers enter and exit through MyGo transitions, which keep only
+// the fades under Reduced Motion.
+var (
+	dialogFade = ui.ElementTransition{Duration: 180 * time.Millisecond, Colors: true,
+		Enter: &ui.Motion{Opacity: 0}, Exit: &ui.Motion{Opacity: 0}}
+	dialogPop = ui.ElementTransition{Duration: 180 * time.Millisecond, Colors: true,
+		Enter: &ui.Motion{Opacity: 0, Scale: .96, Y: 8}, Exit: &ui.Motion{Opacity: 0, Scale: .98}}
+)
 
 // DialogResult is emitted only in the frame of a user action. Store it in
 // application state if needed later; this UI-thread API never blocks.

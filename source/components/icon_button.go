@@ -31,15 +31,24 @@ func IconButton(c *ui.Context, icon *ui.SVG, label string, style IconButtonStyle
 		b.Children(func() { Icon(c, icon).Size(t.Rem(1.125), t.Rem(1.125)) })
 	default:
 		b = ui.ButtonBase(c).Size(size, size).Radius(t.Radius).TextColor(t.TextMuted).Label(label)
-		// Paint after properties such as Disabled have been applied by the caller.
+		// Resolve the face in the build pass's paint, after the caller applies
+		// properties such as Disabled; later paint-only passes, such as an
+		// exiting Dialog's copy, reuse it rather than the expired handle.
+		var face ui.Color
+		resolved := false
 		b.Draw(func(p *ui.Painter, r ui.Rect) {
-			if b.IsDisabled() {
-				return
+			if !resolved {
+				resolved = true
+				switch {
+				case b.IsDisabled():
+				case b.Pressed():
+					face = t.Text.Alpha(0.14)
+				case b.Hovered():
+					face = t.Text.Alpha(0.08)
+				}
 			}
-			if b.Pressed() {
-				p.Fill(r, t.Text.Alpha(0.14), t.Radius)
-			} else if b.Hovered() {
-				p.Fill(r, t.Text.Alpha(0.08), t.Radius)
+			if face.A > 0 {
+				p.Fill(r, face, t.Radius)
 			}
 		}).Children(func() {
 			Icon(c, icon).Size(t.Rem(1.25), t.Rem(1.25))

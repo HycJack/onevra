@@ -128,7 +128,7 @@ Search spans all categories using metadata rather than building hidden controls.
 
 ## Dialog composition
 
-Dialog composes MyGo overlay, modal focus scope and transition primitives rather than a separate modal manager. Applications own open state and build layers in back-to-front order; nested dialogs retain the underlying page. Each layer controls backdrop and Escape dismissal independently.
+Dialog composes MyGo overlay, modal focus scope and transition primitives rather than a modal manager. Applications own open state and build layers back to front; nested dialogs retain the underlying page. Each layer controls backdrop and Escape dismissal independently and animates in and out; nested layers close at once, as MyGo paints exits beneath their siblings.
 
 AlertDialog composes the same surface and Onevra buttons, emitting a frame-local result instead of blocking the UI thread. Applications own localized labels, retain results when needed and provide scrolling for long dialog pages. MyGo owns focus trapping, restoration and reduced-motion behavior.
 

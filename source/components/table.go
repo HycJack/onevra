@@ -222,11 +222,13 @@ func (l *tableColumns) headerInput(c *ui.Context, heads []ui.Element, k int, col
 			}
 			l.setWidth(col, w+dx)
 		}
+		// Read the state while building: paint-only passes, such as an exiting
+		// Dialog's copy, cannot use the handle.
+		color := t.Border
+		if enabled && (edge.Hovered() || edge.Pressed()) {
+			color = t.TextMuted
+		}
 		edge.Draw(func(p *ui.Painter, r ui.Rect) {
-			color := t.Border
-			if enabled && (edge.Hovered() || edge.Pressed()) {
-				color = t.TextMuted
-			}
 			p.Fill(ui.Rect{X: r.X + r.W - 1, Y: r.Y + r.H/4, W: 1, H: r.H / 2}, color, 0)
 		})
 	})
