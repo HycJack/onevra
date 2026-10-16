@@ -191,25 +191,13 @@ func iconSamples(c *ui.Context) {
 	})
 }
 
-// pixelGridBackground shows a grid behind component previews in development
-// builds only; `mygo build` releases omit it.
-var pixelGridBackground = mygo.IsDev()
-
 // View builds the default page's main content.
 func (g *Gallery) View(c *ui.Context) {
 	g.withLanguage(c, func() { g.viewLocalized(c) })
 }
 
 func (g *Gallery) viewLocalized(c *ui.Context) {
-	var content ui.Element
-	_, control := controlExampleFor(g.page)
-	example, upstream := mygoExampleFor(g.page)
-	if pixelGridBackground && (control || upstream && example.name != "Terminal") {
-		content = components.PixelGrid(c, components.PixelGridOptions{Spacing: 22, MajorEvery: -1}).Column()
-	} else {
-		content = ui.Column(c)
-	}
-	content.Fill().Padding(sidebar.HeaderHeight(c), 0, 0, 0)
+	content := ui.Column(c).Fill().Padding(sidebar.HeaderHeight(c), 0, 0, 0)
 	if g.page == welcomePage {
 		welcomeBackground(c, content)
 	}

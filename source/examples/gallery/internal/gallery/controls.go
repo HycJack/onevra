@@ -89,7 +89,6 @@ var controlCatalog = []controlExample{
 	{"Tabs", "Tabs", "Actions & navigation", []string{"Underline", "Segmented control"}, controlTabs},
 	{"Accordion", "Accordion", "Layout & containers", []string{"Default"}, controlAccordion},
 	{"Collapsible", "Collapsible", "Layout & containers", []string{"Right arrow", "Left arrow"}, controlCollapsible},
-	{"Icon", "Icons", "Content display", []string{"Default"}, controlIcon},
 	{"Image", "Images", "Content display", []string{"Contain", "Cover", "Stretch", "Rounded", "Grayscale"}, controlImage},
 	{"List", "List", "Content display", []string{"Default"}, controlList},
 	{"GridView", "GridView", "Content display", []string{"Default"}, controlGridView},
@@ -97,7 +96,6 @@ var controlCatalog = []controlExample{
 	{"Table", "Table", "Content display", []string{"Table", "TableVirtualized"}, controlTable},
 	{"Sidebar", "Sidebar", "Actions & navigation", []string{"Default"}, controlSidebar},
 	{"Honeycomb", "Honeycomb", "Selection & values", []string{"Default"}, controlHoneycomb},
-	{"PixelGrid", "PixelGrid", "Layout & containers", []string{"Uniform", "Major lines"}, controlPixelGrid},
 	{"Split", "Split panes", "Layout & containers", []string{"Horizontal", "Vertical"}, controlSplit},
 	{"SplitPercent", "Percentage split panes", "Layout & containers", []string{"Horizontal", "Vertical"}, controlSplitPercent},
 	{"ScrollView", "Scroll views", "Layout & containers", []string{"Vertical", "Horizontal", "Both", "Insets"}, controlScrollView},
@@ -228,7 +226,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample, heading
 				switch example.name {
 				case "Text", "GridView", "Bar chart", "Line chart", "Area chart", "Stacked bar chart", "Donut chart", "Relationship graph":
 					cell.FillWidth()
-				case "TextBox", "TextBox (multiline)", "TextBoxBuffer", "TextBoxBuffer (multiline)", "NumberInput", "Slider", "Sidebar", "List", "Split", "SplitPercent", "ScrollView", "Progress", "Accordion", "Collapsible", "PixelGrid":
+				case "TextBox", "TextBox (multiline)", "TextBoxBuffer", "TextBoxBuffer (multiline)", "NumberInput", "Slider", "Sidebar", "List", "Split", "SplitPercent", "ScrollView", "Progress", "Accordion", "Collapsible":
 					cell.Width(240)
 				}
 				cell.Children(func() {

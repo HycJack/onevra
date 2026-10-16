@@ -10,7 +10,7 @@ import (
 )
 
 func TestControlPages(t *testing.T) {
-	if len(controlCatalog) != 47 {
+	if len(controlCatalog) != 45 {
 		t.Fatal("missing control examples")
 	}
 	for i, example := range controlCatalog {
@@ -71,27 +71,6 @@ func (g *Gallery) shellFrame(c *ui.Context) {
 		g.View(c)
 		ui.Row(c).Absolute().Top(0).Left(0).Right(0).Height(sidebar.HeaderHeight(c)).AlignItems(ui.Center).Children(func() { g.Titlebar(c) })
 	})
-}
-
-func TestPixelGridStandaloneExample(t *testing.T) {
-	page := pageFromKey("controls/PixelGrid")
-	example, ok := controlExampleFor(page)
-	if !ok || example.name != "PixelGrid" {
-		t.Fatal("missing pixel grid route")
-	}
-	for _, dark := range []bool{false, true} {
-		for _, variant := range example.variants {
-			tt := ui.NewTester(func(c *ui.Context) {
-				c.SetTheme(theme.Palette(dark))
-				controlPixelGrid(c, nil, variant)
-			}, 240, 160)
-			img := tt.Image()
-			minor, major := img.RGBAAt(16, 8), img.RGBAAt(64, 8)
-			if minor == img.RGBAAt(8, 8) || (minor != major) != (variant == "Major lines") {
-				t.Fatalf("dark=%v variant=%s: incorrect grid emphasis", dark, variant)
-			}
-		}
-	}
 }
 
 // The SplitPercent cell needs a bounded width: sized to its content, the
@@ -242,7 +221,7 @@ func TestControlExampleInteractions(t *testing.T) {
 					tt.Key(0, ui.KeyTab)
 					tt.Key(0, ui.KeyRight)
 					changed = s.index == 1
-				case "Badge", "Icon", "Image", "Spinner", "PixelGrid":
+				case "Badge", "Image", "Spinner":
 					return // Display-only components have no interaction state.
 				case "ScrollView":
 					return // ScrollView interactions are covered in the component tests.
@@ -334,46 +313,6 @@ func TestControlExampleInteractions(t *testing.T) {
 					t.Fatalf("changed=%t, disabled=%t", changed, disabled)
 				}
 			})
-		}
-	}
-}
-
-func TestControlPageGrid(t *testing.T) {
-	t.Cleanup(func() { pixelGridBackground = true })
-	for _, dark := range []bool{false, true} {
-		for _, width := range []int{280, 900} {
-			pixelGridBackground = true
-			g := &Gallery{page: pageFromKey("controls/Popover")}
-			tt := ui.NewTester(func(c *ui.Context) {
-				c.SetTheme(theme.Palette(dark))
-				g.View(c)
-			}, width, 600)
-			img := tt.Image()
-			background := img.RGBAAt(5, 575)
-			// The grid covers the header, outer margins and empty space far below
-			// the examples, with one continuous origin rather than local canvases.
-			for _, y := range []int{5, 575} {
-				for x := 22; x < width-10; x += 22 {
-					if img.RGBAAt(x, y) == background || img.RGBAAt(x+5, y) != background {
-						t.Fatalf("dark=%v width=%d: missing page grid at %d,%d", dark, width, x, y)
-					}
-				}
-			}
-			if img.RGBAAt(5, 572) == background {
-				t.Fatal("missing horizontal grid near the page bottom")
-			}
-			if img.RGBAAt(176, 575) != img.RGBAAt(22, 575) {
-				t.Fatal("page grid must not emphasize major lines")
-			}
-			pixelGridBackground = false
-			tt.Frame()
-			img = tt.Image()
-			background = img.RGBAAt(5, 575)
-			for x := 0; x < width; x++ {
-				if img.RGBAAt(x, 575) != background {
-					t.Fatalf("disabled grid still visible at %d", x)
-				}
-			}
 		}
 	}
 }

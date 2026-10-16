@@ -906,16 +906,6 @@ func (msgs Messages) ComponentOutlinetable() string {
 	return Catalog.Format(msgs.locale, "componentOutlinetable", nil)
 }
 
-// ComponentPixelgrid says "PixelGrid"
-// in the language the app shows.
-func ComponentPixelgrid() string { return In(i18n.Locale()).ComponentPixelgrid() }
-
-// ComponentPixelgrid says "PixelGrid"
-// in the language of msgs.
-func (msgs Messages) ComponentPixelgrid() string {
-	return Catalog.Format(msgs.locale, "componentPixelgrid", nil)
-}
-
 // ComponentPopover says "Popover"
 // in the language the app shows.
 func ComponentPopover() string { return In(i18n.Locale()).ComponentPopover() }
@@ -2094,16 +2084,6 @@ func (msgs Messages) IconLibraryLucide() string {
 	return Catalog.Format(msgs.locale, "iconLibraryLucide", nil)
 }
 
-// Icons says "Icons"
-// in the language the app shows.
-func Icons() string { return In(i18n.Locale()).Icons() }
-
-// Icons says "Icons"
-// in the language of msgs.
-func (msgs Messages) Icons() string {
-	return Catalog.Format(msgs.locale, "icons", nil)
-}
-
 // Images says "Images"
 // in the language the app shows.
 func Images() string { return In(i18n.Locale()).Images() }
@@ -2460,16 +2440,6 @@ func LucideIcons() string { return In(i18n.Locale()).LucideIcons() }
 // in the language of msgs.
 func (msgs Messages) LucideIcons() string {
 	return Catalog.Format(msgs.locale, "lucideIcons", nil)
-}
-
-// MajorLines says "Major lines"
-// in the language the app shows.
-func MajorLines() string { return In(i18n.Locale()).MajorLines() }
-
-// MajorLines says "Major lines"
-// in the language of msgs.
-func (msgs Messages) MajorLines() string {
-	return Catalog.Format(msgs.locale, "majorLines", nil)
 }
 
 // MarkdownLoadError says "Unable to load markdown.md"
@@ -4128,16 +4098,6 @@ func Undo() string { return In(i18n.Locale()).Undo() }
 // in the language of msgs.
 func (msgs Messages) Undo() string {
 	return Catalog.Format(msgs.locale, "undo", nil)
-}
-
-// Uniform says "Uniform"
-// in the language the app shows.
-func Uniform() string { return In(i18n.Locale()).Uniform() }
-
-// Uniform says "Uniform"
-// in the language of msgs.
-func (msgs Messages) Uniform() string {
-	return Catalog.Format(msgs.locale, "uniform", nil)
 }
 
 // Unrated says "Unrated"
