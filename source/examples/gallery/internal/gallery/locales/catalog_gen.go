@@ -7168,6 +7168,16 @@ func (msgs Messages) Underline() string {
 	return Catalog.Format(msgs.locale, "underline", nil)
 }
 
+// Highlight says "Highlight"
+// in the language the app shows.
+func Highlight() string { return In(i18n.Locale()).Highlight() }
+
+// Highlight says "Highlight"
+// in the language of msgs.
+func (msgs Messages) Highlight() string {
+	return Catalog.Format(msgs.locale, "highlight", nil)
+}
+
 // Toolbar says "Toolbar"
 // in the language the app shows.
 func Toolbar() string { return In(i18n.Locale()).Toolbar() }

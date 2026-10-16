@@ -104,7 +104,7 @@ var controlCatalog = []controlExample{
 	{"NumberInput", "NumberInput", "Selection & values", []string{"Integer", "Decimal", "Scrub", "Without stepper"}, controlNumberInput},
 	{"Slider", "Sliders", "Selection & values", []string{"Default", "Step", "Range", "Stepped range"}, controlSlider},
 	{"Progress", "Progress", "Feedback & overlays", nil, nil},
-	{"Tabs", "Tabs", "Actions & navigation", []string{"Underline", "Segmented control"}, controlTabs},
+	{"Tabs", "Tabs", "Actions & navigation", []string{"Underline", "Segmented control", "Highlight"}, controlTabs},
 	{"Disclosure", "Disclosure", "Layout & containers", nil, nil},
 	{"Image", "Images", "Content display", []string{"Contain", "Cover", "Stretch", "Rounded", "Grayscale"}, controlImage},
 	{"List", "List", "Content display", []string{"Default"}, controlList},
@@ -262,7 +262,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample, heading
 			}
 		})
 	}
-	if example.name == "Text" || example.name == "Collapsible" {
+	if example.name == "Text" || example.name == "Collapsible" || example.name == "Tabs" {
 		variants = func() {
 			ui.Column(c).FillWidth().MinWidth(0).Gap(t.Space(4)).Children(func() {
 				for _, variant := range example.variants {

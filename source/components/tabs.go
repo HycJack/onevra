@@ -19,6 +19,9 @@ const (
 	// the chosen one raised on a shadowed, lighter thumb, as macOS draws a
 	// segmented control.
 	TabsSegmented
+	// TabsHighlight sets the chosen tab on a softly filled, rounded block that
+	// slides behind the labels, without a track.
+	TabsHighlight
 )
 
 // Tabs creates a row of tabs showing labels, of which *selected is the index
@@ -30,11 +33,14 @@ const (
 // keeps every label's weight, so selection never moves the labels.
 // TabsSegmented raises the chosen tab on a shadowed thumb over a capsule
 // track and shows its label in a heavier weight, like a macOS segmented
-// control.
+// control. TabsHighlight slides a rounded block behind the chosen tab's label.
 func Tabs(c *ui.Context, selected *int, variant TabsVariant, labels ...string) ui.TabsParts {
 	tabs := ui.TabsBase(c, selected, len(labels))
-	if variant == TabsSegmented {
+	switch variant {
+	case TabsSegmented:
 		return segmentedTabs(c, tabs, selected, labels)
+	case TabsHighlight:
+		return highlightTabs(c, tabs, selected, labels)
 	}
 	return underlinedTabs(c, tabs, selected, labels)
 }
@@ -123,17 +129,59 @@ func segmentedTabs(c *ui.Context, tabs ui.TabsParts, selected *int, labels []str
 		// The thumb belongs behind the labels, so draw it with the track rather
 		// than over the tabs.
 		tabs.List.Draw(func(p *ui.Painter, r ui.Rect) {
-			bounds := active.LayoutBounds()
-			x := tabs.List.Animate("thumb-x", bounds.X-r.X, tabsIndicatorDuration)
-			w := tabs.List.Animate("thumb-width", bounds.W, tabsIndicatorDuration)
-			if c.Preferences().ReduceMotion {
-				x, w = bounds.X-r.X, bounds.W
-			}
-			thumbRect := ui.Rect{X: r.X + x, Y: bounds.Y, W: w, H: bounds.H}
-			radius := bounds.H / 2
+			thumbRect := slideBehind(c, tabs.List, active, r)
+			radius := thumbRect.H / 2
 			p.Shadow(thumbRect, radius, 0, 1, 2, 0, shadow)
 			p.Fill(thumbRect, thumb, radius)
 		})
 	}
 	return tabs
+}
+
+// highlightTabs sets the chosen tab on a filled block that slides behind the
+// labels, as Figma marks its chosen tab.
+func highlightTabs(c *ui.Context, tabs ui.TabsParts, selected *int, labels []string) ui.TabsParts {
+	t := c.Theme()
+	radius := [4]float32{t.Radius, t.Radius, t.Radius, t.Radius}
+	tabs.List.Gap(t.Space(0.5)).AlignSelf(ui.Start)
+	var active ui.Element
+	tabs.List.Children(func() {
+		for i, label := range labels {
+			tab := dimmed(tabs.Tab(i).Padding(t.Space(1.5), t.Space(3)).FocusRing(false))
+			on := i == *selected
+			fg := t.Text
+			if !on {
+				fg = fg.Alpha(0.6)
+			}
+			tab.TextColor(fg)
+			if on {
+				active = tab
+			}
+			tab.DrawOver(func(p *ui.Painter, r ui.Rect) {
+				if tab.FocusVisible() {
+					p.FocusRing(r, radius)
+				}
+			})
+			tab.Children(func() { Text(c, label).SingleLine() })
+		}
+	})
+	if len(labels) > 0 {
+		tabs.List.Draw(func(p *ui.Painter, r ui.Rect) {
+			p.Fill(slideBehind(c, tabs.List, active, r), t.Text.Alpha(0.08), t.Radius)
+		})
+	}
+	return tabs
+}
+
+// slideBehind returns the rectangle of a block that slides to the chosen tab
+// inside list's rectangle r. It animates list-relative geometry, so moving the
+// entire control does not move the block, and Reduced Motion skips the slide.
+func slideBehind(c *ui.Context, list, active ui.Element, r ui.Rect) ui.Rect {
+	bounds := active.LayoutBounds()
+	x := list.Animate("thumb-x", bounds.X-r.X, tabsIndicatorDuration)
+	w := list.Animate("thumb-width", bounds.W, tabsIndicatorDuration)
+	if c.Preferences().ReduceMotion {
+		x, w = bounds.X-r.X, bounds.W
+	}
+	return ui.Rect{X: r.X + x, Y: bounds.Y, W: w, H: bounds.H}
 }

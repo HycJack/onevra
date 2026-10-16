@@ -384,7 +384,7 @@ func TestControlVariantLayout(t *testing.T) {
 						t.Fatalf("%s/%s outside preview: %+v", name, variant, r)
 					}
 					if i > 0 {
-						vertical := name == "Text" || name == "Collapsible"
+						vertical := name == "Text" || name == "Collapsible" || name == "Tabs"
 						if vertical && r.Y < previous.Y+previous.H {
 							t.Fatalf("%s variants are not vertical", name)
 						}

@@ -10,7 +10,7 @@ import (
 )
 
 func TestTabsClick(t *testing.T) {
-	for _, variant := range []TabsVariant{TabsUnderline, TabsSegmented} {
+	for _, variant := range []TabsVariant{TabsUnderline, TabsSegmented, TabsHighlight} {
 		for _, dark := range []bool{false, true} {
 			selected := 0
 			tt := ui.NewTester(func(c *ui.Context) {
@@ -219,7 +219,7 @@ func TestTabsSegmentedHoverDoesNotChangeAppearance(t *testing.T) {
 }
 
 func TestTabsEmpty(t *testing.T) {
-	for _, variant := range []TabsVariant{TabsUnderline, TabsSegmented} {
+	for _, variant := range []TabsVariant{TabsUnderline, TabsSegmented, TabsHighlight} {
 		selected := 0
 		tt := ui.NewTester(func(c *ui.Context) { Tabs(c, &selected, variant) }, 400, 100)
 		tt.Frame()
@@ -227,7 +227,7 @@ func TestTabsEmpty(t *testing.T) {
 }
 
 func TestTabsKeyboard(t *testing.T) {
-	for _, variant := range []TabsVariant{TabsUnderline, TabsSegmented} {
+	for _, variant := range []TabsVariant{TabsUnderline, TabsSegmented, TabsHighlight} {
 		selected := 0
 		tt := ui.NewTester(func(c *ui.Context) {
 			c.SetTheme(theme.LightPalette())
@@ -241,6 +241,40 @@ func TestTabsKeyboard(t *testing.T) {
 		tt.Key(0, ui.KeyLeft)
 		if selected != 0 {
 			t.Errorf("variant=%v: Left chose %d, want 0", variant, selected)
+		}
+	}
+}
+
+// TestTabsHighlightBlock checks that the highlight block sits behind the chosen
+// label and slides to a new choice instead of jumping there.
+func TestTabsHighlightBlock(t *testing.T) {
+	for _, dark := range []bool{false, true} {
+		selected := 0
+		tt := ui.NewTester(func(c *ui.Context) {
+			c.SetTheme(theme.Palette(dark))
+			Tabs(c, &selected, TabsHighlight, "General", "Appearance", "Advanced")
+		}, 400, 100)
+		bg := tt.Image().RGBAAt(399, 99)
+		filled := func(label string) bool {
+			t.Helper()
+			r, ok := tt.Find(label)
+			if !ok {
+				t.Fatalf("missing %s", label)
+			}
+			return tt.Image().RGBAAt(int(r.X+r.W/2), int(r.Y-2)) != bg
+		}
+		if !filled("General") || filled("Advanced") {
+			t.Fatalf("dark=%v: block not behind the chosen tab", dark)
+		}
+		selected = 2
+		tt.Frame()
+		if filled("Advanced") {
+			t.Fatal("block jumped to the choice instead of sliding")
+		}
+		tt.Advance(tabsIndicatorDuration + 20*time.Millisecond)
+		tt.Frame()
+		if !filled("Advanced") || filled("General") {
+			t.Fatalf("dark=%v: block did not reach the chosen tab", dark)
 		}
 	}
 }

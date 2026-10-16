@@ -16,6 +16,7 @@ User-facing updates for Onevra library consumers.
 - Add `Leading`, `Stacked` and `Content` to `components.SettingsItem`.
 - Change the default `sidebar.ShellOptions` window height and minimum height to 740.
 - Add `components.SplitPercent`.
+- Add `components.TabsHighlight`.
 - Add `components.ListState.KeepOffset`.
 - Animate `components.Dialog` and `components.AlertDialog` as they open and close.
 - Add `chat.Chip`, `chat.SwitchChip`, `chat.Picker`, `chat.Attachment`, `chat.ContextMeter`, `chat.Quota`, `chat.QuotaSummary` and `chat.Shimmer`.
