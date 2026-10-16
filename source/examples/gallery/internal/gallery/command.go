@@ -42,11 +42,19 @@ func (g *Gallery) Commands(c *ui.Context) {
 	items := []command.Item{{ID: "settings", Title: tr(c, "settings"), Group: tr(c, "actionsNavigation"), Icon: lucide.Settings(), Keywords: []string{"settings", "preferences"},
 		Trailing: func(c *ui.Context) { components.Badge(c, tr(c, "application")).AlignSelf(ui.Center) }}}
 	for _, group := range navigationCatalog() {
-		if group.index {
-			// The New components group repeats pages listed in their own groups.
-			continue
-		}
 		for _, entry := range group.entries {
+			if entry.mygo {
+				// The MyGo entry stands for the pages of its in-page list.
+				for _, purpose := range mygoNavigationGroups() {
+					for _, page := range purpose.entries {
+						items = append(items, command.Item{
+							ID: pageKey(page.page), Title: tr(c, page.label), Group: tr(c, group.label),
+							Icon: page.icon(), Keywords: []string{page.label, purpose.label, group.label},
+						})
+					}
+				}
+				continue
+			}
 			items = append(items, command.Item{
 				ID: pageKey(entry.page), Title: tr(c, entry.label), Group: tr(c, group.label),
 				Icon: entry.icon(), Keywords: []string{entry.label, group.label},

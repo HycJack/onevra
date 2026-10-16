@@ -28,14 +28,6 @@ func TestNavigationSpacing(t *testing.T) {
 func TestNavigationGroupOrder(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.Left, 220, 6000)
-	var bottom float32
-	for _, group := range navigationCatalog() {
-		r, ok := tt.Find(g.text(group.label))
-		if !ok || r.Y < bottom {
-			t.Fatalf("%s missing or out of order: %v (previous bottom %v)", group.label, r, bottom)
-		}
-		bottom = r.Y + r.H
-	}
 	// Entries repeat in the New components index, so their order is checked in
 	// the render order rather than by the position of a unique label.
 	texts := tt.Texts()
@@ -63,48 +55,24 @@ func TestNavigationGroupOrder(t *testing.T) {
 	}
 }
 
-func TestNavigationMyGoMarkers(t *testing.T) {
-	g := &Gallery{}
-	tt := ui.NewTester(g.Left, 220, 6000)
-	texts := tt.Texts()
-	names := map[string]bool{}
-	for _, example := range mygoCatalog {
-		names[example.name] = true
-	}
-	badges, markers := 0, 0
-	for i, text := range texts {
-		switch text {
-		case "MyGo":
-			// Every MyGo page carries the badge directly after its label.
-			if !names[texts[i-1]] {
-				t.Fatalf("MyGo badge follows non-MyGo item: %q", texts[i-1])
-			}
-			badges++
-		case "•":
-			if texts[i-1] != "MyGo" || !names[texts[i-2]] {
-				t.Fatalf("pending marker follows %q %q", texts[i-2], texts[i-1])
-			}
-			markers++
-		}
-	}
-	wantBadges, wantMarkers := 0, 0
+func TestNavigationLeavesMyGoMarkersOut(t *testing.T) {
 	for _, group := range navigationCatalog() {
 		for _, entry := range group.entries {
-			example, ok := mygoExampleFor(entry.page)
-			if !ok {
-				continue
-			}
-			wantBadges++
-			if !mygoDirectUse(example) {
-				wantMarkers++
+			if !entry.mygo && isMyGoPage(entry.page) {
+				t.Fatalf("MyGo page %s is listed outside the MyGo entry", entry.label)
 			}
 		}
 	}
-	if badges != wantBadges {
-		t.Fatalf("got %d MyGo badges, want %d", badges, wantBadges)
-	}
-	if markers != wantMarkers {
-		t.Fatalf("got %d pending markers, want %d", markers, wantMarkers)
+	// Pages behind the MyGo entry need no per-item MyGo label or marker.
+	g := &Gallery{page: trayPage}
+	for _, tt := range []*ui.Tester{ui.NewTester(g.Left, 220, 6000), ui.NewTester(g.View, 900, 6000)} {
+		texts := tt.Texts()
+		if slices.Contains(texts, "•") {
+			t.Fatal("unexpected pending marker")
+		}
+		if i := slices.Index(texts, "MyGo"); i >= 0 && (i+1 >= len(texts) || texts[i+1] != "Official components") {
+			t.Fatalf("unexpected MyGo label after %q", texts[max(i-1, 0)])
+		}
 	}
 }
 
@@ -163,30 +131,30 @@ func TestNavigationIcons(t *testing.T) {
 
 func TestNavigationCatalog(t *testing.T) {
 	all := navigationCatalog()
-	count := 0
 	purpose := map[galleryPage]bool{}
-	indexed := map[galleryPage]bool{}
-	for _, group := range all {
-		count += len(group.entries)
+	hubs := 0
+	visit := func(entry navigationEntry) {
+		t.Helper()
+		if entry.mygo {
+			hubs++
+			return
+		}
+		if purpose[entry.page] {
+			t.Fatalf("duplicate navigation destination: %s", entry.label)
+		}
+		purpose[entry.page] = true
+	}
+	// The MyGo entry hosts every MyGo page once in its in-page list.
+	for _, group := range append(all, mygoNavigationGroups()...) {
 		for _, entry := range group.entries {
-			if group.index {
-				indexed[entry.page] = true
-				continue
-			}
-			if purpose[entry.page] {
-				t.Fatalf("duplicate navigation destination: %s", entry.label)
-			}
-			purpose[entry.page] = true
+			visit(entry)
 		}
 	}
-	// The New components index only repeats pages of the purpose groups.
-	for page := range indexed {
-		if !purpose[page] {
-			t.Fatalf("indexed page %d is missing from its purpose group", page)
-		}
+	if hubs != 1 {
+		t.Fatalf("got %d MyGo entries, want 1", hubs)
 	}
-	if count != 5+len(controlCatalog)+len(mygoCatalog)+len(newNavigationEntries()) {
-		t.Fatalf("missing catalog entries: %d", count)
+	if len(purpose) != 5+len(controlCatalog)+len(mygoCatalog) {
+		t.Fatalf("missing catalog entries: %d", len(purpose))
 	}
 }
 
@@ -216,7 +184,7 @@ func TestChineseNavigationNames(t *testing.T) {
 	g := &Gallery{}
 	g.chooseLanguage("zh-Hans")
 	for _, group := range navigationCatalog() {
-		if g.text(group.label) == group.label {
+		if g.text(group.label) == group.label && group.label != mygoGroupLabel {
 			t.Errorf("untranslated navigation group: %s", group.label)
 		}
 		for _, entry := range group.entries {

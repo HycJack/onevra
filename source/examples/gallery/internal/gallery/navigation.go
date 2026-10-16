@@ -8,8 +8,8 @@ var navigationGroups = []string{
 }
 
 // newPages are the routes added in the latest published version or since; the
-// top New components group indexes them without removing them from their
-// purpose groups. Add new pages alongside the existing entries. When
+// top New components group lists them in place of their purpose groups. Add
+// new pages alongside the existing entries. When
 // publishing a version, keep the pages it ships and remove those from earlier
 // versions.
 var newPages = map[string]bool{
@@ -31,17 +31,21 @@ var newPages = map[string]bool{
 type navigationEntry struct {
 	label string
 	page  galleryPage
+	// mygo marks the single sidebar entry that hosts every MyGo page behind
+	// its own in-page list; page is then only the first of them.
+	mygo bool
 }
 
-// newGroupLabel names the index group of the pages in newPages.
+// mygoGroupLabel names the sidebar group of the MyGo entry, and the command
+// palette group of the pages it hosts.
+const mygoGroupLabel = "MyGo"
+
+// newGroupLabel names the group of the pages in newPages.
 const newGroupLabel = "New components"
 
 type navigationGroup struct {
 	label   string
 	entries []navigationEntry
-	// index marks a shortcut group that repeats pages already listed in
-	// their purpose groups. Command search skips it to keep results unique.
-	index bool
 }
 
 func navigationCatalog() []navigationGroup {
@@ -51,25 +55,17 @@ func navigationCatalog() []navigationGroup {
 			groups = append(groups, navigationGroup{label: label, entries: entries})
 		}
 	}
-	add("Overview", []navigationEntry{{"Welcome", welcomePage}})
-	if entries := newNavigationEntries(); len(entries) > 0 {
-		groups = append(groups, navigationGroup{label: newGroupLabel, entries: entries, index: true})
+	add("Overview", []navigationEntry{{"Welcome", welcomePage, false}})
+	if entries := newNavigationEntries(false); len(entries) > 0 {
+		groups = append(groups, navigationGroup{label: newGroupLabel, entries: entries})
 	}
-	add("Icon library", []navigationEntry{{"Lucide", lucidePage}})
-	desktop := []navigationEntry{{"Tray", trayPage}, {"Dock menu", dockPage}, {"System notifications", notificationsPage}}
-	for _, group := range append([]string{"Desktop"}, navigationGroups...) {
+	add("Icon library", []navigationEntry{{"Lucide", lucidePage, false}})
+	add(mygoGroupLabel, []navigationEntry{{"Official components", trayPage, true}})
+	for _, group := range navigationGroups {
 		var entries []navigationEntry
-		if group == "Desktop" {
-			entries = desktop
-		}
 		for i, example := range controlCatalog {
-			if example.group == group {
-				entries = append(entries, navigationEntry{example.label, controlPageStart() + galleryPage(i)})
-			}
-		}
-		for i, example := range mygoCatalog {
-			if example.group == group {
-				entries = append(entries, navigationEntry{example.name, mygoPageStart + galleryPage(i)})
+			if example.group == group && !newPages["controls/"+example.name] {
+				entries = append(entries, navigationEntry{example.label, controlPageStart() + galleryPage(i), false})
 			}
 		}
 		add(group, entries)
@@ -77,17 +73,51 @@ func navigationCatalog() []navigationGroup {
 	return groups
 }
 
-// newNavigationEntries collects the pages in newPages in catalog order.
-func newNavigationEntries() []navigationEntry {
-	var entries []navigationEntry
-	for i, example := range controlCatalog {
-		if newPages["controls/"+example.name] {
-			entries = append(entries, navigationEntry{example.label, controlPageStart() + galleryPage(i)})
+// mygoNavigationGroups lists the pages of the MyGo entry for its in-page
+// list: its own New components group, then purposes in the sidebar's order.
+func mygoNavigationGroups() []navigationGroup {
+	var groups []navigationGroup
+	if entries := newNavigationEntries(true); len(entries) > 0 {
+		groups = append(groups, navigationGroup{label: newGroupLabel, entries: entries})
+	}
+	for _, group := range append([]string{"Desktop"}, navigationGroups...) {
+		var entries []navigationEntry
+		if group == "Desktop" {
+			entries = []navigationEntry{{"Tray", trayPage, false}, {"Dock menu", dockPage, false}, {"System notifications", notificationsPage, false}}
 		}
+		for i, example := range mygoCatalog {
+			if example.group == group && !newPages["mygo/"+example.name] {
+				entries = append(entries, navigationEntry{example.name, mygoPageStart + galleryPage(i), false})
+			}
+		}
+		if len(entries) > 0 {
+			groups = append(groups, navigationGroup{label: group, entries: entries})
+		}
+	}
+	return groups
+}
+
+// isMyGoPage reports pages behind the MyGo entry: desktop integrations and
+// the MyGo catalog, which directly follow one another.
+func isMyGoPage(page galleryPage) bool {
+	return page >= trayPage && page < controlPageStart()
+}
+
+// newNavigationEntries collects the pages in newPages in catalog order, either
+// Onevra's for the sidebar or MyGo's for the MyGo entry's in-page list.
+func newNavigationEntries(mygo bool) []navigationEntry {
+	var entries []navigationEntry
+	if !mygo {
+		for i, example := range controlCatalog {
+			if newPages["controls/"+example.name] {
+				entries = append(entries, navigationEntry{example.label, controlPageStart() + galleryPage(i), false})
+			}
+		}
+		return entries
 	}
 	for i, example := range mygoCatalog {
 		if newPages["mygo/"+example.name] {
-			entries = append(entries, navigationEntry{example.name, mygoPageStart + galleryPage(i)})
+			entries = append(entries, navigationEntry{example.name, mygoPageStart + galleryPage(i), false})
 		}
 	}
 	return entries

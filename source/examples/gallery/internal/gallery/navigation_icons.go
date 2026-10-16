@@ -106,6 +106,9 @@ var navigationIcons = map[string]func() *ui.SVG{
 }
 
 func (entry navigationEntry) icon() *ui.SVG {
+	if entry.mygo {
+		return lucide.Boxes()
+	}
 	switch entry.page {
 	case welcomePage:
 		return lucide.House()

@@ -19,22 +19,13 @@ type iconEntry struct {
 	get  func() *ui.SVG
 }
 
-func (g *Gallery) navigationItem(c *ui.Context, label string, icon *ui.SVG, page galleryPage) {
-	display := tr(c, label)
-	item := components.SidebarItem(c, display, icon, g.page == page).Key(page)
-	if example, upstream := mygoExampleFor(page); upstream {
-		t := c.Theme()
-		item.Children(func() {
-			ui.Spacer(c)
-			// Pages demonstrating MyGo's own components carry its name.
-			components.Text(c, tr(c, "navigationMyGo")).FontSize(t.Rem(.75)).TextColor(t.TextMuted).SingleLine().Shrink(0)
-			if !mygoDirectUse(example) {
-				components.Text(c, tr(c, "bullet")).FontSize(t.Rem(1.4)).TextColor(t.TextMuted).SingleLine()
-			}
-		})
-	}
-	if item.Clicked() {
-		g.page = page
+func (g *Gallery) navigationItem(c *ui.Context, entry navigationEntry) {
+	selected := g.page == entry.page || entry.mygo && isMyGoPage(g.page)
+	if components.SidebarItem(c, tr(c, entry.label), entry.icon(), selected).Key(entry.page).Clicked() {
+		g.page = entry.page
+		if entry.mygo {
+			g.page = g.lastMyGoPage()
+		}
 	}
 }
 

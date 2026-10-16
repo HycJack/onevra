@@ -26,6 +26,7 @@ type Gallery struct {
 	Clicks         int
 	Shell          *sidebar.Shell
 	page           galleryPage
+	mygoPage       galleryPage // The MyGo page last shown, reopened by its entry.
 	grid           components.GridState
 	mygoStates     map[string]*demoState
 	controlStates  map[string]*controlState
@@ -133,7 +134,7 @@ func (g *Gallery) navigation(c *ui.Context) {
 			for _, group := range groups {
 				components.SidebarSection(c, tr(c, group.label), func() {
 					for _, entry := range group.entries {
-						g.navigationItem(c, entry.label, entry.icon(), entry.page)
+						g.navigationItem(c, entry)
 					}
 				})
 			}
@@ -213,15 +214,15 @@ func (g *Gallery) viewLocalized(c *ui.Context) {
 
 func (g *Gallery) body(c *ui.Context) {
 	if g.page == notificationsPage {
-		g.Notifications(c)
+		g.mygoHost(c, func() { g.Notifications(c) })
 		return
 	}
 	if g.page == dockPage {
-		g.DockMenu(c)
+		g.mygoHost(c, func() { g.DockMenu(c) })
 		return
 	}
 	if g.page == trayPage {
-		g.Tray(c)
+		g.mygoHost(c, func() { g.Tray(c) })
 		return
 	}
 	if g.page == welcomePage {

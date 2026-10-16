@@ -125,7 +125,87 @@ func (g *Gallery) mygoState(name, variant string, first bool) *demoState {
 }
 
 func (g *Gallery) MyGo(c *ui.Context, example mygoExample) {
-	g.withLanguage(c, func() { g.myGoLocalized(c, example) })
+	g.mygoHost(c, func() { g.myGoLocalized(c, example) })
+}
+
+// mygoHost places a page behind the MyGo entry beside the list that switches
+// between them.
+func (g *Gallery) mygoHost(c *ui.Context, page func()) {
+	g.withLanguage(c, func() {
+		g.mygoPage = g.page
+		t := c.Theme()
+		width, _ := c.Size()
+		if g.Shell != nil && g.Shell.LeftExpanded() {
+			width -= g.Shell.LeftWidth()
+		}
+		if width < t.Space(130) {
+			// Narrow content keeps the example's width and switches pages
+			// with a selector, as Settings does.
+			ui.Column(c).Fill().Children(func() {
+				g.mygoSelect(c)
+				ui.Column(c).Fill().MinHeight(0).Children(page)
+			})
+			return
+		}
+		ui.Row(c).Fill().Children(func() {
+			g.mygoList(c)
+			ui.Box(c).Width(1).FillHeight().Shrink(0).Background(t.Border)
+			ui.Column(c).Fill().MinWidth(0).Children(page)
+		})
+	})
+}
+
+func (g *Gallery) mygoSelect(c *ui.Context) {
+	t := c.Theme()
+	groups := mygoNavigationGroups()
+	label := ""
+	for _, group := range groups {
+		for _, entry := range group.entries {
+			if entry.page == g.page {
+				label = entry.label
+			}
+		}
+	}
+	ui.Column(c).Key("mygo-select").FillWidth().Shrink(0).Padding(t.Space(3), t.Space(6), 0, t.Space(6)).Children(func() {
+		sel := components.Select(c, &g.page)
+		sel.Trigger.Label(tr(c, "officialComponents")).FillWidth().Children(func() { components.Text(c, tr(c, label)).SingleLine() })
+		sel.Popup(func(panel ui.Element) {
+			for _, group := range groups {
+				components.Text(c, tr(c, group.label)).FontSize(t.Rem(.75)).TextColor(t.TextMuted).Padding(t.Space(1.5), t.Space(2.5), t.Space(.5), t.Space(2.5))
+				for _, entry := range group.entries {
+					sel.Item(entry.page).Label(tr(c, entry.label)).Children(func() { components.Text(c, tr(c, entry.label)) })
+				}
+			}
+		})
+	})
+}
+
+// lastMyGoPage is the page the single MyGo sidebar entry opens.
+func (g *Gallery) lastMyGoPage() galleryPage {
+	if isMyGoPage(g.mygoPage) {
+		return g.mygoPage
+	}
+	return mygoNavigationGroups()[0].entries[0].page
+}
+
+// mygoList switches between the pages behind the MyGo sidebar entry.
+func (g *Gallery) mygoList(c *ui.Context) {
+	t := c.Theme()
+	ui.Column(c).Key("mygo-list").Width(t.Space(52)).FillHeight().Shrink(0).Background(t.Background).Label(tr(c, "officialComponents")).Children(func() {
+		components.ScrollView(c, components.ScrollViewOptions{}).Fill().Children(func() {
+			components.Sidebar(c).Padding(t.Space(3)).Children(func() {
+				for _, group := range mygoNavigationGroups() {
+					components.SidebarSection(c, tr(c, group.label), func() {
+						for _, entry := range group.entries {
+							if components.SidebarItem(c, tr(c, entry.label), entry.icon(), g.page == entry.page).Key(entry.page).Clicked() {
+								g.page = entry.page
+							}
+						}
+					})
+				}
+			})
+		})
+	})
 }
 
 func (g *Gallery) myGoLocalized(c *ui.Context, example mygoExample) {

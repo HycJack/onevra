@@ -2,6 +2,7 @@ package gallery
 
 import (
 	"fmt"
+	"slices"
 	"testing"
 	"time"
 
@@ -149,12 +150,14 @@ func TestNewMyGoReviewEntries(t *testing.T) {
 
 func TestCodeAndGameGroups(t *testing.T) {
 	want := map[string][]string{"Code & diffs": {"Code editor", "Diff viewer"}, "Games": {"Canvas", "Shaders", "Game loop", "3D renderer"}}
-	for _, group := range navigationCatalog() {
+	for _, group := range mygoNavigationGroups() {
 		if entries, ok := want[group.label]; ok {
 			var got []string
 			for _, entry := range group.entries {
 				got = append(got, entry.label)
 			}
+			// Pages in New components leave their purpose group.
+			entries = slices.DeleteFunc(slices.Clone(entries), func(name string) bool { return newPages["mygo/"+name] })
 			if fmt.Sprint(got) != fmt.Sprint(entries) {
 				t.Fatalf("%s = %v, want %v", group.label, got, entries)
 			}
@@ -168,8 +171,12 @@ func TestCodeAndGameGroups(t *testing.T) {
 
 func TestNewComponentsGroup(t *testing.T) {
 	groups := navigationCatalog()
-	if len(groups) < 2 || groups[0].label != "Overview" || groups[1].label != newGroupLabel || !groups[1].index {
+	if len(groups) < 2 || groups[0].label != "Overview" || groups[1].label != newGroupLabel {
 		t.Fatalf("New components group must follow Overview: %v", groups)
+	}
+	mygoGroups := mygoNavigationGroups()
+	if mygoGroups[0].label != newGroupLabel {
+		t.Fatalf("MyGo list must start with its New components group: %v", mygoGroups[0])
 	}
 	want := map[galleryPage]bool{}
 	for key := range newPages {
@@ -178,30 +185,28 @@ func TestNewComponentsGroup(t *testing.T) {
 		}
 		want[pageFromKey(key)] = true
 	}
-	if len(groups[1].entries) != len(want) {
-		t.Fatalf("New components group has %d entries, want %d", len(groups[1].entries), len(want))
-	}
-	// The index repeats pages that stay in their purpose groups for browsing.
-	purpose := map[galleryPage]bool{}
-	for _, group := range groups {
-		if group.index {
-			continue
-		}
-		for _, entry := range group.entries {
-			purpose[entry.page] = true
-		}
-	}
+	// Onevra pages are new in the sidebar, MyGo pages in the MyGo entry's
+	// in-page list; each appears only there, not again in a purpose group.
 	for _, entry := range groups[1].entries {
+		if isMyGoPage(entry.page) {
+			t.Fatalf("MyGo page %s is listed outside the MyGo entry", entry.label)
+		}
+	}
+	for _, entry := range append(slices.Clone(groups[1].entries), mygoGroups[0].entries...) {
 		if !want[entry.page] {
 			t.Fatalf("unexpected New components entry: %s", entry.label)
-		}
-		if !purpose[entry.page] {
-			t.Fatalf("%s left its purpose group", entry.label)
 		}
 		delete(want, entry.page)
 	}
 	if len(want) != 0 {
 		t.Fatalf("missing New components entries: %v", want)
+	}
+	for _, group := range append(groups[2:], mygoGroups[1:]...) {
+		for _, entry := range group.entries {
+			if newPages[pageKey(entry.page)] {
+				t.Fatalf("%s repeats in %s", entry.label, group.label)
+			}
+		}
 	}
 }
 
@@ -217,7 +222,7 @@ func TestNewComponentsGroupRenders(t *testing.T) {
 		if !ok || index.Y >= lucide.Y {
 			t.Fatalf("%s: New components group is not above the icon library", lang)
 		}
-		for _, entry := range newNavigationEntries() {
+		for _, entry := range newNavigationEntries(false) {
 			if !tt.HasText(g.text(entry.label)) {
 				t.Fatalf("%s: missing %s", lang, entry.label)
 			}

@@ -137,13 +137,6 @@ var mygoDirectExamples = map[string]string{
 	"Markdown stream":    "Use MyGo's ui/markdown directly for streaming replies",
 }
 
-// mygoDirectUse reports examples of MyGo APIs used directly, which the sidebar
-// does not mark as awaiting an Onevra decision.
-func mygoDirectUse(example mygoExample) bool {
-	_, direct := mygoDirectExamples[example.name]
-	return direct || example.group == "Plugins"
-}
-
 // Element methods are not found by the free-function scanner. These native menu
 // APIs are deliberately used directly, including by the Onevra gallery examples.
 var mygoNativeMenus = map[string]string{

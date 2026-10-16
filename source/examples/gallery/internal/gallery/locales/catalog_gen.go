@@ -476,16 +476,6 @@ func (msgs Messages) BuiltWithOnevraPoweredByMygoWrittenInGo() string {
 	return Catalog.Format(msgs.locale, "builtWithOnevraPoweredByMygoWrittenInGo", nil)
 }
 
-// Bullet says "•"
-// in the language the app shows.
-func Bullet() string { return In(i18n.Locale()).Bullet() }
-
-// Bullet says "•"
-// in the language of msgs.
-func (msgs Messages) Bullet() string {
-	return Catalog.Format(msgs.locale, "bullet", nil)
-}
-
 // Buttons says "Buttons"
 // in the language the app shows.
 func Buttons() string { return In(i18n.Locale()).Buttons() }
@@ -6008,6 +5998,16 @@ func NavigationMyGo() string { return In(i18n.Locale()).NavigationMyGo() }
 // in the language of msgs.
 func (msgs Messages) NavigationMyGo() string {
 	return Catalog.Format(msgs.locale, "navigationMyGo", nil)
+}
+
+// OfficialComponents says "Official components"
+// in the language the app shows.
+func OfficialComponents() string { return In(i18n.Locale()).OfficialComponents() }
+
+// OfficialComponents says "Official components"
+// in the language of msgs.
+func (msgs Messages) OfficialComponents() string {
+	return Catalog.Format(msgs.locale, "officialComponents", nil)
 }
 
 // CodeEditorLabel says "Source code"

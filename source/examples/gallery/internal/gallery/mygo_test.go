@@ -92,15 +92,9 @@ func TestMyGoGroupedNavigation(t *testing.T) {
 		texts = texts[i+1:]
 	}
 	for _, group := range navigationGroups {
-		consume(group)
 		for _, entry := range controlCatalog {
-			if entry.group == group {
+			if entry.group == group && !newPages["controls/"+entry.name] {
 				consume(entry.label)
-			}
-		}
-		for _, entry := range mygoCatalog {
-			if entry.group == group {
-				consume(entry.name)
 			}
 		}
 	}
@@ -109,6 +103,48 @@ func TestMyGoGroupedNavigation(t *testing.T) {
 	}
 	if entry, ok := controlExampleFor(g.page); !ok || entry.name != "Tooltip" {
 		t.Fatal("grouping changed route identity")
+	}
+	// MyGo pages share one sidebar entry and switch through its in-page list.
+	if err := tt.Click("Official components"); err != nil {
+		t.Fatal(err)
+	}
+	if g.page != mygoNavigationGroups()[0].entries[0].page {
+		t.Fatalf("MyGo entry opened page %d", g.page)
+	}
+	view := ui.NewTester(g.View, 900, 5000)
+	texts = view.Texts()
+	for _, group := range mygoNavigationGroups() {
+		consume(group.label)
+		for _, entry := range group.entries {
+			consume(entry.label)
+		}
+	}
+	if err := view.Click("Code editor"); err != nil {
+		t.Fatal(err)
+	}
+	if example, ok := mygoExampleFor(g.page); !ok || example.name != "Code editor" {
+		t.Fatal("in-page list selected wrong page")
+	}
+	view.Frame()
+	if err := tt.Click("Lucide"); err != nil {
+		t.Fatal(err)
+	}
+	if err := tt.Click("Official components"); err != nil {
+		t.Fatal(err)
+	}
+	if example, ok := mygoExampleFor(g.page); !ok || example.name != "Code editor" {
+		t.Fatal("MyGo entry must reopen the page last shown")
+	}
+}
+
+func TestMyGoNarrowSelector(t *testing.T) {
+	g := &Gallery{page: pageFromKey("mygo/Code editor")}
+	tt := ui.NewTester(g.View, 480, 600)
+	if tt.HasText("Diff viewer") {
+		t.Fatal("narrow content must replace the in-page list with a selector")
+	}
+	if _, ok := tt.Find("Official components"); !ok {
+		t.Fatal("missing page selector")
 	}
 }
 

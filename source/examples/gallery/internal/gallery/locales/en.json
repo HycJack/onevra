@@ -67,7 +67,6 @@
   "builtWithMygo": "Built with MyGo",
   "builtWithOnevra": "Built with Onevra",
   "builtWithOnevraPoweredByMygoWrittenInGo": "Built with Onevra · Powered by MyGo · Written in Go",
-  "bullet": "•",
   "buttons": "Buttons",
   "cancel": "Cancel",
   "cancelled": "Cancelled",
@@ -893,6 +892,7 @@
   "groupGames": "Games",
   "newComponents": "New components",
   "navigationMyGo": "MyGo",
+  "officialComponents": "Official components",
   "codeEditorLabel": "Source code",
   "codeEditorPosition": "Line {line}, column {column}",
   "@codeEditorPosition": {
