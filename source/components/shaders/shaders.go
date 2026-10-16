@@ -54,6 +54,9 @@ type ripple struct {
 	at   time.Time
 }
 
+// stateKey keys a background's state on its element.
+type stateKey struct{}
+
 // state is what a background keeps between frames, on its element.
 type state struct {
 	start         time.Time
@@ -61,6 +64,7 @@ type state struct {
 	next          int
 	lastX, lastY  float32
 	seenPointer   bool
+	rippling      bool
 	values        *shader.Values
 	rippleUniform [MaxRipples * 4]float32
 }
@@ -98,6 +102,19 @@ type effect struct {
 	defaultColor                                        func(ui.Theme) ui.Color
 }
 
+// Ripple ripples background, an element a background function returned, where
+// the pointer last was over it, as a click there does. Content that takes the
+// pointer's input itself, such as components.Honeycomb with its OnPress,
+// hides its presses from the background, and calls Ripple for them. It does
+// nothing where the background skips ripples.
+func Ripple(c *ui.Context, background ui.Element) {
+	s := ui.Local(background, stateKey{}, func() state { return state{} })
+	if s == nil || !s.rippling || !s.seenPointer {
+		return
+	}
+	s.press(s.lastX, s.lastY, c.Now())
+}
+
 func newEffect(key, source string, defaultColor func(ui.Theme) ui.Color) *effect {
 	sh := shader.MustCompile(source)
 	return &effect{
@@ -110,7 +127,7 @@ func newEffect(key, source string, defaultColor func(ui.Theme) ui.Color) *effect
 func (fx *effect) build(c *ui.Context, o Options) ui.Element {
 	t := c.Theme()
 	root := ui.Box(c).Key(fx.key).Fill().MinWidth(0).MinHeight(0).Clip()
-	s := ui.Local(root, fx.key, func() state { return state{values: fx.shader.NewValues()} })
+	s := ui.Local(root, stateKey{}, func() state { return state{values: fx.shader.NewValues()} })
 	reduce := c.Preferences().ReduceMotion
 
 	color, accent := o.Color, o.Accent
@@ -129,6 +146,7 @@ func (fx *effect) build(c *ui.Context, o Options) ui.Element {
 	}
 
 	var px, py, presence float32
+	s.rippling = !o.Inert && !reduce
 	if !o.Inert {
 		x, y, over := root.PointerPosition()
 		if over {
@@ -152,8 +170,10 @@ func (fx *effect) build(c *ui.Context, o Options) ui.Element {
 			target = 1
 		}
 		presence = root.Animate(fx.key+".presence", target, 600*time.Millisecond)
-		if !reduce {
+		if s.rippling {
 			// Clicks on content pass through: the handler only watches.
+			// Content taking its own input hides its presses from it, so
+			// such content reports them with Ripple.
 			root.HandleInput(func(ev ui.InputEvent) bool {
 				if ev.Kind == ui.InputPointerDown && ev.Button == 0 {
 					s.press(ev.X, ev.Y, ev.Time)

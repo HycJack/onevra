@@ -41,6 +41,11 @@ type HoneycombOptions struct {
 	// SelectedLabel names the selected item for assistive technology and
 	// tests; the others are named by their own labels.
 	SelectedLabel string
+	// OnPress runs as the honeycomb is built after the primary button goes
+	// down on it. The honeycomb takes the press for its pan and choice, so
+	// it does not reach elements around it, such as a background that
+	// ripples where the pointer presses.
+	OnPress func()
 }
 
 const (
@@ -173,6 +178,12 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 		}
 	}
 	p.ready = true
+	if p.pressedNow {
+		p.pressedNow = false
+		if options.OnPress != nil {
+			options.OnPress()
+		}
+	}
 	if p.clicked != "" {
 		if i := slices.IndexFunc(options.Items, func(item HoneycombItem) bool { return item.ID == p.clicked }); i >= 0 {
 			chosen = p.choose(options.Items[i].ID, p.cells[i], now)
@@ -380,6 +391,7 @@ type honeycombPan struct {
 	duration       time.Duration
 	ease           ui.Easing
 	pressed        bool
+	pressedNow     bool
 	released       bool
 	lastX, lastY   float32
 	travel, vx, vy float32
@@ -419,6 +431,7 @@ func (p *honeycombPan) input(ev ui.InputEvent) bool {
 		}
 		// A press catches a moving honeycomb.
 		p.pressed, p.gliding = true, false
+		p.pressedNow = true
 		p.lastX, p.lastY, p.travel, p.vx, p.vy, p.moved = ev.X, ev.Y, 0, 0, 0, ev.Time
 	case ui.InputPointerMove:
 		if !p.pressed {

@@ -17,7 +17,7 @@ func TestRippleWithoutTakingClicks(t *testing.T) {
 	tt := ui.NewTester(func(c *ui.Context) {
 		theme.Apply(c)
 		bg := SignalField(c, Options{})
-		s = ui.Local(bg, signalField.key, func() state { return state{} })
+		s = ui.Local(bg, stateKey{}, func() state { return state{} })
 		bg.Children(func() {
 			ui.Column(c).Padding(40).Children(func() {
 				if components.Button(c, "Start", components.ButtonPrimary).Clicked() {
@@ -45,6 +45,44 @@ func TestRippleWithoutTakingClicks(t *testing.T) {
 	}
 }
 
+// Content taking its own input, such as a Honeycomb, hides its presses from
+// the background, and reports them with Ripple.
+func TestRippleForContentTakingItsInput(t *testing.T) {
+	var s *state
+	selected := "a"
+	tt := ui.NewTester(func(c *ui.Context) {
+		theme.Apply(c)
+		bg := SignalField(c, Options{})
+		s = ui.Local(bg, stateKey{}, func() state { return state{} })
+		bg.Children(func() {
+			items := []components.HoneycombItem{{ID: "a", Label: "A"}, {ID: "b", Label: "B"}}
+			if id := components.Honeycomb(c, components.HoneycombOptions{Items: items, Selected: selected,
+				OnPress: func() { Ripple(c, bg) }}); id != "" {
+				selected = id
+			}
+		})
+	}, 400, 300)
+	tt.Frame()
+	r, ok := tt.Find("B")
+	if !ok {
+		t.Fatal("no item B")
+	}
+	x, y := r.X+r.W/2, r.Y+r.H/2
+	tt.Move(x, y)
+	if err := tt.Click("B"); err != nil {
+		t.Fatal(err)
+	}
+	if selected != "b" {
+		t.Fatalf("honeycomb chose %q", selected)
+	}
+	if live := s.liveRipples(tt.Now()); live != 1 {
+		t.Fatalf("%d live ripples, want 1", live)
+	}
+	if r := s.ripples[0]; r.x != x || r.y != y {
+		t.Fatalf("ripple at %v, %v, want %v, %v", r.x, r.y, x, y)
+	}
+}
+
 func TestRipplesReplaceTheOldest(t *testing.T) {
 	var s state
 	now := time.Unix(100, 0)
@@ -69,7 +107,7 @@ func TestInertAndReducedMotionSkipRipples(t *testing.T) {
 			var s *state
 			tt := ui.NewTester(func(c *ui.Context) {
 				bg := SignalField(c, tc.o)
-				s = ui.Local(bg, signalField.key, func() state { return state{} })
+				s = ui.Local(bg, stateKey{}, func() state { return state{} })
 			}, 200, 200)
 			tt.SetPreferences(ui.Preferences{ReduceMotion: tc.reduce})
 			tt.ClickAt(100, 100)
