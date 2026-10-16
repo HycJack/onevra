@@ -338,3 +338,31 @@ func TestSettingsItemSlots(t *testing.T) {
 		}
 	}
 }
+
+func TestSettingsCloseButton(t *testing.T) {
+	state := SettingsState{}
+	closed := 0
+	tt := ui.NewTester(func(c *ui.Context) {
+		Settings(c, &state, settingsFixture(), SettingsOptions{Close: func() { closed++ }})
+	}, 800, 600)
+	tt.Frame()
+	if err := tt.Click("Close settings"); err != nil {
+		t.Fatal(err)
+	}
+	if closed != 1 {
+		t.Fatalf("close button calls = %d", closed)
+	}
+	// The button is opt-in and its label is overridable.
+	tt = ui.NewTester(func(c *ui.Context) { Settings(c, &state, settingsFixture(), SettingsOptions{}) }, 800, 600)
+	tt.Frame()
+	if _, ok := tt.Find("Close settings"); ok {
+		t.Fatal("close button shown without a callback")
+	}
+	tt = ui.NewTester(func(c *ui.Context) {
+		Settings(c, &state, settingsFixture(), SettingsOptions{Close: func() {}, CloseLabel: "Dismiss"})
+	}, 800, 600)
+	tt.Frame()
+	if _, ok := tt.Find("Dismiss"); !ok {
+		t.Fatal("close label override missing")
+	}
+}

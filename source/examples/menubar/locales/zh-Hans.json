@@ -3,7 +3,6 @@
   "title": "Onevra 菜单栏应用",
   "description": "记录你的想法。在设置中选择应用的启动与关闭行为。",
   "settings": "设置…",
-  "closeSettings": "关闭设置",
   "quit": "退出",
   "open": "打开主窗口",
   "panelTitle": "速记",

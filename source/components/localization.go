@@ -50,6 +50,7 @@ type localization struct {
 	SettingsCategory          string
 	SearchResults             string
 	NoSettings                string
+	CloseSettings             string
 	CloseToast                string
 	Weekdays                  [7]string
 
@@ -80,7 +81,8 @@ func localized(c *ui.Context) localization {
 		{&words.LightnessPercent, "lightnessPercent"}, {&words.Settings, "settings"},
 		{&words.SearchSettings, "searchSettings"}, {&words.SearchSettingsPlaceholder, "searchSettingsPlaceholder"},
 		{&words.SettingsCategory, "settingsCategory"}, {&words.SearchResults, "searchResults"},
-		{&words.NoSettings, "noSettings"}, {&words.CloseToast, "closeToast"},
+		{&words.NoSettings, "noSettings"}, {&words.CloseSettings, "closeSettings"},
+		{&words.CloseToast, "closeToast"},
 	} {
 		*field.value = m.Text(field.key)
 	}

@@ -11,6 +11,7 @@ User-facing updates for Onevra library consumers.
 - Add `command.Options.Filter` and `command.State.Focus`.
 - Return command results to the top when they change.
 - Add `HideSearch` and `HideSidebar` to `components.SettingsOptions`.
+- Add `components.SettingsOptions.Close`.
 - Add `Leading`, `Stacked` and `Content` to `components.SettingsItem`.
 - Change the default `sidebar.ShellOptions` window height and minimum height to 740.
 

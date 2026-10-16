@@ -146,40 +146,61 @@ func (a *application) selectSetting(c *ui.Context, value *string, label string, 
 }
 
 func (a *application) settingsView(c *ui.Context, width float32) {
-	items := []components.SettingsItem{
-		{ID: "language", Title: a.text("language"), Keywords: []string{"English", "中文"}, Build: func(c *ui.Context) {
-			a.selectSetting(c, &a.config.Language, "language", []string{"system", "en", "zh-Hans"})
-		}},
-		{ID: "appearance", Title: a.text("appearance"), Build: func(c *ui.Context) {
-			a.selectSetting(c, &a.config.Appearance, "appearance", []string{"system", "light", "dark"})
-		}},
-	}
+	categories := []components.SettingsCategory{{
+		ID: "general", Title: a.text("general"), Section: a.text("application"), Icon: lucide.Settings(),
+		Groups: []components.SettingsGroup{{ID: "preferences", Items: []components.SettingsItem{
+			{ID: "language", Title: a.text("language"), Keywords: []string{"English", "中文"}, Build: func(c *ui.Context) {
+				a.selectSetting(c, &a.config.Language, "language", []string{"system", "en", "zh-Hans"})
+			}},
+			{ID: "appearance", Title: a.text("appearance"), Keywords: []string{"theme", "light", "dark"}, Build: func(c *ui.Context) {
+				a.selectSetting(c, &a.config.Appearance, "appearance", []string{"system", "light", "dark"})
+			}},
+		}}},
+	}}
+	var window []components.SettingsItem
 	if appKind != "menubar" {
 		choices := []string{"quit"}
 		if runtime.GOOS == "darwin" {
 			choices = []string{"dock", "quit"}
 		}
 		if len(choices) > 1 {
-			items = append(items, components.SettingsItem{ID: "close", Title: a.text("closeAction"), Build: func(c *ui.Context) { a.selectSetting(c, &a.config.CloseAction, "closeAction", choices) }})
+			window = append(window, components.SettingsItem{ID: "close", Title: a.text("closeAction"), Build: func(c *ui.Context) { a.selectSetting(c, &a.config.CloseAction, "closeAction", choices) }})
 		}
 	}
 	if appKind != "desktop" {
-		items = append(items, components.SettingsItem{ID: "panel", Title: a.text("panel"), Description: a.text("panelHint"), Build: func(c *ui.Context) {
+		window = append(window, components.SettingsItem{ID: "panel", Title: a.text("panel"), Description: a.text("panelHint"), Build: func(c *ui.Context) {
 			if components.Switch(c, &a.config.Panel, a.text("panel"), components.SwitchOptions{HideLabel: true}).Changed() {
 				a.changed()
 			}
 		}})
 	}
+	if len(window) > 0 {
+		categories = append(categories, components.SettingsCategory{
+			ID: "window", Title: a.text("window"), Section: a.text("application"), Icon: lucide.AppWindow(),
+			Groups: []components.SettingsGroup{{ID: "behavior", Items: window}},
+		})
+	}
+	categories = append(categories, components.SettingsCategory{
+		ID: "about", Title: a.text("about"), Section: a.text("information"), Icon: lucide.Info(),
+		Groups: []components.SettingsGroup{{ID: "about", Items: []components.SettingsItem{{
+			ID: "about", Title: a.text("title"), Description: a.text("description"),
+			Content: func(c *ui.Context) {
+				t := c.Theme()
+				ui.Column(c).FillWidth().MinWidth(0).AlignItems(ui.Center).Gap(t.Space(2)).Padding(t.Space(4), 0).Children(func() {
+					components.Text(c, a.text("title")).Bold().FontSize(t.Rem(1.25))
+					components.Text(c, a.text("description")).TextColor(t.TextMuted).Wrap()
+				})
+			},
+		}}}},
+	})
 	ui.Column(c).Fill().Children(func() {
-		components.Settings(c, &a.settingsState, []components.SettingsCategory{{ID: "general", Title: a.text("general"), Groups: []components.SettingsGroup{{ID: "preferences", Items: items}}}}, components.SettingsOptions{
-			Narrow: width < 620, HideSearch: true, HideSidebar: true,
-			HeaderActions: func(c *ui.Context) {
-				if components.IconButton(c, lucide.X(), a.text("closeSettings"), components.IconButtonPlain).Clicked() {
-					if appKind == "menubar" {
-						a.settings.Close()
-					} else {
-						a.settingsOpen = false
-					}
+		components.Settings(c, &a.settingsState, categories, components.SettingsOptions{
+			Narrow: width < 620,
+			Close: func() {
+				if appKind == "menubar" {
+					a.settings.Close()
+				} else {
+					a.settingsOpen = false
 				}
 			},
 		})

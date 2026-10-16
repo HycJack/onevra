@@ -626,16 +626,6 @@ func (msgs Messages) Close() string {
 	return Catalog.Format(msgs.locale, "close", nil)
 }
 
-// CloseSettings says "Close settings"
-// in the language the app shows.
-func CloseSettings() string { return In(i18n.Locale()).CloseSettings() }
-
-// CloseSettings says "Close settings"
-// in the language of msgs.
-func (msgs Messages) CloseSettings() string {
-	return Catalog.Format(msgs.locale, "closeSettings", nil)
-}
-
 // CloudRain says "Cloud rain"
 // in the language the app shows.
 func CloudRain() string { return In(i18n.Locale()).CloudRain() }

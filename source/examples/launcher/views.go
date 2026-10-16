@@ -5,7 +5,6 @@ import (
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
 	"github.com/oneo-me/onevra/source/components/command"
-	"github.com/oneo-me/onevra/source/icons/lucide"
 	"github.com/oneo-me/onevra/source/theme"
 )
 
@@ -86,11 +85,7 @@ func (a *application) settingsView(c *ui.Context, width float32) {
 	ui.Column(c).Fill().Children(func() {
 		components.Settings(c, &a.settingsState, []components.SettingsCategory{{ID: "general", Title: a.text("general"), Groups: []components.SettingsGroup{{ID: "preferences", Items: items}}}}, components.SettingsOptions{
 			Narrow: width < 620, HideSearch: true, HideSidebar: true,
-			HeaderActions: func(c *ui.Context) {
-				if components.IconButton(c, lucide.X(), a.text("closeSettings"), components.IconButtonPlain).Clicked() {
-					a.settings.Hide()
-				}
-			},
+			Close: func() { a.settings.Hide() },
 		})
 		a.feedback(c)
 	})

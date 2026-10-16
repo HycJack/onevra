@@ -3,7 +3,6 @@
   "title": "Onevra Desktop",
   "description": "A small space for your ideas. Open Settings to choose how the app starts and closes.",
   "settings": "Settings…",
-  "closeSettings": "Close settings",
   "quit": "Quit",
   "open": "Open main window",
   "panelTitle": "Quick note",
@@ -32,6 +31,9 @@
   "panel": "Enable quick note panel",
   "panelHint": "When disabled, left-click opens Settings.",
   "general": "General",
+  "window": "Window",
+  "application": "Application",
+  "information": "Information",
   "loadError": "Could not read preferences. Using defaults.",
   "saveError": "Could not save preferences. Changes apply for this session.",
   "trayError": "The menu bar icon is unavailable. Keep this window open or quit the app."

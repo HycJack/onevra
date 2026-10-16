@@ -3,7 +3,6 @@
   "title": "Onevra 普通应用",
   "description": "记录你的想法。在设置中选择应用的启动与关闭行为。",
   "settings": "设置…",
-  "closeSettings": "关闭设置",
   "quit": "退出",
   "open": "打开主窗口",
   "panelTitle": "速记",
@@ -32,6 +31,9 @@
   "panel": "启用速记面板",
   "panelHint": "关闭后，左键点击图标打开设置。",
   "general": "通用",
+  "window": "窗口",
+  "application": "应用",
+  "information": "信息",
   "loadError": "无法读取偏好设置，已使用默认值。",
   "saveError": "无法保存偏好设置。更改仅在本次运行期间生效。",
   "trayError": "菜单栏图标不可用。请保留此窗口，或退出应用。"

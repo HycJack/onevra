@@ -78,11 +78,7 @@ func (g *Gallery) settingsLocalized(c *ui.Context) {
 		panel.Width(width).Height(min(t.Space(180), h*.85)).Padding(0).Gap(0).Clip()
 		components.Settings(c, &g.settings.view, g.settingsCategories(), components.SettingsOptions{
 			Narrow: width < t.Space(170), HideSearch: g.settings.hideSearch, HideSidebar: g.settings.hideSidebar,
-			HeaderActions: func(c *ui.Context) {
-				if sidebar.IconButton(c, lucide.X(), tr(c, "closeSettings")).Clicked() {
-					g.settings.open = false
-				}
-			},
+			Close: func() { g.settings.open = false },
 		})
 	})
 }

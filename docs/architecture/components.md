@@ -118,7 +118,7 @@ Settings owns navigation, searchable presentation and the default row layout, in
 
 Small surfaces can omit search or navigation. Without navigation, every category appears on one page, so an application that wants its own navigation passes only the selected category.
 
-Search spans all categories using metadata rather than building hidden controls. Results retain category and group context and allow editing in place; clearing search restores the selected category. Hosts can reuse the same metadata search without rendering the settings surface. Dialog and standalone-window lifecycles remain application-owned. See the [compilable examples](../../source/components/settings_example_test.go) for composition.
+Search spans all categories using metadata rather than building hidden controls. Results retain category and group context and allow editing in place; clearing search restores the selected category. Hosts can reuse the same metadata search without rendering the settings surface. Dialog and standalone-window lifecycles remain application-owned; a host may have Settings draw a close button whose action the host still owns. See the [compilable examples](../../source/components/settings_example_test.go) for composition.
 
 ## Dialog composition
 

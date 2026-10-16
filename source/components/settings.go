@@ -76,8 +76,13 @@ type SettingsItem struct {
 type SettingsOptions struct {
 	Narrow                                                                        bool
 	Title, SearchLabel, SearchPlaceholder, CategoryLabel, ResultsTitle, EmptyText string
-	// HeaderActions builds optional trailing actions, such as a dialog close button.
+	// HeaderActions builds optional trailing actions beside the close button.
 	HeaderActions func(c *ui.Context)
+	// Close, when set, shows a trailing close button that calls it, for hosts
+	// that present Settings in a dialog or window. CloseLabel overrides its
+	// accessible name; empty uses Onevra's catalog. Nil omits the button.
+	Close      func()
+	CloseLabel string
 	// HideSearch removes the search field; Query is then ignored.
 	HideSearch bool
 	// HideSidebar removes category navigation, both the sidebar and the narrow
@@ -146,6 +151,9 @@ func Settings(c *ui.Context, state *SettingsState, categories []SettingsCategory
 	if opts.EmptyText == "" {
 		opts.EmptyText = words.NoSettings
 	}
+	if opts.CloseLabel == "" {
+		opts.CloseLabel = words.CloseSettings
+	}
 	selected := -1
 	for i, category := range categories {
 		if category.ID == state.Category {
@@ -172,8 +180,15 @@ func Settings(c *ui.Context, state *SettingsState, categories []SettingsCategory
 		ui.Row(c).FillWidth().MinHeight(t.Space(14)).Shrink(0).Padding(t.Space(3), t.Space(4)).Gap(t.Space(2)).Children(func() {
 			Text(c, title).Bold()
 			ui.Spacer(c)
-			if actions && opts.HeaderActions != nil {
-				opts.HeaderActions(c)
+			if actions {
+				if opts.HeaderActions != nil {
+					opts.HeaderActions(c)
+				}
+				if opts.Close != nil {
+					if IconButton(c, lucide.X(), opts.CloseLabel, IconButtonPlain).Clicked() {
+						opts.Close()
+					}
+				}
 			}
 		})
 	}

@@ -134,16 +134,6 @@ func (msgs Messages) SettingsTitle() string {
 	return Catalog.Format(msgs.locale, "settingsTitle", nil)
 }
 
-// CloseSettings says "Close settings"
-// in the language the app shows.
-func CloseSettings() string { return In(i18n.Locale()).CloseSettings() }
-
-// CloseSettings says "Close settings"
-// in the language of msgs.
-func (msgs Messages) CloseSettings() string {
-	return Catalog.Format(msgs.locale, "closeSettings", nil)
-}
-
 // Quit says "Quit"
 // in the language the app shows.
 func Quit() string { return In(i18n.Locale()).Quit() }

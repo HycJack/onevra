@@ -64,16 +64,6 @@ func (msgs Messages) Settings() string {
 	return Catalog.Format(msgs.locale, "settings", nil)
 }
 
-// CloseSettings says "Close settings"
-// in the language the app shows.
-func CloseSettings() string { return In(i18n.Locale()).CloseSettings() }
-
-// CloseSettings says "Close settings"
-// in the language of msgs.
-func (msgs Messages) CloseSettings() string {
-	return Catalog.Format(msgs.locale, "closeSettings", nil)
-}
-
 // Quit says "Quit"
 // in the language the app shows.
 func Quit() string { return In(i18n.Locale()).Quit() }
@@ -352,6 +342,36 @@ func General() string { return In(i18n.Locale()).General() }
 // in the language of msgs.
 func (msgs Messages) General() string {
 	return Catalog.Format(msgs.locale, "general", nil)
+}
+
+// Window says "Window"
+// in the language the app shows.
+func Window() string { return In(i18n.Locale()).Window() }
+
+// Window says "Window"
+// in the language of msgs.
+func (msgs Messages) Window() string {
+	return Catalog.Format(msgs.locale, "window", nil)
+}
+
+// Application says "Application"
+// in the language the app shows.
+func Application() string { return In(i18n.Locale()).Application() }
+
+// Application says "Application"
+// in the language of msgs.
+func (msgs Messages) Application() string {
+	return Catalog.Format(msgs.locale, "application", nil)
+}
+
+// Information says "Information"
+// in the language the app shows.
+func Information() string { return In(i18n.Locale()).Information() }
+
+// Information says "Information"
+// in the language of msgs.
+func (msgs Messages) Information() string {
+	return Catalog.Format(msgs.locale, "information", nil)
 }
 
 // LoadError says "Could not read preferences. Using defaults."
