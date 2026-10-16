@@ -18,7 +18,7 @@ func ExampleCommandDialog() {
 	}
 	items := []command.Item{{ID: "settings", Title: "Settings", Keywords: []string{"preferences"}}}
 	view := func(c *ui.Context) {
-		if c.Shortcut(ui.Cmd, ui.KeyE) {
+		if c.Shortcut(ui.Cmd, ui.KeyF) {
 			open = true
 		}
 		command.CommandDialog(c, &open, &state, items, command.Options{

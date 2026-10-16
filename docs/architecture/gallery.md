@@ -28,7 +28,7 @@ Onevra previews omit disabled variants. Closely related components, such as the 
 
 ### Commands and settings
 
-Command+E on macOS, Ctrl+E elsewhere, and the sidebar search button open the public command component. It searches localized page names and English aliases, navigates to pages and opens Settings. Opening clears the query; activation closes the palette. Shortcuts remain window-local and wait behind modal surfaces.
+Command+F on macOS, Ctrl+F elsewhere, and the sidebar search button open the public command component. It searches localized page names and English aliases, navigates to pages and opens Settings. Opening clears the query; activation closes the palette. Shortcuts remain window-local and wait behind modal surfaces.
 
 Settings controls whether results appear immediately or after a search. On macOS, optional ABC selection applies while searching and restores the preceding input source on dismissal, preserving a different source manually chosen while open. Search state stays in memory.
 

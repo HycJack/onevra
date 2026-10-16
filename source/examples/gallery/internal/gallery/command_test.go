@@ -10,7 +10,7 @@ func TestCommandShortcutAndNavigation(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.View, 820, 600)
 	mods, _ := commandShortcut()
-	tt.Key(mods, ui.KeyE)
+	tt.Key(mods, ui.KeyF)
 	if !g.commands.open || !tt.Focused("Command palette") {
 		t.Fatal("opening shortcut did not focus command search")
 	}
@@ -19,7 +19,7 @@ func TestCommandShortcutAndNavigation(t *testing.T) {
 	if g.commands.open || pageKey(g.page) != "controls/TextBox" {
 		t.Fatalf("command navigation: %s", pageKey(g.page))
 	}
-	tt.Key(mods, ui.KeyE)
+	tt.Key(mods, ui.KeyF)
 	if g.commands.palette.Query != "" {
 		t.Fatal("gallery did not reset search on reopening")
 	}
@@ -28,7 +28,7 @@ func TestCommandShortcutAndNavigation(t *testing.T) {
 	if !g.settings.open || g.commands.open {
 		t.Fatal("settings command did not hand over dialog")
 	}
-	tt.Key(mods, ui.KeyE)
+	tt.Key(mods, ui.KeyF)
 	if g.commands.open {
 		t.Fatal("shortcut escaped settings modal")
 	}
@@ -53,7 +53,7 @@ func TestCommandLanguageAndSidebarShortcut(t *testing.T) {
 		t.Fatal("closing palette did not restore trigger focus")
 	}
 	mods, _ := commandShortcut()
-	tt.Key(mods, ui.KeyE)
+	tt.Key(mods, ui.KeyF)
 	if !g.commands.open {
 		t.Fatal("shortcut did not reopen from sidebar trigger")
 	}

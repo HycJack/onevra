@@ -96,7 +96,7 @@ func TestCommandPhysicalShortcut(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.View, 820, 600)
 	mods, _ := commandShortcut()
-	tt.KeyAt(mods, ui.KeyE)
+	tt.KeyAt(mods, ui.KeyF)
 	if !g.commands.open || !tt.Focused("Command palette") {
 		t.Fatal("non-Latin physical shortcut did not open command search")
 	}

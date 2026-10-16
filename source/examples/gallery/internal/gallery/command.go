@@ -16,9 +16,9 @@ type commandState struct {
 
 func commandShortcut() (ui.Modifiers, string) {
 	if runtime.GOOS == "darwin" {
-		return ui.Cmd, "⌘E"
+		return ui.Cmd, "⌘F"
 	}
-	return ui.Ctrl, "Ctrl+E"
+	return ui.Ctrl, "Ctrl+F"
 }
 
 func (g *Gallery) openCommands() {
@@ -31,7 +31,7 @@ func (g *Gallery) openCommands() {
 // Shortcuts are scoped to this window and wait behind other modal surfaces.
 func (g *Gallery) Commands(c *ui.Context) {
 	mods, _ := commandShortcut()
-	if c.Shortcut(mods, ui.KeyE) {
+	if c.Shortcut(mods, ui.KeyF) {
 		g.openCommands()
 	}
 	if !g.commands.open {
