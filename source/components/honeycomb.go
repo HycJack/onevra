@@ -30,7 +30,8 @@ type HoneycombItem struct {
 // HoneycombOptions configures a Honeycomb.
 type HoneycombOptions struct {
 	// Items keep their order from frame to frame: each takes the cell of its
-	// position, so a reordered list moves them around.
+	// position, so a reordered list moves them around. They slide to their new
+	// cells, fading in and out, as items are added and removed.
 	Items []HoneycombItem
 	// Selected is the chosen item's ID, which the honeycomb pans to center.
 	Selected string
@@ -145,14 +146,19 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 		return ""
 	}
 	p := ui.Local(view, honeycombPanKey{}, func() honeycombPan { return honeycombPan{} })
-	if len(p.cells) != n || p.spacing != m.spacing {
+	now := c.Now()
+	// A new spacing scales the whole honeycomb at once; items added or removed
+	// slide the others to their cells as the pan glides to the selected one.
+	rescaled := p.spacing != m.spacing
+	if len(p.cells) != n || rescaled {
 		p.cells, p.spacing = honeycombCells(n, m.spacing), m.spacing
-		if p.ready {
+		if p.ready && rescaled {
 			p.at, p.gliding = p.cells[selected], false
+		} else if p.ready && !p.pressed {
+			p.glide(p.cells[selected], now, honeycombDuration, ui.EaseInOut)
 		}
 	}
 	p.lo, p.hi = honeycombBounds(p.cells)
-	now := c.Now()
 	reduce := c.Preferences().ReduceMotion
 	chosen := ""
 	if options.Selected != p.selected {
@@ -207,10 +213,23 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 			view.Cursor(ui.CursorGrabbing)
 		}
 	}
+	// The view's size is the last frame's layout, which the first frame lacks:
+	// it hides the items rather than show them fading at a guessed edge, and
+	// builds again once laid out. The items hang from the middle of the view,
+	// so a resize keeps them centered; their fading at its edge follows a frame
+	// later.
 	width, height := m.width, m.height
-	if r := view.Bounds(); r.W > 0 {
+	if r := view.LayoutBounds(); r.W > 0 {
 		width, height = r.W, r.H
+	} else {
+		view.Invisible()
+		c.AnimationFrame()
 	}
+	view.Draw(func(_ *ui.Painter, r ui.Rect) {
+		if r.W != width || r.H != height {
+			c.Invalidate()
+		}
+	})
 	// Within honeycombEdge of the edge, items shrink and fade out; the inset is
 	// less in a view too small for it.
 	edge := min(m.edge, width/2, height/2)
@@ -218,82 +237,97 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 	accent := c.Theme().Accent
 	p.hits = p.hits[:0]
 	view.Children(func() {
-		for i, item := range options.Items {
-			dx, dy := p.cells[i].x-p.at.x, p.cells[i].y-p.at.y
-			d := float32(math.Hypot(float64(dx), float64(dy)))
-			cx, cy := width/2, height/2
-			if d > 0 {
-				f := m.magnified(d) / d
-				cx, cy = cx+dx*f, cy+dy*f
-			}
-			// How far into the inset along the edge, rounded at the corners as
-			// on a watch face, from 0 inside it to 1 at the edge.
-			ox, oy := max(edge-cx, cx-width+edge, 0), max(edge-cy, cy-height+edge, 0)
-			out := min(float32(math.Hypot(float64(ox), float64(oy)))/max(edge, 1), 1)
-			size := m.tiny + (m.size(d)-m.tiny)*(1-out)
-			opacity := 1 - honeycombRamp(out, .35, .85)
-			label := item.Label
-			if i == selected && options.SelectedLabel != "" {
-				label = options.SelectedLabel
-			}
-			// Every item keeps its button, faded out or not, so the keyboard
-			// reaches each one and pans the honeycomb to it.
-			b := ui.ButtonBase(c).Key(item.ID).Label(label).Background(ui.Color{})
-			// Round cells, as on a watch face, but not clipped: a rounded clip
-			// under the ball's transform would take a mask the GPU makes anew
-			// every frame. Items draw their own circle instead.
-			b.Absolute().Left(cx-size/2).Top(cy-size/2).Size(size, size)
-			// Turn the item on the ball's surface, so dragging pans over it.
-			b.Transform(honeycombBall(dx, dy, m.tiltAt(d)))
-			// The ring passes from item to item as the honeycomb pans. It is
-			// painted over the item rather than set as a border, which would
-			// take room within the cell and push the item off center.
-			ringTarget := float32(0)
-			if i == middle {
-				ringTarget = 1
-			}
-			ring := b.AnimateWith(honeycombRingKey{}, ringTarget, honeycombDuration/2, ui.EaseInOut)
-			color := accent
-			if item.Ring.A > 0 {
-				color = item.Ring
-			}
-			b.DrawOver(func(p *ui.Painter, r ui.Rect) {
-				if col := color.Alpha(ring * honeycombRingOpacity); col.A > 0 {
-					p.Stroke(r, col, r.W/2, m.ring)
+		// Items hang from the middle of the view, wherever the layout puts it.
+		ui.Box(c).Absolute().LeftPercent(50).TopPercent(50).Size(0, 0).Children(func() {
+			for i, item := range options.Items {
+				// Every item keeps its button, faded out or not, so the keyboard
+				// reaches each one and pans the honeycomb to it. Items fade in
+				// and out as they are added and removed.
+				b := ui.ButtonBase(c).Key(item.ID).Background(ui.Color{})
+				b.Transition(ui.ElementTransition{Duration: honeycombDuration, Ease: ui.EaseInOut, Colors: true,
+					Enter: &ui.Motion{Scale: .5}, Exit: &ui.Motion{Scale: .5}})
+				// The item slides to its cell when items before it come or go.
+				cell := p.cells[i]
+				if rescaled {
+					cell.x, cell.y = b.Jump(honeycombCellKey{0}, cell.x), b.Jump(honeycombCellKey{1}, cell.y)
+				} else {
+					cell.x = b.AnimateWith(honeycombCellKey{0}, cell.x, honeycombDuration, ui.EaseInOut)
+					cell.y = b.AnimateWith(honeycombCellKey{1}, cell.y, honeycombDuration, ui.EaseInOut)
 				}
-			})
-			if i != selected && (b.Hovered() || b.Focused()) {
-				opacity = min(1, opacity+.25)
-			}
-			b.Opacity(opacity)
-			if opacity > .15 {
-				p.hits = append(p.hits, honeycombHit{item.ID, ui.Rect{X: cx - size/2, Y: cy - size/2, W: size, H: size}})
-			}
-			if item.Content != nil {
-				b.Children(func() { item.Content(c, size) })
-			} else {
-				image := item.Image
-				b.Children(func() {
-					Image(c, image).Absolute().Left(0).Top(0).Size(size, size).Fit(ui.Cover).Radius(size / 2)
+				dx, dy := cell.x-p.at.x, cell.y-p.at.y
+				d := float32(math.Hypot(float64(dx), float64(dy)))
+				cx, cy := width/2, height/2
+				if d > 0 {
+					f := m.magnified(d) / d
+					cx, cy = cx+dx*f, cy+dy*f
+				}
+				// How far into the inset along the edge, rounded at the corners as
+				// on a watch face, from 0 inside it to 1 at the edge.
+				ox, oy := max(edge-cx, cx-width+edge, 0), max(edge-cy, cy-height+edge, 0)
+				out := min(float32(math.Hypot(float64(ox), float64(oy)))/max(edge, 1), 1)
+				size := m.tiny + (m.size(d)-m.tiny)*(1-out)
+				opacity := 1 - honeycombRamp(out, .35, .85)
+				label := item.Label
+				if i == selected && options.SelectedLabel != "" {
+					label = options.SelectedLabel
+				}
+				b.Label(label)
+				// Round cells, as on a watch face, but not clipped: a rounded clip
+				// under the ball's transform would take a mask the GPU makes anew
+				// every frame. Items draw their own circle instead.
+				b.Absolute().Left(cx-width/2-size/2).Top(cy-height/2-size/2).Size(size, size)
+				// Turn the item on the ball's surface, so dragging pans over it.
+				b.Transform(honeycombBall(dx, dy, m.tiltAt(d)))
+				// The ring passes from item to item as the honeycomb pans. It is
+				// painted over the item rather than set as a border, which would
+				// take room within the cell and push the item off center.
+				ringTarget := float32(0)
+				if i == middle {
+					ringTarget = 1
+				}
+				ring := b.AnimateWith(honeycombRingKey{}, ringTarget, honeycombDuration/2, ui.EaseInOut)
+				color := accent
+				if item.Ring.A > 0 {
+					color = item.Ring
+				}
+				b.DrawOver(func(p *ui.Painter, r ui.Rect) {
+					if col := color.Alpha(ring * honeycombRingOpacity); col.A > 0 {
+						p.Stroke(r, col, r.W/2, m.ring)
+					}
 				})
-			}
-			if b.Clicked() {
-				// The keyboard or assistive technology; the pointer is the
-				// view's.
-				chosen = p.choose(item.ID, p.cells[i], now)
-			}
-			if b.FocusVisible() {
-				if p.focus != item.ID {
-					p.focus = item.ID
-					p.glide(p.cells[i], now, honeycombDuration, ui.EaseInOut)
+				if i != selected && (b.Hovered() || b.Focused()) {
+					opacity = min(1, opacity+.25)
 				}
-			} else if p.focus == item.ID {
-				// Leaving the items pans back to the chosen one, unless another
-				// item has taken focus already.
-				p.focus = ""
-				p.glide(p.cells[selected], now, honeycombDuration, ui.EaseInOut)
+				b.Opacity(opacity)
+				if opacity > .15 {
+					p.hits = append(p.hits, honeycombHit{item.ID, ui.Rect{X: cx - size/2, Y: cy - size/2, W: size, H: size}})
+				}
+				if item.Content != nil {
+					b.Children(func() { item.Content(c, size) })
+				} else {
+					image := item.Image
+					b.Children(func() {
+						Image(c, image).Absolute().Left(0).Top(0).Size(size, size).Fit(ui.Cover).Radius(size / 2)
+					})
+				}
+				if b.Clicked() {
+					// The keyboard or assistive technology; the pointer is the
+					// view's.
+					chosen = p.choose(item.ID, p.cells[i], now)
+				}
+				if b.FocusVisible() {
+					if p.focus != item.ID {
+						p.focus = item.ID
+						p.glide(p.cells[i], now, honeycombDuration, ui.EaseInOut)
+					}
+				} else if p.focus == item.ID {
+					// Leaving the items pans back to the chosen one, unless another
+					// item has taken focus already.
+					p.focus = ""
+					p.glide(p.cells[selected], now, honeycombDuration, ui.EaseInOut)
+				}
 			}
-		}
+		})
 	})
 	return chosen
 }
@@ -306,6 +340,10 @@ type honeycombPanKey struct{}
 
 // honeycombRingKey keys the animation of an item's accent ring.
 type honeycombRingKey struct{}
+
+// honeycombCellKey keys the animation of an item's cell, 0 along x and 1
+// along y.
+type honeycombCellKey struct{ axis int }
 
 // honeycombHit is where an item was drawn in the last frame, for the pointer.
 type honeycombHit struct {

@@ -473,3 +473,86 @@ func TestHoneycombWithoutSelectedItemDrawsNothing(t *testing.T) {
 		t.Fatal("an unknown selection still drew items")
 	}
 }
+
+func TestHoneycombCentersTheSelectionInItsView(t *testing.T) {
+	width := float32(600)
+	// Every painted frame of the selected item, so a frame placed at a size the
+	// view no longer has shows as a jump.
+	var painted []ui.Rect
+	items := honeycombItems(7)
+	items[0].Content = func(c *ui.Context, size float32) {
+		ui.Box(c).Fill().Draw(func(_ *ui.Painter, r ui.Rect) { painted = append(painted, r) })
+	}
+	tt := ui.NewTester(func(c *ui.Context) {
+		c.SetTheme(theme.Palette(false))
+		ui.Column(c).Fill().Children(func() {
+			ui.Column(c).Width(width).Grow(1).Children(func() {
+				Honeycomb(c, HoneycombOptions{Items: items, Selected: "p00"})
+			})
+		})
+	}, 800, 300)
+	check := func(when string) {
+		t.Helper()
+		if len(painted) == 0 {
+			t.Fatalf("selection not painted %s", when)
+		}
+		for _, r := range painted {
+			if x, y := middle(r); math.Abs(float64(x-width/2)) > 1 || math.Abs(float64(y-150)) > 1 {
+				t.Fatalf("selection painted off center %s: %+v in %v by 300", when, r, width)
+			}
+		}
+		painted = painted[:0]
+	}
+	// The first frame has no layout yet to measure.
+	tt.Frame()
+	check("on entry")
+	width = 760
+	tt.Frame()
+	check("after a resize")
+}
+
+func TestHoneycombSlidesAsItemsComeAndGo(t *testing.T) {
+	items := honeycombItems(7)
+	selected := "p03"
+	tt := ui.NewTester(func(c *ui.Context) {
+		c.SetTheme(theme.Palette(false))
+		ui.Column(c).Fill().Children(func() {
+			Honeycomb(c, HoneycombOptions{Items: items, Selected: selected, SelectedLabel: "Item"})
+		})
+	}, 600, 300)
+	tt.Frame()
+	center, _ := tt.Find("Item")
+	cx, cy := middle(center)
+	centered := func() bool {
+		r, _ := tt.Find("Item")
+		x, y := middle(r)
+		return math.Abs(float64(x-cx)) <= 1 && math.Abs(float64(y-cy)) <= 1
+	}
+	// Removing an item before the selection slides the later ones into the
+	// cells before them, the selection with them, which stays in the middle.
+	before, _ := tt.Find("p05")
+	items = slices.Delete(items, 1, 2)
+	tt.Frame()
+	tt.Advance(honeycombDuration / 2)
+	sliding, _ := tt.Find("p05")
+	settleHoneycomb(tt)
+	after, _ := tt.Find("p05")
+	if sliding == before || sliding == after {
+		t.Fatalf("item did not slide: before %+v, sliding %+v, after %+v", before, sliding, after)
+	}
+	if !centered() {
+		t.Fatal("selection left the middle as items slid")
+	}
+	// Adding an item and selecting it pans there smoothly.
+	items = append(items, honeycombItems(9)[8])
+	selected = "p08"
+	tt.Frame()
+	tt.Advance(honeycombDuration / 2)
+	if centered() {
+		t.Fatal("honeycomb jumped to the added item")
+	}
+	settleHoneycomb(tt)
+	if !centered() {
+		t.Fatal("added item not centered")
+	}
+}

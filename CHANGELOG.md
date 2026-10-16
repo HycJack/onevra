@@ -19,6 +19,8 @@ User-facing updates for Onevra library consumers.
 - Add `components.TabsHighlight`.
 - Add `components.ListState.KeepOffset`.
 - Animate `components.Dialog` and `components.AlertDialog` as they open and close.
+- Fix `components.Honeycomb` centering on first display and after its view resizes.
+- Animate `components.Honeycomb` items as they are added or removed.
 - Add `chat.Chip`, `chat.SwitchChip`, `chat.Picker`, `chat.Attachment`, `chat.ContextMeter`, `chat.Quota`, `chat.QuotaSummary` and `chat.Shimmer`.
 - Require MyGo 0.5.5.
 

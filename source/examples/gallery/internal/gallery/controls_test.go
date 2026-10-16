@@ -339,9 +339,6 @@ func TestControlExampleInteractions(t *testing.T) {
 					click("Files")
 					changed = s.index == 1
 				case "Honeycomb":
-					// The first pointer press of a fresh tester only activates its
-					// surface, so click once more to choose.
-					click("Images")
 					click("Images")
 					tt.Frame()
 					changed = s.honeycomb == "images"
