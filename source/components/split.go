@@ -22,6 +22,11 @@ type SplitOptions struct {
 	// nonfinite values are invalid. When both minima cannot fit, they shrink
 	// proportionally. Layout constraints do not overwrite the preferred size.
 	FirstMin, SecondMin float32
+	// Default, when positive, is the size of the first pane in DIPs that
+	// double-clicking the divider restores, within the effective limits.
+	// Split only; SplitPercent panics when it is set. Negative or nonfinite
+	// values are invalid.
+	Default float32
 }
 
 // SplitControl exposes the layout element. Keep this handle to query Changed
@@ -61,6 +66,7 @@ func (s *SplitControl) AutoFocus() *SplitControl {
 // provide feedback. Tab focuses the divider between the panes; axis arrow keys
 // move it by Theme.Space(2.5), and Home/End move to the effective limits.
 // Label defaults to "Divider". Nil builders leave their panes empty.
+// Double-clicking the divider restores SplitOptions.Default when set.
 func Split(c *ui.Context, size *float32, first, second func(), options ...SplitOptions) *SplitControl {
 	return split(c, "components.Split", size, false, first, second, options)
 }
@@ -92,6 +98,9 @@ func split(c *ui.Context, name string, value *float32, percent bool, first, seco
 	finite := func(v float32) bool { return !math.IsNaN(float64(v)) && !math.IsInf(float64(v), 0) }
 	if value == nil || !finite(*value) || !finite(o.FirstMin) || !finite(o.SecondMin) || o.FirstMin < 0 || o.SecondMin < 0 {
 		panic(name + ": the value must be nonnil and finite; minima must be finite and nonnegative")
+	}
+	if !finite(o.Default) || o.Default < 0 || percent && o.Default != 0 {
+		panic(name + ": the default must be finite and nonnegative, and only Split takes one")
 	}
 	t := c.Theme()
 	if o.FirstMin == 0 {
@@ -167,6 +176,10 @@ func split(c *ui.Context, name string, value *float32, percent bool, first, seco
 			}
 			if div.Shortcut(0, ui.KeyEnd) {
 				next = hi
+			}
+			if o.Default > 0 && handle.DoubleClicked() && !handle.IsDisabled() {
+				div.Focus()
+				next = o.Default
 			}
 			next = max(lo, min(next, hi))
 			if next != position && !div.IsDisabled() && (!percent || room > 0) {

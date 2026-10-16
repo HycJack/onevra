@@ -9,6 +9,8 @@ import (
 
 func controlSplit(c *ui.Context, s *controlState, variant string) {
 	options, first, second := splitPanes(c, variant)
+	// Double-clicking the divider restores the first pane's starting size.
+	options.Default = 100
 	components.Split(c, &s.split, first, second, options).
 		Label(msg(c).DividerOf(tr(c, variant))).FillWidth().Height(240)
 }

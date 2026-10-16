@@ -112,11 +112,20 @@ func controlSidebarCollapsible(c *ui.Context, s *controlState) {
 }
 
 // Custom leading content replaces the icon with application-built marks,
-// such as workspace monograms or tag colors.
+// such as workspace monograms or tag colors, and trailing content adds
+// counts after the label.
 func controlSidebarLeading(c *ui.Context, s *controlState) {
 	t := c.Theme()
 	item := func(key string, leading func(c *ui.Context, size float32)) {
 		if components.SidebarItemWithLeading(c, tr(c, key), s.choice == key, leading).Key(key).Clicked() {
+			s.choice = key
+		}
+	}
+	counted := func(key string, count int, leading func(c *ui.Context, size float32)) {
+		trailing := func(c *ui.Context, _ float32) {
+			components.Text(c, strconv.Itoa(count)).FontSize(t.Rem(.8)).TextColor(t.TextMuted).Shrink(0)
+		}
+		if components.SidebarItemWithSlots(c, tr(c, key), s.choice == key, leading, trailing).Key(key).Clicked() {
 			s.choice = key
 		}
 	}
@@ -144,9 +153,9 @@ func controlSidebarLeading(c *ui.Context, s *controlState) {
 			item("archive", monogram(ui.RGB(120, 120, 128), "archive"))
 		})
 		components.SidebarSection(c, tr(c, "tags"), func() {
-			item("tagImportant", dot(ui.RGB(235, 77, 75)))
-			item("tagInProgress", dot(ui.RGB(242, 178, 51)))
-			item("tagDone", dot(ui.RGB(72, 187, 120)))
+			counted("tagImportant", 3, dot(ui.RGB(235, 77, 75)))
+			counted("tagInProgress", 12, dot(ui.RGB(242, 178, 51)))
+			counted("tagDone", 48, dot(ui.RGB(72, 187, 120)))
 		})
 	})
 }

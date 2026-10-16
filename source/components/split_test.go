@@ -89,6 +89,28 @@ func TestSplitInteraction(t *testing.T) {
 	}
 }
 
+func TestSplitDefault(t *testing.T) {
+	size, changes := float32(100), 0
+	tt := ui.NewTester(func(c *ui.Context) {
+		s := Split(c, &size, nil, nil, SplitOptions{Default: 400})
+		s.Label("Resize").Fill()
+		if s.Changed() {
+			changes++
+		}
+	}, 300, 300)
+	r, _ := tt.Find("Resize")
+	x, y := r.X+r.W/2, r.Y+r.H/2
+	tt.ClickAt(x, y)
+	if size != 100 || changes != 0 {
+		t.Fatalf("single click: %v, %d", size, changes)
+	}
+	// The default is clamped to the limits, as dragging would be.
+	tt.ClickAt(x, y)
+	if size != 259 || changes != 1 {
+		t.Fatalf("double click: %v, %d", size, changes)
+	}
+}
+
 func TestSplitConstraintsAndOrientation(t *testing.T) {
 	size := float32(170)
 	width := float32(300)
@@ -194,6 +216,8 @@ func TestSplitInvalidInputs(t *testing.T) {
 		{&valid, []SplitOptions{{SecondMin: nan}}},
 		{&valid, []SplitOptions{{FirstMin: inf}}},
 		{&valid, []SplitOptions{{}, {}}},
+		{&valid, []SplitOptions{{Default: -1}}},
+		{&valid, []SplitOptions{{Default: inf}}},
 	} {
 		func() {
 			defer func() {
@@ -212,6 +236,12 @@ func TestSplitInvalidInputs(t *testing.T) {
 			ui.NewTester(func(c *ui.Context) { SplitPercent(c, test.size, nil, nil, test.options...).Fill() }, 300, 300)
 		}()
 	}
+	defer func() {
+		if recover() == nil {
+			t.Error("percentage default accepted")
+		}
+	}()
+	ui.NewTester(func(c *ui.Context) { SplitPercent(c, &valid, nil, nil, SplitOptions{Default: 50}).Fill() }, 300, 300)
 }
 
 func TestSplitPercent(t *testing.T) {

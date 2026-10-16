@@ -58,6 +58,16 @@ func SidebarImageItem(c *ui.Context, label string, image ui.ImageSource, selecte
 // so the navigation button remains the only focus and activation target.
 // It runs synchronously on the UI thread and must not start I/O or background work.
 func SidebarItemWithLeading(c *ui.Context, label string, selected bool, leading func(c *ui.Context, size float32)) ui.Element {
+	return SidebarItemWithSlots(c, label, selected, leading, nil)
+}
+
+// SidebarItemWithSlots is a SidebarItemWithLeading with an application-built
+// trailing slot after the label, for example counts or a status mark. The
+// label then takes the remaining room and ends in an ellipsis when it does
+// not fit. Nil builders leave no space. Both builders receive the standard
+// icon size and follow the leading slot's rules: keep them non-interactive
+// and free of I/O or background work.
+func SidebarItemWithSlots(c *ui.Context, label string, selected bool, leading, trailing func(c *ui.Context, size float32)) ui.Element {
 	t := c.Theme()
 	b := ui.ButtonBase(c).Key(label).Label(label).FillWidth().Justify(ui.Start).
 		Padding(t.Space(1.75), t.Space(2)).Gap(t.Space(2)).Radius(t.Radius).
@@ -69,7 +79,11 @@ func SidebarItemWithLeading(c *ui.Context, label string, selected bool, leading 
 		if leading != nil {
 			leading(c, t.Space(4.5))
 		}
-		Text(c, label).SingleLine()
+		text := Text(c, label).SingleLine()
+		if trailing != nil {
+			text.Grow(1).MinWidth(0).Ellipsis("…")
+			trailing(c, t.Space(4.5))
+		}
 	})
 	return dimmed(b)
 }

@@ -133,3 +133,26 @@ func TestSidebarImageItem(t *testing.T) {
 		t.Fatal("missing item without an image")
 	}
 }
+
+func TestSidebarItemWithSlots(t *testing.T) {
+	label := "A project name long enough to need an ellipsis"
+	var inset float32
+	tt := ui.NewTester(func(c *ui.Context) {
+		c.SetTheme(theme.LightPalette())
+		inset = c.Theme().Space(2)
+		Sidebar(c).Children(func() {
+			SidebarItemWithSlots(c, label, false, nil, func(c *ui.Context, size float32) {
+				ui.Box(c).Size(size, size).Shrink(0).Label("mark")
+			})
+		})
+	}, 220, 200)
+	item, ok := tt.Find(label)
+	mark, found := tt.Find("mark")
+	if !ok || !found {
+		t.Fatal("missing item or its trailing mark")
+	}
+	// The label gives way so the mark stays inside the item at its end.
+	if mark.X+mark.W > item.X+item.W || item.X+item.W-(mark.X+mark.W) > inset+1 {
+		t.Fatalf("mark %v outside the end of item %v", mark, item)
+	}
+}
