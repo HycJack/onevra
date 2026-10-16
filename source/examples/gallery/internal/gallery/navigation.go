@@ -13,16 +13,8 @@ var navigationGroups = []string{
 // publishing a version, keep the pages it ships and remove those from earlier
 // versions.
 var newPages = map[string]bool{
-	"controls/Honeycomb":      true,
-	"mygo/Rich text editor":   true,
-	"mygo/Markdown":           true,
-	"mygo/Markdown stream":    true,
-	"mygo/System information": true,
-	"mygo/Recent documents":   true,
-	"mygo/File watching":      true,
-	"mygo/Global shortcuts":   true,
-
 	"controls/Split panes":  true,
+	"mygo/Global shortcuts": true,
 	"mygo/Gradients & blur": true,
 	"mygo/Shaders":          true,
 	"mygo/Live chart":       true,

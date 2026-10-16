@@ -47,10 +47,10 @@ Each template includes localization and its own packaging configuration; all but
 
 ## Getting started
 
-Install **0.2026.10** in your application module with:
+Install **0.2026.11** in your application module with:
 
 ```sh
-go get github.com/oneo-me/onevra/source@v0.2026.10
+go get github.com/oneo-me/onevra/source@v0.2026.11
 ```
 
 Save this minimal application as `main.go` and run `go run .` from your application module:

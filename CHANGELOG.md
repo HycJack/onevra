@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+## [0.2026.11] - 2026-10-16
+
 - Breaking: remove the hybrid application template.
 - Breaking: remove `components.Localization` and `components.WithLocalization`.
 - Breaking: remove Shell label overrides `sidebar.Labels`, `plain.Labels` and their `SetLabels` and label options.

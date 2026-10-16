@@ -11,7 +11,7 @@ import (
 )
 
 // Keep the application version aligned with mygo.json; a test checks both.
-const galleryVersion = "0.2026.10"
+const galleryVersion = "0.2026.11"
 
 const (
 	repositoryURL   = "https://github.com/oneo-me/onevra"
