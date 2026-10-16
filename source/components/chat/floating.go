@@ -11,7 +11,6 @@ import (
 // each ConversationState and share it with the floating GlassComposer.
 type FloatingConversationState struct {
 	height       float32
-	headerHeight float32
 	cardHeight   float32
 	footerHeight float32
 }
@@ -25,33 +24,17 @@ func FloatingConversation(c *ui.Context, layout *FloatingConversationState, stat
 	return FloatingConversationWith(c, layout, state, FloatingConversationOptions{JumpLabel: jumpLabel, Content: content, Composer: composer})
 }
 
-// FloatingConversationOptions supplies FloatingConversation's views. Header
-// floats over the top of the transcript at the composer's width, such as a
-// GlassPanel with live status. By default the transcript reserves its height
-// so the first turn stays unobscured. Leave Header nil to reclaim the space.
+// FloatingConversationOptions supplies FloatingConversation's views. The
+// conversation does not manage a window title bar or floating header: hosts
+// that overlay one position it themselves and may pad Content to clear it.
 type FloatingConversationOptions struct {
-	JumpLabel                 string
-	Header, Content, Composer View
-	// HeaderOverlay lets Header cover the transcript without reserving space,
-	// keeping message positions unchanged when it appears, resizes or hides.
-	HeaderOverlay bool
-	// HeaderTopInset overrides the gap above Header. Nil keeps the default
-	// 8-pixel inset; an explicit zero docks it to the top of the viewport.
-	// Negative values are treated as zero.
-	HeaderTopInset *float32
-	// TopInset reserves space above the transcript and its scrollbar, such as
-	// for a floating window header. Messages scroll beneath it, while Header
-	// and the first turn start below it. Negative values are treated as zero.
-	TopInset float32
+	JumpLabel         string
+	Content, Composer View
 }
 
-// FloatingConversationWith is FloatingConversation with an optional Header.
+// FloatingConversationWith is FloatingConversation with its views as options.
 func FloatingConversationWith(c *ui.Context, layout *FloatingConversationState, state *ConversationState, options FloatingConversationOptions) ui.Element {
 	jumpLabel, content, composer := options.JumpLabel, options.Content, options.Composer
-	inset := max(0, options.TopInset)
-	if options.Header == nil || options.HeaderOverlay {
-		layout.headerHeight = 0
-	}
 	return ui.Column(c).FillWidth().Grow(1).MinHeight(0).MinWidth(0).Clip().Children(func() {
 		height := layout.height
 		if height <= 0 {
@@ -68,10 +51,9 @@ func FloatingConversationWith(c *ui.Context, layout *FloatingConversationState, 
 		// Leave a small gap above the floating composer without shortening
 		// the transcript viewport that scrolls behind it.
 		viewport := components.ScrollView(c, components.ScrollViewOptions{}).Key("transcript").FillWidth().Grow(1).MinHeight(0).
-			ScrollbarInsets(inset, 0, height+8, 0).TrackScroll(&state.Scroll)
+			ScrollbarInsets(0, 0, height+8, 0).TrackScroll(&state.Scroll)
 		viewport.Children(func() {
-			// A measured Header's height already includes the top inset.
-			ui.Column(c).FillWidth().MinWidth(0).Shrink(0).AlignItems(ui.Center).Padding(22+max(inset, layout.headerHeight), 20, 0, 20).Children(func() {
+			ui.Column(c).FillWidth().MinWidth(0).Shrink(0).AlignItems(ui.Center).Padding(22, 20, 0, 20).Children(func() {
 				ui.Column(c).FillWidth().MaxWidth(ContentWidth).MinWidth(0).Gap(48).Children(func() {
 					slot := conversationSlot(c)
 					saved := *slot
@@ -131,28 +113,13 @@ func FloatingConversationWith(c *ui.Context, layout *FloatingConversationState, 
 				}
 			})
 		})
-		if options.Header != nil {
-			topInset := float32(8)
-			if options.HeaderTopInset != nil {
-				topInset = max(0, *options.HeaderTopInset)
-			}
-			topInset += inset
-			ui.Row(c).Key("floating-header").Absolute().Attach(ui.AnchorTop, ui.AnchorTop).
-				FillWidth().Justify(ui.Center).Padding(topInset, 20, 0, 20).Draw(func(_ *ui.Painter, r ui.Rect) {
-				if !options.HeaderOverlay && layout.headerHeight != r.H {
-					layout.headerHeight = r.H
-					c.Invalidate()
-				}
-			}).Children(func() {
-				ui.Column(c).FillWidth().MaxWidth(ContentWidth).MinWidth(0).Children(func() { options.Header(c) })
-			})
-		}
 	})
 }
 
 // GlassPanel is a compact card with GlassComposer's surface, for floating
-// status such as a FloatingConversation Header. Its height follows content,
-// and its tighter radius suits a panel docked near the window edge.
+// status the host overlays on a conversation, such as command output or
+// errors above the composer. Its height follows content, and its tighter
+// radius suits a panel docked near the window edge.
 func GlassPanel(c *ui.Context, content View) ui.Element {
 	t := c.Theme()
 	return ui.Column(c).FillWidth().MinWidth(0).Padding(8, 12).Radius(8).Border(1, t.Border).

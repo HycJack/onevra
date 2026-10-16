@@ -4820,16 +4820,6 @@ func (msgs Messages) ChatReasoning() string {
 	return Catalog.Format(msgs.locale, "chatReasoning", nil)
 }
 
-// ChatSummary says "{duration} · 2 tool calls"
-// in the language the app shows.
-func ChatSummary(duration string) string { return In(i18n.Locale()).ChatSummary(duration) }
-
-// ChatSummary says "{duration} · 2 tool calls"
-// in the language of msgs.
-func (msgs Messages) ChatSummary(duration string) string {
-	return Catalog.Format(msgs.locale, "chatSummary", map[string]any{"duration": duration})
-}
-
 // ChatMessage says "Message"
 // in the language the app shows.
 func ChatMessage() string { return In(i18n.Locale()).ChatMessage() }
@@ -4904,86 +4894,6 @@ func (msgs Messages) ChatRemoveAttachment() string {
 	return Catalog.Format(msgs.locale, "chatRemoveAttachment", nil)
 }
 
-// ChatDemoContext says "Local demonstration · no requests sent"
-// in the language the app shows.
-func ChatDemoContext() string { return In(i18n.Locale()).ChatDemoContext() }
-
-// ChatDemoContext says "Local demonstration · no requests sent"
-// in the language of msgs.
-func (msgs Messages) ChatDemoContext() string {
-	return Catalog.Format(msgs.locale, "chatDemoContext", nil)
-}
-
-// ChatChanged says "Changed 6 files"
-// in the language the app shows.
-func ChatChanged() string { return In(i18n.Locale()).ChatChanged() }
-
-// ChatChanged says "Changed 6 files"
-// in the language of msgs.
-func (msgs Messages) ChatChanged() string {
-	return Catalog.Format(msgs.locale, "chatChanged", nil)
-}
-
-// ChatReview says "Review"
-// in the language the app shows.
-func ChatReview() string { return In(i18n.Locale()).ChatReview() }
-
-// ChatReview says "Review"
-// in the language of msgs.
-func (msgs Messages) ChatReview() string {
-	return Catalog.Format(msgs.locale, "chatReview", nil)
-}
-
-// ChatMoreFiles says "Show 3 more files"
-// in the language the app shows.
-func ChatMoreFiles() string { return In(i18n.Locale()).ChatMoreFiles() }
-
-// ChatMoreFiles says "Show 3 more files"
-// in the language of msgs.
-func (msgs Messages) ChatMoreFiles() string {
-	return Catalog.Format(msgs.locale, "chatMoreFiles", nil)
-}
-
-// ChatLessFiles says "Show fewer files"
-// in the language the app shows.
-func ChatLessFiles() string { return In(i18n.Locale()).ChatLessFiles() }
-
-// ChatLessFiles says "Show fewer files"
-// in the language of msgs.
-func (msgs Messages) ChatLessFiles() string {
-	return Catalog.Format(msgs.locale, "chatLessFiles", nil)
-}
-
-// ChatSampleDiff says "Sample change preview"
-// in the language the app shows.
-func ChatSampleDiff() string { return In(i18n.Locale()).ChatSampleDiff() }
-
-// ChatSampleDiff says "Sample change preview"
-// in the language of msgs.
-func (msgs Messages) ChatSampleDiff() string {
-	return Catalog.Format(msgs.locale, "chatSampleDiff", nil)
-}
-
-// ChatCloseReview says "Close preview"
-// in the language the app shows.
-func ChatCloseReview() string { return In(i18n.Locale()).ChatCloseReview() }
-
-// ChatCloseReview says "Close preview"
-// in the language of msgs.
-func (msgs Messages) ChatCloseReview() string {
-	return Catalog.Format(msgs.locale, "chatCloseReview", nil)
-}
-
-// ChatAttach says "Attach sample context"
-// in the language the app shows.
-func ChatAttach() string { return In(i18n.Locale()).ChatAttach() }
-
-// ChatAttach says "Attach sample context"
-// in the language of msgs.
-func (msgs Messages) ChatAttach() string {
-	return Catalog.Format(msgs.locale, "chatAttach", nil)
-}
-
 // ChatModel says "Model"
 // in the language the app shows.
 func ChatModel() string { return In(i18n.Locale()).ChatModel() }
@@ -5012,6 +4922,246 @@ func ChatThink() string { return In(i18n.Locale()).ChatThink() }
 // in the language of msgs.
 func (msgs Messages) ChatThink() string {
 	return Catalog.Format(msgs.locale, "chatThink", nil)
+}
+
+// ChatAttach says "Attach a sample file"
+// in the language the app shows.
+func ChatAttach() string { return In(i18n.Locale()).ChatAttach() }
+
+// ChatAttach says "Attach a sample file"
+// in the language of msgs.
+func (msgs Messages) ChatAttach() string {
+	return Catalog.Format(msgs.locale, "chatAttach", nil)
+}
+
+// ChatStreamReply says "Stream a reply"
+// in the language the app shows.
+func ChatStreamReply() string { return In(i18n.Locale()).ChatStreamReply() }
+
+// ChatStreamReply says "Stream a reply"
+// in the language of msgs.
+func (msgs Messages) ChatStreamReply() string {
+	return Catalog.Format(msgs.locale, "chatStreamReply", nil)
+}
+
+// ChatStreaming says "Streaming a simulated reply"
+// in the language the app shows.
+func ChatStreaming() string { return In(i18n.Locale()).ChatStreaming() }
+
+// ChatStreaming says "Streaming a simulated reply"
+// in the language of msgs.
+func (msgs Messages) ChatStreaming() string {
+	return Catalog.Format(msgs.locale, "chatStreaming", nil)
+}
+
+// ChatSearchModels says "Search models"
+// in the language the app shows.
+func ChatSearchModels() string { return In(i18n.Locale()).ChatSearchModels() }
+
+// ChatSearchModels says "Search models"
+// in the language of msgs.
+func (msgs Messages) ChatSearchModels() string {
+	return Catalog.Format(msgs.locale, "chatSearchModels", nil)
+}
+
+// ChatSearchBranches says "Search branches"
+// in the language the app shows.
+func ChatSearchBranches() string { return In(i18n.Locale()).ChatSearchBranches() }
+
+// ChatSearchBranches says "Search branches"
+// in the language of msgs.
+func (msgs Messages) ChatSearchBranches() string {
+	return Catalog.Format(msgs.locale, "chatSearchBranches", nil)
+}
+
+// ChatNoResults says "No results"
+// in the language the app shows.
+func ChatNoResults() string { return In(i18n.Locale()).ChatNoResults() }
+
+// ChatNoResults says "No results"
+// in the language of msgs.
+func (msgs Messages) ChatNoResults() string {
+	return Catalog.Format(msgs.locale, "chatNoResults", nil)
+}
+
+// ChatWorktree says "Worktree"
+// in the language the app shows.
+func ChatWorktree() string { return In(i18n.Locale()).ChatWorktree() }
+
+// ChatWorktree says "Worktree"
+// in the language of msgs.
+func (msgs Messages) ChatWorktree() string {
+	return Catalog.Format(msgs.locale, "chatWorktree", nil)
+}
+
+// ChatContextWindow says "Context window"
+// in the language the app shows.
+func ChatContextWindow() string { return In(i18n.Locale()).ChatContextWindow() }
+
+// ChatContextWindow says "Context window"
+// in the language of msgs.
+func (msgs Messages) ChatContextWindow() string {
+	return Catalog.Format(msgs.locale, "chatContextWindow", nil)
+}
+
+// ChatProviderLocal says "Local"
+// in the language the app shows.
+func ChatProviderLocal() string { return In(i18n.Locale()).ChatProviderLocal() }
+
+// ChatProviderLocal says "Local"
+// in the language of msgs.
+func (msgs Messages) ChatProviderLocal() string {
+	return Catalog.Format(msgs.locale, "chatProviderLocal", nil)
+}
+
+// ChatProviderRemote says "Remote"
+// in the language the app shows.
+func ChatProviderRemote() string { return In(i18n.Locale()).ChatProviderRemote() }
+
+// ChatProviderRemote says "Remote"
+// in the language of msgs.
+func (msgs Messages) ChatProviderRemote() string {
+	return Catalog.Format(msgs.locale, "chatProviderRemote", nil)
+}
+
+// ChatEffortLow says "Low"
+// in the language the app shows.
+func ChatEffortLow() string { return In(i18n.Locale()).ChatEffortLow() }
+
+// ChatEffortLow says "Low"
+// in the language of msgs.
+func (msgs Messages) ChatEffortLow() string {
+	return Catalog.Format(msgs.locale, "chatEffortLow", nil)
+}
+
+// ChatEffortMedium says "Medium"
+// in the language the app shows.
+func ChatEffortMedium() string { return In(i18n.Locale()).ChatEffortMedium() }
+
+// ChatEffortMedium says "Medium"
+// in the language of msgs.
+func (msgs Messages) ChatEffortMedium() string {
+	return Catalog.Format(msgs.locale, "chatEffortMedium", nil)
+}
+
+// ChatEffortHigh says "High"
+// in the language the app shows.
+func ChatEffortHigh() string { return In(i18n.Locale()).ChatEffortHigh() }
+
+// ChatEffortHigh says "High"
+// in the language of msgs.
+func (msgs Messages) ChatEffortHigh() string {
+	return Catalog.Format(msgs.locale, "chatEffortHigh", nil)
+}
+
+// ChatUsageLimits says "Usage limits"
+// in the language the app shows.
+func ChatUsageLimits() string { return In(i18n.Locale()).ChatUsageLimits() }
+
+// ChatUsageLimits says "Usage limits"
+// in the language of msgs.
+func (msgs Messages) ChatUsageLimits() string {
+	return Catalog.Format(msgs.locale, "chatUsageLimits", nil)
+}
+
+// ChatQuotaAccount says "Demo account"
+// in the language the app shows.
+func ChatQuotaAccount() string { return In(i18n.Locale()).ChatQuotaAccount() }
+
+// ChatQuotaAccount says "Demo account"
+// in the language of msgs.
+func (msgs Messages) ChatQuotaAccount() string {
+	return Catalog.Format(msgs.locale, "chatQuotaAccount", nil)
+}
+
+// ChatQuotaFiveHour says "5-hour limit"
+// in the language the app shows.
+func ChatQuotaFiveHour() string { return In(i18n.Locale()).ChatQuotaFiveHour() }
+
+// ChatQuotaFiveHour says "5-hour limit"
+// in the language of msgs.
+func (msgs Messages) ChatQuotaFiveHour() string {
+	return Catalog.Format(msgs.locale, "chatQuotaFiveHour", nil)
+}
+
+// ChatQuotaFiveHourReset says "2h 14m"
+// in the language the app shows.
+func ChatQuotaFiveHourReset() string { return In(i18n.Locale()).ChatQuotaFiveHourReset() }
+
+// ChatQuotaFiveHourReset says "2h 14m"
+// in the language of msgs.
+func (msgs Messages) ChatQuotaFiveHourReset() string {
+	return Catalog.Format(msgs.locale, "chatQuotaFiveHourReset", nil)
+}
+
+// ChatQuotaWeekly says "Weekly limit"
+// in the language the app shows.
+func ChatQuotaWeekly() string { return In(i18n.Locale()).ChatQuotaWeekly() }
+
+// ChatQuotaWeekly says "Weekly limit"
+// in the language of msgs.
+func (msgs Messages) ChatQuotaWeekly() string {
+	return Catalog.Format(msgs.locale, "chatQuotaWeekly", nil)
+}
+
+// ChatQuotaWeeklyReset says "4d"
+// in the language the app shows.
+func ChatQuotaWeeklyReset() string { return In(i18n.Locale()).ChatQuotaWeeklyReset() }
+
+// ChatQuotaWeeklyReset says "4d"
+// in the language of msgs.
+func (msgs Messages) ChatQuotaWeeklyReset() string {
+	return Catalog.Format(msgs.locale, "chatQuotaWeeklyReset", nil)
+}
+
+// ChatQuotaCredits says "Credits"
+// in the language the app shows.
+func ChatQuotaCredits() string { return In(i18n.Locale()).ChatQuotaCredits() }
+
+// ChatQuotaCredits says "Credits"
+// in the language of msgs.
+func (msgs Messages) ChatQuotaCredits() string {
+	return Catalog.Format(msgs.locale, "chatQuotaCredits", nil)
+}
+
+// ChatQuotaRefresh says "Refresh limits"
+// in the language the app shows.
+func ChatQuotaRefresh() string { return In(i18n.Locale()).ChatQuotaRefresh() }
+
+// ChatQuotaRefresh says "Refresh limits"
+// in the language of msgs.
+func (msgs Messages) ChatQuotaRefresh() string {
+	return Catalog.Format(msgs.locale, "chatQuotaRefresh", nil)
+}
+
+// ChatQuotaOpen says "Open usage page"
+// in the language the app shows.
+func ChatQuotaOpen() string { return In(i18n.Locale()).ChatQuotaOpen() }
+
+// ChatQuotaOpen says "Open usage page"
+// in the language of msgs.
+func (msgs Messages) ChatQuotaOpen() string {
+	return Catalog.Format(msgs.locale, "chatQuotaOpen", nil)
+}
+
+// ChatQuotaRefreshing says "Refreshing…"
+// in the language the app shows.
+func ChatQuotaRefreshing() string { return In(i18n.Locale()).ChatQuotaRefreshing() }
+
+// ChatQuotaRefreshing says "Refreshing…"
+// in the language of msgs.
+func (msgs Messages) ChatQuotaRefreshing() string {
+	return Catalog.Format(msgs.locale, "chatQuotaRefreshing", nil)
+}
+
+// ChatQuotaLeft says "{percent}% left"
+// in the language the app shows.
+func ChatQuotaLeft(percent int) string { return In(i18n.Locale()).ChatQuotaLeft(percent) }
+
+// ChatQuotaLeft says "{percent}% left"
+// in the language of msgs.
+func (msgs Messages) ChatQuotaLeft(percent int) string {
+	return Catalog.Format(msgs.locale, "chatQuotaLeft", map[string]any{"percent": percent})
 }
 
 // FlyoutEditor says "Open editor"

@@ -731,14 +731,6 @@
   "chatRunning": "Working",
   "chatLatest": "Back to latest",
   "chatReasoning": "Ran 2 tools",
-  "chatSummary": "{duration} · 2 tool calls",
-  "@chatSummary": {
-    "placeholders": {
-      "duration": {
-        "type": "String"
-      }
-    }
-  },
   "chatMessage": "Message",
   "chatPlaceholder": "Write a message. Enter adds a new line.",
   "chatSend": "Send",
@@ -769,17 +761,40 @@
     }
   },
   "chatRemoveAttachment": "Remove attachment",
-  "chatDemoContext": "Local demonstration · no requests sent",
-  "chatChanged": "Changed 6 files",
-  "chatReview": "Review",
-  "chatMoreFiles": "Show 3 more files",
-  "chatLessFiles": "Show fewer files",
-  "chatSampleDiff": "Sample change preview",
-  "chatCloseReview": "Close preview",
-  "chatAttach": "Attach sample context",
   "chatModel": "Model",
   "chatEffort": "Reasoning effort",
   "chatThink": "Think",
+  "chatAttach": "Attach a sample file",
+  "chatStreamReply": "Stream a reply",
+  "chatStreaming": "Streaming a simulated reply",
+  "chatSearchModels": "Search models",
+  "chatSearchBranches": "Search branches",
+  "chatNoResults": "No results",
+  "chatWorktree": "Worktree",
+  "chatContextWindow": "Context window",
+  "chatProviderLocal": "Local",
+  "chatProviderRemote": "Remote",
+  "chatEffortLow": "Low",
+  "chatEffortMedium": "Medium",
+  "chatEffortHigh": "High",
+  "chatUsageLimits": "Usage limits",
+  "chatQuotaAccount": "Demo account",
+  "chatQuotaFiveHour": "5-hour limit",
+  "chatQuotaFiveHourReset": "2h 14m",
+  "chatQuotaWeekly": "Weekly limit",
+  "chatQuotaWeeklyReset": "4d",
+  "chatQuotaCredits": "Credits",
+  "chatQuotaRefresh": "Refresh limits",
+  "chatQuotaOpen": "Open usage page",
+  "chatQuotaRefreshing": "Refreshing…",
+  "chatQuotaLeft": "{percent}% left",
+  "@chatQuotaLeft": {
+    "placeholders": {
+      "percent": {
+        "type": "int"
+      }
+    }
+  },
   "flyoutEditor": "Open editor",
   "flyoutPopover": "System popover",
   "flyoutDescription": "A parent-owned popup that can extend beyond the window.",

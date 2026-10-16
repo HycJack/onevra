@@ -30,6 +30,24 @@ func TestAttachmentPreview(t *testing.T) {
 	}
 }
 
+func TestAttachmentChip(t *testing.T) {
+	removed := 0
+	tt := ui.NewTester(func(c *ui.Context) {
+		ui.Row(c).Children(func() {
+			if Attachment(c, AttachmentOptions{Label: "notes.md", Detail: "2 KB", RemoveLabel: "Remove notes.md"}).Remove {
+				removed++
+			}
+			Attachment(c, AttachmentOptions{Label: "sent.txt"})
+		})
+	}, 500, 200)
+	if !tt.HasText("notes.md") || !tt.HasText("2 KB") || !tt.HasText("sent.txt") {
+		t.Fatal("attachment labels missing")
+	}
+	if err := tt.Click("Remove notes.md"); err != nil || removed != 1 {
+		t.Fatalf("removal: %v count=%d", err, removed)
+	}
+}
+
 func TestComposerPasteAndDisabledSend(t *testing.T) {
 	for _, glass := range []bool{false, true} {
 		draft := "keep"

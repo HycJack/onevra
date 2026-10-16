@@ -210,8 +210,8 @@ func TestControlExampleInteractions(t *testing.T) {
 					click("Show Default")
 					changed = s.dialogOpen
 				case "Chat":
-					click("Attach sample context")
-					changed = s.chat.attachment
+					click("Attach a sample file")
+					changed = len(s.chat.files) == 1
 				case "RichText":
 					click("inline action")
 					changed = s.index == 1

@@ -8,6 +8,7 @@ User-facing updates for Onevra library consumers.
 - Breaking: remove `components.Localization` and `components.WithLocalization`.
 - Breaking: remove Shell label overrides `sidebar.Labels`, `plain.Labels` and their `SetLabels` and label options.
 - Breaking: rename `command.CommandPalette` to `command.CommandView`.
+- Breaking: remove `Header`, `HeaderOverlay`, `HeaderTopInset` and `TopInset` from `chat.FloatingConversationOptions`.
 - Add `command.Options.Filter` and `command.State.Focus`.
 - Return command results to the top when they change.
 - Add `HideSearch` and `HideSidebar` to `components.SettingsOptions`.
@@ -16,6 +17,7 @@ User-facing updates for Onevra library consumers.
 - Change the default `sidebar.ShellOptions` window height and minimum height to 740.
 - Add `components.SplitPercent`.
 - Add `components.ListState.KeepOffset`.
+- Add `chat.Chip`, `chat.SwitchChip`, `chat.Picker`, `chat.Attachment`, `chat.ContextMeter`, `chat.Quota`, `chat.QuotaSummary` and `chat.Shimmer`.
 - Require MyGo 0.5.5.
 
 ## [0.2026.10] - 2026-10-15

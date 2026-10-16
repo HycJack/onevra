@@ -108,7 +108,7 @@ var controlCatalog = []controlExample{
 var controlToolbars = map[string]func(*ui.Context, *controlState){
 	"Bar chart": chartToolbar, "Line chart": chartToolbar, "Area chart": chartToolbar,
 	"Stacked bar chart": chartToolbar, "Donut chart": chartToolbar,
-	"Relationship graph": graphToolbar, "Honeycomb": honeycombToolbar,
+	"Relationship graph": graphToolbar, "Honeycomb": honeycombToolbar, "Chat": chatToolbar,
 }
 
 func controlPageStart() galleryPage { return mygoPageStart + galleryPage(len(mygoCatalog)) }

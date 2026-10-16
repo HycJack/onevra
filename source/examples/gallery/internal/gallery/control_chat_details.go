@@ -2,11 +2,14 @@ package gallery
 
 import (
 	"fmt"
+	"math"
+	"slices"
+	"time"
 
 	"github.com/egoist/mygo/ui"
-	"github.com/egoist/mygo/ui/markdown"
 	"github.com/oneo-me/onevra/source/components"
 	"github.com/oneo-me/onevra/source/components/chat"
+	"github.com/oneo-me/onevra/source/icons/lucide"
 )
 
 func chatTurnSummary(c *ui.Context, turn *chatDemoTurn) string {
@@ -21,61 +24,150 @@ func chatTurnSummary(c *ui.Context, turn *chatDemoTurn) string {
 	return msg(c).ChatWorking(chatStatusLabel(c, turn.status), seconds/60, seconds%60)
 }
 
-var chatDemoArtifacts = []chat.SummaryItem{
-	{ID: "component", Label: "component.go", Metadata: chatDemoMetrics(32, 8)},
-	{ID: "tests", Label: "component_test.go", Metadata: chatDemoMetrics(24, 0)},
-	{ID: "example", Label: "examples/demo.go", Metadata: chatDemoMetrics(12, 2)},
-	{ID: "readme", Label: "README.md", Metadata: chatDemoMetrics(4, 1)},
-	{ID: "theme", Label: "theme.go", Metadata: chatDemoMetrics(3, 3)},
-	{ID: "styles", Label: "styles.go", Metadata: chatDemoMetrics(7, 2)},
+type chatDemoModel struct {
+	id, name, provider string
+	window             int
 }
 
-func chatDemoResults(c *ui.Context, s *chatDemoState, turn *chatDemoTurn) {
-	if turn.status != chat.Completed {
-		return
+var chatDemoModels = []chatDemoModel{
+	{"demo", "Demo model", "chatProviderLocal", 200_000},
+	{"fast", "Fast demo", "chatProviderLocal", 128_000},
+	{"deep", "Deep demo", "chatProviderRemote", 1_000_000},
+}
+
+var chatDemoFiles = []chatDemoFile{{name: "context.md", sample: true}, {name: "screenshot.png", image: true, sample: true}, {name: "design.pdf", sample: true}}
+
+func chatDemoModelFor(id string) chatDemoModel {
+	for _, m := range chatDemoModels {
+		if m.id == id {
+			return m
+		}
 	}
-	result := chat.ResultSummary(c, &turn.summary, chat.SummaryOptions{
-		Title: tr(c, "chatChanged"), Metadata: chatDemoMetrics(82, 16), ActionLabel: tr(c, "chatReview"),
-		MoreLabel: tr(c, "chatMoreFiles"), LessLabel: tr(c, "chatLessFiles"), Items: chatDemoArtifacts,
-	})
-	if result.Action || result.SelectedID != "" {
-		turn.showReview = true
+	return chatDemoModels[0]
+}
+
+// chatDemoAccessory holds the model and reasoning pickers inside the card.
+func chatDemoAccessory(c *ui.Context, s *chatDemoState) {
+	model := chatDemoModelFor(s.model)
+	models := make([]chat.Option, len(chatDemoModels))
+	for i, m := range chatDemoModels {
+		models[i] = chat.Option{ID: m.id, Label: m.name, Detail: chatDemoTokens(m.window), Group: tr(c, m.provider), Icon: lucide.Sparkles}
 	}
-	if turn.showReview {
-		ui.Column(c).FillWidth().MinWidth(0).Gap(c.Theme().Space(2)).Children(func() {
-			components.Text(c, tr(c, "chatSampleDiff")).TextColor(c.Theme().TextMuted)
-			markdown.View(c, turn.review, &s.markdown).FillWidth()
-			if components.Button(c, tr(c, "chatCloseReview"), components.ButtonGhost).Clicked() {
-				turn.showReview = false
-			}
-		})
+	if r := chat.Picker(c, &s.modelPicker, chat.PickerOptions{Label: model.name, Icon: lucide.Sparkles, Options: models, Selected: s.model,
+		SearchLabel: tr(c, "chatSearchModels"), EmptyText: tr(c, "chatNoResults"), Searchable: 2, Width: 280}); r.Chosen != "" {
+		s.model = r.Chosen
+	}
+	efforts := []chat.Option{{ID: "low", Label: tr(c, "chatEffortLow")}, {ID: "medium", Label: tr(c, "chatEffortMedium")}, {ID: "high", Label: tr(c, "chatEffortHigh")}}
+	label := tr(c, "chatEffort")
+	for _, o := range efforts {
+		if o.ID == s.effort {
+			label = o.Label
+		}
+	}
+	if r := chat.Picker(c, &s.effortPicker, chat.PickerOptions{Label: label, Icon: lucide.Brain, Options: efforts, Selected: s.effort, Width: 200}); r.Chosen != "" {
+		s.effort = r.Chosen
 	}
 }
 
-func chatDemoToolbar(c *ui.Context, s *chatDemoState) {
-	ui.Box(c).Key("model").Children(func() {
-		selectModel := components.Select(c, &s.model)
-		selectModel.Trigger.Label(tr(c, "chatModel")).Children(func() { components.Text(c, s.model).SingleLine() })
-		selectModel.Popup(func(ui.Element) {
-			for _, name := range []string{"Demo model", "Fast demo"} {
-				selectModel.Item(name).Children(func() { components.Text(c, name) })
-			}
-		})
-	})
-	ui.Box(c).Key("effort").Children(func() {
-		selectEffort := components.Select(c, &s.effort)
-		selectEffort.Trigger.Label(tr(c, "chatEffort")).Children(func() { components.Text(c, s.effort).SingleLine() })
-		selectEffort.Popup(func(ui.Element) {
-			for _, name := range []string{"Low", "Medium", "High"} {
-				selectEffort.Item(name).Children(func() { components.Text(c, name) })
-			}
-		})
-	})
+// chatDemoTrailing attaches sample files and shows simulated context use.
+func chatDemoTrailing(c *ui.Context, s *chatDemoState) {
+	// Each sample attaches once; the action rests when all are attached.
+	next := -1
+	for i, f := range chatDemoFiles {
+		if next < 0 && !slices.Contains(s.files, f) {
+			next = i
+		}
+	}
+	if attach := chat.IconAction(c, tr(c, "chatAttach"), lucide.Paperclip).Disabled(next < 0); attach.Clicked() && next >= 0 {
+		s.files = append(s.files, chatDemoFiles[next])
+	}
+	window := chatDemoModelFor(s.model).window
+	used := 18_400 + 6_200*len(s.turns)
+	if turn := s.running(); turn != nil {
+		used += turn.received / 4
+	}
+	fraction := math.Min(1, float64(used)/float64(window))
+	value := fmt.Sprintf("%s / %s (%d%%)", chatDemoTokens(used), chatDemoTokens(window), int(math.Round(fraction*100)))
+	chat.ContextMeter(c, &s.meter, chat.ContextMeterOptions{Label: tr(c, "chatContextWindow"), Tooltip: value,
+		Title: tr(c, "chatContextWindow"), Value: value, Fraction: fraction})
 }
 
-func chatDemoMetrics(added, removed int) chat.View {
-	return func(c *ui.Context) {
-		components.Text(c, fmt.Sprintf("+%d", added)).TextColor(c.Theme().Success)
-		components.Text(c, fmt.Sprintf("−%d", removed)).TextColor(c.Theme().Danger)
+// chatDemoFooter shows the project, branch and working mode under the card.
+func chatDemoFooter(c *ui.Context, s *chatDemoState) {
+	t := c.Theme()
+	chat.Chip(c, "onevra", chat.ChipOptions{Icon: lucide.Folder, ReadOnly: true})
+	var branches []chat.Option
+	for _, b := range []string{"main", "feature/chat-ui", "release/0.2026.10"} {
+		branches = append(branches, chat.Option{ID: b, Label: b})
 	}
+	if r := chat.Picker(c, &s.branchPicker, chat.PickerOptions{Label: s.branch, Icon: lucide.GitBranch, Options: branches, Selected: s.branch,
+		SearchLabel: tr(c, "chatSearchBranches"), EmptyText: tr(c, "chatNoResults"), Searchable: 2}); r.Chosen != "" {
+		s.branch = r.Chosen
+	}
+	chat.SwitchChip(c, &s.worktree, tr(c, "chatWorktree"))
+	ui.Spacer(c)
+	if s.running() != nil {
+		chat.Shimmer(c, tr(c, "chatStreaming"), 12.5, t.TextMuted, t.Text)
+	}
+	quota := chatDemoQuota(c, s)
+	row := quota.Rows[0]
+	r := chat.QuotaSummary(c, &s.quota, chat.QuotaSummaryOptions{Label: tr(c, "chatUsageLimits"),
+		Tooltip: quota.Title + "\n" + row.Label + " · " + row.Value, Row: row, Quotas: []chat.QuotaOptions{quota}})
+	if r.Refresh != "" {
+		// A host would start the read off the UI thread; the sample only waits.
+		s.quotaRefreshed = c.Now().Add(chatQuotaRead)
+	}
+	if r.Open != "" {
+		c.OpenURL(chatDemoUsagePage)
+	}
+}
+
+const (
+	chatQuotaEvery    = 5 * time.Minute
+	chatQuotaRead     = 1200 * time.Millisecond
+	chatDemoUsagePage = "https://github.com/oneo-me/onevra"
+)
+
+// chatDemoQuota is a sample account; the summary glances at its shortest
+// limit. Its countdown and simulated refresh follow the frame clock.
+func chatDemoQuota(c *ui.Context, s *chatDemoState) chat.QuotaOptions {
+	now := c.Now()
+	if !s.quotaRefreshed.IsZero() && !now.Before(s.quotaRefreshed) {
+		s.quotaRefreshed, s.quotaNext = time.Time{}, time.Time{}
+	}
+	if s.quotaNext.IsZero() || now.After(s.quotaNext) {
+		s.quotaNext = now.Add(chatQuotaEvery)
+	}
+	refreshing := !s.quotaRefreshed.IsZero()
+	countdown := tr(c, "chatQuotaRefreshing")
+	if !refreshing {
+		// Round up so the countdown never shows zero before a read.
+		seconds := int((s.quotaNext.Sub(now) + time.Second - 1) / time.Second)
+		countdown = fmt.Sprintf("%02d:%02d", seconds/60, seconds%60)
+	}
+	if s.quota.Open || refreshing {
+		c.After(time.Second / 4)
+	}
+	return chat.QuotaOptions{
+		ID: "demo", Title: tr(c, "chatQuotaAccount"), Countdown: countdown, Refreshing: refreshing,
+		RefreshLabel: tr(c, "chatQuotaRefresh"), OpenLabel: tr(c, "chatQuotaOpen"),
+		Leading: func(c *ui.Context, size float32) {
+			components.Icon(c, lucide.Gauge).Size(size, size).Shrink(0).TextColor(c.Theme().TextMuted)
+		},
+		Rows: []chat.QuotaRow{
+			{Label: tr(c, "chatQuotaFiveHour"), Detail: tr(c, "chatQuotaFiveHourReset"), Value: msg(c).ChatQuotaLeft(63), Fraction: .63},
+			{Label: tr(c, "chatQuotaWeekly"), Detail: tr(c, "chatQuotaWeeklyReset"), Value: msg(c).ChatQuotaLeft(18), Fraction: .18},
+			{Label: tr(c, "chatQuotaCredits"), Value: "$12.40", Fraction: -1},
+		},
+	}
+}
+
+func chatDemoTokens(n int) string {
+	switch {
+	case n >= 999_500:
+		return fmt.Sprintf("%.1fM", float64(n)/1e6)
+	case n >= 1000:
+		return fmt.Sprintf("%.0fk", float64(n)/1e3)
+	}
+	return fmt.Sprint(n)
 }

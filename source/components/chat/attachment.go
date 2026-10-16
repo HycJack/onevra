@@ -20,8 +20,9 @@ type AttachmentPreviewResult struct {
 	Remove bool
 }
 
-// AttachmentPreview shows a compact image tile with an optional remove
-// action. A nil image shows a placeholder, without reading any file.
+// AttachmentPreview shows a 64-point image tile with an optional remove
+// action. A nil image shows a placeholder, without reading any file. Use it
+// for rows of images only; Attachment keeps mixed rows at one height.
 func AttachmentPreview(c *ui.Context, options AttachmentPreviewOptions) AttachmentPreviewResult {
 	var result AttachmentPreviewResult
 	t := c.Theme()
@@ -45,5 +46,58 @@ func AttachmentPreview(c *ui.Context, options AttachmentPreviewOptions) Attachme
 		}
 	})
 	components.Tooltip(c, result.Root, options.Label)
+	return result
+}
+
+// AttachmentOptions describes a file the host has already prepared. Detail
+// is short trailing text, such as a size. Image is an optional decoded
+// thumbnail; without one, Icon replaces the default file icon, such as
+// lucide.Image for an image still being prepared. An empty RemoveLabel
+// makes the chip read-only, as in a sent prompt.
+type AttachmentOptions struct {
+	Label, Detail, RemoveLabel string
+	Image                      ui.ImageSource
+	Icon                       func() *ui.SVG
+}
+
+// AttachmentResult reports a frame-local removal request.
+type AttachmentResult struct {
+	Root   ui.Element
+	Remove bool
+}
+
+// Attachment shows a compact file chip with an optional remove action, for
+// the composer's Attachments slot or a prompt. It performs no file I/O.
+func Attachment(c *ui.Context, options AttachmentOptions) AttachmentResult {
+	var result AttachmentResult
+	t := c.Theme()
+	result.Root = ui.Row(c).MinWidth(0).MaxWidth(220).Height(30).AlignItems(ui.Center).Gap(6).Padding(0, 4).
+		Radius(7).Border(1, strongBorder(t)).Background(t.Background.Mix(t.Text, .035)).Children(func() {
+		if options.Image != nil {
+			ui.Image(c, options.Image).Size(22, 22).Fit(ui.Cover).Radius(4).Shrink(0)
+		} else {
+			icon := options.Icon
+			if icon == nil {
+				icon = lucide.FileText
+			}
+			ui.Row(c).Size(22, 22).Shrink(0).Center().Children(func() {
+				components.Icon(c, icon).Size(13, 13).TextColor(tertiary(t))
+			})
+		}
+		components.Text(c, options.Label).MinWidth(0).SingleLine().Ellipsis("…").FontSize(12.5).TextColor(secondary(t))
+		if options.Detail != "" {
+			components.Text(c, options.Detail).Shrink(0).FontSize(11.5).TextColor(tertiary(t))
+		}
+		if options.RemoveLabel == "" {
+			ui.Box(c).Width(2)
+			return
+		}
+		b := ui.ButtonBase(c).Label(options.RemoveLabel).Size(18, 18).Shrink(0).Radius(4).Center().Background(ui.Color{}).TextColor(tertiary(t))
+		if b.Hovered() || b.Focused() {
+			b.Background(overlayStrong(t)).TextColor(t.Text)
+		}
+		b.Children(func() { components.Icon(c, lucide.X).Size(11, 11) })
+		result.Remove = b.Clicked()
+	})
 	return result
 }
