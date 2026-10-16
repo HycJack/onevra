@@ -13,22 +13,21 @@ import (
 )
 
 type graphDemoState struct {
-	view                  graph.State
-	attachments, settings bool
-	empty                 bool
-	added                 int
-	opened                string
-	cache                 graphCache
+	view   graph.State
+	empty  bool
+	added  int
+	opened string
+	cache  graphCache
 }
 
 // graphCache keeps the sample between builds, so thousands of added notes
 // are not regenerated for every frame.
 type graphCache struct {
-	added             int
-	attachments, dark bool
-	newTitle          locales.Messages
-	data              graph.Data
-	titles            map[string]string
+	added    int
+	dark     bool
+	newTitle locales.Messages
+	data     graph.Data
+	titles   map[string]string
 }
 
 // graphNote is a document of the sample library; its path's first segment
@@ -74,8 +73,8 @@ func graphDirectory(path string) string {
 func graphSample(c *ui.Context, s *graphDemoState) (graph.Data, map[string]string) {
 	dark, newTitle := c.Theme().Dark, msg(c)
 	k := &s.cache
-	if k.titles == nil || k.added != s.added || k.attachments != s.attachments || k.dark != dark || k.newTitle != newTitle {
-		*k = graphCache{added: s.added, attachments: s.attachments, dark: dark, newTitle: newTitle}
+	if k.titles == nil || k.added != s.added || k.dark != dark || k.newTitle != newTitle {
+		*k = graphCache{added: s.added, dark: dark, newTitle: newTitle}
 		k.data = graphLibrary(s, dark, newTitle)
 		k.titles = make(map[string]string, len(k.data.Nodes))
 		for _, n := range k.data.Nodes {
@@ -127,9 +126,6 @@ func graphLibrary(s *graphDemoState, dark bool, newTitle locales.Messages) graph
 			}
 			data.Edges = append(data.Edges, graph.Edge{Source: note.path, Target: target, Style: style})
 		}
-		if !s.attachments {
-			continue
-		}
 		for _, name := range note.attachments {
 			id := note.path + "#" + name
 			data.Nodes = append(data.Nodes, graph.Node{ID: id, Label: name, Group: directory, Size: 8, Color: attachment, LabelColor: attachmentLabel})
@@ -139,13 +135,13 @@ func graphLibrary(s *graphDemoState, dark bool, newTitle locales.Messages) graph
 	return data
 }
 
-// graphBulkCounts are the larger additions offered for trying the graph's
+// graphBulkCount is the larger addition offered for trying the graph's
 // performance.
-var graphBulkCounts = []int{100, 1000}
+const graphBulkCount = 100
 
 func graphDemo(s *controlState) *graphDemoState {
 	if s.graph == nil {
-		s.graph = &graphDemoState{attachments: true}
+		s.graph = &graphDemoState{}
 	}
 	return s.graph
 }
@@ -158,14 +154,11 @@ func controlGraph(c *ui.Context, s *controlState, _ string) {
 	if !d.empty {
 		data, titles = graphSample(c, d)
 	}
-	ui.Column(c).FillWidth().Grow(1).MinWidth(0).MinHeight(240).Radius(t.Radius*1.5).Background(t.Surface).Border(1, t.Border.Alpha(.5)).Clip().Children(func() {
-		graph.View(c, &d.view, data, graph.Options{
-			Label:     msg(c).GraphLabel(len(data.Nodes), len(data.Edges)),
-			EmptyText: tr(c, "graphEmpty"),
-			Open:      func(id string) { d.opened = id },
-			Overlay:   func(c *ui.Context) { graphSettings(c, d) },
-		})
-	})
+	graph.View(c, &d.view, data, graph.Options{
+		Label:     msg(c).GraphLabel(len(data.Nodes), len(data.Edges)),
+		EmptyText: tr(c, "graphEmpty"),
+		Open:      func(id string) { d.opened = id },
+	}).Grow(1).MinHeight(240)
 	if title, ok := titles[d.opened]; ok {
 		components.Text(c, msg(c).GraphOpened(title)).TextColor(t.TextMuted)
 	}
@@ -177,13 +170,9 @@ func graphToolbar(c *ui.Context, s *controlState) {
 	if sidebar.IconButton(c, lucide.Plus(), tr(c, "graphAdd")).Clicked() {
 		d.added++
 	}
-	sidebar.IconButton(c, lucide.ListPlus(), tr(c, "graphAddBulk")).Menu(func(m *ui.Menu) {
-		for _, count := range graphBulkCounts {
-			if m.Item(msg(c).GraphAddMany(count)).Chosen() {
-				d.added += count
-			}
-		}
-	})
+	if sidebar.IconButton(c, lucide.ListPlus(), msg(c).GraphAddMany(graphBulkCount)).Clicked() {
+		d.added += graphBulkCount
+	}
 	if d.added > 0 && sidebar.IconButton(c, lucide.RotateCcw(), tr(c, "graphReset")).Clicked() {
 		d.added = 0
 	}
@@ -191,21 +180,4 @@ func graphToolbar(c *ui.Context, s *controlState) {
 		d.view.Fit()
 	}
 	emptyStateToggle(c, &d.empty)
-}
-
-func graphSettings(c *ui.Context, d *graphDemoState) {
-	t := c.Theme()
-	label := tr(c, "graphSettings")
-	anchor := components.Button(c, "", components.ButtonSecondary).Label(label).Padding(t.Space(1.5))
-	anchor.Children(func() { components.Icon(c, lucide.Ellipsis).Size(16, 16) })
-	if anchor.Clicked() {
-		d.settings = !d.settings
-	}
-	components.Popover(c, anchor, &d.settings, func(panel ui.Element) {
-		panel.Label(label).Width(288)
-		ui.Row(c).FillWidth().AlignItems(ui.Start).Gap(t.Space(3)).Children(func() {
-			components.Text(c, tr(c, "graphAttachments")).Grow(1).MinWidth(0)
-			components.Switch(c, &d.attachments, tr(c, "graphAttachments"), components.SwitchOptions{HideLabel: true})
-		})
-	})
 }

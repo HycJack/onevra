@@ -6126,16 +6126,6 @@ func (msgs Messages) GraphAdd() string {
 	return Catalog.Format(msgs.locale, "graphAdd", nil)
 }
 
-// GraphAddBulk says "Add many notes"
-// in the language the app shows.
-func GraphAddBulk() string { return In(i18n.Locale()).GraphAddBulk() }
-
-// GraphAddBulk says "Add many notes"
-// in the language of msgs.
-func (msgs Messages) GraphAddBulk() string {
-	return Catalog.Format(msgs.locale, "graphAddBulk", nil)
-}
-
 // GraphAddMany says "Add {count} notes"
 // in the language the app shows.
 func GraphAddMany(count int) string { return In(i18n.Locale()).GraphAddMany(count) }
@@ -6204,26 +6194,6 @@ func GraphOpened(title string) string { return In(i18n.Locale()).GraphOpened(tit
 // in the language of msgs.
 func (msgs Messages) GraphOpened(title string) string {
 	return Catalog.Format(msgs.locale, "graphOpened", map[string]any{"title": title})
-}
-
-// GraphSettings says "Graph settings"
-// in the language the app shows.
-func GraphSettings() string { return In(i18n.Locale()).GraphSettings() }
-
-// GraphSettings says "Graph settings"
-// in the language of msgs.
-func (msgs Messages) GraphSettings() string {
-	return Catalog.Format(msgs.locale, "graphSettings", nil)
-}
-
-// GraphAttachments says "Show attachments"
-// in the language the app shows.
-func GraphAttachments() string { return In(i18n.Locale()).GraphAttachments() }
-
-// GraphAttachments says "Show attachments"
-// in the language of msgs.
-func (msgs Messages) GraphAttachments() string {
-	return Catalog.Format(msgs.locale, "graphAttachments", nil)
 }
 
 // ComponentRichTextEditor says "Rich text editor"

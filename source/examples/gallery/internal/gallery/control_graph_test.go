@@ -40,38 +40,16 @@ func TestGraphPage(t *testing.T) {
 				t.Fatalf("sample has %d nodes", nodes)
 			}
 
-			if err := tt.Click(g.text("graphSettings")); err != nil {
-				t.Fatal(err)
-			}
-			if !tt.HasText(g.text("graphAttachments")) {
-				t.Fatal("settings popover did not open")
-			}
-			// The switch is the popover's only control; the keyboard reaches it.
-			for range 2 {
-				if tt.Focused(g.text("graphAttachments")) {
-					break
-				}
-				tt.Key(0, ui.KeyTab)
-			}
-			tt.Key(0, ui.KeySpace)
-			if s.attachments || len(graphLibrary(s, false, locales.In("")).Nodes) != len(graphNotes) {
-				t.Fatal("switch did not hide attachments")
-			}
-			tt.Key(0, ui.KeyEscape)
-
 			if err := tt.Click(g.text("graphAdd")); err != nil {
 				t.Fatal(err)
 			}
 			if s.added != 1 {
 				t.Fatal("add note did not update the graph")
 			}
-			if err := tt.Click(g.text("graphAddBulk")); err != nil {
+			if err := tt.Click(g.messages().GraphAddMany(graphBulkCount)); err != nil {
 				t.Fatal(err)
 			}
-			if err := tt.ChooseMenuItem(g.messages().GraphAddMany(1000)); err != nil {
-				t.Fatal(err)
-			}
-			if s.added != 1001 || len(s.cache.data.Nodes) != len(graphNotes)+1001 {
+			if s.added != 1+graphBulkCount || len(s.cache.data.Nodes) != len(graphNotes)+6+1+graphBulkCount {
 				t.Fatalf("bulk add left %d added notes and %d nodes", s.added, len(s.cache.data.Nodes))
 			}
 			ids := map[string]bool{}

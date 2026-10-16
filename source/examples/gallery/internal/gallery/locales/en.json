@@ -925,7 +925,6 @@
   "scene3dView": "Software 3D scene",
   "relationshipGraph": "Relationship graph",
   "graphAdd": "Add note",
-  "graphAddBulk": "Add many notes",
   "graphAddMany": "Add {count} notes",
   "@graphAddMany": {
     "placeholders": {
@@ -964,8 +963,6 @@
       }
     }
   },
-  "graphSettings": "Graph settings",
-  "graphAttachments": "Show attachments",
   "componentRichTextEditor": "Rich text editor",
   "componentMarkdownStream": "Markdown stream",
   "timeline": "Timeline",
