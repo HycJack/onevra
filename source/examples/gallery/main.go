@@ -40,6 +40,7 @@ func main() {
 		if menu := g.ApplicationMenu(); menu != nil {
 			mygo.App.SetMenu(menu)
 		}
+		g.EnableDesktopIntegrations()
 		win.OnClosed(func() { mygo.App.Quit() })
 	})
 	if err := mygo.App.Run(); err != nil {

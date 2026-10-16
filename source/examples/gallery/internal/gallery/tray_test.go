@@ -10,56 +10,55 @@ import (
 	"github.com/egoist/mygo/ui"
 )
 
-func TestPanelPosition(t *testing.T) {
-	panel := mygo.Rectangle{Width: 380, Height: 320}
-	for _, tt := range []struct {
-		name         string
-		anchor, area mygo.Rectangle
-		x, y         int
-	}{
-		{"top", mygo.Rectangle{X: 500, Width: 24, Height: 24}, mygo.Rectangle{Y: 24, Width: 1440, Height: 876}, 322, 30},
-		{"bottom", mygo.Rectangle{X: 500, Y: 876, Width: 24, Height: 24}, mygo.Rectangle{Width: 1440, Height: 876}, 322, 550},
-		{"left edge", mygo.Rectangle{Width: 24, Height: 24}, mygo.Rectangle{Y: 24, Width: 1440, Height: 876}, 0, 30},
-		{"right edge", mygo.Rectangle{X: 1416, Width: 24, Height: 24}, mygo.Rectangle{Y: 24, Width: 1440, Height: 876}, 1060, 30},
-		{"secondary display", mygo.Rectangle{X: -30, Y: -900, Width: 24, Height: 24}, mygo.Rectangle{X: -1440, Y: -876, Width: 1440, Height: 876}, -380, -870},
-		{"small work area", mygo.Rectangle{Width: 24, Height: 24}, mygo.Rectangle{Y: 24, Width: 200, Height: 200}, 0, 24},
-	} {
-		t.Run(tt.name, func(t *testing.T) {
-			x, y := panelPosition(tt.anchor, tt.area, panel)
-			if x != tt.x || y != tt.y {
-				t.Fatalf("position = (%d, %d), want (%d, %d)", x, y, tt.x, tt.y)
-			}
-		})
-	}
-}
-
 func TestTrayIcon(t *testing.T) {
-	img, err := png.Decode(bytes.NewReader(trayIcon()))
-	if err != nil {
-		t.Fatal(err)
-	}
-	if img.Bounds().Dx() != 32 || img.Bounds().Dy() != 32 {
-		t.Fatalf("unexpected icon bounds: %v", img.Bounds())
-	}
-	if _, _, _, a := img.At(0, 0).RGBA(); a != 0 {
-		t.Fatal("icon background must be transparent")
-	}
-	if _, _, _, a := img.At(6, 4).RGBA(); a == 0 {
-		t.Fatal("icon must contain visible ink")
+	for _, template := range []bool{true, false} {
+		img, err := png.Decode(bytes.NewReader(trayIcon(template)))
+		if err != nil {
+			t.Fatal(err)
+		}
+		if img.Bounds().Dx() != 32 || img.Bounds().Dy() != 32 {
+			t.Fatalf("unexpected icon bounds: %v", img.Bounds())
+		}
+		if _, _, _, a := img.At(0, 0).RGBA(); a != 0 {
+			t.Fatal("icon background must be transparent")
+		}
+		// The tall bar of the artwork sits left of center, the tiles right.
+		r, g, b, a := img.At(8, 16).RGBA()
+		if a == 0 {
+			t.Fatal("icon must contain visible ink")
+		}
+		if template != (r == 0 && g == 0 && b == 0) {
+			t.Fatalf("template=%v drew color %d,%d,%d", template, r, g, b)
+		}
+		if _, _, _, a := img.At(12, 16).RGBA(); a != 0 {
+			t.Fatal("gap between the bar and the tiles must stay transparent")
+		}
 	}
 }
 
-func TestTrayPage(t *testing.T) {
-	g := &Gallery{page: trayPage}
-	tt := ui.NewTester(g.View, 600, 500)
-	if !tt.HasText("Tray") || !tt.HasText("Enable tray") {
-		t.Fatal("missing tray page", tt.Texts())
+func TestTrayPanel(t *testing.T) {
+	shown := 0
+	a := &trayDemo{showOwner: func() { shown++ }}
+	tt := ui.NewTester(a.view, 300, 124)
+	if !tt.HasText("Onevra Gallery") || !tt.HasText("More actions are in the tray menu.") {
+		t.Fatal("missing panel text", tt.Texts())
 	}
-	if g.tray.tray != nil || g.tray.win != nil {
-		t.Fatal("rendering must not create native resources")
+	if err := tt.Click("Show Gallery"); err != nil || shown != 1 {
+		t.Fatalf("Show Gallery did not reach its owner: %v", err)
 	}
-	if pageFromKey(pageKey(trayPage)) != trayPage {
-		t.Fatal("tray route does not round trip")
+}
+
+func TestDesktopIntegrationsNeedShell(t *testing.T) {
+	g := &Gallery{}
+	ui.NewTester(g.View, 600, 500)
+	g.EnableDesktopIntegrations()
+	if g.tray.tray != nil || g.dock.menu != nil {
+		t.Fatal("headless gallery must not create native resources")
+	}
+	for _, key := range []string{"desktop/tray", "desktop/dock-menu"} {
+		if pageKey(pageFromKey(key)) == key {
+			t.Fatalf("removed route %s must fall back", key)
+		}
 	}
 	g.Close()
 	g.Close()
@@ -73,59 +72,58 @@ func TestNativeTray(t *testing.T) {
 		t.Skip("requires a desktop session")
 	}
 	mygo.RunOnMain(func() {
-		g := &Gallery{page: trayPage}
+		g := &Gallery{}
 		g.New()
 		defer g.Shell.Window().Destroy()
 		defer g.Close()
 		a := &g.tray
-		if err := a.start(g.Shell.Window()); err != nil {
+		if err := a.start(g.showMainWindow); err != nil {
 			t.Error(err)
 			return
 		}
 		original := a.tray
-		if err := a.start(g.Shell.Window()); err != nil || a.tray != original {
-			t.Error("enable should be idempotent")
+		if err := a.start(g.showMainWindow); err != nil || a.tray != original {
+			t.Error("start should be idempotent")
 		}
-		if a.win.IsVisible() {
-			t.Error("panel should start hidden")
+		if a.panel != nil {
+			t.Error("panel should not open with the tray")
 		}
-		menu, panel := a.menu, a.win
+		menu := a.menu
 		g.chooseLanguage("zh-Hans")
-		if a.menu != menu || a.win != panel || menu.ItemByID("notes").Label != g.text("openNotes") || menu.ItemByID("quit").Label != "退出" {
+		if a.menu != menu || menu.ItemByID("panel").Label != g.text("openTrayPanel") || menu.ItemByID("quit").Label != "退出" {
 			t.Error("language switch must update tray menu without recreating its resources")
 		}
 		g.chooseLanguage("en")
-		if menu.ItemByID("notes").Label != "Open notes" {
+		if menu.ItemByID("panel").Label != "Open tray panel" {
 			t.Error("English tray menu was not restored")
 		}
-		a.note = "Preserved while hidden"
 		a.toggle()
-		if !a.win.IsVisible() {
-			t.Error("toggle should show the panel")
+		if a.panel == nil {
+			t.Error("toggle should open the panel")
 		}
 		a.toggle()
-		if a.win.IsVisible() {
-			t.Error("toggle should hide the panel")
+		if a.panel != nil {
+			t.Error("toggle should close the panel")
+		}
+		g.Shell.Window().Hide()
+		a.show()
+		item := menu.ItemByID("gallery")
+		item.Click(item, nil)
+		if a.panel != nil || !g.Shell.Window().IsVisible() {
+			t.Error("Show Gallery should close the panel and show the main window")
 		}
 		a.show()
-		a.win.Close()
-		if a.win.IsVisible() || a.note != "Preserved while hidden" {
-			t.Error("close should hide the panel without discarding state")
-		}
-		old := a.win
+		old := a.panel
 		a.close()
 		a.close()
-		if !old.IsDestroyed() || a.tray != nil || a.win != nil || a.offQuit != nil {
-			t.Error("disable must release native resources and quit subscription")
+		if !old.IsDestroyed() || a.tray != nil || a.panel != nil || a.offQuit != nil {
+			t.Error("close must release native resources and quit subscription")
 		}
-		if err := a.start(g.Shell.Window()); err != nil {
+		if err := a.start(g.showMainWindow); err != nil {
 			t.Error(err)
 		}
-		if a.note != "Preserved while hidden" {
-			t.Error("disable should retain the in-memory note")
-		}
 		g.Close()
-		if a.tray != nil || a.win != nil {
+		if a.tray != nil || a.panel != nil {
 			t.Error("gallery cleanup left tray resources alive")
 		}
 	})

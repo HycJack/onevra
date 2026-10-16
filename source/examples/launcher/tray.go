@@ -23,6 +23,7 @@ func (a *application) createTray() error {
 	if runtime.GOOS != "linux" {
 		a.tray.OnClick(a.toggle)
 		a.tray.OnRightClick(func() {
+			a.hide()
 			a.tray.SetMenu(a.trayMenu)
 			defer a.tray.SetMenu(nil)
 			a.tray.PopUpMenu()

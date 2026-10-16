@@ -8,7 +8,7 @@ import (
 	"github.com/oneo-me/onevra/source/components"
 )
 
-const notificationsPage galleryPage = dockPage + 1
+const notificationsPage galleryPage = shellPage + 1
 
 type notificationDemo struct {
 	current *mygo.Notification
@@ -52,7 +52,7 @@ func (g *Gallery) sendNotification() {
 		d.status = "notificationClicked"
 		g.page = notificationsPage
 		g.settings.open = false
-		g.showFromDock()
+		g.showMainWindow()
 		g.Shell.Window().Invalidate()
 	})
 	// Show may wait for the macOS permission prompt. Keep the UI responsive;

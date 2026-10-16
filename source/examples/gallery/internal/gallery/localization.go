@@ -127,7 +127,7 @@ func (g *Gallery) updateLanguageWindows() {
 		g.tray.tray.SetToolTip(g.text("trayTooltip"))
 	}
 	if g.tray.menu != nil {
-		g.tray.menu.ItemByID("notes").SetLabel(g.text("openNotes"))
+		g.tray.menu.ItemByID("panel").SetLabel(g.text("openTrayPanel"))
 		g.tray.menu.ItemByID("gallery").SetLabel(g.text("showGallery"))
 		g.tray.menu.ItemByID("quit").SetLabel(g.text("quit"))
 		// AppIndicator retains a native snapshot rather than reading the menu on click.
@@ -147,8 +147,7 @@ func (g *Gallery) updateLanguageWindows() {
 			mygo.App.Dock.SetMenu(g.dock.menu)
 		}
 	}
-	if g.tray.win != nil {
-		g.tray.win.SetTitle(g.text("galleryTrayNotes"))
-		g.tray.win.Invalidate()
+	if g.tray.panel != nil {
+		g.tray.panel.Invalidate()
 	}
 }

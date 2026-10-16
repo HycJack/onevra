@@ -97,12 +97,6 @@ func pageKey(page galleryPage) string {
 	if page == notificationsPage {
 		return "desktop/notifications"
 	}
-	if page == dockPage {
-		return "desktop/dock-menu"
-	}
-	if page == trayPage {
-		return "desktop/tray"
-	}
 	if page == welcomePage {
 		return "welcome"
 	}
@@ -121,12 +115,6 @@ func pageKey(page galleryPage) string {
 func pageFromKey(key string) galleryPage {
 	if key == "desktop/notifications" {
 		return notificationsPage
-	}
-	if key == "desktop/dock-menu" {
-		return dockPage
-	}
-	if key == "desktop/tray" {
-		return trayPage
 	}
 	if key == "welcome" {
 		return welcomePage

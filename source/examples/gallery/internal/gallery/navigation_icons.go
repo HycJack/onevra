@@ -107,10 +107,6 @@ func (entry navigationEntry) icon() *ui.SVG {
 		return lucide.House()
 	case lucidePage:
 		return lucide.Shapes()
-	case trayPage:
-		return lucide.Inbox()
-	case dockPage:
-		return lucide.PanelBottom()
 	case notificationsPage:
 		return lucide.Bell()
 	}

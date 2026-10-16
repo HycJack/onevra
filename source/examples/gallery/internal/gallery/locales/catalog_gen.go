@@ -128,16 +128,6 @@ func (msgs Messages) ASingleLineLabel() string {
 	return Catalog.Format(msgs.locale, "aSingleLineLabel", nil)
 }
 
-// ASmallWindowOpenedFromTheTray says "A small window, opened from the tray."
-// in the language the app shows.
-func ASmallWindowOpenedFromTheTray() string { return In(i18n.Locale()).ASmallWindowOpenedFromTheTray() }
-
-// ASmallWindowOpenedFromTheTray says "A small window, opened from the tray."
-// in the language of msgs.
-func (msgs Messages) ASmallWindowOpenedFromTheTray() string {
-	return Catalog.Format(msgs.locale, "aSmallWindowOpenedFromTheTray", nil)
-}
-
 // AWebPageInsideNativeUi says "A web page inside native UI"
 // in the language the app shows.
 func AWebPageInsideNativeUi() string { return In(i18n.Locale()).AWebPageInsideNativeUi() }
@@ -246,18 +236,6 @@ func Appearance() string { return In(i18n.Locale()).Appearance() }
 // in the language of msgs.
 func (msgs Messages) Appearance() string {
 	return Catalog.Format(msgs.locale, "appearance", nil)
-}
-
-// AppindicatorSupportsMenusOnlyChooseOpenNotesFromTheTrayMenu says "AppIndicator supports menus only. Choose Open notes from the tray menu."
-// in the language the app shows.
-func AppindicatorSupportsMenusOnlyChooseOpenNotesFromTheTrayMenu() string {
-	return In(i18n.Locale()).AppindicatorSupportsMenusOnlyChooseOpenNotesFromTheTrayMenu()
-}
-
-// AppindicatorSupportsMenusOnlyChooseOpenNotesFromTheTrayMenu says "AppIndicator supports menus only. Choose Open notes from the tray menu."
-// in the language of msgs.
-func (msgs Messages) AppindicatorSupportsMenusOnlyChooseOpenNotesFromTheTrayMenu() string {
-	return Catalog.Format(msgs.locale, "appindicatorSupportsMenusOnlyChooseOpenNotesFromTheTrayMenu", nil)
 }
 
 // Application says "APPLICATION"
@@ -1498,26 +1476,6 @@ func (msgs Messages) Desktop() string {
 	return Catalog.Format(msgs.locale, "desktop", nil)
 }
 
-// DesktopDockMenu says "Desktop / Dock menu"
-// in the language the app shows.
-func DesktopDockMenu() string { return In(i18n.Locale()).DesktopDockMenu() }
-
-// DesktopDockMenu says "Desktop / Dock menu"
-// in the language of msgs.
-func (msgs Messages) DesktopDockMenu() string {
-	return Catalog.Format(msgs.locale, "desktopDockMenu", nil)
-}
-
-// DesktopTray says "Desktop / Tray"
-// in the language the app shows.
-func DesktopTray() string { return In(i18n.Locale()).DesktopTray() }
-
-// DesktopTray says "Desktop / Tray"
-// in the language of msgs.
-func (msgs Messages) DesktopTray() string {
-	return Catalog.Format(msgs.locale, "desktopTray", nil)
-}
-
 // Details says "Details"
 // in the language the app shows.
 func Details() string { return In(i18n.Locale()).Details() }
@@ -1538,26 +1496,6 @@ func (msgs Messages) Dialog() string {
 	return Catalog.Format(msgs.locale, "dialog", nil)
 }
 
-// DisableDockMenu says "Disable Dock menu"
-// in the language the app shows.
-func DisableDockMenu() string { return In(i18n.Locale()).DisableDockMenu() }
-
-// DisableDockMenu says "Disable Dock menu"
-// in the language of msgs.
-func (msgs Messages) DisableDockMenu() string {
-	return Catalog.Format(msgs.locale, "disableDockMenu", nil)
-}
-
-// DisableTray says "Disable tray"
-// in the language the app shows.
-func DisableTray() string { return In(i18n.Locale()).DisableTray() }
-
-// DisableTray says "Disable tray"
-// in the language of msgs.
-func (msgs Messages) DisableTray() string {
-	return Catalog.Format(msgs.locale, "disableTray", nil)
-}
-
 // Disabled says "Disabled"
 // in the language the app shows.
 func Disabled() string { return In(i18n.Locale()).Disabled() }
@@ -1576,28 +1514,6 @@ func Divider() string { return In(i18n.Locale()).Divider() }
 // in the language of msgs.
 func (msgs Messages) Divider() string {
 	return Catalog.Format(msgs.locale, "divider", nil)
-}
-
-// DockMenu says "Dock menu"
-// in the language the app shows.
-func DockMenu() string { return In(i18n.Locale()).DockMenu() }
-
-// DockMenu says "Dock menu"
-// in the language of msgs.
-func (msgs Messages) DockMenu() string {
-	return Catalog.Format(msgs.locale, "dockMenu", nil)
-}
-
-// DockMenusAreAvailableOnlyOnMacosUseDesktopTrayForATrayMen says "Dock menus are available only on macOS. Use Desktop / Tray for a tray menu on this platform."
-// in the language the app shows.
-func DockMenusAreAvailableOnlyOnMacosUseDesktopTrayForATrayMen() string {
-	return In(i18n.Locale()).DockMenusAreAvailableOnlyOnMacosUseDesktopTrayForATrayMen()
-}
-
-// DockMenusAreAvailableOnlyOnMacosUseDesktopTrayForATrayMen says "Dock menus are available only on macOS. Use Desktop / Tray for a tray menu on this platform."
-// in the language of msgs.
-func (msgs Messages) DockMenusAreAvailableOnlyOnMacosUseDesktopTrayForATrayMen() string {
-	return Catalog.Format(msgs.locale, "dockMenusAreAvailableOnlyOnMacosUseDesktopTrayForATrayMen", nil)
 }
 
 // Documents says "Documents"
@@ -1700,16 +1616,6 @@ func (msgs Messages) Empty() string {
 	return Catalog.Format(msgs.locale, "empty", nil)
 }
 
-// EnableDockMenu says "Enable Dock menu"
-// in the language the app shows.
-func EnableDockMenu() string { return In(i18n.Locale()).EnableDockMenu() }
-
-// EnableDockMenu says "Enable Dock menu"
-// in the language of msgs.
-func (msgs Messages) EnableDockMenu() string {
-	return Catalog.Format(msgs.locale, "enableDockMenu", nil)
-}
-
 // EnableNotifications says "Enable notifications"
 // in the language the app shows.
 func EnableNotifications() string { return In(i18n.Locale()).EnableNotifications() }
@@ -1718,16 +1624,6 @@ func EnableNotifications() string { return In(i18n.Locale()).EnableNotifications
 // in the language of msgs.
 func (msgs Messages) EnableNotifications() string {
 	return Catalog.Format(msgs.locale, "enableNotifications", nil)
-}
-
-// EnableTray says "Enable tray"
-// in the language the app shows.
-func EnableTray() string { return In(i18n.Locale()).EnableTray() }
-
-// EnableTray says "Enable tray"
-// in the language of msgs.
-func (msgs Messages) EnableTray() string {
-	return Catalog.Format(msgs.locale, "enableTray", nil)
 }
 
 // Enabled says "Enabled"
@@ -1838,16 +1734,6 @@ func FollowSystem() string { return In(i18n.Locale()).FollowSystem() }
 // in the language of msgs.
 func (msgs Messages) FollowSystem() string {
 	return Catalog.Format(msgs.locale, "followSystem", nil)
-}
-
-// GalleryTrayNotes says "Gallery Tray notes"
-// in the language the app shows.
-func GalleryTrayNotes() string { return In(i18n.Locale()).GalleryTrayNotes() }
-
-// GalleryTrayNotes says "Gallery Tray notes"
-// in the language of msgs.
-func (msgs Messages) GalleryTrayNotes() string {
-	return Catalog.Format(msgs.locale, "galleryTrayNotes", nil)
 }
 
 // General says "General"
@@ -1972,16 +1858,6 @@ func HelloWorld() string { return In(i18n.Locale()).HelloWorld() }
 // in the language of msgs.
 func (msgs Messages) HelloWorld() string {
 	return Catalog.Format(msgs.locale, "helloWorld", nil)
-}
-
-// Hide says "Hide"
-// in the language the app shows.
-func Hide() string { return In(i18n.Locale()).Hide() }
-
-// Hide says "Hide"
-// in the language of msgs.
-func (msgs Messages) Hide() string {
-	return Catalog.Format(msgs.locale, "hide", nil)
 }
 
 // Home says "Home"
@@ -2206,18 +2082,6 @@ func (msgs Messages) Items() string {
 	return Catalog.Format(msgs.locale, "items", nil)
 }
 
-// KeptInMemoryUntilYouQuitEscapeHidesThisWindow says "Kept in memory until you quit. Escape hides this window."
-// in the language the app shows.
-func KeptInMemoryUntilYouQuitEscapeHidesThisWindow() string {
-	return In(i18n.Locale()).KeptInMemoryUntilYouQuitEscapeHidesThisWindow()
-}
-
-// KeptInMemoryUntilYouQuitEscapeHidesThisWindow says "Kept in memory until you quit. Escape hides this window."
-// in the language of msgs.
-func (msgs Messages) KeptInMemoryUntilYouQuitEscapeHidesThisWindow() string {
-	return Catalog.Format(msgs.locale, "keptInMemoryUntilYouQuitEscapeHidesThisWindow", nil)
-}
-
 // Kind says "Kind"
 // in the language the app shows.
 func Kind() string { return In(i18n.Locale()).Kind() }
@@ -2296,18 +2160,6 @@ func LeftClick() string { return In(i18n.Locale()).LeftClick() }
 // in the language of msgs.
 func (msgs Messages) LeftClick() string {
 	return Catalog.Format(msgs.locale, "leftClick", nil)
-}
-
-// LeftClickTheTrayIconToToggleTheNotesWindowRightClickForIt says "Left-click the tray icon to toggle the notes window. Right-click for its native menu."
-// in the language the app shows.
-func LeftClickTheTrayIconToToggleTheNotesWindowRightClickForIt() string {
-	return In(i18n.Locale()).LeftClickTheTrayIconToToggleTheNotesWindowRightClickForIt()
-}
-
-// LeftClickTheTrayIconToToggleTheNotesWindowRightClickForIt says "Left-click the tray icon to toggle the notes window. Right-click for its native menu."
-// in the language of msgs.
-func (msgs Messages) LeftClickTheTrayIconToToggleTheNotesWindowRightClickForIt() string {
-	return Catalog.Format(msgs.locale, "leftClickTheTrayIconToToggleTheNotesWindowRightClickForIt", nil)
 }
 
 // LeftPane says "Left pane"
@@ -2614,16 +2466,6 @@ func (msgs Messages) NotNeeded() string {
 	return Catalog.Format(msgs.locale, "notNeeded", nil)
 }
 
-// Note says "Note"
-// in the language the app shows.
-func Note() string { return In(i18n.Locale()).Note() }
-
-// Note says "Note"
-// in the language of msgs.
-func (msgs Messages) Note() string {
-	return Catalog.Format(msgs.locale, "note", nil)
-}
-
 // Notes says "Notes"
 // in the language the app shows.
 func Notes() string { return In(i18n.Locale()).Notes() }
@@ -2756,16 +2598,6 @@ func (msgs Messages) OpenDialog() string {
 	return Catalog.Format(msgs.locale, "openDialog", nil)
 }
 
-// OpenNotes says "Open notes"
-// in the language the app shows.
-func OpenNotes() string { return In(i18n.Locale()).OpenNotes() }
-
-// OpenNotes says "Open notes"
-// in the language of msgs.
-func (msgs Messages) OpenNotes() string {
-	return Catalog.Format(msgs.locale, "openNotes", nil)
-}
-
 // OpenSettings says "Open Settings"
 // in the language the app shows.
 func OpenSettings() string { return In(i18n.Locale()).OpenSettings() }
@@ -2774,6 +2606,16 @@ func OpenSettings() string { return In(i18n.Locale()).OpenSettings() }
 // in the language of msgs.
 func (msgs Messages) OpenSettings() string {
 	return Catalog.Format(msgs.locale, "openSettings", nil)
+}
+
+// OpenTrayPanel says "Open tray panel"
+// in the language the app shows.
+func OpenTrayPanel() string { return In(i18n.Locale()).OpenTrayPanel() }
+
+// OpenTrayPanel says "Open tray panel"
+// in the language of msgs.
+func (msgs Messages) OpenTrayPanel() string {
+	return Catalog.Format(msgs.locale, "openTrayPanel", nil)
 }
 
 // OpenWelcome says "Open Welcome"
@@ -3980,44 +3822,24 @@ func (msgs Messages) TopPane() string {
 	return Catalog.Format(msgs.locale, "topPane", nil)
 }
 
-// Tray says "Tray"
+// TrayHint says "More actions are in the tray menu."
 // in the language the app shows.
-func Tray() string { return In(i18n.Locale()).Tray() }
+func TrayHint() string { return In(i18n.Locale()).TrayHint() }
 
-// Tray says "Tray"
+// TrayHint says "More actions are in the tray menu."
 // in the language of msgs.
-func (msgs Messages) Tray() string {
-	return Catalog.Format(msgs.locale, "tray", nil)
+func (msgs Messages) TrayHint() string {
+	return Catalog.Format(msgs.locale, "trayHint", nil)
 }
 
-// TrayNotes says "Tray notes"
-// in the language the app shows.
-func TrayNotes() string { return In(i18n.Locale()).TrayNotes() }
-
-// TrayNotes says "Tray notes"
-// in the language of msgs.
-func (msgs Messages) TrayNotes() string {
-	return Catalog.Format(msgs.locale, "trayNotes", nil)
-}
-
-// TrayTooltip says "Onevra Gallery — Tray demo"
+// TrayTooltip says "Onevra Gallery"
 // in the language the app shows.
 func TrayTooltip() string { return In(i18n.Locale()).TrayTooltip() }
 
-// TrayTooltip says "Onevra Gallery — Tray demo"
+// TrayTooltip says "Onevra Gallery"
 // in the language of msgs.
 func (msgs Messages) TrayTooltip() string {
 	return Catalog.Format(msgs.locale, "trayTooltip", nil)
-}
-
-// TrayUnavailableS says "Tray unavailable: {error}"
-// in the language the app shows.
-func TrayUnavailableS(error string) string { return In(i18n.Locale()).TrayUnavailableS(error) }
-
-// TrayUnavailableS says "Tray unavailable: {error}"
-// in the language of msgs.
-func (msgs Messages) TrayUnavailableS(error string) string {
-	return Catalog.Format(msgs.locale, "trayUnavailableS", map[string]any{"error": error})
 }
 
 // TypeIntoThePage says "Type into the page"
@@ -4252,16 +4074,6 @@ func WriteANote() string { return In(i18n.Locale()).WriteANote() }
 // in the language of msgs.
 func (msgs Messages) WriteANote() string {
 	return Catalog.Format(msgs.locale, "writeANote", nil)
-}
-
-// WriteAQuickNote says "Write a quick note…"
-// in the language the app shows.
-func WriteAQuickNote() string { return In(i18n.Locale()).WriteAQuickNote() }
-
-// WriteAQuickNote says "Write a quick note…"
-// in the language of msgs.
-func (msgs Messages) WriteAQuickNote() string {
-	return Catalog.Format(msgs.locale, "writeAQuickNote", nil)
 }
 
 // WriteSomeNotes says "Write some notes"

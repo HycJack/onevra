@@ -41,5 +41,5 @@ func (g *Gallery) ApplicationMenu() *mygo.Menu {
 // focused window. Repeated activation keeps the existing settings state.
 func (g *Gallery) openSettingsFromMenu() {
 	g.settings.open = true
-	g.showFromDock()
+	g.showMainWindow()
 }

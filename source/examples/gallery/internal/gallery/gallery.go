@@ -82,14 +82,8 @@ func (g *Gallery) titlebarLocalized(c *ui.Context) {
 	if g.page == lucidePage {
 		title = "Icon library / Lucide"
 	}
-	if g.page == trayPage {
-		title = "Desktop / Tray"
-	}
 	if g.page == notificationsPage {
 		title = "Desktop / System notifications"
-	}
-	if g.page == dockPage {
-		title = "Desktop / Dock menu"
 	}
 	if example, ok := mygoExampleFor(g.page); ok {
 		title = tr(c, example.group) + " / " + tr(c, example.name)
@@ -239,14 +233,6 @@ func (g *Gallery) viewLocalized(c *ui.Context) {
 func (g *Gallery) body(c *ui.Context) {
 	if g.page == notificationsPage {
 		g.mygoHost(c, func() { g.Notifications(c) })
-		return
-	}
-	if g.page == dockPage {
-		g.mygoHost(c, func() { g.DockMenu(c) })
-		return
-	}
-	if g.page == trayPage {
-		g.mygoHost(c, func() { g.Tray(c) })
 		return
 	}
 	if g.page == welcomePage {

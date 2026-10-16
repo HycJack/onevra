@@ -64,7 +64,7 @@ func TestNavigationLeavesMyGoMarkersOut(t *testing.T) {
 		}
 	}
 	// Pages behind the MyGo entry need no per-item MyGo label or marker.
-	g := &Gallery{page: trayPage}
+	g := &Gallery{page: notificationsPage}
 	for _, tt := range []*ui.Tester{ui.NewTester(g.Left, 220, 6000), ui.NewTester(g.View, 900, 6000)} {
 		texts := tt.Texts()
 		if slices.Contains(texts, "•") {
@@ -153,7 +153,7 @@ func TestNavigationCatalog(t *testing.T) {
 	if hubs != 1 {
 		t.Fatalf("got %d MyGo entries, want 1", hubs)
 	}
-	if len(purpose) != 5+len(controlCatalog)+len(mygoCatalog) {
+	if len(purpose) != 3+len(controlCatalog)+len(mygoCatalog) {
 		t.Fatalf("missing catalog entries: %d", len(purpose))
 	}
 }

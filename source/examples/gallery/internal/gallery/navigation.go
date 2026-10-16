@@ -60,7 +60,7 @@ func navigationCatalog() []navigationGroup {
 		groups = append(groups, navigationGroup{label: newGroupLabel, entries: entries})
 	}
 	add("Icon library", []navigationEntry{{"Lucide", lucidePage, false}})
-	add(mygoGroupLabel, []navigationEntry{{"Official components", trayPage, true}})
+	add(mygoGroupLabel, []navigationEntry{{"Official components", notificationsPage, true}})
 	for _, group := range navigationGroups {
 		var entries []navigationEntry
 		for i, example := range controlCatalog {
@@ -83,7 +83,7 @@ func mygoNavigationGroups() []navigationGroup {
 	for _, group := range append([]string{"Desktop"}, navigationGroups...) {
 		var entries []navigationEntry
 		if group == "Desktop" {
-			entries = []navigationEntry{{"Tray", trayPage, false}, {"Dock menu", dockPage, false}, {"System notifications", notificationsPage, false}}
+			entries = []navigationEntry{{"System notifications", notificationsPage, false}}
 		}
 		for i, example := range mygoCatalog {
 			if example.group == group && !newPages["mygo/"+example.name] {
@@ -97,10 +97,10 @@ func mygoNavigationGroups() []navigationGroup {
 	return groups
 }
 
-// isMyGoPage reports pages behind the MyGo entry: desktop integrations and
+// isMyGoPage reports pages behind the MyGo entry: System notifications and
 // the MyGo catalog, which directly follow one another.
 func isMyGoPage(page galleryPage) bool {
-	return page >= trayPage && page < controlPageStart()
+	return page >= notificationsPage && page < controlPageStart()
 }
 
 // newNavigationEntries collects the pages in newPages in catalog order, either
