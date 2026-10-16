@@ -22,6 +22,9 @@ type HoneycombItem struct {
 	// A clipped cell would take a mask the GPU makes anew every frame as the
 	// honeycomb turns it, which costs the frame.
 	Content func(c *ui.Context, size float32)
+	// Overlay, when set, builds content over the item and its ring at the
+	// given size, such as a badge on its edge. Like Content it is not clipped.
+	Overlay func(c *ui.Context, size float32)
 	// Ring colors the ring the item nearest the middle of the view wears, such
 	// as the main color of its image; transparent uses the theme's accent.
 	Ring ui.Color
@@ -290,11 +293,15 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 				if item.Ring.A > 0 {
 					color = item.Ring
 				}
-				b.DrawOver(func(p *ui.Painter, r ui.Rect) {
-					if col := color.Alpha(ring * honeycombRingOpacity); col.A > 0 {
-						p.Stroke(r, col, r.W/2, m.ring)
-					}
-				})
+				// The ring is a layer of its own between the item and its
+				// overlay, so an overlay can sit on top of it.
+				drawRing := func() {
+					ui.Box(c).Absolute().Left(0).Top(0).Size(size, size).Draw(func(p *ui.Painter, r ui.Rect) {
+						if col := color.Alpha(ring * honeycombRingOpacity); col.A > 0 {
+							p.Stroke(r, col, r.W/2, m.ring)
+						}
+					})
+				}
 				if i != selected && (b.Hovered() || b.Focused()) {
 					opacity = min(1, opacity+.25)
 				}
@@ -302,14 +309,18 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 				if opacity > .15 {
 					p.hits = append(p.hits, honeycombHit{item.ID, ui.Rect{X: cx - size/2, Y: cy - size/2, W: size, H: size}})
 				}
-				if item.Content != nil {
-					b.Children(func() { item.Content(c, size) })
-				} else {
-					image := item.Image
-					b.Children(func() {
+				content, image, overlay := item.Content, item.Image, item.Overlay
+				b.Children(func() {
+					if content != nil {
+						content(c, size)
+					} else {
 						Image(c, image).Absolute().Left(0).Top(0).Size(size, size).Fit(ui.Cover).Radius(size / 2)
-					})
-				}
+					}
+					drawRing()
+					if overlay != nil {
+						overlay(c, size)
+					}
+				})
 				if b.Clicked() {
 					// The keyboard or assistive technology; the pointer is the
 					// view's.

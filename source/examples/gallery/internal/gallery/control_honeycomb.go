@@ -131,6 +131,15 @@ func controlHoneycomb(c *ui.Context, s *controlState, _ string) {
 				})
 			},
 		}
+		// Favorites wear a badge on their edge, over the ring.
+		if item.labelKey == "favorites" {
+			items[i].Overlay = func(c *ui.Context, size float32) {
+				d := size * .3
+				ui.Box(c).Absolute().Right(0).Bottom(0).Size(d, d).Radius(d / 2).Center().Background(c.Theme().Background).Children(func() {
+					components.Icon(c, lucide.Heart).Size(d*.6, d*.6).TextColor(ring)
+				})
+			}
+		}
 		if item.id == selected {
 			selectedLabel = msg(c).SelectedS(label)
 		}

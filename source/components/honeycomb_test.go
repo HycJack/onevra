@@ -433,6 +433,14 @@ func TestHoneycombRingsInTheItemsColor(t *testing.T) {
 	if n := rings(items); n < 100 {
 		t.Fatalf("the ring drew only %d pixels of the item's color", n)
 	}
+	// An overlay lies over the ring, so one covering the cell hides it; the
+	// translucent ring would tint white.
+	items[0].Overlay = func(c *ui.Context, size float32) {
+		ui.Box(c).Absolute().Left(0).Top(0).Size(size, size).Background(ui.RGB(255, 255, 255))
+	}
+	if n := rings(items); n != 0 {
+		t.Fatalf("the ring drew %d pixels over the overlay", n)
+	}
 }
 
 func TestHoneycombScalesWithThemeSpacing(t *testing.T) {
