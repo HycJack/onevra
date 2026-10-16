@@ -88,12 +88,13 @@ func controlSidebarFileTree(c *ui.Context, s *controlState) {
 	})
 }
 
-// Collapsible groups let a long sidebar hide sections, with a count beside
-// each heading.
+// Collapsible groups let a long sidebar hide sections, with an icon before
+// and a count beside each heading.
 func controlSidebarCollapsible(c *ui.Context, s *controlState) {
-	group := func(label string, open *bool, items []string, icons []*ui.SVG) {
+	group := func(label string, icon *ui.SVG, open *bool, items []string, icons []*ui.SVG) {
 		components.Collapsible(c, tr(c, label), open, components.CollapsibleOptions{
 			ArrowPosition: components.ArrowLeft,
+			Leading:       func() { components.Icon(c, icon).Size(14, 14).Shrink(0) },
 			Trailing:      func() { components.Badge(c, strconv.Itoa(len(items))) },
 		}, func() {
 			ui.Column(c).FillWidth().MinWidth(0).Gap(c.Theme().Space(1)).Children(func() {
@@ -106,8 +107,8 @@ func controlSidebarCollapsible(c *ui.Context, s *controlState) {
 		}).Root.FillWidth().MinWidth(0)
 	}
 	components.Sidebar(c).Children(func() {
-		group("favorites", &s.folders[0], []string{"home", "recent", "downloads"}, []*ui.SVG{lucide.House(), lucide.Clock(), lucide.Download()})
-		group("locations", &s.folders[1], []string{"documents", "shared"}, []*ui.SVG{lucide.FileText(), lucide.Users()})
+		group("favorites", lucide.Star(), &s.folders[0], []string{"home", "recent", "downloads"}, []*ui.SVG{lucide.House(), lucide.Clock(), lucide.Download()})
+		group("locations", lucide.MapPin(), &s.folders[1], []string{"documents", "shared"}, []*ui.SVG{lucide.FileText(), lucide.Users()})
 	})
 }
 

@@ -4,6 +4,7 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Add `components.CollapsibleOptions.Leading`.
 - Add `components.SidebarItemWithSlots`.
 - Add `components.SplitOptions.Default`.
 - Fix development-build panics when a closing `components.Dialog` contains `components.Checkbox`, `components.Radio`, `components.Accordion`, `components.Slider` or color controls.

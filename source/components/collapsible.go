@@ -15,10 +15,12 @@ const (
 )
 
 // CollapsibleOptions configures the disclosure arrow, whose default is right,
-// and optional trailing content, such as a count, built at the header's end
-// outside the trigger and vertically centered on it.
+// optional leading content, such as an icon, built inside the trigger before
+// its label, and optional trailing content, such as a count, built at the
+// header's end outside the trigger and vertically centered on it.
 type CollapsibleOptions struct {
 	ArrowPosition ArrowPosition
+	Leading       func()
 	Trailing      func()
 }
 
@@ -45,6 +47,9 @@ func Collapsible(c *ui.Context, label string, open *bool, options CollapsibleOpt
 			result.Trigger.Children(func() {
 				if options.ArrowPosition == ArrowLeft {
 					disclosureArrow(c, 90*p.Progress())
+				}
+				if options.Leading != nil {
+					options.Leading()
 				}
 				Text(c, label).SingleLine()
 				if options.ArrowPosition != ArrowLeft {

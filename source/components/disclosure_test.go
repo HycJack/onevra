@@ -167,6 +167,30 @@ func TestCollapsibleTrailing(t *testing.T) {
 	}
 }
 
+func TestCollapsibleLeading(t *testing.T) {
+	open := false
+	var icon, trigger ui.Rect
+	tt := ui.NewTester(func(c *ui.Context) {
+		c.SetTheme(theme.LightPalette())
+		p := Collapsible(c, "Details", &open, CollapsibleOptions{Leading: func() {
+			ui.Box(c).Size(12, 12).Draw(func(_ *ui.Painter, r ui.Rect) { icon = r })
+		}}, func() { Text(c, "Inside") })
+		p.Trigger.DrawOver(func(_ *ui.Painter, r ui.Rect) { trigger = r })
+	}, 320, 240)
+	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
+	label, ok := tt.Find("Details")
+	if !ok {
+		t.Fatal("label missing")
+	}
+	if icon.X < trigger.X || icon.X+icon.W > label.X {
+		t.Fatalf("leading content not inside the trigger before the label: icon=%v label=%v trigger=%v", icon, label, trigger)
+	}
+	tt.ClickAt(icon.X+icon.W/2, icon.Y+icon.H/2)
+	if !open {
+		t.Fatal("leading content does not toggle")
+	}
+}
+
 func TestDisclosureAnimation(t *testing.T) {
 	open := false
 	var root ui.Rect
