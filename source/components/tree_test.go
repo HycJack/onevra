@@ -53,7 +53,7 @@ func TestTreeDisclosureAndAppearance(t *testing.T) {
 						}
 					}, 260, 200)
 					pause := func() {
-						time.Sleep(200 * time.Millisecond)
+						tt.Advance(200 * time.Millisecond)
 						tt.Frame()
 					}
 					click := func(label string) {

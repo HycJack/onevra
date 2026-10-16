@@ -12,7 +12,7 @@ func TestChartPages(t *testing.T) {
 	for _, group := range navigationCatalog() {
 		if group.label == "Charts" {
 			for _, entry := range group.entries {
-				if entry.label != "Relationship graph" {
+				if _, control := controlExampleFor(entry.page); control && entry.label != "Relationship graph" {
 					names = append(names, entry.label)
 				}
 			}

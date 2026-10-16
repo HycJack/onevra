@@ -1,10 +1,11 @@
 package gallery
 
 import (
-	"github.com/oneo-me/onevra/source/examples/gallery/internal/gallery/locales"
 	"testing"
+	"time"
 
 	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/source/examples/gallery/internal/gallery/locales"
 	"github.com/oneo-me/onevra/source/theme"
 )
 
@@ -18,7 +19,9 @@ func TestGraphPage(t *testing.T) {
 			}
 			tt := ui.NewTester(func(c *ui.Context) { theme.Apply(c); g.View(c) }, 520, 900)
 			tt.SetPreferences(ui.Preferences{ReduceMotion: true})
-			tt.Frame()
+			// The layout settles on the next painted frame, which the
+			// tester's clock must reach.
+			tt.Advance(100 * time.Millisecond)
 			s := g.controlState("Relationship graph", "Default").graph
 			if !tt.HasText(g.text("Relationship graph")) || !tt.HasText(g.text("graphHint")) || tt.HasText("graphIntro") {
 				t.Fatal("graph page is not localized")

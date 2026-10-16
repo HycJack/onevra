@@ -2,6 +2,7 @@ package components
 
 import (
 	"bytes"
+	"slices"
 	"testing"
 
 	"github.com/egoist/mygo/ui"
@@ -89,6 +90,37 @@ func TestListVirtualizationAndDisabled(t *testing.T) {
 			if selected != 9999 || !tt.HasText("Item 10000") {
 				t.Fatal("End did not reveal final row")
 			}
+		}
+	}
+}
+
+func TestListKeepOffset(t *testing.T) {
+	for _, keep := range []bool{false, true} {
+		rows := make([]int, 100)
+		for i := range rows {
+			rows[i] = i
+		}
+		selected := 20
+		state := ListState{Selected: &selected, KeepOffset: keep, Key: func(i int) any { return rows[i] }}
+		tt := ui.NewTester(func(c *ui.Context) {
+			List(c, &state, len(rows), func(i int) {
+				ui.Textf(c, "Item %d", rows[i]).Padding(8)
+			}).Size(200, 150)
+		}, 220, 200)
+		state.ScrollTo(20, ui.Start)
+		tt.Frame()
+		before, _ := state.Visible()
+		slices.Reverse(rows)
+		tt.Frame()
+		first, _ := state.Visible()
+		if keep && first != before {
+			t.Fatalf("KeepOffset moved the first row from %d to %d", before, first)
+		}
+		if !keep && first == before {
+			t.Fatal("keyed list did not follow its top row")
+		}
+		if rows[selected] != 20 {
+			t.Fatalf("selection followed row %d, want 20", rows[selected])
 		}
 	}
 }

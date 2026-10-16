@@ -2,6 +2,7 @@ package graph_test
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components/graph"
@@ -32,7 +33,8 @@ func ExampleView() {
 	// Supply view to a Onevra Shell, or run it without a window.
 	tt := ui.NewTester(view, 480, 360)
 	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
-	tt.Frame()
+	// The tester's clock stands still until the test advances it.
+	tt.Advance(100 * time.Millisecond)
 	fmt.Println(state.Settled(), opened == "")
 	// Output: true true
 }

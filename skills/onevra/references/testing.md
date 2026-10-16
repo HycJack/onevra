@@ -33,6 +33,7 @@ func TestSaveButton(t *testing.T) {
 - Locate elements by visible text or accessible label with `Find`, `HasText`, `Texts` and `Focused`; drive them with `Click`, `RightClick`, `Key`, `TypeKey`, `Type`, `Compose`, `Scroll`, `Move`, `Press` and `Release`.
 - Check keyboard paths, not just pointer clicks: `tt.Key(0, ui.KeyTab)` then `tt.Key(0, ui.KeySpace)` or `ui.KeyEnter`.
 - Inspect menus with `Menu` and `ChooseMenuItem`, screen-reader output with `Announcements`, pointer shape with `Cursor`, and clipboard or opened URLs with their accessors instead of system services.
+- The tester's clock stands still until `tt.Advance(d)` moves it, running the frames due meanwhile; advance it for animations, `After` delays, tooltips and separate clicks instead of sleeping.
 - After changing state outside the builder, call `tt.Frame()` before asserting. Use `SetSize`, `SetScale`, `SetDark` and `SetPreferences` for narrow layouts, scaling, appearance and reduced motion.
 - Assert appearance with `tt.Image().RGBAAt(x, y)` relative to another rendering, such as enabled versus disabled, rather than hard-coded colors.
 - Cover both themes when a change affects theme-dependent colors. Read the version-matched `Tester` methods in MyGo's `ui/` before relying on one.

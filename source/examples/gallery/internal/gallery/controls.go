@@ -38,7 +38,7 @@ type controlState struct {
 	honeycomb              string
 	honeycombItems         []honeycombDemoItem
 	honeycombNext          int
-	split                  float32
+	split, splitPercent    float32
 	color                  ui.Color
 	day                    time.Time
 }
@@ -99,6 +99,7 @@ var controlCatalog = []controlExample{
 	{"Honeycomb", "Honeycomb", "Selection & values", []string{"Default"}, controlHoneycomb},
 	{"PixelGrid", "PixelGrid", "Layout & containers", []string{"Uniform", "Major lines"}, controlPixelGrid},
 	{"Split", "Split panes", "Layout & containers", []string{"Horizontal", "Vertical"}, controlSplit},
+	{"SplitPercent", "Percentage split panes", "Layout & containers", []string{"Horizontal", "Vertical"}, controlSplitPercent},
 	{"ScrollView", "Scroll views", "Layout & containers", []string{"Vertical", "Horizontal", "Both", "Insets"}, controlScrollView},
 }
 
@@ -120,7 +121,7 @@ func (g *Gallery) controlState(name, variant string) *controlState {
 	if s := g.controlStates[key]; s != nil {
 		return s
 	}
-	s := &controlState{day: time.Now(), color: ui.RGB(110, 90, 230), on: variant == "On", choice: "Small", value: 40, high: 80, split: 100, toggles: [2]bool{false, true}}
+	s := &controlState{day: time.Now(), color: ui.RGB(110, 90, 230), on: variant == "On", choice: "Small", value: 40, high: 80, split: 100, splitPercent: 30, toggles: [2]bool{false, true}}
 	if variant == "Selected" {
 		s.choice, s.index = "Large", 1
 	}

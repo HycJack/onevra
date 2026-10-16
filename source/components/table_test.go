@@ -70,7 +70,7 @@ func TestTableHeaderInteractionAndAppearance(t *testing.T) {
 						t.Fatalf("Size header ends at %v, cell at %v", size.X+size.W, cell.X+cell.W)
 					}
 					tt.Move(419, 239)
-					time.Sleep(200 * time.Millisecond)
+					tt.Advance(200 * time.Millisecond)
 					tt.Frame()
 					before := bytes.Clone(tt.Image().Pix)
 					row := find("r1-Kind")

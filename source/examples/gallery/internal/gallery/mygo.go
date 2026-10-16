@@ -12,7 +12,7 @@ type mygoExample struct {
 	build       func(*ui.Context, *demoState)
 }
 
-var mygoGroups = []string{"Text input", "Content display", "Code & diffs", "Feedback & overlays", "Layout & containers", "Games"}
+var mygoGroups = []string{"Text input", "Content display", "Code & diffs", "Charts", "Feedback & overlays", "Layout & containers", "Games"}
 
 var demoImage = ui.MustParseSVG([]byte(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 100"><rect width="180" height="100" rx="12" fill="#dbeafe"/><circle cx="140" cy="28" r="15" fill="#fbbf24"/><path d="M0 100L55 25L110 100Z" fill="#2563eb"/><path d="M65 100L120 45L180 100Z" fill="#059669"/></svg>`))
 
@@ -33,6 +33,10 @@ func mygoVariants(name string) []string {
 		return []string{"Editable", "Read only"}
 	case "Diff viewer":
 		return []string{"Side by side", "Unified"}
+	case "Gradients & blur":
+		return []string{"Gradient stops", "Conic", "Borders", "Blur"}
+	case "Shaders":
+		return []string{"Fragment", "Text and paths", "Element effect", "Backdrop"}
 	case "Transforms":
 		return []string{"Editable controls", "Perspective"}
 	case "Toggle", "ToggleGroup", "Checkbox", "Switch":
@@ -79,6 +83,9 @@ func (g *Gallery) mygoState(name, variant string, first bool) *demoState {
 	}
 	if name == "Canvas" {
 		s.value = 0
+	}
+	if name == "Gradients & blur" || name == "Shaders" {
+		s.value, s.on = 30, true
 	}
 	s.system.native, s.system.window = g.systemServices, g.window
 	s.game.gamepads = g.gamepads

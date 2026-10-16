@@ -30,6 +30,7 @@ type systemDemo struct {
 	recentStatus string
 
 	watchPath   string
+	watchHints  bool
 	watchEvents []mygo.FileEvent
 	watchErr    string
 	watchStop   context.CancelFunc
@@ -219,8 +220,9 @@ func (d *systemDemo) watch(path string) {
 	d.stopWatching()
 	ctx, cancel := context.WithCancel(context.Background())
 	d.watchStop, d.watchPath, d.watchEvents, d.watchErr = cancel, path, nil, ""
+	hints := d.watchHints
 	go func() {
-		w, err := mygo.WatchFiles(ctx, path, mygo.FileWatchOptions{Recursive: true,
+		w, err := mygo.WatchFiles(ctx, path, mygo.FileWatchOptions{Recursive: true, HintsOnly: hints,
 			Ignore: func(p string, dir bool) bool { return dir && (p == ".git" || p == "node_modules") }})
 		if err != nil {
 			d.update(func() { d.watchErr = err.Error() })
@@ -264,6 +266,8 @@ func exampleFileWatching(c *ui.Context, s *demoState) {
 			d.stopWatching()
 		}
 	})
+	// The choice applies to the next watch.
+	components.Checkbox(c, &d.watchHints, m.WatchHintsOnly()).Disabled(d.watchStop != nil)
 	if d.watchPath != "" {
 		systemRow(c, m.WatchFolder(), d.watchPath)
 	}

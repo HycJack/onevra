@@ -46,7 +46,7 @@ The [graph component](../../source/components/graph/graph.go) draws a force-dire
 
 Layout, camera, hover and reveal advance in `Draw` on the UI thread. Initial ticks run in per-frame budgets before showing; Reduced Motion settles at once.
 
-[Gestures](../../source/components/gesture/gesture.go): wheels and pinches zoom, touchpads pan. MyGo 0.5.1 neither tells smoothed mice from touchpads nor reports pinches; a macOS adapter reads scroll phases and observes magnify events.
+[Gestures](../../source/components/gesture/gesture.go): wheels and pinches zoom, touchpads pan. MyGo 0.5.5 neither tells smoothed mice from touchpads nor reports pinches; a macOS adapter reads scroll phases and observes magnify events.
 
 ### Commands
 

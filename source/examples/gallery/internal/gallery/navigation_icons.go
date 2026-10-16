@@ -98,6 +98,11 @@ var navigationIcons = map[string]func() *ui.SVG{
 	"Diff viewer":        lucide.Diff,
 	"Game loop":          lucide.Gamepad2,
 	"3D renderer":        lucide.Cuboid,
+
+	"SplitPercent":     lucide.SquareSplitHorizontal,
+	"Gradients & blur": lucide.Blend,
+	"Shaders":          lucide.Sparkles,
+	"Live chart":       lucide.ChartSpline,
 }
 
 func (entry navigationEntry) icon() *ui.SVG {

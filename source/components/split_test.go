@@ -203,6 +203,63 @@ func TestSplitInvalidInputs(t *testing.T) {
 			}()
 			ui.NewTester(func(c *ui.Context) { Split(c, test.size, nil, nil, test.options...).Fill() }, 300, 300)
 		}()
+		func() {
+			defer func() {
+				if recover() == nil {
+					t.Error("invalid percentage input accepted")
+				}
+			}()
+			ui.NewTester(func(c *ui.Context) { SplitPercent(c, test.size, nil, nil, test.options...).Fill() }, 300, 300)
+		}()
+	}
+}
+
+func TestSplitPercent(t *testing.T) {
+	percent, width := float32(25), float32(301)
+	orientation := Horizontal
+	changes := 0
+	tt := ui.NewTester(func(c *ui.Context) {
+		s := SplitPercent(c, &percent, func() { ui.Box(c).Fill().Label("first") }, nil, SplitOptions{Orientation: orientation, FirstMin: 60, SecondMin: 30})
+		s.Label("Resize").Width(width).Height(201)
+		if s.Changed() {
+			changes++
+		}
+	}, 700, 400)
+	a, _ := tt.Find("first")
+	if a.W != 75 {
+		t.Fatalf("share of 300: %+v", a)
+	}
+	// Both panes follow the room in proportion, without writing the share.
+	width = 601
+	tt.Move(690, 390)
+	if a, _ = tt.Find("first"); a.W != 150 || percent != 25 || changes != 0 {
+		t.Fatalf("share of 600: %+v %v %d", a, percent, changes)
+	}
+	// The minimum applies without replacing the preferred share.
+	width = 201
+	tt.Move(691, 390)
+	if a, _ = tt.Find("first"); a.W != 60 || percent != 25 {
+		t.Fatalf("minimum: %+v %v", a, percent)
+	}
+	width = 601
+	tt.Move(692, 390)
+	r, _ := tt.Find("Resize")
+	x, y := r.X+r.W/2, r.Y+r.H/2
+	tt.Press(x, y)
+	tt.Move(x+150, y)
+	tt.Release(x+150, y)
+	if percent != 50 || changes != 1 {
+		t.Fatalf("drag: %v %d", percent, changes)
+	}
+	tt.Key(0, ui.KeyEnd)
+	if percent != 95 {
+		t.Fatalf("End: %v", percent)
+	}
+	orientation = Vertical
+	tt.Key(0, ui.KeyHome)
+	near := func(a, b float32) bool { return math.Abs(float64(a-b)) < .01 }
+	if a, _ = tt.Find("first"); !near(percent, 30) || !near(a.H, 60) || a.W != 601 {
+		t.Fatalf("vertical: %+v %v", a, percent)
 	}
 }
 

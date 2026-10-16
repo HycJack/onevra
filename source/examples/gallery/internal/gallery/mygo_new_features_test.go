@@ -113,10 +113,7 @@ func TestGameExampleMovesWithHeldKeys(t *testing.T) {
 	x, y := d.x, d.y
 	tt.KeyDown(ui.KeyD)
 	tt.KeyDown(ui.KeyS)
-	for range 6 {
-		time.Sleep(20 * time.Millisecond)
-		tt.Frame()
-	}
+	tt.Advance(120 * time.Millisecond)
 	tt.KeyUp(ui.KeyD)
 	tt.KeyUp(ui.KeyS)
 	if d.steps == 0 || d.x <= x || d.y <= y || d.left {
@@ -125,8 +122,7 @@ func TestGameExampleMovesWithHeldKeys(t *testing.T) {
 	// The player stays inside the world.
 	d.x, d.y = gameWorld, -gameWorld
 	tt.KeyDown(ui.KeyA)
-	time.Sleep(40 * time.Millisecond)
-	tt.Frame()
+	tt.Advance(40 * time.Millisecond)
 	tt.KeyUp(ui.KeyA)
 	if d.x > gameWorld-spriteSize/2 || d.y < spriteSize/2 || !d.left {
 		t.Fatalf("player left the world: (%v, %v), left %v", d.x, d.y, d.left)
@@ -152,7 +148,7 @@ func TestNewMyGoReviewEntries(t *testing.T) {
 }
 
 func TestCodeAndGameGroups(t *testing.T) {
-	want := map[string][]string{"Code & diffs": {"Code editor", "Diff viewer"}, "Games": {"Canvas", "Game loop", "3D renderer"}}
+	want := map[string][]string{"Code & diffs": {"Code editor", "Diff viewer"}, "Games": {"Canvas", "Shaders", "Game loop", "3D renderer"}}
 	for _, group := range navigationCatalog() {
 		if entries, ok := want[group.label]; ok {
 			var got []string

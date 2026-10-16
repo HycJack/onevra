@@ -48,25 +48,25 @@ func lawnTester(t *testing.T, lang string) (*lawnDemo, *ui.Tester, func(x, y flo
 		ui.Column(c).FillWidth().Padding(16).Gap(12).Children(func() { d.view(c) })
 	}, 400, 480)
 	tt.SetLocale(lang)
-	// Real frame times vary, so no sun or zombie arrives by itself.
+	// No sun or zombie arrives by itself.
 	d.nextSun, d.nextSpawn = 1<<30, 1<<30
 	advance(tt)
 	view, ok := tt.Find(locales.In(lang).LawnScene())
 	if !ok {
 		t.Fatal("missing lawn view")
 	}
-	// click presses at a pixel of the lawn's logical screen.
+	// click presses at a pixel of the lawn's logical screen, which the
+	// game's next steps take.
 	click := func(x, y float32) {
 		tt.ClickAt(view.X+d.fitX+x/d.fitK, view.Y+d.fitY+y/d.fitK)
+		advance(tt)
 	}
 	return d, tt, click
 }
 
-// advance runs a frame; the tester paints up to 20 for the running game,
-// enough time for its steps.
+// advance runs the game's frames for a few of its steps.
 func advance(tt *ui.Tester) {
-	time.Sleep(20 * time.Millisecond)
-	tt.Frame()
+	tt.Advance(50 * time.Millisecond)
 }
 
 func TestLawnPlanting(t *testing.T) {
@@ -172,6 +172,7 @@ func TestLawnMowersAndDefeat(t *testing.T) {
 	if err := tt.Click(locales.In("en").LawnRestart()); err != nil {
 		t.Fatal(err)
 	}
+	advance(tt)
 	// The button took the keyboard, so the new round waits for the lawn.
 	if d.state != lawnPaused || d.sun != 150 || d.mowers[0].gone || len(d.zombies) != 0 {
 		t.Fatalf("restart left state %v, sun %d, mower %+v", d.state, d.sun, d.mowers[0])

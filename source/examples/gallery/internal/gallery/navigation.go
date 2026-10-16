@@ -21,6 +21,11 @@ var newPages = map[string]bool{
 	"mygo/Recent documents":   true,
 	"mygo/File watching":      true,
 	"mygo/Global shortcuts":   true,
+
+	"controls/SplitPercent": true,
+	"mygo/Gradients & blur": true,
+	"mygo/Shaders":          true,
+	"mygo/Live chart":       true,
 }
 
 type navigationEntry struct {

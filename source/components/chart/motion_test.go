@@ -31,7 +31,7 @@ func TestDataMotionRetargetAndReset(t *testing.T) {
 	if current[0] >= 100 || settled {
 		t.Fatal("data update did not start a transition")
 	}
-	time.Sleep(60 * time.Millisecond)
+	tt.Advance(60 * time.Millisecond)
 	tt.Frame()
 	if current[0] <= 0 || current[0] >= 100 || !math.IsNaN(current[1]) {
 		t.Fatalf("incorrect intermediate values: %v", current)
@@ -64,7 +64,7 @@ func TestDataMotionRetargetAndReset(t *testing.T) {
 	opts.AnimationDuration = 40 * time.Millisecond
 	values[0] = 50
 	tt.Frame()
-	time.Sleep(80 * time.Millisecond)
+	tt.Advance(80 * time.Millisecond)
 	tt.Frame()
 	if current[0] != 50 || !settled {
 		t.Fatal("completed transition kept moving")
@@ -101,7 +101,7 @@ func TestChartDataTransitions(t *testing.T) {
 				if settled {
 					t.Fatal("chart did not animate its data")
 				}
-				time.Sleep(50 * time.Millisecond)
+				tt.Advance(50 * time.Millisecond)
 				tt.Frame()
 				middle := slices.Clone(tt.Image().Pix)
 				tt.SetPreferences(ui.Preferences{ReduceMotion: true})
@@ -128,7 +128,7 @@ func TestAnimatedStackAndDomainStayTogether(t *testing.T) {
 	}, 100, 100)
 	data.Series[0].Values[0], data.Series[1].Values[0] = -40, 80
 	tt.Frame()
-	time.Sleep(50 * time.Millisecond)
+	tt.Advance(50 * time.Millisecond)
 	tt.Frame()
 	if shown.values[0][0] == -40 || shown.y.Hi == 80 {
 		t.Fatal("data or scale jumped to its target")
@@ -152,7 +152,7 @@ func TestAnimatedDonutBoundariesStayJoined(t *testing.T) {
 	}, 100, 100)
 	values = []float64{60, 25, 15}
 	tt.Frame()
-	time.Sleep(50 * time.Millisecond)
+	tt.Advance(50 * time.Millisecond)
 	tt.Frame()
 	if arcs[0].End == base.Pie(values, .025)[0].End {
 		t.Fatal("donut jumped to its target")
@@ -181,7 +181,7 @@ func TestDonutHoverFollowsChangingGeometry(t *testing.T) {
 	}
 	data[0].Value, data[1].Value = 90, 10
 	tt.Frame()
-	time.Sleep(150 * time.Millisecond)
+	tt.Advance(150 * time.Millisecond)
 	tt.Frame()
 	if state.Index != 0 {
 		t.Fatal("stationary pointer did not follow the animated slice boundary")

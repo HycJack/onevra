@@ -3,6 +3,7 @@ package graph
 import (
 	"math"
 	"testing"
+	"time"
 
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components/gesture"
@@ -47,6 +48,11 @@ func newHarness(t *testing.T) *harness {
 	// Reduced Motion settles the layout and camera synchronously.
 	h.tt.SetPreferences(ui.Preferences{ReduceMotion: true})
 	h.tt.Frame()
+	// The layout settles on the next painted frame, which the tester's
+	// clock must reach.
+	for i := 0; i < 100 && !(h.state.ready && h.state.Settled()) && h.tt.FramePending(); i++ {
+		h.tt.Advance(20 * time.Millisecond)
+	}
 	if !h.state.ready || !h.state.Settled() {
 		t.Fatal("graph did not settle under Reduced Motion")
 	}

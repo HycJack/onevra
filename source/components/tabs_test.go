@@ -68,13 +68,13 @@ func TestTabsIndicatorAnimation(t *testing.T) {
 		if x, _ := underline(); x < start || x >= int(before.X) {
 			t.Fatal("underline jumped on selection")
 		}
-		time.Sleep(60 * time.Millisecond)
+		tt.Advance(60 * time.Millisecond)
 		tt.Frame()
 		middle, _ := underline()
 		if middle <= start || middle >= int(before.X) {
 			t.Fatalf("not moving between tabs: %d", middle)
 		}
-		time.Sleep(tabsIndicatorDuration)
+		tt.Advance(tabsIndicatorDuration)
 		tt.Frame()
 		end, _ := underline()
 		if end <= middle {
@@ -86,7 +86,7 @@ func TestTabsIndicatorAnimation(t *testing.T) {
 		}
 		selected = 0
 		tt.Frame()
-		time.Sleep(40 * time.Millisecond)
+		tt.Advance(40 * time.Millisecond)
 		tt.Frame()
 		selected = 1
 		tt.Frame()
@@ -185,7 +185,7 @@ func TestTabsSegmentedThumbAnimation(t *testing.T) {
 	if isThumb("Advanced") {
 		t.Fatal("thumb jumped to the choice instead of animating")
 	}
-	time.Sleep(tabsIndicatorDuration + 20*time.Millisecond)
+	tt.Advance(tabsIndicatorDuration + 20*time.Millisecond)
 	tt.Frame()
 	if !isThumb("Advanced") {
 		t.Fatal("thumb did not reach the chosen tab")

@@ -100,7 +100,7 @@ func TestShellLayoutAndReplacement(t *testing.T) {
 	if err := tt.Click("Back"); err != nil {
 		t.Fatal(err)
 	}
-	time.Sleep(sidebarDuration + 30*time.Millisecond)
+	tt.Advance(sidebarDuration + 30*time.Millisecond)
 	tt.Frame()
 	if !tt.HasText("Document") || tt.HasText("Navigation") {
 		t.Fatal(tt.Texts())
@@ -132,11 +132,11 @@ func TestShellSidebarAnimations(t *testing.T) {
 		return r.X
 	}
 	step := func() {
-		time.Sleep(55 * time.Millisecond)
+		tt.Advance(55 * time.Millisecond)
 		tt.Frame()
 	}
 	finish := func() {
-		time.Sleep(sidebarDuration + 30*time.Millisecond)
+		tt.Advance(sidebarDuration + 30*time.Millisecond)
 		tt.Frame()
 	}
 	startX := contentX()
@@ -186,7 +186,7 @@ func TestShellSidebarRevealsWithoutReflow(t *testing.T) {
 	leftBefore := left
 	s.SetLeftExpanded(false)
 	tt.Frame()
-	time.Sleep(55 * time.Millisecond)
+	tt.Advance(55 * time.Millisecond)
 	tt.Frame()
 	if got := left; got != leftBefore {
 		t.Fatalf("left content reflowed instead of being covered: %+v -> %+v", leftBefore, got)
@@ -194,7 +194,7 @@ func TestShellSidebarRevealsWithoutReflow(t *testing.T) {
 	if x := main.X; x <= 0 || x >= leftBefore.W {
 		t.Fatalf("main surface did not move over sidebar: %v", x)
 	}
-	time.Sleep(sidebarDuration + 30*time.Millisecond)
+	tt.Advance(sidebarDuration + 30*time.Millisecond)
 	tt.Frame()
 	if r := main; r.X != 0 || r.W != 820 {
 		t.Fatal("collapsed sidebar reserved space", r)

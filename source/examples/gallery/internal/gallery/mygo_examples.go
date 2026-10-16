@@ -22,6 +22,7 @@ type demoState struct {
 	audio           audioDemo
 	system          systemDemo
 	canvas          canvasDemo
+	graphics        graphicsDemo
 	game            gameDemo
 	scene3d         scene3D
 	code            *editor.State

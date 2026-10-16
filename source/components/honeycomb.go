@@ -370,7 +370,7 @@ func (p *honeycombPan) input(ev ui.InputEvent) bool {
 		}
 		// A press catches a moving honeycomb.
 		p.pressed, p.gliding = true, false
-		p.lastX, p.lastY, p.travel, p.vx, p.vy, p.moved = ev.X, ev.Y, 0, 0, 0, time.Now()
+		p.lastX, p.lastY, p.travel, p.vx, p.vy, p.moved = ev.X, ev.Y, 0, 0, 0, ev.Time
 	case ui.InputPointerMove:
 		if !p.pressed {
 			return false
@@ -380,13 +380,12 @@ func (p *honeycombPan) input(ev ui.InputEvent) bool {
 		p.travel += float32(math.Hypot(float64(dx), float64(dy)))
 		// The magnified middle follows the pointer.
 		p.pan(-dx*honeycombSmall/honeycombLarge, -dy*honeycombSmall/honeycombLarge)
-		now := time.Now()
-		if dt := float32(now.Sub(p.moved).Seconds()); dt > 0 {
+		if dt := float32(ev.Time.Sub(p.moved).Seconds()); dt > 0 {
 			// The speed of the last moves, smoothed.
 			p.vx = .7*(-dx/dt) + .3*p.vx
 			p.vy = .7*(-dy/dt) + .3*p.vy
 		}
-		p.moved = now
+		p.moved = ev.Time
 	case ui.InputPointerUp:
 		if !p.pressed || ev.Button != 0 {
 			return false
@@ -396,7 +395,7 @@ func (p *honeycombPan) input(ev ui.InputEvent) bool {
 			p.clicked = p.hit(ev.X, ev.Y)
 			return true
 		}
-		if time.Since(p.moved) > 80*time.Millisecond {
+		if ev.Time.Sub(p.moved) > 80*time.Millisecond {
 			// Held still before letting go.
 			p.vx, p.vy = 0, 0
 		}
@@ -404,7 +403,7 @@ func (p *honeycombPan) input(ev ui.InputEvent) bool {
 	case ui.InputScroll:
 		p.gliding, p.scrolling = false, true
 		p.pan(ev.DX*honeycombSmall/honeycombLarge, ev.DY*honeycombSmall/honeycombLarge)
-		p.scrolled = time.Now()
+		p.scrolled = ev.Time
 	default:
 		return false
 	}

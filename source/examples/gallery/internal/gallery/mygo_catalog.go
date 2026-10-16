@@ -7,6 +7,7 @@ var mygoCatalog = unhandledMyGoExamples(mygoExamples)
 var mygoExamples = []mygoExample{
 	{"Transforms", "Layout & containers", exampleTransforms},
 	{"Motion", "Layout & containers", exampleMotion},
+	{"Gradients & blur", "Layout & containers", exampleGradients},
 	{"CheckboxGroup", "Selection & values", exampleCheckboxGroup},
 	{"RadioGroup", "Selection & values", exampleRadioGroup},
 	{"StepSlider", "Selection & values", exampleStepSlider},
@@ -56,6 +57,8 @@ var mygoExamples = []mygoExample{
 	{"Code editor", "Code & diffs", exampleCodeEditor},
 	{"Diff viewer", "Code & diffs", exampleDiffViewer},
 	{"Canvas", "Games", exampleCanvas},
+	{"Shaders", "Games", exampleShaders},
+	{"Live chart", "Charts", exampleLiveChart},
 	{"Game loop", "Games", exampleGame},
 	{"3D renderer", "Games", example3D},
 	{"Box", "Layout & containers", exampleBox},

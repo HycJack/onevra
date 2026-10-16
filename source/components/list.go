@@ -15,19 +15,22 @@ import (
 // Selection uses ui.Selection[any] so keys can have any comparable type.
 // Selection, when set, controls the chosen rows; Selected optionally exposes
 // the keyboard cursor as well. A nil Selected and Selection disables selection.
+// KeepOffset keeps a keyed list's scroll offset as its rows move, such as when
+// they are sorted again, while selection still follows its keys.
 //
 // OnChange and OnSubmit report user selection and activation respectively;
 // use these callbacks rather than the returned Element's Changed/Submitted.
 // MyGo still owns virtualization, variable-height measurement and scrolling.
 // This state intentionally does not expose table sorting, reordering or headers.
 type ListState struct {
-	Selected  *int
-	Selection *ui.Selection[any]
-	Key       func(int) any
-	Label     func(int) string
-	FollowEnd bool
-	OnChange  func()
-	OnSubmit  func(int)
+	Selected   *int
+	Selection  *ui.Selection[any]
+	Key        func(int) any
+	Label      func(int) string
+	KeepOffset bool
+	FollowEnd  bool
+	OnChange   func()
+	OnSubmit   func(int)
 
 	// Optional adapters let grid selection reuse collection behavior while
 	// MyGo's grid owns scrolling and visible cell geometry.
@@ -80,7 +83,7 @@ func collection(c *ui.Context, s *ListState, count int, role ui.Role, decorate f
 	var scroll *ui.ListState
 	if s != nil {
 		s.sync(count)
-		s.scroll.Key, s.scroll.FollowEnd = s.Key, s.FollowEnd
+		s.scroll.Key, s.scroll.KeepOffset, s.scroll.FollowEnd = s.Key, s.KeepOffset, s.FollowEnd
 		scroll = &s.scroll
 	}
 	e := ui.List(c, scroll, count).Role(role)
@@ -93,7 +96,7 @@ func collection(c *ui.Context, s *ListState, count int, role ui.Role, decorate f
 				if event.Kind != ui.InputText || event.Text == "" || event.Mods&(ui.Ctrl|ui.Cmd|ui.Alt) != 0 {
 					return false
 				}
-				s.typeAhead(event.Text, count)
+				s.typeAhead(event.Text, event.Time, count)
 				return true
 			})
 		}
@@ -254,8 +257,7 @@ func (s *ListState) setAnchor(i, count int) {
 	}
 }
 
-func (s *ListState) typeAhead(text string, count int) {
-	now := time.Now()
+func (s *ListState) typeAhead(text string, now time.Time, count int) {
 	text = strings.ToLower(text)
 	start := s.position()
 	if now.Sub(s.typedAt) > time.Second || s.typed == text {

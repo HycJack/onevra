@@ -81,6 +81,7 @@ func controlTableVirtualized(c *ui.Context, s *controlState, _ string) {
 	}
 	s.table.List.Selected = &s.index
 	s.table.List.Key = func(row int) any { return s.tableRows[row] }
+	s.table.List.KeepOffset = true
 	components.TableVirtualized(c, &s.table, tableExampleColumns(c), len(s.tableRows), func(row, col int) {
 		i := s.tableRows[row]
 		tableExampleCell(c, col, msg(c).FileD(i+1), size(i))

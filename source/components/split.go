@@ -62,17 +62,36 @@ func (s *SplitControl) AutoFocus() *SplitControl {
 // move it by Theme.Space(2.5), and Home/End move to the effective limits.
 // Label defaults to "Divider". Nil builders leave their panes empty.
 func Split(c *ui.Context, size *float32, first, second func(), options ...SplitOptions) *SplitControl {
+	return split(c, "components.Split", size, false, first, second, options)
+}
+
+// SplitPercent is Split with *percent the share of the room, from 0 to 100,
+// that the first pane takes, so both panes grow and shrink with the split in
+// proportion. Values outside that range are clamped when shown. The minima
+// still apply and are not written back, so the preferred share returns when
+// there is room again. The divider reports its position to assistive
+// technology as a percentage.
+//
+//	SplitPercent(c, &percent, files, editor).Fill()
+//	SplitPercent(c, &percent, preview, console, SplitOptions{Orientation: Vertical}).Fill()
+func SplitPercent(c *ui.Context, percent *float32, first, second func(), options ...SplitOptions) *SplitControl {
+	return split(c, "components.SplitPercent", percent, true, first, second, options)
+}
+
+// split shares the room between first and second: *value is first's size in
+// DIPs, or with percent its share of the room.
+func split(c *ui.Context, name string, value *float32, percent bool, first, second func(), options []SplitOptions) *SplitControl {
 	words := localized(c)
 	if len(options) > 1 {
-		panic("components.Split: at most one options value")
+		panic(name + ": at most one options value")
 	}
 	o := SplitOptions{}
 	if len(options) == 1 {
 		o = options[0]
 	}
 	finite := func(v float32) bool { return !math.IsNaN(float64(v)) && !math.IsInf(float64(v), 0) }
-	if size == nil || !finite(*size) || !finite(o.FirstMin) || !finite(o.SecondMin) || o.FirstMin < 0 || o.SecondMin < 0 {
-		panic("components.Split: size must be nonnil and finite; minima must be finite and nonnegative")
+	if value == nil || !finite(*value) || !finite(o.FirstMin) || !finite(o.SecondMin) || o.FirstMin < 0 || o.SecondMin < 0 {
+		panic(name + ": the value must be nonnil and finite; minima must be finite and nonnegative")
 	}
 	t := c.Theme()
 	if o.FirstMin == 0 {
@@ -103,7 +122,13 @@ func Split(c *ui.Context, size *float32, first, second func(), options ...SplitO
 			}
 		})
 		lo, hi := splitLimits(total, o.FirstMin, o.SecondMin)
-		position := max(lo, min(*size, hi))
+		// room is what the panes share, without the line between them.
+		room := max(0, total-1)
+		preferred := *value
+		if percent {
+			preferred = min(max(*value, 0), 100) / 100 * room
+		}
+		position := max(lo, min(preferred, hi))
 		in.Children(func() {
 			a := ui.Box(c).Key("first").Shrink(0).MinWidth(0).MinHeight(0).Clip()
 			if first != nil {
@@ -144,11 +169,19 @@ func Split(c *ui.Context, size *float32, first, second func(), options ...SplitO
 				next = hi
 			}
 			next = max(lo, min(next, hi))
-			if next != position && !div.IsDisabled() {
-				*size, position, s.changed = next, next, true
+			if next != position && !div.IsDisabled() && (!percent || room > 0) {
+				*value, position, s.changed = next, next, true
+				if percent {
+					*value = next / room * 100
+				}
 				c.Invalidate()
 			}
-			div.Range(float64(lo), float64(hi), float64(position)).Step(float64(step))
+			if percent && room > 0 {
+				scale := float64(100 / room)
+				div.Range(float64(lo)*scale, float64(hi)*scale, float64(position)*scale).Step(float64(step) * scale)
+			} else {
+				div.Range(float64(lo), float64(hi), float64(position)).Step(float64(step))
+			}
 			grip := t.Space(1.5)
 			if vertical {
 				a.Height(position)

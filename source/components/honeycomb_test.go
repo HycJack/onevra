@@ -39,7 +39,7 @@ func honeycombTester(items []HoneycombItem, selected *string) *ui.Tester {
 }
 
 func settleHoneycomb(tt *ui.Tester) {
-	time.Sleep(honeycombDuration + 50*time.Millisecond)
+	tt.Advance(honeycombDuration + 50*time.Millisecond)
 	tt.Frame()
 }
 
@@ -117,7 +117,6 @@ func TestHoneycombCentersTheClickedItem(t *testing.T) {
 	center, _ := tt.Find("Item")
 	cx, cy := middle(center)
 	target, _ := tt.Find("p04")
-	last := time.Now()
 	if err := tt.Click("p04"); err != nil {
 		t.Fatal(err)
 	}
@@ -126,26 +125,14 @@ func TestHoneycombCentersTheClickedItem(t *testing.T) {
 		t.Fatalf("clicked item not chosen: %q", selected)
 	}
 	// The honeycomb pans over, growing the chosen item on the way.
+	tt.Advance(honeycombDuration / 2)
 	moving := false
-	// The tester runs frames back to back while the pan goes on, so a test
-	// starved of time, as when the race detector runs every package at once, may
-	// finish the pan before it looks.
-	gap := time.Since(last)
-	last = time.Now()
-	for deadline := time.Now().Add(2 * honeycombDuration); time.Now().Before(deadline); {
-		if r, ok := tt.Find("Item"); ok {
-			x, _ := middle(r)
-			tx, _ := middle(target)
-			moving = moving || (x != tx && x != cx)
-		}
-		time.Sleep(10 * time.Millisecond)
-		tt.Frame()
-		gap, last = max(gap, time.Since(last)), time.Now()
+	if r, ok := tt.Find("Item"); ok {
+		x, _ := middle(r)
+		tx, _ := middle(target)
+		moving = x != tx && x != cx
 	}
-	if !moving && gap > honeycombDuration/2 {
-		t.Logf("frames %v apart, too far apart to see the pan", gap)
-		moving = true
-	}
+	tt.Advance(2 * honeycombDuration)
 	r, _ := tt.Find("Item")
 	if x, y := middle(r); !moving || r.W != m.large || math.Abs(float64(x-cx)) > 1 || math.Abs(float64(y-cy)) > 1 {
 		t.Fatalf("clicked item not centered smoothly (moving %v): %+v, center %v,%v", moving, r, cx, cy)
@@ -158,7 +145,7 @@ func TestHoneycombSettlesOnTheItemNearestTheMiddle(t *testing.T) {
 	tt := honeycombTester(items, &selected)
 	m := honeycombTestMetrics()
 	// Without motion, the ring does not keep the harness repainting, so the
-	// scroll below reaches its settle check on real time as in a window.
+	// scroll below settles only when the clock reaches its settle check.
 	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
 	tt.Frame()
 	center, _ := tt.Find("Item")
@@ -180,7 +167,8 @@ func TestHoneycombSettlesOnTheItemNearestTheMiddle(t *testing.T) {
 	if r, _ := tt.Find("Item"); r.W >= m.large-10 {
 		t.Fatalf("item out of the middle still large: %+v", r)
 	}
-	time.Sleep(100 * time.Millisecond)
+	// Held still before letting go, the drag does not glide on.
+	tt.Advance(100 * time.Millisecond)
 	tt.Release(x-reach, y)
 	tt.Frame()
 	if selected != "p01" {
@@ -188,17 +176,13 @@ func TestHoneycombSettlesOnTheItemNearestTheMiddle(t *testing.T) {
 	}
 	// Scrolling pans too, and once it stops settles on the item nearest the
 	// middle, here the one below and right.
-	scrolledAt := time.Now()
 	tt.Scroll(x, y, 0, 40*m.large/m.small)
 	tt.Frame()
-	// The settle waits honeycombSettle after the scroll is over. A frame slow
-	// enough to outlast that wait has rightly settled already, so only check the
-	// wait when it passed.
-	if time.Since(scrolledAt) < honeycombSettle && selected != "p01" {
+	// The settle waits honeycombSettle after the scroll is over.
+	if selected != "p01" {
 		t.Fatalf("scrolling chose an item before it stopped: %q", selected)
 	}
-	time.Sleep(honeycombSettle + 20*time.Millisecond)
-	tt.Frame()
+	tt.Advance(honeycombSettle + 20*time.Millisecond)
 	if selected != "p02" {
 		t.Fatalf("scrolling did not choose the item nearest the middle: %q", selected)
 	}

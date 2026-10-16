@@ -2,7 +2,7 @@
 
 package gallery
 
-const mygoScanVersion = "v0.5.1"
+const mygoScanVersion = "v0.5.5"
 
 var mygoDiscovered = []mygoComponent{
 	{Name: "Accordion", Source: "ui/api_gen.go"},
@@ -67,7 +67,9 @@ var mygoDiscovered = []mygoComponent{
 	{Name: "Spacer", Source: "ui/api_gen.go"},
 	{Name: "Spinner", Source: "ui/api_gen.go"},
 	{Name: "Split", Source: "ui/api_gen.go"},
+	{Name: "SplitPercent", Source: "ui/api_gen.go"},
 	{Name: "SplitVertical", Source: "ui/api_gen.go"},
+	{Name: "SplitVerticalPercent", Source: "ui/api_gen.go"},
 	{Name: "StepSlider", Source: "ui/api_gen.go"},
 	{Name: "Stepper", Source: "ui/api_gen.go"},
 	{Name: "Switch", Source: "ui/api_gen.go"},

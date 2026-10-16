@@ -7805,3 +7805,365 @@ func UpToDate() string { return In(i18n.Locale()).UpToDate() }
 func (msgs Messages) UpToDate() string {
 	return Catalog.Format(msgs.locale, "upToDate", nil)
 }
+
+// ComponentSplitpercent says "SplitPercent"
+// in the language the app shows.
+func ComponentSplitpercent() string { return In(i18n.Locale()).ComponentSplitpercent() }
+
+// ComponentSplitpercent says "SplitPercent"
+// in the language of msgs.
+func (msgs Messages) ComponentSplitpercent() string {
+	return Catalog.Format(msgs.locale, "componentSplitpercent", nil)
+}
+
+// ComponentSplitverticalpercent says "SplitVerticalPercent"
+// in the language the app shows.
+func ComponentSplitverticalpercent() string { return In(i18n.Locale()).ComponentSplitverticalpercent() }
+
+// ComponentSplitverticalpercent says "SplitVerticalPercent"
+// in the language of msgs.
+func (msgs Messages) ComponentSplitverticalpercent() string {
+	return Catalog.Format(msgs.locale, "componentSplitverticalpercent", nil)
+}
+
+// SplitPercentShare says "The first pane takes {percent, number, integer}% of the room."
+// in the language the app shows.
+func SplitPercentShare(percent int) string { return In(i18n.Locale()).SplitPercentShare(percent) }
+
+// SplitPercentShare says "The first pane takes {percent, number, integer}% of the room."
+// in the language of msgs.
+func (msgs Messages) SplitPercentShare(percent int) string {
+	return Catalog.Format(msgs.locale, "splitPercentShare", map[string]any{"percent": percent})
+}
+
+// ComponentGradientsBlur says "Gradients & blur"
+// in the language the app shows.
+func ComponentGradientsBlur() string { return In(i18n.Locale()).ComponentGradientsBlur() }
+
+// ComponentGradientsBlur says "Gradients & blur"
+// in the language of msgs.
+func (msgs Messages) ComponentGradientsBlur() string {
+	return Catalog.Format(msgs.locale, "componentGradientsBlur", nil)
+}
+
+// ComponentShaders says "Shaders"
+// in the language the app shows.
+func ComponentShaders() string { return In(i18n.Locale()).ComponentShaders() }
+
+// ComponentShaders says "Shaders"
+// in the language of msgs.
+func (msgs Messages) ComponentShaders() string {
+	return Catalog.Format(msgs.locale, "componentShaders", nil)
+}
+
+// ComponentLiveChart says "Live chart"
+// in the language the app shows.
+func ComponentLiveChart() string { return In(i18n.Locale()).ComponentLiveChart() }
+
+// ComponentLiveChart says "Live chart"
+// in the language of msgs.
+func (msgs Messages) ComponentLiveChart() string {
+	return Catalog.Format(msgs.locale, "componentLiveChart", nil)
+}
+
+// GradientStops says "Linear gradient with stops"
+// in the language the app shows.
+func GradientStops() string { return In(i18n.Locale()).GradientStops() }
+
+// GradientStops says "Linear gradient with stops"
+// in the language of msgs.
+func (msgs Messages) GradientStops() string {
+	return Catalog.Format(msgs.locale, "gradientStops", nil)
+}
+
+// GradientConic says "Conic gradient"
+// in the language the app shows.
+func GradientConic() string { return In(i18n.Locale()).GradientConic() }
+
+// GradientConic says "Conic gradient"
+// in the language of msgs.
+func (msgs Messages) GradientConic() string {
+	return Catalog.Format(msgs.locale, "gradientConic", nil)
+}
+
+// GradientConicOffset says "Off-center conic gradient"
+// in the language the app shows.
+func GradientConicOffset() string { return In(i18n.Locale()).GradientConicOffset() }
+
+// GradientConicOffset says "Off-center conic gradient"
+// in the language of msgs.
+func (msgs Messages) GradientConicOffset() string {
+	return Catalog.Format(msgs.locale, "gradientConicOffset", nil)
+}
+
+// GradientBorderConic says "Conic gradient border"
+// in the language the app shows.
+func GradientBorderConic() string { return In(i18n.Locale()).GradientBorderConic() }
+
+// GradientBorderConic says "Conic gradient border"
+// in the language of msgs.
+func (msgs Messages) GradientBorderConic() string {
+	return Catalog.Format(msgs.locale, "gradientBorderConic", nil)
+}
+
+// GradientBorderLinear says "Linear gradient border"
+// in the language the app shows.
+func GradientBorderLinear() string { return In(i18n.Locale()).GradientBorderLinear() }
+
+// GradientBorderLinear says "Linear gradient border"
+// in the language of msgs.
+func (msgs Messages) GradientBorderLinear() string {
+	return Catalog.Format(msgs.locale, "gradientBorderLinear", nil)
+}
+
+// GradientGlow says "Glow"
+// in the language the app shows.
+func GradientGlow() string { return In(i18n.Locale()).GradientGlow() }
+
+// GradientGlow says "Glow"
+// in the language of msgs.
+func (msgs Messages) GradientGlow() string {
+	return Catalog.Format(msgs.locale, "gradientGlow", nil)
+}
+
+// GradientBlurred says "Blurred content"
+// in the language the app shows.
+func GradientBlurred() string { return In(i18n.Locale()).GradientBlurred() }
+
+// GradientBlurred says "Blurred content"
+// in the language of msgs.
+func (msgs Messages) GradientBlurred() string {
+	return Catalog.Format(msgs.locale, "gradientBlurred", nil)
+}
+
+// GradientBlur says "Blur"
+// in the language the app shows.
+func GradientBlur() string { return In(i18n.Locale()).GradientBlur() }
+
+// GradientBlur says "Blur"
+// in the language of msgs.
+func (msgs Messages) GradientBlur() string {
+	return Catalog.Format(msgs.locale, "gradientBlur", nil)
+}
+
+// GradientAngle says "Angle"
+// in the language the app shows.
+func GradientAngle() string { return In(i18n.Locale()).GradientAngle() }
+
+// GradientAngle says "Angle"
+// in the language of msgs.
+func (msgs Messages) GradientAngle() string {
+	return Catalog.Format(msgs.locale, "gradientAngle", nil)
+}
+
+// GradientOklab says "Mix in Oklab"
+// in the language the app shows.
+func GradientOklab() string { return In(i18n.Locale()).GradientOklab() }
+
+// GradientOklab says "Mix in Oklab"
+// in the language of msgs.
+func (msgs Messages) GradientOklab() string {
+	return Catalog.Format(msgs.locale, "gradientOklab", nil)
+}
+
+// ShaderPlasma says "Animated fragment shader"
+// in the language the app shows.
+func ShaderPlasma() string { return In(i18n.Locale()).ShaderPlasma() }
+
+// ShaderPlasma says "Animated fragment shader"
+// in the language of msgs.
+func (msgs Messages) ShaderPlasma() string {
+	return Catalog.Format(msgs.locale, "shaderPlasma", nil)
+}
+
+// ShaderFillLabel says "Shape and text filled with a shader"
+// in the language the app shows.
+func ShaderFillLabel() string { return In(i18n.Locale()).ShaderFillLabel() }
+
+// ShaderFillLabel says "Shape and text filled with a shader"
+// in the language of msgs.
+func (msgs Messages) ShaderFillLabel() string {
+	return Catalog.Format(msgs.locale, "shaderFillLabel", nil)
+}
+
+// ShaderWave says "Wavy text"
+// in the language the app shows.
+func ShaderWave() string { return In(i18n.Locale()).ShaderWave() }
+
+// ShaderWave says "Wavy text"
+// in the language of msgs.
+func (msgs Messages) ShaderWave() string {
+	return Catalog.Format(msgs.locale, "shaderWave", nil)
+}
+
+// ShaderStillClickable says "Still clickable"
+// in the language the app shows.
+func ShaderStillClickable() string { return In(i18n.Locale()).ShaderStillClickable() }
+
+// ShaderStillClickable says "Still clickable"
+// in the language of msgs.
+func (msgs Messages) ShaderStillClickable() string {
+	return Catalog.Format(msgs.locale, "shaderStillClickable", nil)
+}
+
+// ShaderBackdropLine1 says "Drag the frosted pane"
+// in the language the app shows.
+func ShaderBackdropLine1() string { return In(i18n.Locale()).ShaderBackdropLine1() }
+
+// ShaderBackdropLine1 says "Drag the frosted pane"
+// in the language of msgs.
+func (msgs Messages) ShaderBackdropLine1() string {
+	return Catalog.Format(msgs.locale, "shaderBackdropLine1", nil)
+}
+
+// ShaderBackdropLine2 says "across this text"
+// in the language the app shows.
+func ShaderBackdropLine2() string { return In(i18n.Locale()).ShaderBackdropLine2() }
+
+// ShaderBackdropLine2 says "across this text"
+// in the language of msgs.
+func (msgs Messages) ShaderBackdropLine2() string {
+	return Catalog.Format(msgs.locale, "shaderBackdropLine2", nil)
+}
+
+// ShaderBackdropLine3 says "to see it blurred."
+// in the language the app shows.
+func ShaderBackdropLine3() string { return In(i18n.Locale()).ShaderBackdropLine3() }
+
+// ShaderBackdropLine3 says "to see it blurred."
+// in the language of msgs.
+func (msgs Messages) ShaderBackdropLine3() string {
+	return Catalog.Format(msgs.locale, "shaderBackdropLine3", nil)
+}
+
+// ShaderFrost says "Frosted pane"
+// in the language the app shows.
+func ShaderFrost() string { return In(i18n.Locale()).ShaderFrost() }
+
+// ShaderFrost says "Frosted pane"
+// in the language of msgs.
+func (msgs Messages) ShaderFrost() string {
+	return Catalog.Format(msgs.locale, "shaderFrost", nil)
+}
+
+// LiveChartLabel says "Two live waveforms"
+// in the language the app shows.
+func LiveChartLabel() string { return In(i18n.Locale()).LiveChartLabel() }
+
+// LiveChartLabel says "Two live waveforms"
+// in the language of msgs.
+func (msgs Messages) LiveChartLabel() string {
+	return Catalog.Format(msgs.locale, "liveChartLabel", nil)
+}
+
+// TerminalCopyOnSelect says "Copy on select"
+// in the language the app shows.
+func TerminalCopyOnSelect() string { return In(i18n.Locale()).TerminalCopyOnSelect() }
+
+// TerminalCopyOnSelect says "Copy on select"
+// in the language of msgs.
+func (msgs Messages) TerminalCopyOnSelect() string {
+	return Catalog.Format(msgs.locale, "terminalCopyOnSelect", nil)
+}
+
+// WatchHintsOnly says "Hints only (coarse, cheap)"
+// in the language the app shows.
+func WatchHintsOnly() string { return In(i18n.Locale()).WatchHintsOnly() }
+
+// WatchHintsOnly says "Hints only (coarse, cheap)"
+// in the language of msgs.
+func (msgs Messages) WatchHintsOnly() string {
+	return Catalog.Format(msgs.locale, "watchHintsOnly", nil)
+}
+
+// TextBoxAnchorCaret says "Anchor {anchor, number, integer}, caret {caret, number, integer}"
+// in the language the app shows.
+func TextBoxAnchorCaret(anchor int, caret int) string {
+	return In(i18n.Locale()).TextBoxAnchorCaret(anchor, caret)
+}
+
+// TextBoxAnchorCaret says "Anchor {anchor, number, integer}, caret {caret, number, integer}"
+// in the language of msgs.
+func (msgs Messages) TextBoxAnchorCaret(anchor int, caret int) string {
+	return Catalog.Format(msgs.locale, "textBoxAnchorCaret", map[string]any{"anchor": anchor, "caret": caret})
+}
+
+// VariantGradientStops says "Gradient stops"
+// in the language the app shows.
+func VariantGradientStops() string { return In(i18n.Locale()).VariantGradientStops() }
+
+// VariantGradientStops says "Gradient stops"
+// in the language of msgs.
+func (msgs Messages) VariantGradientStops() string {
+	return Catalog.Format(msgs.locale, "variantGradientStops", nil)
+}
+
+// VariantConic says "Conic"
+// in the language the app shows.
+func VariantConic() string { return In(i18n.Locale()).VariantConic() }
+
+// VariantConic says "Conic"
+// in the language of msgs.
+func (msgs Messages) VariantConic() string {
+	return Catalog.Format(msgs.locale, "variantConic", nil)
+}
+
+// VariantBorders says "Borders"
+// in the language the app shows.
+func VariantBorders() string { return In(i18n.Locale()).VariantBorders() }
+
+// VariantBorders says "Borders"
+// in the language of msgs.
+func (msgs Messages) VariantBorders() string {
+	return Catalog.Format(msgs.locale, "variantBorders", nil)
+}
+
+// VariantFragment says "Fragment"
+// in the language the app shows.
+func VariantFragment() string { return In(i18n.Locale()).VariantFragment() }
+
+// VariantFragment says "Fragment"
+// in the language of msgs.
+func (msgs Messages) VariantFragment() string {
+	return Catalog.Format(msgs.locale, "variantFragment", nil)
+}
+
+// VariantTextAndPaths says "Text and paths"
+// in the language the app shows.
+func VariantTextAndPaths() string { return In(i18n.Locale()).VariantTextAndPaths() }
+
+// VariantTextAndPaths says "Text and paths"
+// in the language of msgs.
+func (msgs Messages) VariantTextAndPaths() string {
+	return Catalog.Format(msgs.locale, "variantTextAndPaths", nil)
+}
+
+// VariantElementEffect says "Element effect"
+// in the language the app shows.
+func VariantElementEffect() string { return In(i18n.Locale()).VariantElementEffect() }
+
+// VariantElementEffect says "Element effect"
+// in the language of msgs.
+func (msgs Messages) VariantElementEffect() string {
+	return Catalog.Format(msgs.locale, "variantElementEffect", nil)
+}
+
+// VariantBackdrop says "Backdrop"
+// in the language the app shows.
+func VariantBackdrop() string { return In(i18n.Locale()).VariantBackdrop() }
+
+// VariantBackdrop says "Backdrop"
+// in the language of msgs.
+func (msgs Messages) VariantBackdrop() string {
+	return Catalog.Format(msgs.locale, "variantBackdrop", nil)
+}
+
+// PercentageSplitPanes says "Percentage split panes"
+// in the language the app shows.
+func PercentageSplitPanes() string { return In(i18n.Locale()).PercentageSplitPanes() }
+
+// PercentageSplitPanes says "Percentage split panes"
+// in the language of msgs.
+func (msgs Messages) PercentageSplitPanes() string {
+	return Catalog.Format(msgs.locale, "percentageSplitPanes", nil)
+}

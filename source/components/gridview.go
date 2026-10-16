@@ -103,7 +103,7 @@ func GridView(c *ui.Context, s *GridState, count int, minWidth, height float32, 
 				if event.Kind != ui.InputText || event.Text == "" || event.Mods&(ui.Ctrl|ui.Cmd|ui.Alt) != 0 {
 					return false
 				}
-				s.choice.typeAhead(event.Text, count)
+				s.choice.typeAhead(event.Text, event.Time, count)
 				return true
 			})
 		}

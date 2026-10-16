@@ -176,21 +176,21 @@ func TestDisclosureAnimation(t *testing.T) {
 	}, 320, 240)
 	closed := root.H
 	tt.Click("Details")
-	time.Sleep(60 * time.Millisecond)
+	tt.Advance(60 * time.Millisecond)
 	tt.Frame()
 	middle := root.H
-	time.Sleep(220 * time.Millisecond)
+	tt.Advance(220 * time.Millisecond)
 	tt.Frame()
 	if middle <= closed || middle >= root.H {
 		t.Fatalf("no expansion animation: %v %v %v", closed, middle, root.H)
 	}
 	tt.Click("Details")
-	time.Sleep(60 * time.Millisecond)
+	tt.Advance(60 * time.Millisecond)
 	tt.Frame()
 	if root.H <= closed {
 		t.Fatal("closing snapped shut")
 	}
-	time.Sleep(220 * time.Millisecond)
+	tt.Advance(220 * time.Millisecond)
 	tt.Frame()
 	if root.H != closed {
 		t.Fatal("closing did not finish")

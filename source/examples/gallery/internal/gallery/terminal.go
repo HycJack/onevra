@@ -75,6 +75,13 @@ func exampleTerminal(c *ui.Context, s *demoState) {
 		return
 	}
 	if term != nil {
+		if components.Checkbox(c, &s.on, tr(c, "terminalCopyOnSelect")).Changed() {
+			mode := terminal.CopyOnSelectNone
+			if s.on {
+				mode = terminal.CopyOnSelectClipboard
+			}
+			term.SetCopyOnSelect(mode)
+		}
 		terminal.View(c, term).Key("terminal-session").Fill().AutoFocus()
 	}
 }

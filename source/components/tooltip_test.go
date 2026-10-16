@@ -66,8 +66,7 @@ func TestTooltipHover(t *testing.T) {
 	if tt.HasText("Save changes") {
 		t.Fatal("hover tooltip appeared without delay")
 	}
-	// MyGo's public tester uses real time; its private clock is not exposed.
-	time.Sleep(650 * time.Millisecond)
+	tt.Advance(650 * time.Millisecond)
 	tt.Frame()
 	if !tt.HasText("Save changes") {
 		t.Fatal("hover tooltip did not appear")

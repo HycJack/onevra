@@ -1,11 +1,27 @@
 package gallery
 
 import (
+	"math"
+
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
 )
 
 func controlSplit(c *ui.Context, s *controlState, variant string) {
+	options, first, second := splitPanes(c, variant)
+	components.Split(c, &s.split, first, second, options).
+		Label(msg(c).DividerOf(tr(c, variant))).FillWidth().Height(240)
+}
+
+// controlSplitPercent keeps the panes' shares as the page resizes.
+func controlSplitPercent(c *ui.Context, s *controlState, variant string) {
+	options, first, second := splitPanes(c, variant)
+	components.SplitPercent(c, &s.splitPercent, first, second, options).
+		Label(msg(c).DividerOf(tr(c, variant))).FillWidth().Height(240)
+	components.Text(c, msg(c).SplitPercentShare(int(math.Round(float64(s.splitPercent))))).TextColor(c.Theme().TextMuted)
+}
+
+func splitPanes(c *ui.Context, variant string) (components.SplitOptions, func(), func()) {
 	options := components.SplitOptions{}
 	first, second := "Left pane", "Right pane"
 	if variant == "Vertical" {
@@ -19,6 +35,5 @@ func controlSplit(c *ui.Context, s *controlState, variant string) {
 			})
 		}
 	}
-	components.Split(c, &s.split, pane(first), pane(second), options).
-		Label(msg(c).DividerOf(tr(c, variant))).FillWidth().Height(240)
+	return options, pane(first), pane(second)
 }
