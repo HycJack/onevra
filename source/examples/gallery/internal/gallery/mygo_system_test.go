@@ -10,7 +10,7 @@ func TestSystemPagesRenderHeadless(t *testing.T) {
 	pages := map[string]string{
 		"Recent documents": "recentEmpty",
 		"File watching":    "watchEmpty",
-		"Global shortcuts": "shortcutHint",
+		"Global shortcuts": "shortcutRegistered",
 	}
 	for name, key := range pages {
 		for _, lang := range []string{"en", "zh-Hans"} {

@@ -192,13 +192,6 @@ func (g *Gallery) trayLocalized(c *ui.Context) {
 	d := &g.tray
 	components.ScrollView(c, components.ScrollViewOptions{}).Fill().Children(func() {
 		ui.Column(c).FillWidth().Padding(c.Theme().Space(6)).Gap(16).Children(func() {
-			components.Text(c, tr(c, "tray")).FontSize(22).Bold()
-			instructions := "Left-click the tray icon to toggle the notes window. Right-click for its native menu."
-			if runtime.GOOS == "linux" {
-				instructions = "AppIndicator supports menus only. Choose Open notes from the tray menu."
-			}
-			components.Text(c, tr(c, instructions)).Wrap()
-			components.Text(c, tr(c, "escapeClosingTheNotesWindowOrClickingAwayHidesItNotesStayI")).Wrap().TextColor(c.Theme().TextMuted)
 			ui.Row(c).Gap(8).Wrap().Children(func() {
 				if d.tray == nil {
 					if components.Button(c, tr(c, "enableTray"), components.ButtonPrimary).Disabled(g.Shell == nil).Clicked() {

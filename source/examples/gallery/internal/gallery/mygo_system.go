@@ -108,7 +108,6 @@ func exampleNetwork(c *ui.Context, s *demoState) {
 	}
 	components.Badge(c, status)
 	systemRow(c, m.NetworkMetered(), yesNo(m, d.network.Metered))
-	components.Text(c, m.NetworkHint()).Wrap().TextColor(c.Theme().TextMuted)
 }
 
 func exampleSecrets(c *ui.Context, s *demoState) {
@@ -147,7 +146,6 @@ func exampleSecrets(c *ui.Context, s *demoState) {
 	if d.secretStatus != "" {
 		components.Text(c, d.secretStatus).Wrap().TextColor(c.Theme().TextMuted)
 	}
-	components.Text(c, m.SecretsHint()).Wrap().TextColor(c.Theme().TextMuted)
 }
 
 func secretResult(m locales.Messages, err error, ok string) string {
@@ -205,7 +203,6 @@ func exampleRecentDocuments(c *ui.Context, s *demoState) {
 	if d.recentStatus != "" {
 		components.Text(c, d.recentStatus).Wrap().TextColor(c.Theme().Danger)
 	}
-	components.Text(c, m.RecentHint()).Wrap().TextColor(c.Theme().TextMuted)
 }
 
 func (d *systemDemo) stopWatching() {
@@ -379,7 +376,6 @@ func exampleSystemAppearance(c *ui.Context, s *demoState) {
 		scale = 1
 	}
 	systemRow(c, m.AppearanceTextScale(), i18n.FormatNumber(c.Locale(), scale, i18n.NumberOptions{Percent: true}))
-	components.Text(c, m.AppearanceHint()).Wrap().TextColor(t.TextMuted)
 }
 
 func exampleLanguages(c *ui.Context, s *demoState) {
@@ -403,7 +399,6 @@ func exampleLanguages(c *ui.Context, s *demoState) {
 	systemRow(c, m.LanguagesFirstWeekday(), i18n.Weekdays(format, i18n.Wide, true)[r.FirstWeekday])
 	systemRow(c, m.LanguagesNumber(), i18n.FormatNumber(format, 1234567.891, i18n.NumberOptions{}))
 	systemRow(c, m.LanguagesDate(), i18n.FormatDate(format, time.Date(2026, 10, 15, 13, 7, 0, 0, time.Local), i18n.DateOptions{Date: i18n.FullStyle, Time: i18n.ShortStyle}))
-	components.Text(c, m.LanguagesHint()).Wrap().TextColor(c.Theme().TextMuted)
 }
 
 // formats mirrors the regional formats MyGo's date controls use, with CLDR's

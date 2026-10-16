@@ -8,6 +8,7 @@ import (
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
 	"github.com/oneo-me/onevra/source/icons/lucide"
+	"github.com/oneo-me/onevra/source/shells/sidebar"
 )
 
 // honeycombDemoItem is one cell of the gallery's honeycomb demonstration. The
@@ -94,8 +95,17 @@ func honeycombRemove(s *controlState) {
 	s.honeycombItems = slices.Delete(s.honeycombItems, i, i+1)
 }
 
+// honeycombToolbar holds the sample's item actions in the page titlebar.
+func honeycombToolbar(c *ui.Context, s *controlState) {
+	if sidebar.IconButton(c, lucide.Plus(), tr(c, "honeycombAdd")).Clicked() {
+		honeycombAdd(s)
+	}
+	if sidebar.IconButton(c, lucide.Minus(), tr(c, "honeycombRemove")).Disabled(len(s.honeycombItems) == 0).Clicked() {
+		honeycombRemove(s)
+	}
+}
+
 func controlHoneycomb(c *ui.Context, s *controlState, _ string) {
-	t := c.Theme()
 	if s.honeycombItems == nil {
 		s.honeycombItems = honeycombDefaults()
 		s.honeycomb = s.honeycombItems[0].id
@@ -125,16 +135,7 @@ func controlHoneycomb(c *ui.Context, s *controlState, _ string) {
 			selectedLabel = msg(c).SelectedS(label)
 		}
 	}
-	ui.Column(c).Key("honeycomb-demo").FillWidth().Grow(1).MinWidth(0).MinHeight(0).Gap(t.Space(3)).Children(func() {
-		components.Text(c, tr(c, "honeycombHint")).TextColor(t.TextMuted).Wrap().Shrink(0)
-		ui.Row(c).FillWidth().MinWidth(0).Wrap().Gap(t.Space(2)).Shrink(0).Children(func() {
-			if components.Button(c, tr(c, "honeycombAdd"), components.ButtonOutline).Clicked() {
-				honeycombAdd(s)
-			}
-			if components.Button(c, tr(c, "honeycombRemove"), components.ButtonOutline).Clicked() {
-				honeycombRemove(s)
-			}
-		})
+	ui.Column(c).Key("honeycomb-demo").FillWidth().Grow(1).MinWidth(0).MinHeight(0).Children(func() {
 		ui.Box(c).FillWidth().Grow(1).Shrink(1).MinWidth(0).MinHeight(0).Children(func() {
 			if chosen := components.Honeycomb(c, components.HoneycombOptions{Items: items, Selected: selected,
 				SelectedLabel: selectedLabel}); chosen != "" {

@@ -70,13 +70,10 @@ func (g *Gallery) DockMenu(c *ui.Context) {
 func (g *Gallery) dockMenuLocalized(c *ui.Context) {
 	components.ScrollView(c, components.ScrollViewOptions{}).Fill().Children(func() {
 		ui.Column(c).FillWidth().Padding(c.Theme().Space(6)).Gap(16).Children(func() {
-			components.Text(c, tr(c, "dockMenu")).FontSize(22).Bold()
 			if runtime.GOOS != "darwin" {
 				components.Text(c, tr(c, "dockMenusAreAvailableOnlyOnMacosUseDesktopTrayForATrayMen")).Wrap()
 				return
 			}
-			components.Text(c, tr(c, "enableTheMenuThenRightClickGallerySDockIconShowGalleryOpen")).Wrap()
-			components.Text(c, tr(c, "theMenuStaysAvailableWhenYouNavigateAwayDisableItHereOrClo")).Wrap().TextColor(c.Theme().TextMuted)
 			if g.dock.menu == nil {
 				components.Button(c, tr(c, "enableDockMenu"), components.ButtonPrimary).
 					Disabled(g.Shell == nil).OnClick(g.enableDockMenu)

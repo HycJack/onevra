@@ -4,7 +4,6 @@ import (
 	"github.com/egoist/mygo/plugins/game"
 	"github.com/egoist/mygo/plugins/game/gamepad"
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/source/components"
 )
 
 // The world is tiles of 8 world units; the view shows a fixed logical
@@ -123,9 +122,7 @@ func gameTile(x, y int) ui.Color {
 }
 
 func exampleGame(c *ui.Context, s *demoState) {
-	t := c.Theme()
 	d := &s.game
 	d.init()
-	components.Text(c, tr(c, "gameHint")).TextColor(t.TextMuted).Wrap()
 	game.View(c, d).Height(300).FillWidth().Radius(12).Clip().Label(tr(c, "gameScene"))
 }

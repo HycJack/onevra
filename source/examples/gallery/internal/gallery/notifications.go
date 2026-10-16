@@ -86,9 +86,6 @@ func (g *Gallery) Notifications(c *ui.Context) {
 		d := &g.notification
 		components.ScrollView(c, components.ScrollViewOptions{}).Fill().Children(func() {
 			ui.Column(c).FillWidth().Padding(c.Theme().Space(6)).Gap(16).Children(func() {
-				components.Text(c, tr(c, "systemNotifications")).FontSize(22).Bold()
-				components.Text(c, tr(c, "notificationDescription")).Wrap()
-				components.Text(c, tr(c, "notificationRequirements")).Wrap().TextColor(c.Theme().TextMuted)
 				components.Checkbox(c, &d.silent, tr(c, "notificationSilent"))
 				components.Button(c, tr(c, "notificationSend"), components.ButtonPrimary).
 					Disabled(g.Shell == nil || d.pending).OnClick(g.sendNotification)

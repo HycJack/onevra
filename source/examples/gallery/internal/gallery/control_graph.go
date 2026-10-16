@@ -9,6 +9,7 @@ import (
 	"github.com/oneo-me/onevra/source/components"
 	"github.com/oneo-me/onevra/source/components/graph"
 	"github.com/oneo-me/onevra/source/icons/lucide"
+	"github.com/oneo-me/onevra/source/shells/sidebar"
 )
 
 type graphDemoState struct {
@@ -142,36 +143,16 @@ func graphLibrary(s *graphDemoState, dark bool, newTitle locales.Messages) graph
 // performance.
 var graphBulkCounts = []int{100, 1000}
 
-func controlGraph(c *ui.Context, s *controlState, _ string) {
+func graphDemo(s *controlState) *graphDemoState {
 	if s.graph == nil {
 		s.graph = &graphDemoState{attachments: true}
 	}
-	d := s.graph
+	return s.graph
+}
+
+func controlGraph(c *ui.Context, s *controlState, _ string) {
+	d := graphDemo(s)
 	t := c.Theme()
-	components.Text(c, tr(c, "graphIntro")).TextColor(t.TextMuted).Wrap()
-	ui.Row(c).FillWidth().MinWidth(0).Wrap().Gap(t.Space(2)).Children(func() {
-		if components.Button(c, tr(c, "graphAdd"), components.ButtonOutline).Clicked() {
-			d.added++
-		}
-		for _, count := range graphBulkCounts {
-			if components.Button(c, msg(c).GraphAddMany(count), components.ButtonOutline).Clicked() {
-				d.added += count
-			}
-		}
-		if d.added > 0 && components.Button(c, tr(c, "graphReset"), components.ButtonGhost).Clicked() {
-			d.added = 0
-		}
-		if components.Button(c, tr(c, "graphFit"), components.ButtonOutline).Clicked() {
-			d.view.Fit()
-		}
-		label := "chartEmpty"
-		if d.empty {
-			label = "chartRestore"
-		}
-		if components.Button(c, tr(c, label), components.ButtonGhost).Clicked() {
-			d.empty = !d.empty
-		}
-	})
 	var data graph.Data
 	var titles map[string]string
 	if !d.empty {
@@ -185,11 +166,31 @@ func controlGraph(c *ui.Context, s *controlState, _ string) {
 			Overlay:   func(c *ui.Context) { graphSettings(c, d) },
 		})
 	})
-	opened := tr(c, "graphHint")
 	if title, ok := titles[d.opened]; ok {
-		opened = msg(c).GraphOpened(title)
+		components.Text(c, msg(c).GraphOpened(title)).TextColor(t.TextMuted)
 	}
-	components.Text(c, opened).TextColor(t.TextMuted)
+}
+
+// graphToolbar holds the graph's sample actions in the page titlebar.
+func graphToolbar(c *ui.Context, s *controlState) {
+	d := graphDemo(s)
+	if sidebar.IconButton(c, lucide.Plus(), tr(c, "graphAdd")).Clicked() {
+		d.added++
+	}
+	sidebar.IconButton(c, lucide.ListPlus(), tr(c, "graphAddBulk")).Menu(func(m *ui.Menu) {
+		for _, count := range graphBulkCounts {
+			if m.Item(msg(c).GraphAddMany(count)).Chosen() {
+				d.added += count
+			}
+		}
+	})
+	if d.added > 0 && sidebar.IconButton(c, lucide.RotateCcw(), tr(c, "graphReset")).Clicked() {
+		d.added = 0
+	}
+	if sidebar.IconButton(c, lucide.Scan(), tr(c, "graphFit")).Clicked() {
+		d.view.Fit()
+	}
+	emptyStateToggle(c, &d.empty)
 }
 
 func graphSettings(c *ui.Context, d *graphDemoState) {
@@ -203,10 +204,7 @@ func graphSettings(c *ui.Context, d *graphDemoState) {
 	components.Popover(c, anchor, &d.settings, func(panel ui.Element) {
 		panel.Label(label).Width(288)
 		ui.Row(c).FillWidth().AlignItems(ui.Start).Gap(t.Space(3)).Children(func() {
-			ui.Column(c).Grow(1).MinWidth(0).Gap(t.Space(0.5)).Children(func() {
-				components.Text(c, tr(c, "graphAttachments"))
-				components.Text(c, tr(c, "graphAttachmentsHint")).FontSize(t.FontSize - 1).TextColor(t.TextMuted).Wrap()
-			})
+			components.Text(c, tr(c, "graphAttachments")).Grow(1).MinWidth(0)
 			components.Switch(c, &d.attachments, tr(c, "graphAttachments"), components.SwitchOptions{HideLabel: true})
 		})
 	})

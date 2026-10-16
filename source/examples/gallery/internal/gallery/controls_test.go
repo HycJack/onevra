@@ -1,9 +1,11 @@
 package gallery
 
 import (
+	"slices"
 	"testing"
 
 	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/source/shells/sidebar"
 	"github.com/oneo-me/onevra/source/theme"
 )
 
@@ -24,6 +26,7 @@ func TestControlPages(t *testing.T) {
 				for _, dark := range []bool{false, true} {
 					g := &Gallery{page: page}
 					tt := ui.NewTester(func(c *ui.Context) { c.SetTheme(theme.Palette(dark)); g.View(c) }, width, 1800)
+					title := ui.NewTester(func(c *ui.Context) { c.SetTheme(theme.Palette(dark)); g.Titlebar(c) }, width, 40)
 					wantStates := len(example.variants)
 					if example.name == "TextBox" || example.name == "TextBoxBuffer" {
 						wantStates = 7
@@ -34,8 +37,15 @@ func TestControlPages(t *testing.T) {
 					if tt.HasText("Disabled") {
 						t.Fatal("unexpected disabled example")
 					}
-					if example.name != "Selection" && !tt.HasText(example.name) {
-						t.Fatalf("missing component heading %s", example.name)
+					if !title.HasText(example.name) {
+						t.Fatalf("missing page title %s", example.name)
+					}
+					// The titlebar names the page; content repeats the name
+					// only as a variant or section label, or where the
+					// component itself shows or announces it.
+					ownName := slices.Contains([]string{"Breadcrumbs", "Chat", "Rating", "Select"}, example.name)
+					if tt.HasText(example.name) && !ownName && !slices.Contains(example.variants, example.name) {
+						t.Fatalf("content repeats the page title %s", example.name)
 					}
 					if len(example.variants) > 1 {
 						for _, variant := range example.variants {
@@ -53,6 +63,14 @@ func TestControlPages(t *testing.T) {
 			t.Fatalf("unexpected route %d", page)
 		}
 	}
+}
+
+// shellFrame builds a page below its titlebar, as Shell overlays it.
+func (g *Gallery) shellFrame(c *ui.Context) {
+	ui.Box(c).Fill().Children(func() {
+		g.View(c)
+		ui.Row(c).Absolute().Top(0).Left(0).Right(0).Height(sidebar.HeaderHeight(c)).AlignItems(ui.Center).Children(func() { g.Titlebar(c) })
+	})
 }
 
 func TestPixelGridStandaloneExample(t *testing.T) {
@@ -135,7 +153,12 @@ func TestControlExampleInteractions(t *testing.T) {
 				s := (&Gallery{}).controlState(example.name, "Empty")
 				tt := ui.NewTester(func(c *ui.Context) {
 					c.SetTheme(theme.LightPalette())
-					ui.Column(c).Fill().Gap(12).Disabled(disabled).Children(func() { example.build(c, s, "Default") })
+					ui.Column(c).Fill().Gap(12).Disabled(disabled).Children(func() {
+						if toolbar := controlToolbars[example.name]; toolbar != nil {
+							ui.Row(c).Children(func() { toolbar(c, s) })
+						}
+						example.build(c, s, "Default")
+					})
 				}, 540, 900)
 				click := func(label string) {
 					t.Helper()
@@ -346,7 +369,7 @@ func TestControlVariantLayout(t *testing.T) {
 				}
 				tt := ui.NewTester(func(c *ui.Context) {
 					c.SetTheme(theme.Palette(dark))
-					ui.Column(c).Fill().Padding(24).Children(func() { g.controlVariants(c, example) })
+					ui.Column(c).Fill().Padding(24).Children(func() { g.controlVariants(c, example, false) })
 				}, width, 1200)
 				var previous ui.Rect
 				for i, variant := range example.variants {
@@ -396,7 +419,10 @@ func TestHoneycombExampleAddRemove(t *testing.T) {
 	s := (&Gallery{}).controlState("Honeycomb", "Empty")
 	tt := ui.NewTester(func(c *ui.Context) {
 		c.SetTheme(theme.LightPalette())
-		ui.Column(c).Fill().Gap(12).Children(func() { controlHoneycomb(c, s, "Default") })
+		ui.Column(c).Fill().Gap(12).Children(func() {
+			ui.Row(c).Children(func() { honeycombToolbar(c, s) })
+			controlHoneycomb(c, s, "Default")
+		})
 	}, 540, 900)
 	tt.Frame()
 	before := len(s.honeycombItems)

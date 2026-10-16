@@ -83,5 +83,4 @@ func exampleGlobalShortcuts(c *ui.Context, s *demoState) {
 	if d.shortcutErr != "" {
 		components.Text(c, m.SystemError(d.shortcutErr)).Wrap().TextColor(t.Danger)
 	}
-	components.Text(c, m.ShortcutHint()).Wrap().TextColor(t.TextMuted)
 }

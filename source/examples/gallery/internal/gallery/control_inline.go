@@ -29,7 +29,9 @@ func controlBreadcrumbs(c *ui.Context, s *controlState, _ string) {
 	if b.Changed() {
 		s.text = []string{"Home", "Components", "Breadcrumbs"}[s.index]
 	}
-	components.Text(c, tr(c, s.text)).TextColor(c.Theme().TextMuted)
+	if s.text != "" {
+		components.Text(c, tr(c, s.text)).TextColor(c.Theme().TextMuted)
+	}
 }
 
 func controlRating(c *ui.Context, s *controlState, _ string) {

@@ -103,6 +103,14 @@ var controlCatalog = []controlExample{
 	{"ScrollView", "Scroll views", "Layout & containers", []string{"Vertical", "Horizontal", "Both", "Insets"}, controlScrollView},
 }
 
+// controlToolbars hold page-level sample actions, which the titlebar shows
+// after the page title so the content stays with the example itself.
+var controlToolbars = map[string]func(*ui.Context, *controlState){
+	"Bar chart": chartToolbar, "Line chart": chartToolbar, "Area chart": chartToolbar,
+	"Stacked bar chart": chartToolbar, "Donut chart": chartToolbar,
+	"Relationship graph": graphToolbar, "Honeycomb": honeycombToolbar,
+}
+
 func controlPageStart() galleryPage { return mygoPageStart + galleryPage(len(mygoCatalog)) }
 
 func controlExampleFor(page galleryPage) (controlExample, bool) {
@@ -138,7 +146,7 @@ func (g *Gallery) controlState(name, variant string) *controlState {
 		s.index = 3
 	}
 	if name == "Breadcrumbs" {
-		s.text = "Choose an ancestor"
+		s.text = ""
 	}
 	g.controlStates[key] = s
 	return s
@@ -155,9 +163,8 @@ func (g *Gallery) controlsLocalized(c *ui.Context, example controlExample) {
 		return
 	}
 	if example.name == "Relationship graph" || example.name == "Honeycomb" {
-		// These views fill the page below their heading instead of scrolling.
+		// These views fill the page instead of scrolling.
 		ui.Column(c).Key("controls-" + example.name).Fill().MinWidth(0).MinHeight(0).Padding(t.Space(6)).Gap(12).Children(func() {
-			components.Text(c, tr(c, example.name)).Bold().TextColor(t.Text)
 			example.build(c, g.controlState(example.name, "Default"), "Default")
 		})
 		return
@@ -170,17 +177,14 @@ func (g *Gallery) controlsLocalized(c *ui.Context, example controlExample) {
 					catalog = textBoxBufferControlCatalog
 				}
 				for _, textExample := range catalog {
-					g.controlVariants(c, textExample)
+					g.controlVariants(c, textExample, true)
 				}
 				return
-			}
-			if example.name == "Toast" {
-				g.controlSection(c, "Placement", func() { g.toastPlacement(c) })
 			}
 			if example.name == "Select" {
 				selectExample := example
 				selectExample.variants = example.variants[:len(example.variants)-1]
-				g.controlVariants(c, selectExample)
+				g.controlVariants(c, selectExample, false)
 				g.controlSection(c, "NativeSelect", func() {
 					controlSelect(c, g.controlState("Select", "NativeSelect"), "NativeSelect")
 				})
@@ -194,16 +198,20 @@ func (g *Gallery) controlsLocalized(c *ui.Context, example controlExample) {
 				}
 				return
 			}
-			g.controlVariants(c, example)
+			g.controlVariants(c, example, false)
+			if example.name == "Toast" {
+				g.controlSection(c, "Placement", func() { g.toastPlacement(c) })
+			}
 		})
 	})
 }
 
-func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
+// controlVariants lays out an example's variants. The titlebar already names
+// the page, so only a section within a page gets its own heading.
+func (g *Gallery) controlVariants(c *ui.Context, example controlExample, heading bool) {
 	t := c.Theme()
 	if example.name == "Text" || example.name == "Collapsible" {
 		ui.Column(c).Key(example.name).FillWidth().MinWidth(0).Gap(t.Space(4)).Children(func() {
-			components.Text(c, tr(c, example.name)).Bold().TextColor(t.Text)
 			for _, variant := range example.variants {
 				ui.Column(c).Key(variant).FillWidth().MinWidth(0).Gap(12).Children(func() {
 					components.Text(c, tr(c, variant)).TextColor(t.TextMuted)
@@ -213,7 +221,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 		})
 		return
 	}
-	g.controlSection(c, example.name, func() {
+	variants := func() {
 		ui.Row(c).FillWidth().MinWidth(0).Wrap().AlignItems(ui.Start).Gap(t.Space(4)).Children(func() {
 			for _, variant := range example.variants {
 				cell := ui.Column(c).Key(variant).MinWidth(0).MaxWidthPercent(100).Gap(12)
@@ -231,7 +239,12 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample) {
 				})
 			}
 		})
-	})
+	}
+	if !heading {
+		ui.Column(c).Key(example.name).FillWidth().MinWidth(0).Children(variants)
+		return
+	}
+	g.controlSection(c, example.name, variants)
 }
 
 func (g *Gallery) controlSection(c *ui.Context, name string, build func()) {

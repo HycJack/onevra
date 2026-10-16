@@ -17,24 +17,23 @@ func TestGraphPage(t *testing.T) {
 			if example, ok := controlExampleFor(g.page); !ok || example.group != "Charts" {
 				t.Fatal("graph is not a public component page")
 			}
-			tt := ui.NewTester(func(c *ui.Context) { theme.Apply(c); g.View(c) }, 520, 900)
+			tt := ui.NewTester(func(c *ui.Context) { theme.Apply(c); g.shellFrame(c) }, 520, 900)
 			tt.SetPreferences(ui.Preferences{ReduceMotion: true})
 			// The layout settles on the next painted frame, which the
 			// tester's clock must reach.
 			tt.Advance(100 * time.Millisecond)
 			s := g.controlState("Relationship graph", "Default").graph
-			if !tt.HasText(g.text("Relationship graph")) || !tt.HasText(g.text("graphHint")) || tt.HasText("graphIntro") {
+			if !tt.HasText(g.text("Relationship graph")) {
 				t.Fatal("graph page is not localized")
 			}
 			if !s.view.Settled() || s.view.Hovered() != "" {
 				t.Fatal("graph did not settle")
 			}
-			// The graph fills the page below its controls, leaving the hint
-			// at the bottom edge.
+			// The graph fills the page below the titlebar, whose toolbar
+			// holds its actions.
 			view, ok := tt.Find(g.messages().GraphLabel(len(s.cache.data.Nodes), len(s.cache.data.Edges)))
-			hint, hintOK := tt.Find(g.text("graphHint"))
-			if !ok || !hintOK || view.H < 460 || hint.Y+hint.H < 860 {
-				t.Fatalf("graph %v and hint %v do not fill the page", view, hint)
+			if !ok || view.Y > 100 || view.Y+view.H < 860 {
+				t.Fatalf("graph %v does not fill the page", view)
 			}
 			nodes := len(graphLibrary(s, false, locales.In("")).Nodes)
 			if nodes != len(graphNotes)+6 {
@@ -44,7 +43,7 @@ func TestGraphPage(t *testing.T) {
 			if err := tt.Click(g.text("graphSettings")); err != nil {
 				t.Fatal(err)
 			}
-			if !tt.HasText(g.text("graphAttachmentsHint")) {
+			if !tt.HasText(g.text("graphAttachments")) {
 				t.Fatal("settings popover did not open")
 			}
 			// The switch is the popover's only control; the keyboard reaches it.
@@ -66,7 +65,10 @@ func TestGraphPage(t *testing.T) {
 			if s.added != 1 {
 				t.Fatal("add note did not update the graph")
 			}
-			if err := tt.Click(g.messages().GraphAddMany(1000)); err != nil {
+			if err := tt.Click(g.text("graphAddBulk")); err != nil {
+				t.Fatal(err)
+			}
+			if err := tt.ChooseMenuItem(g.messages().GraphAddMany(1000)); err != nil {
 				t.Fatal(err)
 			}
 			if s.added != 1001 || len(s.cache.data.Nodes) != len(graphNotes)+1001 {

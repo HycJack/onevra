@@ -1650,16 +1650,6 @@ func (msgs Messages) Done() string {
 	return Catalog.Format(msgs.locale, "done", nil)
 }
 
-// DragTheGlassOverTheAvatar says "Drag the glass over the avatar"
-// in the language the app shows.
-func DragTheGlassOverTheAvatar() string { return In(i18n.Locale()).DragTheGlassOverTheAvatar() }
-
-// DragTheGlassOverTheAvatar says "Drag the glass over the avatar"
-// in the language of msgs.
-func (msgs Messages) DragTheGlassOverTheAvatar() string {
-	return Catalog.Format(msgs.locale, "dragTheGlassOverTheAvatar", nil)
-}
-
 // DraggableGlass says "Draggable glass"
 // in the language the app shows.
 func DraggableGlass() string { return In(i18n.Locale()).DraggableGlass() }
@@ -1760,18 +1750,6 @@ func (msgs Messages) EnableNotifications() string {
 	return Catalog.Format(msgs.locale, "enableNotifications", nil)
 }
 
-// EnableTheMenuThenRightClickGallerySDockIconShowGalleryOpen says "Enable the menu, then right-click Gallery's Dock icon. Show Gallery, Open Welcome and Open Settings appear above the …"
-// in the language the app shows.
-func EnableTheMenuThenRightClickGallerySDockIconShowGalleryOpen() string {
-	return In(i18n.Locale()).EnableTheMenuThenRightClickGallerySDockIconShowGalleryOpen()
-}
-
-// EnableTheMenuThenRightClickGallerySDockIconShowGalleryOpen says "Enable the menu, then right-click Gallery's Dock icon. Show Gallery, Open Welcome and Open Settings appear above the …"
-// in the language of msgs.
-func (msgs Messages) EnableTheMenuThenRightClickGallerySDockIconShowGalleryOpen() string {
-	return Catalog.Format(msgs.locale, "enableTheMenuThenRightClickGallerySDockIconShowGalleryOpen", nil)
-}
-
 // EnableTray says "Enable tray"
 // in the language the app shows.
 func EnableTray() string { return In(i18n.Locale()).EnableTray() }
@@ -1810,18 +1788,6 @@ func EnterAName() string { return In(i18n.Locale()).EnterAName() }
 // in the language of msgs.
 func (msgs Messages) EnterAName() string {
 	return Catalog.Format(msgs.locale, "enterAName", nil)
-}
-
-// EscapeClosingTheNotesWindowOrClickingAwayHidesItNotesStayI says "Escape, closing the notes window or clicking away hides it. Notes stay in memory; closing Gallery removes the tray."
-// in the language the app shows.
-func EscapeClosingTheNotesWindowOrClickingAwayHidesItNotesStayI() string {
-	return In(i18n.Locale()).EscapeClosingTheNotesWindowOrClickingAwayHidesItNotesStayI()
-}
-
-// EscapeClosingTheNotesWindowOrClickingAwayHidesItNotesStayI says "Escape, closing the notes window or clicking away hides it. Notes stay in memory; closing Gallery removes the tray."
-// in the language of msgs.
-func (msgs Messages) EscapeClosingTheNotesWindowOrClickingAwayHidesItNotesStayI() string {
-	return Catalog.Format(msgs.locale, "escapeClosingTheNotesWindowOrClickingAwayHidesItNotesStayI", nil)
 }
 
 // Expanded says "Expanded"
@@ -4024,18 +3990,6 @@ func (msgs Messages) TextInput() string {
 	return Catalog.Format(msgs.locale, "textInput", nil)
 }
 
-// TheMenuStaysAvailableWhenYouNavigateAwayDisableItHereOrClo says "The menu stays available when you navigate away. Disable it here or close Gallery to remove the demonstration items."
-// in the language the app shows.
-func TheMenuStaysAvailableWhenYouNavigateAwayDisableItHereOrClo() string {
-	return In(i18n.Locale()).TheMenuStaysAvailableWhenYouNavigateAwayDisableItHereOrClo()
-}
-
-// TheMenuStaysAvailableWhenYouNavigateAwayDisableItHereOrClo says "The menu stays available when you navigate away. Disable it here or close Gallery to remove the demonstration items."
-// in the language of msgs.
-func (msgs Messages) TheMenuStaysAvailableWhenYouNavigateAwayDisableItHereOrClo() string {
-	return Catalog.Format(msgs.locale, "theMenuStaysAvailableWhenYouNavigateAwayDisableItHereOrClo", nil)
-}
-
 // ThePageUnderneathStaysOpen says "The page underneath stays open."
 // in the language the app shows.
 func ThePageUnderneathStaysOpen() string { return In(i18n.Locale()).ThePageUnderneathStaysOpen() }
@@ -4564,26 +4518,6 @@ func (msgs Messages) DesktopSystemNotifications() string {
 	return Catalog.Format(msgs.locale, "desktopSystemNotifications", nil)
 }
 
-// NotificationDescription says "Send a system notification, then click it to return to this page. Sending again replaces this demo’s previous notif…"
-// in the language the app shows.
-func NotificationDescription() string { return In(i18n.Locale()).NotificationDescription() }
-
-// NotificationDescription says "Send a system notification, then click it to return to this page. Sending again replaces this demo’s previous notif…"
-// in the language of msgs.
-func (msgs Messages) NotificationDescription() string {
-	return Catalog.Format(msgs.locale, "notificationDescription", nil)
-}
-
-// NotificationRequirements says "macOS requires a packaged app and notification permission. Linux requires a desktop notification service. System sett…"
-// in the language the app shows.
-func NotificationRequirements() string { return In(i18n.Locale()).NotificationRequirements() }
-
-// NotificationRequirements says "macOS requires a packaged app and notification permission. Linux requires a desktop notification service. System sett…"
-// in the language of msgs.
-func (msgs Messages) NotificationRequirements() string {
-	return Catalog.Format(msgs.locale, "notificationRequirements", nil)
-}
-
 // NotificationSilent says "Silent notification"
 // in the language the app shows.
 func NotificationSilent() string { return In(i18n.Locale()).NotificationSilent() }
@@ -5110,16 +5044,6 @@ func (msgs Messages) FlyoutDescription() string {
 	return Catalog.Format(msgs.locale, "flyoutDescription", nil)
 }
 
-// FlyoutDismiss says "Press Escape or click outside to dismiss."
-// in the language the app shows.
-func FlyoutDismiss() string { return In(i18n.Locale()).FlyoutDismiss() }
-
-// FlyoutDismiss says "Press Escape or click outside to dismiss."
-// in the language of msgs.
-func (msgs Messages) FlyoutDismiss() string {
-	return Catalog.Format(msgs.locale, "flyoutDismiss", nil)
-}
-
 // ComponentFlyout says "Flyout"
 // in the language the app shows.
 func ComponentFlyout() string { return In(i18n.Locale()).ComponentFlyout() }
@@ -5508,16 +5432,6 @@ func DonutChart() string { return In(i18n.Locale()).DonutChart() }
 // in the language of msgs.
 func (msgs Messages) DonutChart() string {
 	return Catalog.Format(msgs.locale, "donutChart", nil)
-}
-
-// ChartIntro says "Soft colors, subtle grids and details on selection. Use the legend to explore the data."
-// in the language the app shows.
-func ChartIntro() string { return In(i18n.Locale()).ChartIntro() }
-
-// ChartIntro says "Soft colors, subtle grids and details on selection. Use the legend to explore the data."
-// in the language of msgs.
-func (msgs Messages) ChartIntro() string {
-	return Catalog.Format(msgs.locale, "chartIntro", nil)
 }
 
 // ChartEmpty says "Show empty state"
@@ -6124,16 +6038,6 @@ func (msgs Messages) CanvasRotation() string {
 	return Catalog.Format(msgs.locale, "canvasRotation", nil)
 }
 
-// GameHint says "Click the scene, then move with WASD, the arrow keys or a gamepad's left stick."
-// in the language the app shows.
-func GameHint() string { return In(i18n.Locale()).GameHint() }
-
-// GameHint says "Click the scene, then move with WASD, the arrow keys or a gamepad's left stick."
-// in the language of msgs.
-func (msgs Messages) GameHint() string {
-	return Catalog.Format(msgs.locale, "gameHint", nil)
-}
-
 // GameScene says "Game scene"
 // in the language the app shows.
 func GameScene() string { return In(i18n.Locale()).GameScene() }
@@ -6152,16 +6056,6 @@ func Component3dRenderer() string { return In(i18n.Locale()).Component3dRenderer
 // in the language of msgs.
 func (msgs Messages) Component3dRenderer() string {
 	return Catalog.Format(msgs.locale, "component3dRenderer", nil)
-}
-
-// Scene3dHint says "Drag to orbit the camera, scroll to zoom, and use WASD or the arrow keys to look around. A software rasterizer shades…"
-// in the language the app shows.
-func Scene3dHint() string { return In(i18n.Locale()).Scene3dHint() }
-
-// Scene3dHint says "Drag to orbit the camera, scroll to zoom, and use WASD or the arrow keys to look around. A software rasterizer shades…"
-// in the language of msgs.
-func (msgs Messages) Scene3dHint() string {
-	return Catalog.Format(msgs.locale, "scene3dHint", nil)
 }
 
 // Scene3dView says "Software 3D scene"
@@ -6184,16 +6078,6 @@ func (msgs Messages) RelationshipGraph() string {
 	return Catalog.Format(msgs.locale, "relationshipGraph", nil)
 }
 
-// GraphIntro says "Notes are colored by folder. Drag empty space or two fingers on a touchpad to pan, drag a note to move it, use the wh…"
-// in the language the app shows.
-func GraphIntro() string { return In(i18n.Locale()).GraphIntro() }
-
-// GraphIntro says "Notes are colored by folder. Drag empty space or two fingers on a touchpad to pan, drag a note to move it, use the wh…"
-// in the language of msgs.
-func (msgs Messages) GraphIntro() string {
-	return Catalog.Format(msgs.locale, "graphIntro", nil)
-}
-
 // GraphAdd says "Add note"
 // in the language the app shows.
 func GraphAdd() string { return In(i18n.Locale()).GraphAdd() }
@@ -6202,6 +6086,16 @@ func GraphAdd() string { return In(i18n.Locale()).GraphAdd() }
 // in the language of msgs.
 func (msgs Messages) GraphAdd() string {
 	return Catalog.Format(msgs.locale, "graphAdd", nil)
+}
+
+// GraphAddBulk says "Add many notes"
+// in the language the app shows.
+func GraphAddBulk() string { return In(i18n.Locale()).GraphAddBulk() }
+
+// GraphAddBulk says "Add many notes"
+// in the language of msgs.
+func (msgs Messages) GraphAddBulk() string {
+	return Catalog.Format(msgs.locale, "graphAddBulk", nil)
 }
 
 // GraphAddMany says "Add {count} notes"
@@ -6264,16 +6158,6 @@ func (msgs Messages) GraphNewNote(number int) string {
 	return Catalog.Format(msgs.locale, "graphNewNote", map[string]any{"number": number})
 }
 
-// GraphHint says "Double-click a note to open it."
-// in the language the app shows.
-func GraphHint() string { return In(i18n.Locale()).GraphHint() }
-
-// GraphHint says "Double-click a note to open it."
-// in the language of msgs.
-func (msgs Messages) GraphHint() string {
-	return Catalog.Format(msgs.locale, "graphHint", nil)
-}
-
 // GraphOpened says "Opened: {title}"
 // in the language the app shows.
 func GraphOpened(title string) string { return In(i18n.Locale()).GraphOpened(title) }
@@ -6302,16 +6186,6 @@ func GraphAttachments() string { return In(i18n.Locale()).GraphAttachments() }
 // in the language of msgs.
 func (msgs Messages) GraphAttachments() string {
 	return Catalog.Format(msgs.locale, "graphAttachments", nil)
-}
-
-// GraphAttachmentsHint says "Show attachment nodes beside the notes in their folder."
-// in the language the app shows.
-func GraphAttachmentsHint() string { return In(i18n.Locale()).GraphAttachmentsHint() }
-
-// GraphAttachmentsHint says "Show attachment nodes beside the notes in their folder."
-// in the language of msgs.
-func (msgs Messages) GraphAttachmentsHint() string {
-	return Catalog.Format(msgs.locale, "graphAttachmentsHint", nil)
 }
 
 // ComponentRichTextEditor says "Rich text editor"
@@ -6546,16 +6420,6 @@ func (msgs Messages) NetworkMetered() string {
 	return Catalog.Format(msgs.locale, "networkMetered", nil)
 }
 
-// NetworkHint says "Updates when the computer joins or leaves a network."
-// in the language the app shows.
-func NetworkHint() string { return In(i18n.Locale()).NetworkHint() }
-
-// NetworkHint says "Updates when the computer joins or leaves a network."
-// in the language of msgs.
-func (msgs Messages) NetworkHint() string {
-	return Catalog.Format(msgs.locale, "networkHint", nil)
-}
-
 // SecretsKey says "Secret name"
 // in the language the app shows.
 func SecretsKey() string { return In(i18n.Locale()).SecretsKey() }
@@ -6636,16 +6500,6 @@ func (msgs Messages) SecretsNotFound() string {
 	return Catalog.Format(msgs.locale, "secretsNotFound", nil)
 }
 
-// SecretsHint says "Secrets stay in the Keychain, Credential Manager or Secret Service, encrypted for the current user."
-// in the language the app shows.
-func SecretsHint() string { return In(i18n.Locale()).SecretsHint() }
-
-// SecretsHint says "Secrets stay in the Keychain, Credential Manager or Secret Service, encrypted for the current user."
-// in the language of msgs.
-func (msgs Messages) SecretsHint() string {
-	return Catalog.Format(msgs.locale, "secretsHint", nil)
-}
-
 // RecentChoose says "Add a file…"
 // in the language the app shows.
 func RecentChoose() string { return In(i18n.Locale()).RecentChoose() }
@@ -6694,16 +6548,6 @@ func RecentEmpty() string { return In(i18n.Locale()).RecentEmpty() }
 // in the language of msgs.
 func (msgs Messages) RecentEmpty() string {
 	return Catalog.Format(msgs.locale, "recentEmpty", nil)
-}
-
-// RecentHint says "Recent documents also appear in the Dock menu, Open Recent and the Windows jump list."
-// in the language the app shows.
-func RecentHint() string { return In(i18n.Locale()).RecentHint() }
-
-// RecentHint says "Recent documents also appear in the Dock menu, Open Recent and the Windows jump list."
-// in the language of msgs.
-func (msgs Messages) RecentHint() string {
-	return Catalog.Format(msgs.locale, "recentHint", nil)
 }
 
 // WatchChoose says "Choose a folder…"
@@ -6814,16 +6658,6 @@ func ShortcutLastPressed() string { return In(i18n.Locale()).ShortcutLastPressed
 // in the language of msgs.
 func (msgs Messages) ShortcutLastPressed() string {
 	return Catalog.Format(msgs.locale, "shortcutLastPressed", nil)
-}
-
-// ShortcutHint says "Global shortcuts work while another app is focused. Write accelerators such as CmdOrCtrl+Shift+Space; another app may…"
-// in the language the app shows.
-func ShortcutHint() string { return In(i18n.Locale()).ShortcutHint() }
-
-// ShortcutHint says "Global shortcuts work while another app is focused. Write accelerators such as CmdOrCtrl+Shift+Space; another app may…"
-// in the language of msgs.
-func (msgs Messages) ShortcutHint() string {
-	return Catalog.Format(msgs.locale, "shortcutHint", nil)
 }
 
 // FontsSearch says "Search fonts"
@@ -6946,16 +6780,6 @@ func (msgs Messages) AppearanceTextScale() string {
 	return Catalog.Format(msgs.locale, "appearanceTextScale", nil)
 }
 
-// AppearanceHint says "These follow the desktop settings and update while the gallery is open."
-// in the language the app shows.
-func AppearanceHint() string { return In(i18n.Locale()).AppearanceHint() }
-
-// AppearanceHint says "These follow the desktop settings and update while the gallery is open."
-// in the language of msgs.
-func (msgs Messages) AppearanceHint() string {
-	return Catalog.Format(msgs.locale, "appearanceHint", nil)
-}
-
 // LanguagesTab says "Language"
 // in the language the app shows.
 func LanguagesTab() string { return In(i18n.Locale()).LanguagesTab() }
@@ -7024,16 +6848,6 @@ func LanguagesDate() string { return In(i18n.Locale()).LanguagesDate() }
 // in the language of msgs.
 func (msgs Messages) LanguagesDate() string {
 	return Catalog.Format(msgs.locale, "languagesDate", nil)
-}
-
-// LanguagesHint says "Numbers and dates follow the language shown and the user's regional formats."
-// in the language the app shows.
-func LanguagesHint() string { return In(i18n.Locale()).LanguagesHint() }
-
-// LanguagesHint says "Numbers and dates follow the language shown and the user's regional formats."
-// in the language of msgs.
-func (msgs Messages) LanguagesHint() string {
-	return Catalog.Format(msgs.locale, "languagesHint", nil)
 }
 
 // WebDataAvailable says "System web view available"
@@ -7184,16 +6998,6 @@ func ComponentHoneycomb() string { return In(i18n.Locale()).ComponentHoneycomb()
 // in the language of msgs.
 func (msgs Messages) ComponentHoneycomb() string {
 	return Catalog.Format(msgs.locale, "componentHoneycomb", nil)
-}
-
-// HoneycombHint says "Drag, scroll or Tab through the honeycomb; the item in the middle is chosen."
-// in the language the app shows.
-func HoneycombHint() string { return In(i18n.Locale()).HoneycombHint() }
-
-// HoneycombHint says "Drag, scroll or Tab through the honeycomb; the item in the middle is chosen."
-// in the language of msgs.
-func (msgs Messages) HoneycombHint() string {
-	return Catalog.Format(msgs.locale, "honeycombHint", nil)
 }
 
 // HoneycombAdd says "Add item"

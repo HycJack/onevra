@@ -6,7 +6,6 @@ import (
 
 	"github.com/egoist/mygo/plugins/game"
 	"github.com/egoist/mygo/ui"
-	"github.com/oneo-me/onevra/source/components"
 )
 
 // The rasterizer draws only the objects: the buffer is transparent between
@@ -504,9 +503,7 @@ func sincos(x float32) (float32, float32) {
 // game loop, driven by fixed steps and the plugin's input. It paints no
 // background of its own, so the elements sit on the page behind them.
 func example3D(c *ui.Context, s *demoState) {
-	t := c.Theme()
 	d := &s.scene3d
 	d.init()
-	components.Text(c, tr(c, "scene3dHint")).TextColor(t.TextMuted).Wrap()
 	game.View(c, d).Height(360).FillWidth().Label(tr(c, "scene3dView"))
 }

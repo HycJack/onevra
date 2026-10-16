@@ -6,6 +6,8 @@ import (
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
 	"github.com/oneo-me/onevra/source/components/chart"
+	"github.com/oneo-me/onevra/source/icons/lucide"
+	"github.com/oneo-me/onevra/source/shells/sidebar"
 )
 
 type chartDemoState struct {
@@ -33,24 +35,36 @@ func controlDonutChart(c *ui.Context, s *controlState, _ string) {
 	controlChart(c, s, "Donut chart", nil)
 }
 
-func controlChart(c *ui.Context, s *controlState, name string, render func(*ui.Context, *chart.State, chart.Data, chart.Options) ui.Element) {
+func chartDemo(s *controlState) *chartDemoState {
 	if s.chart == nil {
 		s.chart = &chartDemoState{selection: chart.State{Index: -1}}
 	}
+	return s.chart
+}
+
+// chartToolbar holds a chart page's data actions in the page titlebar.
+func chartToolbar(c *ui.Context, s *controlState) {
+	d := chartDemo(s)
+	if sidebar.IconButton(c, lucide.RefreshCw(), tr(c, "chartUpdate")).Disabled(d.empty).Clicked() {
+		s.on = !s.on
+	}
+	emptyStateToggle(c, &d.empty)
+}
+
+// emptyStateToggle switches a sample between its data and its empty state.
+func emptyStateToggle(c *ui.Context, empty *bool) {
+	icon, label := lucide.Eraser(), "chartEmpty"
+	if *empty {
+		icon, label = lucide.Undo2(), "chartRestore"
+	}
+	if sidebar.IconButton(c, icon, tr(c, label)).Clicked() {
+		*empty = !*empty
+	}
+}
+
+func controlChart(c *ui.Context, s *controlState, name string, render func(*ui.Context, *chart.State, chart.Data, chart.Options) ui.Element) {
+	chartDemo(s)
 	t := c.Theme()
-	components.Text(c, tr(c, "chartIntro")).TextColor(t.TextMuted)
-	ui.Row(c).FillWidth().MinWidth(0).Wrap().Gap(t.Space(2)).Children(func() {
-		if components.Button(c, tr(c, "chartUpdate"), components.ButtonOutline).Clicked() {
-			s.on = !s.on
-		}
-		label := "chartEmpty"
-		if s.chart.empty {
-			label = "chartRestore"
-		}
-		if components.Button(c, tr(c, label), components.ButtonGhost).Clicked() {
-			s.chart.empty = !s.chart.empty
-		}
-	})
 	ui.Column(c).FillWidth().MinWidth(0).Padding(t.Space(4)).Gap(t.Space(4)).
 		Radius(t.Radius*1.5).Background(t.Surface).Border(1, t.Border.Alpha(.5)).Children(func() {
 		opts := chart.Options{

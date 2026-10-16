@@ -63,7 +63,6 @@ func (d *flyoutDemo) view(c *ui.Context) {
 		}
 		panel.Children(func() {
 			components.TextBox(c, &d.note, components.TextBoxOptions{}).Label(tr(c, "notes")).FillWidth().AutoFocus()
-			components.Text(c, tr(c, "flyoutDismiss")).Wrap().TextColor(t.TextMuted)
 			components.Button(c, tr(c, "close"), components.ButtonOutline).OnClick(func() {
 				if d.window != nil {
 					d.window.Close()

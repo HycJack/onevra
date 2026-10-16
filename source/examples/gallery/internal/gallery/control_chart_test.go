@@ -30,10 +30,10 @@ func TestChartPages(t *testing.T) {
 				if !ok || example.group != "Charts" {
 					t.Fatal("chart is not a public component page")
 				}
-				tt := ui.NewTester(func(c *ui.Context) { theme.Apply(c); g.View(c) }, 280, 900)
+				tt := ui.NewTester(func(c *ui.Context) { theme.Apply(c); g.shellFrame(c) }, 280, 900)
 				for _, dark := range []bool{false, true} {
 					tt.SetDark(dark)
-					if !tt.HasText(g.text(name)) || tt.HasText("chartIntro") {
+					if !tt.HasText(g.text(name)) {
 						t.Fatal("chart page is not localized")
 					}
 					for _, label := range []string{"chartUpdate", "chartEmpty"} {

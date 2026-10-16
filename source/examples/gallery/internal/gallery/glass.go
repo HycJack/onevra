@@ -35,7 +35,6 @@ func glassPreview(c *ui.Context, s *demoState, bitmap *ui.Bitmap) {
 			s.glass = glassDemo{}
 		}
 	})
-	components.Text(c, tr(c, "dragTheGlassOverTheAvatar")).TextColor(c.Theme().TextMuted)
 	canvas := ui.Box(c).FillWidth().Height(420).Radius(20).Clip().Label(tr(c, "glassCanvas"))
 	previousWidth := canvas.Bounds().W
 	// Bounds is the previous layout; settle initial layout and window resizing.

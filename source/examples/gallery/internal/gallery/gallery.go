@@ -91,10 +91,17 @@ func (g *Gallery) titlebarLocalized(c *ui.Context) {
 	if example, ok := mygoExampleFor(g.page); ok {
 		title = tr(c, example.group) + " / " + tr(c, example.name)
 	}
-	if example, ok := controlExampleFor(g.page); ok {
+	example, control := controlExampleFor(g.page)
+	if control {
 		title = tr(c, example.group) + " / " + tr(c, example.name)
 	}
-	components.Text(c, tr(c, title)).Bold().SingleLine()
+	ui.Row(c).Fill().MinWidth(0).AlignItems(ui.Center).Gap(c.Theme().Space(1)).Children(func() {
+		components.Text(c, tr(c, title)).Bold().SingleLine().MinWidth(0).Shrink(1)
+		if toolbar := controlToolbars[example.name]; control && toolbar != nil {
+			ui.Spacer(c)
+			toolbar(c, g.controlState(example.name, "Default"))
+		}
+	})
 }
 
 func (g *Gallery) Left(c *ui.Context) {
