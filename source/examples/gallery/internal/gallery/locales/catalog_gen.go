@@ -1974,38 +1974,6 @@ func (msgs Messages) TheSystemWebEngineRendersThisPageNativePopoversDialogsAnd()
 	return Catalog.Format(msgs.locale, "theSystemWebEngineRendersThisPageNativePopoversDialogsAnd", nil)
 }
 
-// TogglePixelGridBackground says "Toggle pixel grid background"
-// in the language the app shows.
-func TogglePixelGridBackground() string { return In(i18n.Locale()).TogglePixelGridBackground() }
-
-// TogglePixelGridBackground says "Toggle pixel grid background"
-// in the language of msgs.
-func (msgs Messages) TogglePixelGridBackground() string {
-	return Catalog.Format(msgs.locale, "togglePixelGridBackground", nil)
-}
-
-// PixelGridBackground says "Pixel grid background"
-// in the language the app shows.
-func PixelGridBackground() string { return In(i18n.Locale()).PixelGridBackground() }
-
-// PixelGridBackground says "Pixel grid background"
-// in the language of msgs.
-func (msgs Messages) PixelGridBackground() string {
-	return Catalog.Format(msgs.locale, "pixelGridBackground", nil)
-}
-
-// PixelGridBackgroundDescription says "Show a pixel grid behind component previews."
-// in the language the app shows.
-func PixelGridBackgroundDescription() string {
-	return In(i18n.Locale()).PixelGridBackgroundDescription()
-}
-
-// PixelGridBackgroundDescription says "Show a pixel grid behind component previews."
-// in the language of msgs.
-func (msgs Messages) PixelGridBackgroundDescription() string {
-	return Catalog.Format(msgs.locale, "pixelGridBackgroundDescription", nil)
-}
-
 // Grid says "Grid"
 // in the language the app shows.
 func Grid() string { return In(i18n.Locale()).Grid() }

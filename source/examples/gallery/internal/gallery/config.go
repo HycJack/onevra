@@ -14,9 +14,8 @@ import (
 
 // Config holds application preferences, separate from transient window state.
 type Config struct {
-	Theme            mygo.ThemeSource `json:"theme"`
-	Language         string           `json:"language,omitempty"`
-	DisablePixelGrid bool             `json:"disablePixelGrid,omitempty"`
+	Theme    mygo.ThemeSource `json:"theme"`
+	Language string           `json:"language,omitempty"`
 	// Zero values preserve automatic ABC selection and initially visible results.
 	DisableCommandABC     bool `json:"disableCommandABC,omitempty"`
 	CommandExpandOnSearch bool `json:"commandExpandOnSearch,omitempty"`

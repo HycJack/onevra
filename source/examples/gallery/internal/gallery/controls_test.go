@@ -319,8 +319,10 @@ func TestControlExampleInteractions(t *testing.T) {
 }
 
 func TestControlPageGrid(t *testing.T) {
+	t.Cleanup(func() { pixelGridBackground = true })
 	for _, dark := range []bool{false, true} {
 		for _, width := range []int{280, 900} {
+			pixelGridBackground = true
 			g := &Gallery{page: pageFromKey("controls/Popover")}
 			tt := ui.NewTester(func(c *ui.Context) {
 				c.SetTheme(theme.Palette(dark))
@@ -343,7 +345,7 @@ func TestControlPageGrid(t *testing.T) {
 			if img.RGBAAt(176, 575) != img.RGBAAt(22, 575) {
 				t.Fatal("page grid must not emphasize major lines")
 			}
-			g.config.DisablePixelGrid = true
+			pixelGridBackground = false
 			tt.Frame()
 			img = tt.Image()
 			background = img.RGBAAt(5, 575)

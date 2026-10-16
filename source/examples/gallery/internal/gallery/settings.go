@@ -160,17 +160,6 @@ func (g *Gallery) settingsCategories() []components.SettingsCategory {
 						g.chooseTheme(mygo.ThemeSource(choice))
 					}
 				},
-			}, {
-				ID: "pixel-grid", Title: g.text("pixelGridBackground"), Description: g.text("pixelGridBackgroundDescription"),
-				Build: func(c *ui.Context) {
-					enabled := !g.config.DisablePixelGrid
-					components.Switch(c, &enabled, g.text("togglePixelGridBackground"), components.SwitchOptions{HideLabel: true}).Changed()
-					if enabled != !g.config.DisablePixelGrid {
-						g.config.DisablePixelGrid = !enabled
-						g.savePreferences()
-						c.Invalidate()
-					}
-				},
 			}}}},
 		},
 		// Template categories stay together under their own section.
