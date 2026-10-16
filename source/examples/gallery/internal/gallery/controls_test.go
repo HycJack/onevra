@@ -94,6 +94,26 @@ func TestPixelGridStandaloneExample(t *testing.T) {
 	}
 }
 
+// The SplitPercent cell needs a bounded width: sized to its content, the
+// split grew with the panes and the divider outran the pointer.
+func TestSplitPercentDragFollowsPointer(t *testing.T) {
+	g := &Gallery{page: pageFromKey("controls/SplitPercent")}
+	tt := ui.NewTester(g.View, 900, 1200)
+	r, ok := tt.Find("Horizontal divider")
+	if !ok {
+		t.Fatal("missing divider")
+	}
+	x, y := r.X+r.W/2, r.Y+r.H/2
+	tt.Press(x, y)
+	for i := 1; i <= 20; i++ {
+		px := x + float32(i*5)
+		tt.Move(px, y)
+		if d, _ := tt.Find("Horizontal divider"); d.X+d.W/2 < px-1 || d.X+d.W/2 > px+1 {
+			t.Fatalf("step %d: divider at %v, pointer at %v", i, d.X+d.W/2, px)
+		}
+	}
+}
+
 func TestControlNavigationAndState(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.Left, 220, 6000)

@@ -228,7 +228,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample, heading
 				switch example.name {
 				case "Text", "GridView", "Bar chart", "Line chart", "Area chart", "Stacked bar chart", "Donut chart", "Relationship graph":
 					cell.FillWidth()
-				case "TextBox", "TextBox (multiline)", "TextBoxBuffer", "TextBoxBuffer (multiline)", "NumberInput", "Slider", "Sidebar", "List", "Split", "ScrollView", "Progress", "Accordion", "Collapsible", "PixelGrid":
+				case "TextBox", "TextBox (multiline)", "TextBoxBuffer", "TextBoxBuffer (multiline)", "NumberInput", "Slider", "Sidebar", "List", "Split", "SplitPercent", "ScrollView", "Progress", "Accordion", "Collapsible", "PixelGrid":
 					cell.Width(240)
 				}
 				cell.Children(func() {
