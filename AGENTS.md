@@ -24,10 +24,12 @@ Update documentation in the same change only when its reader-needed facts change
 - README.md and README.zh-CN.md cover the project introduction, basic usage and contributor onboarding. Link to deeper material instead of expanding the quick start.
 - ARCHITECTURE.md and docs/ explain system boundaries, core flows, design rationale and important constraints. Keep property definitions, defaults and local implementation details in code; do not duplicate them in prose or create a document per task.
 - skills/onevra/ guides Agents building applications on Onevra. Update it when basic usage, component replacement decisions, testing conventions or packaging requirements change; keep it concise and link to the module source for details.
-- CHANGELOG.md records what a library consumer notices or must do, under Unreleased: one short clause per outcome, starting with a verb and naming the public API, such as "Add `components.Honeycomb`." Do not follow it with a colon, semicolon or "which" clause describing behavior, options or migration details; those belong in documentation.
-- Omit refactors, source layout, tests, tooling, styling, copy tweaks and gallery-only changes. Merge related entries instead of appending task histories; do not present an unreleased experiment as a removed released feature.
-- Prefix breaking changes with `Breaking:` and name at most the replacement. Record MyGo upgrades as the required version alone.
-- Keep adjacent changelog bullets together without blank lines; retain blank lines around headings.
+- CHANGELOG.md records what a library consumer notices or must do, under Unreleased. Write one short clause per outcome, starting with a verb and naming the public API, such as "Add `components.Honeycomb`."
+- Do not extend an entry with a colon, semicolon or "which" clause; behavior, options and migration details belong in documentation.
+- Omit refactors, source layout, tests, tooling, styling, copy tweaks and gallery-only changes. Merge related entries; never present an unreleased experiment as a removed released feature.
+- Prefix breaking changes with `Breaking:` and name at most the replacement. Record MyGo upgrades as the required version alone, first in its group.
+- Order each version's bullets by type: `Breaking:`, then Add, then other changes such as Change, Require or Animate, then Fix. Insert new entries into their group instead of appending.
+- Keep each version's bullets in one list without type subheadings or blank lines; retain blank lines around headings.
 - Update summaries, changelog entries and release notes describe only what was added, changed or removed. Unless the user explicitly requests it, omit Verification sections and all testing or validation details, including commands, results and verification gaps. Required checks still run as part of the work.
 
 Keep documentation and code on the same branch and reconcile definitions during merges. Each explanation has one owning location; link rather than repeat it.
