@@ -46,6 +46,10 @@ func editorBuffer(text string) *editor.Buffer {
 	return b
 }
 
+// editorFont sizes code a step below body text, as Onevra's other monospaced
+// text, since the editor's default monospaced 13 DIPs reads larger than it.
+func editorFont(c *ui.Context) ui.Font { return ui.Font{Size: c.Theme().FontSize - 1} }
+
 // exampleCodeEditor shows edits against the original text in the gutter, or a
 // highlighted read-only snippet as tall as its lines.
 // Buffers live in page memory and are never written to disk.
@@ -55,14 +59,14 @@ func exampleCodeEditor(c *ui.Context, s *demoState) {
 			s.code = &editor.State{Buffer: editorBuffer(editorSample), ReadOnly: true, FitContent: true,
 				LineNumbers: editor.LineNumbersOff, NoFolding: true, NoActiveLine: true, NoIndentGuides: true}
 		}
-		s.code.Label = tr(c, "codeEditorLabel")
+		s.code.Label, s.code.Font = tr(c, "codeEditorLabel"), editorFont(c)
 		editor.View(c, s.code).FillWidth().Radius(8).Clip()
 		return
 	}
 	if s.code == nil {
 		s.code = &editor.State{Buffer: editorBuffer(editorSample), DiffBase: editorBuffer(editorSample), WrapGuides: []int{80}}
 	}
-	s.code.Label = tr(c, "codeEditorLabel")
+	s.code.Label, s.code.Font = tr(c, "codeEditorLabel"), editorFont(c)
 	editor.View(c, s.code).Height(320).FillWidth().Radius(8).Clip()
 	pos := s.code.CursorPos()
 	components.Text(c, msg(c).CodeEditorPosition(pos.Line+1, pos.Col+1)).TextColor(c.Theme().TextMuted)
@@ -75,6 +79,7 @@ func exampleDiffViewer(c *ui.Context, s *demoState) {
 			s.diff.Layout = editor.DiffUnified
 		}
 	}
+	s.diff.Font = editorFont(c)
 	editor.DiffView(c, s.diff).Height(360).FillWidth().Radius(8).Clip()
 	added, deleted := s.diff.Stats()
 	components.Text(c, msg(c).DiffViewerStats(added, deleted)).TextColor(c.Theme().TextMuted)
