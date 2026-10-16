@@ -22,10 +22,10 @@ type SplitOptions struct {
 	// nonfinite values are invalid. When both minima cannot fit, they shrink
 	// proportionally. Layout constraints do not overwrite the preferred size.
 	FirstMin, SecondMin float32
-	// Default, when positive, is the size of the first pane in DIPs that
-	// double-clicking the divider restores, within the effective limits.
-	// Split only; SplitPercent panics when it is set. Negative or nonfinite
-	// values are invalid.
+	// Default, when positive, is the size of the first pane that
+	// double-clicking the divider restores, within the effective limits: DIPs
+	// for Split and a share from 0 to 100 for SplitPercent. Negative or
+	// nonfinite values are invalid.
 	Default float32
 }
 
@@ -76,7 +76,7 @@ func Split(c *ui.Context, size *float32, first, second func(), options ...SplitO
 // proportion. Values outside that range are clamped when shown. The minima
 // still apply and are not written back, so the preferred share returns when
 // there is room again. The divider reports its position to assistive
-// technology as a percentage.
+// technology as a percentage, and SplitOptions.Default is a share.
 //
 //	SplitPercent(c, &percent, files, editor).Fill()
 //	SplitPercent(c, &percent, preview, console, SplitOptions{Orientation: Vertical}).Fill()
@@ -99,8 +99,8 @@ func split(c *ui.Context, name string, value *float32, percent bool, first, seco
 	if value == nil || !finite(*value) || !finite(o.FirstMin) || !finite(o.SecondMin) || o.FirstMin < 0 || o.SecondMin < 0 {
 		panic(name + ": the value must be nonnil and finite; minima must be finite and nonnegative")
 	}
-	if !finite(o.Default) || o.Default < 0 || percent && o.Default != 0 {
-		panic(name + ": the default must be finite and nonnegative, and only Split takes one")
+	if !finite(o.Default) || o.Default < 0 {
+		panic(name + ": the default must be finite and nonnegative")
 	}
 	t := c.Theme()
 	if o.FirstMin == 0 {
@@ -180,6 +180,9 @@ func split(c *ui.Context, name string, value *float32, percent bool, first, seco
 			if o.Default > 0 && handle.DoubleClicked() && !handle.IsDisabled() {
 				div.Focus()
 				next = o.Default
+				if percent {
+					next = min(o.Default, 100) / 100 * room
+				}
 			}
 			next = max(lo, min(next, hi))
 			if next != position && !div.IsDisabled() && (!percent || room > 0) {

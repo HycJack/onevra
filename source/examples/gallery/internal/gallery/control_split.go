@@ -18,6 +18,7 @@ func controlSplit(c *ui.Context, s *controlState, variant string) {
 // controlSplitPercent keeps the panes' shares as the page resizes.
 func controlSplitPercent(c *ui.Context, s *controlState, variant string) {
 	options, first, second := splitPanes(c, variant)
+	options.Default = 30
 	components.SplitPercent(c, &s.splitPercent, first, second, options).
 		Label(msg(c).DividerOf(tr(c, variant))).FillWidth().Height(240)
 	components.Text(c, msg(c).SplitPercentShare(int(math.Round(float64(s.splitPercent))))).TextColor(c.Theme().TextMuted)

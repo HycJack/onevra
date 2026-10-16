@@ -236,12 +236,6 @@ func TestSplitInvalidInputs(t *testing.T) {
 			ui.NewTester(func(c *ui.Context) { SplitPercent(c, test.size, nil, nil, test.options...).Fill() }, 300, 300)
 		}()
 	}
-	defer func() {
-		if recover() == nil {
-			t.Error("percentage default accepted")
-		}
-	}()
-	ui.NewTester(func(c *ui.Context) { SplitPercent(c, &valid, nil, nil, SplitOptions{Default: 50}).Fill() }, 300, 300)
 }
 
 func TestSplitPercent(t *testing.T) {
@@ -249,7 +243,7 @@ func TestSplitPercent(t *testing.T) {
 	orientation := Horizontal
 	changes := 0
 	tt := ui.NewTester(func(c *ui.Context) {
-		s := SplitPercent(c, &percent, func() { ui.Box(c).Fill().Label("first") }, nil, SplitOptions{Orientation: orientation, FirstMin: 60, SecondMin: 30})
+		s := SplitPercent(c, &percent, func() { ui.Box(c).Fill().Label("first") }, nil, SplitOptions{Orientation: orientation, FirstMin: 60, SecondMin: 30, Default: 40})
 		s.Label("Resize").Width(width).Height(201)
 		if s.Changed() {
 			changes++
@@ -284,6 +278,14 @@ func TestSplitPercent(t *testing.T) {
 	tt.Key(0, ui.KeyEnd)
 	if percent != 95 {
 		t.Fatalf("End: %v", percent)
+	}
+	// Double-clicking the divider restores the default share.
+	r, _ = tt.Find("Resize")
+	x, y = r.X+r.W/2, r.Y+r.H/2
+	tt.ClickAt(x, y)
+	tt.ClickAt(x, y)
+	if percent != 40 || changes != 3 {
+		t.Fatalf("double click: %v %d", percent, changes)
 	}
 	orientation = Vertical
 	tt.Key(0, ui.KeyHome)
