@@ -2,7 +2,7 @@ package gallery
 
 // Component sections describe purpose, never implementation ownership.
 var navigationGroups = []string{
-	"Plugins", "Actions & navigation", "Text input", "Selection & values",
+	"Conversation", "Plugins", "Actions & navigation", "Text input", "Selection & values",
 	"Date & time", "Color", "Content display", "Code & diffs", "Charts", "Layout & containers",
 	"Feedback & overlays", "Games",
 }

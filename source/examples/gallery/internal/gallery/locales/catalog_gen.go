@@ -4158,6 +4158,16 @@ func (msgs Messages) DateTime() string {
 	return Catalog.Format(msgs.locale, "dateTime", nil)
 }
 
+// Conversation says "Conversation"
+// in the language the app shows.
+func Conversation() string { return In(i18n.Locale()).Conversation() }
+
+// Conversation says "Conversation"
+// in the language of msgs.
+func (msgs Messages) Conversation() string {
+	return Catalog.Format(msgs.locale, "conversation", nil)
+}
+
 // ContentDisplay says "Content display"
 // in the language the app shows.
 func ContentDisplay() string { return In(i18n.Locale()).ContentDisplay() }

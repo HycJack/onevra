@@ -91,7 +91,7 @@ var controlCatalog = []controlExample{
 	{"Dialogs", "Dialogs", "Feedback & overlays", nil, nil},
 	{"Badge", "Badge", "Feedback & overlays", []string{"Default", "Accent"}, controlBadge},
 	{"Toast", "Toast", "Feedback & overlays", []string{"Status", "Actions", "Progress"}, controlToast},
-	{"Chat", "Chat", "Content display", []string{"Default"}, controlChat},
+	{"Chat", "Chat", "Conversation", []string{"Default"}, controlChat},
 	{"RichText", "RichText", "Content display", []string{"Default"}, controlRichText},
 	{"Breadcrumbs", "Breadcrumbs", "Actions & navigation", []string{"Default"}, controlBreadcrumbs},
 	{"Rating", "Rating", "Selection & values", []string{"Default"}, controlRating},
