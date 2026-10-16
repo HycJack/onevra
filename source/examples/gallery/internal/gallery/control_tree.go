@@ -5,6 +5,7 @@ import (
 
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
+	"github.com/oneo-me/onevra/source/icons/lucide"
 )
 
 func controlTree(c *ui.Context, s *controlState, variant string) {
@@ -12,8 +13,12 @@ func controlTree(c *ui.Context, s *controlState, variant string) {
 		controlTreeVirtualized(c, s, variant)
 		return
 	}
+	// A leading slot marks the folder before its label.
+	folder := func(c *ui.Context, size float32) {
+		components.Icon(c, lucide.Folder).Size(size, size).TextColor(c.Theme().Accent)
+	}
 	components.Tree(c, func() {
-		if components.TreeItem(c, "source", &s.on, s.choice == "source", func() {
+		if components.TreeItemWithLeading(c, "source", &s.on, s.choice == "source", folder, func() {
 			for _, name := range []string{"main.go", "go.mod"} {
 				if components.TreeItem(c, name, nil, s.choice == name, nil).Clicked() {
 					s.choice = name

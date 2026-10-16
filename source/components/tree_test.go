@@ -144,6 +144,28 @@ func TestTreeDisclosureAndAppearance(t *testing.T) {
 	}
 }
 
+func TestTreeItemWithLeading(t *testing.T) {
+	open, arrow := true, float32(0)
+	tt := ui.NewTester(func(c *ui.Context) {
+		c.SetTheme(theme.LightPalette())
+		arrow = c.Theme().Space(4)
+		Tree(c, func() {
+			TreeItemWithLeading(c, "Folder", &open, false, func(c *ui.Context, size float32) {
+				ui.Box(c).Size(size, size).Label("mark")
+			}, func() { TreeItem(c, "Child", nil, false, nil) })
+		}).Width(240)
+	}, 260, 200)
+	folder, _ := tt.Find("Folder")
+	mark, ok := tt.Find("mark")
+	if !ok || !tt.HasText("Child") {
+		t.Fatal("missing leading mark or children")
+	}
+	// The mark follows the disclosure arrow inside its row.
+	if mark.X < folder.X+arrow || mark.X+mark.W > folder.X+folder.W || mark.Y < folder.Y || mark.Y+mark.H > folder.Y+folder.H {
+		t.Fatalf("mark %v outside row %v after its arrow", mark, folder)
+	}
+}
+
 func TestTreeVirtualizedBuildsOnlyVisibleRows(t *testing.T) {
 	var state TreeVirtualizedState[int]
 	selected, built := 0, 0

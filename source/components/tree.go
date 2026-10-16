@@ -62,6 +62,15 @@ func Tree(c *ui.Context, children func()) ui.Element {
 // toggles expansion; Clicked lets the application select or activate the row.
 // Selection uses the Sidebar's neutral tint, without a hover face.
 func TreeItem(c *ui.Context, label string, open *bool, selected bool, children func()) ui.Element {
+	return TreeItemWithLeading(c, label, open, selected, nil, children)
+}
+
+// TreeItemWithLeading is a TreeItem with an application-built leading slot
+// between its disclosure arrow and label, for example a file type or host
+// mark. A nil builder leaves no leading space. The builder receives the
+// theme-scaled icon size as a suggestion and owns its content's size and
+// appearance. Keep it non-interactive and free of I/O or background work.
+func TreeItemWithLeading(c *ui.Context, label string, open *bool, selected bool, leading func(c *ui.Context, size float32), children func()) ui.Element {
 	t := c.Theme()
 	slot := ui.Local(c.Root(), treeScopeKey{}, func() *treeScope { return nil })
 	scope := *slot
@@ -87,6 +96,10 @@ func TreeItem(c *ui.Context, label string, open *bool, selected bool, children f
 	scope.items = append(scope.items, treeNode{element: e, parent: scope.parent, open: open, branch: branch})
 	e.Children(func() {
 		treeDisclosureArrow(c, branch, branch && *open, func() { *open = !*open })
+		if leading != nil {
+			// The mark sits nearer its label than the arrow does.
+			ui.Box(c).Shrink(0).Margin(0, t.Space(1), 0, t.Space(.5)).Children(func() { leading(c, t.Space(3.5)) })
+		}
 		Text(c, label).SingleLine()
 	})
 	if branch && *open {
