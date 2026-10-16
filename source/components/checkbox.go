@@ -7,7 +7,9 @@ import "github.com/egoist/mygo/ui"
 func Checkbox(c *ui.Context, checked *bool, label string) ui.Element {
 	t := c.Theme()
 	row := ui.CheckboxBase(c, checked).Gap(t.Space(2)).FocusRing(false)
-	on := *checked
+	// Paint runs after the build pass that owns row, so its focus is read
+	// now.
+	on, focus := *checked, row.FocusVisible()
 	row.Children(func() {
 		box := ui.Box(c).Size(t.Space(4), t.Space(4)).Radius(t.Space(1)).Shrink(0).PassThrough()
 		border := t.Border.Mix(t.Text, 0.25)
@@ -27,7 +29,7 @@ func Checkbox(c *ui.Context, checked *bool, label string) ui.Element {
 					LineTo(r.X+r.W*0.78, r.Y+r.H*0.31)
 				p.StrokePath(&path, t.Space(0.5), t.AccentText)
 			}
-			if row.FocusVisible() {
+			if focus {
 				p.FocusRing(r, [4]float32{t.Radius, t.Radius, t.Radius, t.Radius})
 			}
 		})

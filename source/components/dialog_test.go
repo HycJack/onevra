@@ -132,6 +132,7 @@ func TestDialogGeometryAndNotice(t *testing.T) {
 func TestDialogTransitions(t *testing.T) {
 	for _, nested := range []bool{false, true} {
 		outer, open := true, false
+		checked, choice := false, 0
 		if !nested {
 			outer = false
 		}
@@ -140,8 +141,10 @@ func TestDialogTransitions(t *testing.T) {
 			inner := func() {
 				Dialog(c, &open, DialogOptions{Label: "Inner"}, func(ui.Element) {
 					Text(c, "Inner")
-					// Its paint callback must survive the exiting copy's later passes.
+					// Their paint callbacks must survive the exiting copy's later passes.
 					IconButton(c, lucide.Settings(), "Settings", IconButtonPlain)
+					Checkbox(c, &checked, "Check")
+					Radio(c, &choice, 1, "Choice")
 				})
 			}
 			if nested {

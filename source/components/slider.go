@@ -114,6 +114,15 @@ func Slider(c *ui.Context, value *float64, lo, hi float64, options ...SliderOpti
 		}
 		glass[i] = e.Animate(i, target, 150*time.Millisecond)
 	}
+	// Paint runs after the build pass that owns the elements, so their focus
+	// is read now.
+	var focus [2]bool
+	for i := range focus {
+		focus[i] = e.FocusVisible()
+		if i < len(s.thumbs) {
+			focus[i] = s.thumbs[i].FocusVisible()
+		}
+	}
 	e.Draw(func(p *ui.Painter, r ui.Rect) {
 		h, cy := t.Space(1), r.Y+t.Space(2.5)
 		tx, tw := r.X+thumb/2, max(float32(0), r.W-thumb)
@@ -136,11 +145,7 @@ func Slider(c *ui.Context, value *float64, lo, hi float64, options ...SliderOpti
 			}
 		}
 		for i, x := range positions {
-			focus := e.FocusVisible()
-			if len(s.thumbs) > 0 {
-				focus = s.thumbs[i].FocusVisible()
-			}
-			paintSliderKnob(p, t, sliderKnobRect(t, x, cy, glass[i]), glass[i], focus)
+			paintSliderKnob(p, t, sliderKnobRect(t, x, cy, glass[i]), glass[i], focus[i])
 		}
 	})
 	dimmed(e)

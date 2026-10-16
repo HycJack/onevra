@@ -62,8 +62,9 @@ func underlinedTabs(c *ui.Context, tabs ui.TabsParts, selected *int, labels []st
 			if on {
 				active = tab
 			}
+			focus := tab.FocusVisible()
 			tab.DrawOver(func(p *ui.Painter, r ui.Rect) {
-				if tab.FocusVisible() {
+				if focus {
 					p.FocusRing(r, [4]float32{t.Radius, t.Radius, t.Radius, t.Radius})
 				}
 			})
@@ -112,8 +113,9 @@ func segmentedTabs(c *ui.Context, tabs ui.TabsParts, selected *int, labels []str
 			if on {
 				active = tab
 			}
+			focus := tab.FocusVisible()
 			tab.DrawOver(func(p *ui.Painter, r ui.Rect) {
-				if tab.FocusVisible() {
+				if focus {
 					p.FocusRing(r, [4]float32{pill, pill, pill, pill})
 				}
 			})
@@ -157,8 +159,9 @@ func highlightTabs(c *ui.Context, tabs ui.TabsParts, selected *int, labels []str
 			if on {
 				active = tab
 			}
+			focus := tab.FocusVisible()
 			tab.DrawOver(func(p *ui.Painter, r ui.Rect) {
-				if tab.FocusVisible() {
+				if focus {
 					p.FocusRing(r, radius)
 				}
 			})

@@ -52,8 +52,9 @@ func (group *AccordionGroup) Item(title string, open *bool, fn func()) Disclosur
 		tr := p.Trigger.AlignItems(ui.Center).Gap(t.Space(2)).Padding(t.Space(2.5), t.Space(3)).FocusRing(false)
 		result.Trigger = tr
 		group.headers = append(group.headers, tr)
+		focus := tr.FocusVisible()
 		tr.DrawOver(func(p *ui.Painter, r ui.Rect) {
-			if tr.FocusVisible() {
+			if focus {
 				p.FocusRing(ui.Rect{X: r.X + 4, Y: r.Y + 4, W: r.W - 8, H: r.H - 8}, [4]float32{t.Radius, t.Radius, t.Radius, t.Radius})
 			}
 		})

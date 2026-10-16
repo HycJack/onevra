@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Fix development-build panics when a closing `components.Dialog` contains `components.Checkbox`, `components.Radio`, `components.Accordion`, `components.Slider` or color controls.
+
 ## [0.2026.11] - 2026-10-16
 
 - Breaking: remove the hybrid application template.

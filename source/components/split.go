@@ -192,8 +192,9 @@ func split(c *ui.Context, name string, value *float32, percent bool, first, seco
 				div.Width(1)
 				handle.Top(0).Bottom(0).Left(position - (grip-1)/2).Width(grip).Cursor(ui.CursorResizeEW)
 			}
+			focus := div.FocusVisible()
 			handle.Draw(func(p *ui.Painter, r ui.Rect) {
-				if div.FocusVisible() {
+				if focus {
 					p.FocusRing(r, [4]float32{})
 				}
 			})

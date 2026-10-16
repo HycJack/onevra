@@ -182,6 +182,7 @@ func ColorView(c *ui.Context, value *ui.Color) *ColorControl {
 		knob.Size(diameter, diameter).LeftPercent(float32(x.s)*100).TopPercent(float32(1-x.v)*100).
 			Margin(-diameter/2, 0, 0, -diameter/2)
 		plane.Range(0, 100, x.s*100).Step(1).Value(fmt.Sprintf("%.0f%% saturation, %.0f%% brightness", x.s*100, x.v*100))
+		focus := plane.FocusVisible()
 		plane.Draw(func(p *ui.Painter, r ui.Rect) {
 			hue := colorHSV{h: st.hsv.h, s: 1, v: 1}.color(255)
 			p.FillGradient(r, ui.LinearGradient{From: ui.RGB(255, 255, 255), To: hue, Angle: 90}, t.Radius)
@@ -189,7 +190,7 @@ func ColorView(c *ui.Context, value *ui.Color) *ColorControl {
 			cx := r.X + r.W*float32(st.hsv.s)
 			cy := r.Y + r.H*float32(1-st.hsv.v)
 			paintColorPlaneKnob(p, ui.Rect{X: cx - diameter/2, Y: cy - diameter/2, W: diameter, H: diameter}, press)
-			if plane.FocusVisible() {
+			if focus {
 				p.FocusRing(r, [4]float32{t.Radius, t.Radius, t.Radius, t.Radius})
 			}
 		})
@@ -288,6 +289,7 @@ func colorChannel(c *ui.Context, value *float64, hi float64, label string, paint
 		target = 1
 	}
 	glass := e.Animate(0, target, 150*time.Millisecond)
+	focus := e.FocusVisible()
 	e.Draw(func(p *ui.Painter, r ui.Rect) {
 		bar := ui.Rect{X: r.X + d/2, Y: r.Y + d*.2, W: max(0, r.W-d), H: d * .6}
 		p.Clip(bar, bar.H/2, func() { paint(p, bar) })
@@ -295,7 +297,7 @@ func colorChannel(c *ui.Context, value *float64, hi float64, label string, paint
 		grow := 1 + .35*glass
 		w, h := t.Space(1.5)*grow, t.Space(4)*grow
 		knob := ui.Rect{X: x - w/2, Y: y - h/2, W: w, H: h}
-		paintSliderKnob(p, t, knob, glass, e.FocusVisible())
+		paintSliderKnob(p, t, knob, glass, focus)
 		if glass > 0 {
 			rad := min(w, h) / 2
 			p.Stroke(knob, ui.RGBA(0, 0, 0, .4*glass), rad, 2)

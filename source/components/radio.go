@@ -7,7 +7,7 @@ import "github.com/egoist/mygo/ui"
 func Radio[T comparable](c *ui.Context, selected *T, value T, label string) ui.Element {
 	t := c.Theme()
 	row := ui.RadioBase(c, selected, value).Gap(t.Space(2)).FocusRing(false)
-	on := *selected == value
+	on, focus := *selected == value, row.FocusVisible()
 	row.Children(func() {
 		dot := ui.Box(c).Size(t.Space(4), t.Space(4)).Radius(t.Space(2)).Shrink(0)
 		border := t.Border.Mix(t.Text, 0.25)
@@ -24,7 +24,7 @@ func Radio[T comparable](c *ui.Context, selected *T, value T, label string) ui.E
 				d := t.Space(1.5)
 				p.Fill(ui.Rect{X: r.X + (r.W-d)/2, Y: r.Y + (r.H-d)/2, W: d, H: d}, t.AccentText, d/2)
 			}
-			if row.FocusVisible() {
+			if focus {
 				p.FocusRing(r, [4]float32{t.Radius, t.Radius, t.Radius, t.Radius})
 			}
 		})
