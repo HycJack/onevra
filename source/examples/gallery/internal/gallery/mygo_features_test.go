@@ -14,7 +14,12 @@ func featureTester(name, variant, language string, width int) (*Gallery, *demoSt
 	tt := ui.NewTester(func(c *ui.Context) {
 		theme.Apply(c)
 		g.withLanguage(c, func() {
-			ui.Column(c).FillWidth().Padding(16).Gap(12).Children(func() { example.build(c, s) })
+			ui.Column(c).FillWidth().Padding(16).Gap(12).Children(func() {
+				if toolbar := mygoToolbars[name]; toolbar != nil {
+					ui.Row(c).Children(func() { toolbar(c, s) })
+				}
+				example.build(c, s)
+			})
 		})
 	}, width, 480)
 	return g, s, tt

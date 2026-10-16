@@ -138,21 +138,55 @@ func (g *Gallery) mygoHost(c *ui.Context, page func()) {
 		if g.Shell != nil && g.Shell.LeftExpanded() {
 			width -= g.Shell.LeftWidth()
 		}
-		if width < t.Space(130) {
-			// Narrow content keeps the example's width and switches pages
-			// with a selector, as Settings does.
-			ui.Column(c).Fill().Children(func() {
-				g.mygoSelect(c)
-				ui.Column(c).Fill().MinHeight(0).Children(page)
-			})
-			return
+		pane := func() ui.Element {
+			if g.exampleGrid() {
+				return components.PixelGrid(c, components.PixelGridOptions{Spacing: 22, MajorEvery: -1}).Column()
+			}
+			return ui.Column(c)
 		}
-		ui.Row(c).Fill().Children(func() {
-			g.mygoList(c)
-			ui.Box(c).Width(1).FillHeight().Shrink(0).Background(t.Border)
-			ui.Column(c).Fill().MinWidth(0).Children(page)
+		ui.Column(c).Fill().Children(func() {
+			// Separate the list and example from the shell's floating header.
+			ui.Box(c).Height(1).FillWidth().Shrink(0).Background(t.Border)
+			if width < t.Space(130) {
+				// Narrow content keeps the example's width and switches pages
+				// with a selector, as Settings does.
+				g.mygoSelect(c)
+				g.mygoTitlebar(c)
+				pane().Fill().MinHeight(0).Children(page)
+				return
+			}
+			ui.Row(c).Fill().MinHeight(0).Children(func() {
+				g.mygoList(c)
+				ui.Box(c).Width(1).FillHeight().Shrink(0).Background(t.Border)
+				ui.Column(c).Fill().MinWidth(0).Children(func() {
+					g.mygoTitlebar(c)
+					pane().Fill().MinHeight(0).Children(page)
+				})
+			})
 		})
 	})
+}
+
+// mygoToolbars hold page-level sample actions, which the example's titlebar
+// shows after its title so the content stays with the example itself.
+var mygoToolbars = map[string]func(*ui.Context, *demoState){
+	"Rich text editor": richTextToolbar, "Markdown stream": markdownStreamToolbar, "Terminal": terminalToolbar,
+}
+
+// mygoTitlebar names the selected page above it, followed by its actions.
+func (g *Gallery) mygoTitlebar(c *ui.Context) {
+	t := c.Theme()
+	example, _ := mygoExampleFor(g.page)
+	toolbar := mygoToolbars[example.name]
+	ui.Row(c).Key("mygo-titlebar").FillWidth().Shrink(0).Height(t.Space(11)).Padding(0, t.Space(3)).
+		AlignItems(ui.Center).Gap(t.Space(1)).Background(t.Background).Children(func() {
+		components.Text(c, g.pageTitle(c)).Bold().SingleLine().MinWidth(0).Shrink(1)
+		if toolbar != nil {
+			ui.Spacer(c)
+			toolbar(c, g.mygoState(example.name, mygoVariants(example.name)[0], true))
+		}
+	})
+	ui.Box(c).Height(1).FillWidth().Shrink(0).Background(t.Border)
 }
 
 func (g *Gallery) mygoSelect(c *ui.Context) {
@@ -208,15 +242,25 @@ func (g *Gallery) mygoList(c *ui.Context) {
 	})
 }
 
+// mygoDocuments fill the example pane as a single document, without variant
+// sections; those that scroll themselves own the whole pane.
+var mygoDocuments = map[string]bool{
+	"Terminal": true, "Rich text editor": true, "Markdown": false, "Markdown stream": false,
+}
+
 func (g *Gallery) myGoLocalized(c *ui.Context, example mygoExample) {
-	if example.name == "Terminal" {
-		_, exists := g.mygoStates["Terminal"]
-		s := g.mygoState("Terminal", "Default", true)
-		if !exists && g.createTerminal != nil {
+	t := c.Theme()
+	if selfScrolling, ok := mygoDocuments[example.name]; ok {
+		s := g.mygoState(example.name, "Default", true)
+		if example.name == "Terminal" && g.createTerminal != nil {
 			s.terminal.start(g.createTerminal)
 		}
-		ui.Column(c).Key("mygo-Terminal").Fill().Children(func() {
-			example.build(c, s)
+		if selfScrolling {
+			ui.Column(c).Key("mygo-" + example.name).Fill().Children(func() { example.build(c, s) })
+			return
+		}
+		components.ScrollView(c, components.ScrollViewOptions{}).Key("mygo-" + example.name).Fill().Children(func() {
+			ui.Column(c).FillWidth().Padding(t.Space(6)).Children(func() { example.build(c, s) })
 		})
 		return
 	}
@@ -227,7 +271,6 @@ func (g *Gallery) myGoLocalized(c *ui.Context, example mygoExample) {
 			d.start(g.createWebView)
 		}
 	}
-	t := c.Theme()
 	variants := mygoVariants(example.name)
 	components.ScrollView(c, components.ScrollViewOptions{}).Key("mygo-" + example.name).Fill().Children(func() {
 		ui.Column(c).FillWidth().Padding(t.Space(6)).Gap(t.Space(6)).Children(func() {

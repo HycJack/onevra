@@ -29,9 +29,6 @@ func TestRichTextEditorExample(t *testing.T) {
 		if got := s.richText.Text().PlainText(); got != "Shipped" {
 			t.Fatalf("%s: text %q, want the selection replaced", lang, got)
 		}
-		if s.count == 0 || !tt.HasText(g.messages().RichTextEdits(s.count)) {
-			t.Fatalf("%s: edits not reported: %q", lang, tt.Texts())
-		}
 	}
 }
 

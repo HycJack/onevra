@@ -75,6 +75,23 @@ func (g *Gallery) Titlebar(c *ui.Context) {
 }
 
 func (g *Gallery) titlebarLocalized(c *ui.Context) {
+	title := g.pageTitle(c)
+	if isMyGoPage(g.page) {
+		// The example pane carries the page's own title and actions.
+		title = tr(c, mygoGroupLabel) + " / " + tr(c, "officialComponents")
+	}
+	example, control := controlExampleFor(g.page)
+	ui.Row(c).Fill().MinWidth(0).AlignItems(ui.Center).Gap(c.Theme().Space(1)).Children(func() {
+		components.Text(c, title).Bold().SingleLine().MinWidth(0).Shrink(1)
+		if toolbar := controlToolbars[example.name]; control && toolbar != nil {
+			ui.Spacer(c)
+			toolbar(c, g.controlState(example.name, "Default"))
+		}
+	})
+}
+
+// pageTitle names the current page in the active language.
+func (g *Gallery) pageTitle(c *ui.Context) string {
 	title := "Shell"
 	if g.page == welcomePage {
 		title = "Welcome"
@@ -86,19 +103,12 @@ func (g *Gallery) titlebarLocalized(c *ui.Context) {
 		title = "Desktop / System notifications"
 	}
 	if example, ok := mygoExampleFor(g.page); ok {
-		title = tr(c, example.group) + " / " + tr(c, example.name)
+		return tr(c, example.group) + " / " + tr(c, example.name)
 	}
-	example, control := controlExampleFor(g.page)
-	if control {
-		title = tr(c, example.group) + " / " + tr(c, example.name)
+	if example, ok := controlExampleFor(g.page); ok {
+		return tr(c, example.group) + " / " + tr(c, example.name)
 	}
-	ui.Row(c).Fill().MinWidth(0).AlignItems(ui.Center).Gap(c.Theme().Space(1)).Children(func() {
-		components.Text(c, tr(c, title)).Bold().SingleLine().MinWidth(0).Shrink(1)
-		if toolbar := controlToolbars[example.name]; control && toolbar != nil {
-			ui.Spacer(c)
-			toolbar(c, g.controlState(example.name, "Default"))
-		}
-	})
+	return tr(c, title)
 }
 
 func (g *Gallery) Left(c *ui.Context) {
@@ -205,10 +215,17 @@ func (g *Gallery) View(c *ui.Context) {
 }
 
 // pageGrid reports whether a development build shows a grid behind the page.
-// Welcome and Terminal keep their dedicated backgrounds.
+// Welcome keeps its dedicated background; MyGo pages place the grid behind
+// the selected example instead.
 func (g *Gallery) pageGrid() bool {
+	return g.dev && g.page != welcomePage && !isMyGoPage(g.page)
+}
+
+// exampleGrid reports whether a development build shows a grid behind the
+// selected MyGo example. Terminal keeps its dedicated background.
+func (g *Gallery) exampleGrid() bool {
 	example, upstream := mygoExampleFor(g.page)
-	return g.dev && g.page != welcomePage && !(upstream && example.name == "Terminal")
+	return g.dev && !(upstream && example.name == "Terminal")
 }
 
 func (g *Gallery) viewLocalized(c *ui.Context) {

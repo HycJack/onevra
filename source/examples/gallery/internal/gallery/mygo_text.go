@@ -16,42 +16,56 @@ const richTextSample = "# Release notes\n\nEdit **bold**, *italic* and `code` te
 
 const markdownReply = "## Streaming replies\n\nMarkdown arrives **a few words at a time**, and the unfinished tail already shows as what it will become.\n\n- Lists, *emphasis* and `code` render as they stream\n- Finished blocks are never parsed again\n\n```go\nfmt.Println(\"Hello, Onevra\")\n```\n"
 
-// exampleRichTextEditor edits attributed text in page memory only.
-func exampleRichTextEditor(c *ui.Context, s *demoState) {
+func richTextDocument(s *demoState) *richtext.Document {
 	if s.richText == nil {
 		s.richText = richtext.NewDocument(richtext.ParseMarkdown(richTextSample))
 	}
-	f := s.richText.Formatting()
-	ui.Row(c).Gap(6).Children(func() {
-		for _, format := range []struct {
-			label string
-			state richtext.FormatState
-			apply func()
-		}{
-			{"bold", f.Bold, s.richText.ToggleBold},
-			{"italic", f.Italic, s.richText.ToggleItalic},
-			{"code", f.Code, s.richText.ToggleCode},
-		} {
-			on := format.state == richtext.FormatOn
-			// Keep the editor's selection while formatting it.
-			if components.ToggleButton(c, &on, tr(c, format.label)).KeepFocus().Changed() {
-				format.apply()
-			}
+	return s.richText
+}
+
+// richTextToolbar formats the editor's selection from the titlebar.
+func richTextToolbar(c *ui.Context, s *demoState) {
+	doc := richTextDocument(s)
+	f := doc.Formatting()
+	for _, format := range []struct {
+		label string
+		state richtext.FormatState
+		apply func()
+	}{
+		{"bold", f.Bold, doc.ToggleBold},
+		{"italic", f.Italic, doc.ToggleItalic},
+		{"code", f.Code, doc.ToggleCode},
+	} {
+		on := format.state == richtext.FormatOn
+		// Keep the editor's selection while formatting it.
+		if components.ToggleButton(c, &on, tr(c, format.label)).KeepFocus().Changed() {
+			format.apply()
 		}
-	})
-	if richtext.Editor(c, s.richText, richtext.EditorOptions{Label: tr(c, "richTextLabel")}).Height(220).FillWidth().Changed() {
+	}
+}
+
+// exampleRichTextEditor edits attributed text in page memory only, filling
+// the pane with equal room on every side.
+func exampleRichTextEditor(c *ui.Context, s *demoState) {
+	t := c.Theme()
+	room := t.Space(6)
+	richtext.Editor(c, richTextDocument(s), richtext.EditorOptions{
+		Label: tr(c, "richTextLabel"),
+		Theme: &richtext.Theme{Padding: [2]float32{room, room}},
+	}).Fill().Radius(0).Background(ui.Transparent).Border(0, ui.Transparent)
+}
+
+// markdownStreamToolbar replays the reply from the titlebar.
+func markdownStreamToolbar(c *ui.Context, s *demoState) {
+	if components.Button(c, tr(c, "markdownStreamReplay"), components.ButtonOutline).Clicked() {
 		s.count++
 	}
-	components.Text(c, msg(c).RichTextEdits(s.count)).TextColor(c.Theme().TextMuted)
 }
 
 // exampleMarkdownStream reveals a canned reply on the frame clock, so it
 // needs no goroutine and settles at once when the desktop reduces motion.
 func exampleMarkdownStream(c *ui.Context, s *demoState) {
-	if components.Button(c, tr(c, "markdownStreamReplay"), components.ButtonOutline).Clicked() {
-		s.count++
-	}
-	reply := ui.Column(c).Key("reply").FillWidth().MinHeight(260)
+	reply := ui.Column(c).Key("reply").FillWidth()
 	tl := reply.Timeline("stream", ui.TimelineOptions{Run: uint64(s.count)})
 	n := int(tl.Tween(ui.Tween{From: 0, To: float32(len(markdownReply)), Duration: 4 * time.Second, Ease: ui.Linear}))
 	text := markdownReply[:n]

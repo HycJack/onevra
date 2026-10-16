@@ -52,5 +52,5 @@ func exampleMarkdown(c *ui.Context, s *demoState) {
 			})
 		},
 	}
-	markdown.View(c, source, &s.markdown).FillWidth().MaxWidth(640)
+	markdown.View(c, source, &s.markdown).FillWidth()
 }

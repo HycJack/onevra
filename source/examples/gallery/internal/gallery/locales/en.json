@@ -962,14 +962,6 @@
     }
   },
   "richTextLabel": "Release notes",
-  "richTextEdits": "Edits: {count}",
-  "@richTextEdits": {
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
   "markdownStreamReplay": "Stream again",
   "markdownStreamLabel": "Assistant reply",
   "systemYes": "Yes",

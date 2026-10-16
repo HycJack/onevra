@@ -12,19 +12,19 @@ import (
 // terminalDemo loads the optional native library once when its page is entered.
 // Loading never blocks a frame. A stopped load cannot resurrect its terminal.
 type terminalDemo struct {
-	mu               sync.Mutex
-	term             *terminal.Terminal
-	loading, stopped bool
-	err              error
+	mu                        sync.Mutex
+	term                      *terminal.Terminal
+	started, loading, stopped bool
+	err                       error
 }
 
 func (d *terminalDemo) start(create func() (*terminal.Terminal, error)) {
 	d.mu.Lock()
-	if d.loading || d.term != nil {
+	if d.started {
 		d.mu.Unlock()
 		return
 	}
-	d.loading, d.stopped, d.err = true, false, nil
+	d.started, d.loading, d.stopped, d.err = true, true, false, nil
 	d.mu.Unlock()
 	go func() {
 		term, err := create()
@@ -49,7 +49,7 @@ func (d *terminalDemo) snapshot() (*terminal.Terminal, bool, error) {
 
 func (d *terminalDemo) close() {
 	d.mu.Lock()
-	d.stopped = true
+	d.started, d.stopped = false, true
 	term := d.term
 	d.term, d.err = nil, nil
 	d.mu.Unlock()
@@ -75,14 +75,23 @@ func exampleTerminal(c *ui.Context, s *demoState) {
 		return
 	}
 	if term != nil {
-		if components.Checkbox(c, &s.on, tr(c, "terminalCopyOnSelect")).Changed() {
-			mode := terminal.CopyOnSelectNone
-			if s.on {
-				mode = terminal.CopyOnSelectClipboard
-			}
-			term.SetCopyOnSelect(mode)
-		}
 		terminal.View(c, term).Key("terminal-session").Fill().AutoFocus()
+	}
+}
+
+// terminalToolbar switches copy on select from the titlebar once the session
+// is running.
+func terminalToolbar(c *ui.Context, s *demoState) {
+	term, _, _ := s.terminal.snapshot()
+	if term == nil {
+		return
+	}
+	if components.ToggleButton(c, &s.on, tr(c, "terminalCopyOnSelect")).KeepFocus().Changed() {
+		mode := terminal.CopyOnSelectNone
+		if s.on {
+			mode = terminal.CopyOnSelectClipboard
+		}
+		term.SetCopyOnSelect(mode)
 	}
 }
 

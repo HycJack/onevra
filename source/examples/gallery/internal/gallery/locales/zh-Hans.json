@@ -606,7 +606,6 @@
   "timelineScrub": "时间线位置",
   "timelineTime": "{elapsed} / {total} 毫秒",
   "richTextLabel": "发布说明",
-  "richTextEdits": "编辑次数：{count}",
   "markdownStreamReplay": "重新输出",
   "markdownStreamLabel": "助手回复",
   "systemYes": "是",

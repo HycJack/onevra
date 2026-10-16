@@ -6150,16 +6150,6 @@ func (msgs Messages) RichTextLabel() string {
 	return Catalog.Format(msgs.locale, "richTextLabel", nil)
 }
 
-// RichTextEdits says "Edits: {count}"
-// in the language the app shows.
-func RichTextEdits(count int) string { return In(i18n.Locale()).RichTextEdits(count) }
-
-// RichTextEdits says "Edits: {count}"
-// in the language of msgs.
-func (msgs Messages) RichTextEdits(count int) string {
-	return Catalog.Format(msgs.locale, "richTextEdits", map[string]any{"count": count})
-}
-
 // MarkdownStreamReplay says "Stream again"
 // in the language the app shows.
 func MarkdownStreamReplay() string { return In(i18n.Locale()).MarkdownStreamReplay() }
