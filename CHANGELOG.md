@@ -14,6 +14,7 @@ User-facing updates for Onevra library consumers.
 - Add `Leading`, `Stacked` and `Content` to `components.SettingsItem`.
 - Add `components.SplitPercent`.
 - Add `components.TabsHighlight`.
+- Add `shaders.SignalField`.
 - Add `components.ListState.KeepOffset`.
 - Add `chat.Chip`, `chat.SwitchChip`, `chat.Picker`, `chat.Attachment`, `chat.ContextMeter`, `chat.Quota`, `chat.QuotaSummary` and `chat.Shimmer`.
 - Require MyGo 0.5.5.

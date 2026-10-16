@@ -7490,6 +7490,116 @@ func (msgs Messages) ComponentShaders() string {
 	return Catalog.Format(msgs.locale, "componentShaders", nil)
 }
 
+// ComponentSignalField says "Signal field"
+// in the language the app shows.
+func ComponentSignalField() string { return In(i18n.Locale()).ComponentSignalField() }
+
+// ComponentSignalField says "Signal field"
+// in the language of msgs.
+func (msgs Messages) ComponentSignalField() string {
+	return Catalog.Format(msgs.locale, "componentSignalField", nil)
+}
+
+// ShaderWelcomeTitle says "What should we build today?"
+// in the language the app shows.
+func ShaderWelcomeTitle() string { return In(i18n.Locale()).ShaderWelcomeTitle() }
+
+// ShaderWelcomeTitle says "What should we build today?"
+// in the language of msgs.
+func (msgs Messages) ShaderWelcomeTitle() string {
+	return Catalog.Format(msgs.locale, "shaderWelcomeTitle", nil)
+}
+
+// ShaderWelcomeSubtitle says "Describe a task, and the agent plans, edits and verifies it with you."
+// in the language the app shows.
+func ShaderWelcomeSubtitle() string { return In(i18n.Locale()).ShaderWelcomeSubtitle() }
+
+// ShaderWelcomeSubtitle says "Describe a task, and the agent plans, edits and verifies it with you."
+// in the language of msgs.
+func (msgs Messages) ShaderWelcomeSubtitle() string {
+	return Catalog.Format(msgs.locale, "shaderWelcomeSubtitle", nil)
+}
+
+// ShaderWelcomePrompt says "Ask the agent anything"
+// in the language the app shows.
+func ShaderWelcomePrompt() string { return In(i18n.Locale()).ShaderWelcomePrompt() }
+
+// ShaderWelcomePrompt says "Ask the agent anything"
+// in the language of msgs.
+func (msgs Messages) ShaderWelcomePrompt() string {
+	return Catalog.Format(msgs.locale, "shaderWelcomePrompt", nil)
+}
+
+// ShaderWelcomeReview says "Review this branch"
+// in the language the app shows.
+func ShaderWelcomeReview() string { return In(i18n.Locale()).ShaderWelcomeReview() }
+
+// ShaderWelcomeReview says "Review this branch"
+// in the language of msgs.
+func (msgs Messages) ShaderWelcomeReview() string {
+	return Catalog.Format(msgs.locale, "shaderWelcomeReview", nil)
+}
+
+// ShaderWelcomeTests says "Write missing tests"
+// in the language the app shows.
+func ShaderWelcomeTests() string { return In(i18n.Locale()).ShaderWelcomeTests() }
+
+// ShaderWelcomeTests says "Write missing tests"
+// in the language of msgs.
+func (msgs Messages) ShaderWelcomeTests() string {
+	return Catalog.Format(msgs.locale, "shaderWelcomeTests", nil)
+}
+
+// ShaderWelcomeExplain says "Explain the codebase"
+// in the language the app shows.
+func ShaderWelcomeExplain() string { return In(i18n.Locale()).ShaderWelcomeExplain() }
+
+// ShaderWelcomeExplain says "Explain the codebase"
+// in the language of msgs.
+func (msgs Messages) ShaderWelcomeExplain() string {
+	return Catalog.Format(msgs.locale, "shaderWelcomeExplain", nil)
+}
+
+// ShaderIntensity says "Intensity"
+// in the language the app shows.
+func ShaderIntensity() string { return In(i18n.Locale()).ShaderIntensity() }
+
+// ShaderIntensity says "Intensity"
+// in the language of msgs.
+func (msgs Messages) ShaderIntensity() string {
+	return Catalog.Format(msgs.locale, "shaderIntensity", nil)
+}
+
+// ShaderScale says "Scale"
+// in the language the app shows.
+func ShaderScale() string { return In(i18n.Locale()).ShaderScale() }
+
+// ShaderScale says "Scale"
+// in the language of msgs.
+func (msgs Messages) ShaderScale() string {
+	return Catalog.Format(msgs.locale, "shaderScale", nil)
+}
+
+// ShaderStill says "Pause drift"
+// in the language the app shows.
+func ShaderStill() string { return In(i18n.Locale()).ShaderStill() }
+
+// ShaderStill says "Pause drift"
+// in the language of msgs.
+func (msgs Messages) ShaderStill() string {
+	return Catalog.Format(msgs.locale, "shaderStill", nil)
+}
+
+// ShaderInert says "Ignore pointer"
+// in the language the app shows.
+func ShaderInert() string { return In(i18n.Locale()).ShaderInert() }
+
+// ShaderInert says "Ignore pointer"
+// in the language of msgs.
+func (msgs Messages) ShaderInert() string {
+	return Catalog.Format(msgs.locale, "shaderInert", nil)
+}
+
 // ComponentLiveChart says "Live chart"
 // in the language the app shows.
 func ComponentLiveChart() string { return In(i18n.Locale()).ComponentLiveChart() }

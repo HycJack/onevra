@@ -215,9 +215,12 @@ func (g *Gallery) View(c *ui.Context) {
 }
 
 // pageGrid reports whether a development build shows a grid behind the page.
-// Welcome keeps its dedicated background; MyGo pages place the grid behind
-// the selected example instead.
+// Welcome and the shader backgrounds keep their dedicated backgrounds; MyGo
+// pages place the grid behind the selected example instead.
 func (g *Gallery) pageGrid() bool {
+	if control, ok := controlExampleFor(g.page); ok && control.group == "Shaders" {
+		return false
+	}
 	return g.dev && g.page != welcomePage && !isMyGoPage(g.page)
 }
 

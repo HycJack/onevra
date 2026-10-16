@@ -18,6 +18,7 @@ type controlState struct {
 	chat                   *chatDemoState
 	chart                  *chartDemoState
 	graph                  *graphDemoState
+	shader                 *shaderDemoState
 	dialogOpen, nestedOpen bool
 	tree                   components.TreeVirtualizedState[string]
 	table                  components.TableVirtualizedState
@@ -82,6 +83,7 @@ var controlSections = map[string][]controlExample{
 }
 
 var controlCatalog = []controlExample{
+	{"Signal field", "Signal field", "Shaders", []string{"Default"}, controlSignalField},
 	{"Data charts", "Data charts", "Charts", []string{"Bar chart", "Line chart", "Area chart", "Stacked bar chart", "Donut chart"}, controlChart},
 	{"Relationship graph", "Relationship graph", "Charts", []string{"Default"}, controlGraph},
 	{"Date & time pickers", "Date & time pickers", "Date & time", nil, nil},
@@ -189,6 +191,13 @@ func (g *Gallery) controlsLocalized(c *ui.Context, example controlExample) {
 	t := c.Theme()
 	if example.name == "Chat" {
 		example.build(c, g.controlState(example.name, "Default"), "Default")
+		return
+	}
+	if example.group == "Shaders" {
+		// Backgrounds reach the page's edges, behind their sample content.
+		ui.Box(c).Key("controls-" + example.name).Fill().MinWidth(0).MinHeight(0).Children(func() {
+			example.build(c, g.controlState(example.name, "Default"), "Default")
+		})
 		return
 	}
 	if example.name == "Relationship graph" || example.name == "Honeycomb" {
