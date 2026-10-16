@@ -6,10 +6,11 @@ User-facing updates for Onevra library consumers.
 
 - Add `components.CollapsibleOptions.Leading`.
 - Add `components.HoneycombItem.Overlay` and `components.HoneycombOptions.OnPress`.
-- Add `components.SidebarItemWithSlots`.
+- Add `components.SidebarItemWithSlots` and `components.SidebarItemWithContent`.
 - Add `components.SplitOptions.Default`.
 - Add `shaders.Ripple`.
 - Add `components.TreeItemWithLeading`.
+- Let `chat.Shimmer` shrink and end in an ellipsis.
 - Fix development-build panics when a closing `components.Dialog` contains `components.Checkbox`, `components.Radio`, `components.Accordion`, `components.Slider` or color controls.
 
 ## [0.2026.11] - 2026-10-16

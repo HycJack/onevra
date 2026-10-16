@@ -156,3 +156,27 @@ func TestSidebarItemWithSlots(t *testing.T) {
 		t.Fatalf("mark %v outside the end of item %v", mark, item)
 	}
 }
+
+func TestSidebarItemWithContent(t *testing.T) {
+	label := "Project"
+	tt := ui.NewTester(func(c *ui.Context) {
+		c.SetTheme(theme.LightPalette())
+		Sidebar(c).Children(func() {
+			SidebarItemWithContent(c, label, false, nil, func(c *ui.Context) ui.Element {
+				return ui.Box(c).Size(400, 12).Shrink(0).Label("content")
+			}, func(c *ui.Context, size float32) {
+				ui.Box(c).Size(size, size).Shrink(0).Label("mark")
+			})
+		})
+	}, 220, 200)
+	item, ok := tt.Find(label)
+	content, shown := tt.Find("content")
+	mark, found := tt.Find("mark")
+	if !ok || !shown || !found {
+		t.Fatal("missing item, its content or its trailing mark")
+	}
+	// Wide content gives way like the label, keeping the mark inside the item.
+	if content.X+content.W > mark.X || mark.X+mark.W > item.X+item.W {
+		t.Fatalf("content %v and mark %v overflow item %v", content, mark, item)
+	}
+}

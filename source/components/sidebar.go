@@ -68,6 +68,16 @@ func SidebarItemWithLeading(c *ui.Context, label string, selected bool, leading 
 // icon size and follow the leading slot's rules: keep them non-interactive
 // and free of I/O or background work.
 func SidebarItemWithSlots(c *ui.Context, label string, selected bool, leading, trailing func(c *ui.Context, size float32)) ui.Element {
+	return SidebarItemWithContent(c, label, selected, leading, nil, trailing)
+}
+
+// SidebarItemWithContent is a SidebarItemWithSlots whose visible label is
+// application-built, for example animated or styled text; label still keys
+// the item and names it for accessibility. A nil content builder shows label
+// as plain text. With a trailing slot, the returned element takes the
+// remaining room and may shrink below its natural width. Content follows the
+// leading slot's rules.
+func SidebarItemWithContent(c *ui.Context, label string, selected bool, leading func(c *ui.Context, size float32), content func(c *ui.Context) ui.Element, trailing func(c *ui.Context, size float32)) ui.Element {
 	t := c.Theme()
 	b := ui.ButtonBase(c).Key(label).Label(label).FillWidth().Justify(ui.Start).
 		Padding(t.Space(1.75), t.Space(2)).Gap(t.Space(2)).Radius(t.Radius).
@@ -79,9 +89,14 @@ func SidebarItemWithSlots(c *ui.Context, label string, selected bool, leading, t
 		if leading != nil {
 			leading(c, t.Space(4.5))
 		}
-		text := Text(c, label).SingleLine()
+		var text ui.Element
+		if content != nil {
+			text = content(c)
+		} else {
+			text = Text(c, label).SingleLine()
+		}
 		if trailing != nil {
-			text.Grow(1).MinWidth(0).Ellipsis("…")
+			text.Grow(1).Shrink(1).MinWidth(0).Ellipsis("…")
 			trailing(c, t.Space(4.5))
 		}
 	})

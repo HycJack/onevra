@@ -5,6 +5,7 @@ import (
 
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
+	"github.com/oneo-me/onevra/source/components/chat"
 	"github.com/oneo-me/onevra/source/icons/lucide"
 )
 
@@ -113,8 +114,8 @@ func controlSidebarCollapsible(c *ui.Context, s *controlState) {
 }
 
 // Custom leading content replaces the icon with application-built marks,
-// such as workspace monograms or tag colors, and trailing content adds
-// counts after the label.
+// such as workspace monograms or tag colors, trailing content adds counts
+// after the label and custom content animates a busy workspace's name.
 func controlSidebarLeading(c *ui.Context, s *controlState) {
 	t := c.Theme()
 	item := func(key string, leading func(c *ui.Context, size float32)) {
@@ -127,6 +128,15 @@ func controlSidebarLeading(c *ui.Context, s *controlState) {
 			components.Text(c, strconv.Itoa(count)).FontSize(t.Rem(.8)).TextColor(t.TextMuted).Shrink(0)
 		}
 		if components.SidebarItemWithSlots(c, tr(c, key), s.choice == key, leading, trailing).Key(key).Clicked() {
+			s.choice = key
+		}
+	}
+	busy := func(key string, leading func(c *ui.Context, size float32)) {
+		label := tr(c, key)
+		content := func(c *ui.Context) ui.Element {
+			return chat.Shimmer(c, label, t.Rem(1), t.Accent, ui.RGB(255, 255, 255))
+		}
+		if components.SidebarItemWithContent(c, label, s.choice == key, leading, content, nil).Key(key).Clicked() {
 			s.choice = key
 		}
 	}
@@ -150,7 +160,7 @@ func controlSidebarLeading(c *ui.Context, s *controlState) {
 	components.Sidebar(c).Children(func() {
 		components.SidebarSection(c, tr(c, "workspaces"), func() {
 			item("personal2", monogram(t.Accent, "personal2"))
-			item("workspaceTeam", monogram(ui.RGB(232, 121, 52), "workspaceTeam"))
+			busy("workspaceTeam", monogram(ui.RGB(232, 121, 52), "workspaceTeam"))
 			item("archive", monogram(ui.RGB(120, 120, 128), "archive"))
 		})
 		components.SidebarSection(c, tr(c, "tags"), func() {
