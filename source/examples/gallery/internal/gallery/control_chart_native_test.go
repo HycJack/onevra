@@ -10,7 +10,6 @@ import (
 	"time"
 
 	"github.com/egoist/mygo"
-	"github.com/oneo-me/onevra/source/components/chart"
 	"github.com/oneo-me/onevra/source/shells/sidebar"
 )
 
@@ -35,7 +34,7 @@ func TestNativeCharts(t *testing.T) {
 		{"narrow", "zh-Hans", false, 320},
 	} {
 		for _, example := range controlCatalog {
-			if example.group != "Charts" {
+			if example.name != "Data charts" {
 				continue
 			}
 			t.Run(mode.name+"/"+example.name, func(t *testing.T) {
@@ -44,7 +43,6 @@ func TestNativeCharts(t *testing.T) {
 				mygo.RunOnMain(func() {
 					g := &Gallery{page: pageFromKey("controls/" + example.name), language: newTranslator(mode.language, "en")}
 					state = g.controlState(example.name, "Default")
-					state.chart = &chartDemoState{selection: chart.State{Index: -1}}
 					shell = sidebar.NewShell(sidebar.ShellOptions{
 						Hidden: nativeBackground(), Title: example.name, Width: mode.width, Height: 640,
 						MinWidth: 280, MinHeight: 400, LeftCollapsed: true, Theme: pinnedTheme(mode.dark),
@@ -69,7 +67,12 @@ func TestNativeCharts(t *testing.T) {
 					}
 				}
 				for _, index := range []int{-1, 1} {
-					mygo.RunOnMain(func() { state.chart.selection.Index = index; win.Invalidate() })
+					mygo.RunOnMain(func() {
+						for _, name := range example.variants {
+							chartDemo(state).selection(name).Index = index
+						}
+						win.Invalidate()
+					})
 					time.Sleep(180 * time.Millisecond)
 					capture(fmt.Sprint(index))
 				}

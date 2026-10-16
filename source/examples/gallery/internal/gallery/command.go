@@ -55,9 +55,13 @@ func (g *Gallery) Commands(c *ui.Context) {
 				}
 				continue
 			}
+			keywords := []string{entry.label, group.label}
+			if example, ok := controlExampleFor(entry.page); ok {
+				keywords = append(keywords, pageComponents(example)...)
+			}
 			items = append(items, command.Item{
 				ID: pageKey(entry.page), Title: tr(c, entry.label), Group: tr(c, group.label),
-				Icon: entry.icon(), Keywords: []string{entry.label, group.label},
+				Icon: entry.icon(), Keywords: keywords,
 			})
 		}
 	}

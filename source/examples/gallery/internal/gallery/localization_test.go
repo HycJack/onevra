@@ -255,7 +255,7 @@ func TestNativeLanguages(t *testing.T) {
 		}
 		t.Log(path)
 	}
-	for _, name := range []string{"Calendar", "ColorView"} {
+	for _, name := range []string{"Date & time pickers", "Color pickers"} {
 		mygo.RunOnMain(func() {
 			g.chooseLanguage("zh-Hans")
 			g.settings.open = false

@@ -8,64 +8,61 @@ import (
 )
 
 func TestChartPages(t *testing.T) {
-	var names []string
-	for _, group := range navigationCatalog() {
-		if group.label == "Charts" {
-			for _, entry := range group.entries {
-				if _, control := controlExampleFor(entry.page); control && entry.label != "Relationship graph" {
-					names = append(names, entry.label)
-				}
-			}
-		}
-	}
-	if len(names) != 5 {
-		t.Fatalf("chart group = %v", names)
+	page := pageFromKey("controls/Data charts")
+	example, ok := controlExampleFor(page)
+	if !ok || example.group != "Charts" || len(example.variants) != 5 {
+		t.Fatal("charts are not one public component page")
 	}
 	for _, language := range []string{"en", "zh-Hans"} {
-		g := &Gallery{language: newTranslator(language, "en")}
-		for _, name := range names {
-			t.Run(language+"/"+name, func(t *testing.T) {
-				g.page = pageFromKey("controls/" + name)
-				example, ok := controlExampleFor(g.page)
-				if !ok || example.group != "Charts" {
-					t.Fatal("chart is not a public component page")
-				}
-				tt := ui.NewTester(func(c *ui.Context) { theme.Apply(c); g.shellFrame(c) }, 280, 900)
-				for _, dark := range []bool{false, true} {
-					tt.SetDark(dark)
+		t.Run(language, func(t *testing.T) {
+			g := &Gallery{page: page, language: newTranslator(language, "en")}
+			tt := ui.NewTester(func(c *ui.Context) { theme.Apply(c); g.shellFrame(c) }, 280, 2400)
+			for _, dark := range []bool{false, true} {
+				tt.SetDark(dark)
+				for _, name := range example.variants {
 					if !tt.HasText(g.text(name)) {
-						t.Fatal("chart page is not localized")
+						t.Fatalf("chart section %s is not localized", name)
 					}
-					for _, label := range []string{"chartUpdate", "chartEmpty"} {
-						if err := tt.Click(g.text(label)); err != nil {
-							t.Fatal(err)
-						}
-					}
-					if !tt.HasText(g.text("chartNoData")) {
-						t.Fatal("empty state is missing")
-					}
-					if err := tt.Click(g.text("chartRestore")); err != nil {
+				}
+				for _, label := range []string{"chartUpdate", "chartEmpty"} {
+					if err := tt.Click(g.text(label)); err != nil {
 						t.Fatal(err)
 					}
-					r, ok := tt.Find(g.text("chartSelection"))
-					if !ok || r.X < 0 || r.X+r.W > 280 || r.W < 80 {
-						t.Fatalf("narrow plot bounds = %+v", r)
-					}
-					tt.ClickAt(r.X+r.W/2, r.Y+r.H/2)
-					tt.Key(0, ui.KeyHome)
-					tt.Key(0, ui.KeyRight)
-					if g.controlState(name, "Default").chart.selection.Index != 1 {
-						t.Fatal("chart is not keyboard selectable")
-					}
 				}
-			})
+				if !tt.HasText(g.text("chartNoData")) {
+					t.Fatal("empty state is missing")
+				}
+				if err := tt.Click(g.text("chartRestore")); err != nil {
+					t.Fatal(err)
+				}
+				r, ok := tt.Find(g.text("chartSelection"))
+				if !ok || r.X < 0 || r.X+r.W > 280 || r.W < 80 {
+					t.Fatalf("narrow plot bounds = %+v", r)
+				}
+			}
+			if len(g.controlStates) != 1 {
+				t.Fatal("charts do not share the page's data actions")
+			}
+		})
+	}
+}
+
+func TestChartSelectionsIndependent(t *testing.T) {
+	s := (&Gallery{}).controlState("Data charts", "Default")
+	example, _ := controlExampleFor(pageFromKey("controls/Data charts"))
+	names := example.variants
+	for i, name := range names {
+		tt := ui.NewTester(func(c *ui.Context) { theme.Apply(c); controlChart(c, s, name) }, 540, 400)
+		r, ok := tt.Find("Chart selection")
+		if !ok {
+			t.Fatalf("%s: missing plot", name)
 		}
-		for i, name := range names {
-			state := g.controlState(name, "Default").chart
-			for _, other := range names[i+1:] {
-				if state == g.controlState(other, "Default").chart {
-					t.Fatal("chart pages share state")
-				}
+		tt.ClickAt(r.X+r.W/2, r.Y+r.H/2)
+		tt.Key(0, ui.KeyHome)
+		tt.Key(0, ui.KeyRight)
+		for j, other := range names {
+			if want := map[bool]int{true: 1, false: -1}[j <= i]; chartDemo(s).selection(other).Index != want {
+				t.Fatalf("after %s, %s selection = %d", name, other, chartDemo(s).selection(other).Index)
 			}
 		}
 	}

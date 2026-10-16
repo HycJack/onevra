@@ -10,13 +10,7 @@ func TestTextBoxBufferExamples(t *testing.T) {
 	g := &Gallery{}
 	for _, name := range []string{"TextBoxBuffer", "TextBoxBuffer (multiline)"} {
 		t.Run(name, func(t *testing.T) {
-			var example controlExample
-			for _, entry := range textBoxBufferControlCatalog {
-				if entry.name == name {
-					example = entry
-					break
-				}
-			}
+			example := sectionExample(name)
 			if example.build == nil || example.group != "Text input" {
 				t.Fatal("missing buffer example")
 			}

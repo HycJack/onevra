@@ -97,7 +97,7 @@ func TestCommandPhysicalShortcut(t *testing.T) {
 	}
 	tt.Type("Bar chart")
 	tt.Key(0, ui.KeyEnter)
-	if pageKey(g.page) != "controls/Bar chart" || g.commands.open {
+	if pageKey(g.page) != "controls/Data charts" || g.commands.open {
 		t.Fatal("command search did not navigate to the chart example")
 	}
 }

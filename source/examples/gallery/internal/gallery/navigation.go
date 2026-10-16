@@ -22,7 +22,7 @@ var newPages = map[string]bool{
 	"mygo/File watching":      true,
 	"mygo/Global shortcuts":   true,
 
-	"controls/SplitPercent": true,
+	"controls/Split panes":  true,
 	"mygo/Gradients & blur": true,
 	"mygo/Shaders":          true,
 	"mygo/Live chart":       true,

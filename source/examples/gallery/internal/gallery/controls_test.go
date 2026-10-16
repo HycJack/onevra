@@ -9,8 +9,34 @@ import (
 	"github.com/oneo-me/onevra/source/theme"
 )
 
+// sectionExample returns a component shown in a section of a gathered page.
+func sectionExample(name string) controlExample {
+	for _, sections := range controlSections {
+		for _, section := range sections {
+			if section.name == name {
+				return section
+			}
+		}
+	}
+	return controlExample{}
+}
+
+// controlComponents lists every component example, with gathered pages
+// replaced by their sections.
+func controlComponents() []controlExample {
+	var examples []controlExample
+	for _, example := range controlCatalog {
+		if sections := controlSections[example.name]; sections != nil {
+			examples = append(examples, sections...)
+		} else {
+			examples = append(examples, example)
+		}
+	}
+	return examples
+}
+
 func TestControlPages(t *testing.T) {
-	if len(controlCatalog) != 45 {
+	if len(controlCatalog) != 33 {
 		t.Fatal("missing control examples")
 	}
 	for i, example := range controlCatalog {
@@ -27,9 +53,19 @@ func TestControlPages(t *testing.T) {
 					g := &Gallery{page: page}
 					tt := ui.NewTester(func(c *ui.Context) { c.SetTheme(theme.Palette(dark)); g.View(c) }, width, 1800)
 					title := ui.NewTester(func(c *ui.Context) { c.SetTheme(theme.Palette(dark)); g.Titlebar(c) }, width, 40)
-					wantStates := len(example.variants)
-					if example.name == "TextBox" || example.name == "TextBoxBuffer" {
-						wantStates = 7
+					wantStates, labels := len(example.variants), example.variants
+					if example.name == "Data charts" {
+						wantStates = 1 // The charts share their data actions.
+					}
+					if sections := controlSections[example.name]; sections != nil {
+						wantStates, labels = 0, nil
+						for _, section := range sections {
+							wantStates += len(section.variants)
+							labels = append(labels, section.name)
+							if len(section.variants) > 1 {
+								labels = append(labels, section.variants...)
+							}
+						}
 					}
 					if tt.Image() == nil || len(g.controlStates) != wantStates {
 						t.Fatal("missing page or variant")
@@ -44,13 +80,13 @@ func TestControlPages(t *testing.T) {
 					// only as a variant or section label, or where the
 					// component itself shows or announces it.
 					ownName := slices.Contains([]string{"Breadcrumbs", "Chat", "Rating", "Select"}, example.name)
-					if tt.HasText(example.name) && !ownName && !slices.Contains(example.variants, example.name) {
+					if tt.HasText(example.name) && !ownName && !slices.Contains(labels, example.name) {
 						t.Fatalf("content repeats the page title %s", example.name)
 					}
-					if len(example.variants) > 1 {
-						for _, variant := range example.variants {
-							if !tt.HasText(variant) {
-								t.Fatalf("missing variant %s", variant)
+					if len(labels) > 1 {
+						for _, label := range labels {
+							if !tt.HasText(label) {
+								t.Fatalf("missing variant or section %s", label)
 							}
 						}
 					}
@@ -76,8 +112,10 @@ func (g *Gallery) shellFrame(c *ui.Context) {
 // The SplitPercent cell needs a bounded width: sized to its content, the
 // split grew with the panes and the divider outran the pointer.
 func TestSplitPercentDragFollowsPointer(t *testing.T) {
-	g := &Gallery{page: pageFromKey("controls/SplitPercent")}
-	tt := ui.NewTester(g.View, 900, 1200)
+	g := &Gallery{}
+	tt := ui.NewTester(func(c *ui.Context) {
+		ui.Column(c).Fill().Padding(24).Children(func() { g.controlVariants(c, sectionExample("SplitPercent"), true) })
+	}, 900, 1200)
 	r, ok := tt.Find("Horizontal divider")
 	if !ok {
 		t.Fatal("missing divider")
@@ -143,7 +181,7 @@ func TestEditableTextExample(t *testing.T) {
 }
 
 func TestControlExampleInteractions(t *testing.T) {
-	for _, example := range append(append([]controlExample{}, controlCatalog...), textBoxControlCatalog[1:]...) {
+	for _, example := range controlComponents() {
 		if example.name == "Selection" {
 			continue // Grouped selection interactions are covered separately.
 		}
@@ -156,7 +194,11 @@ func TestControlExampleInteractions(t *testing.T) {
 						if toolbar := controlToolbars[example.name]; toolbar != nil {
 							ui.Row(c).Children(func() { toolbar(c, s) })
 						}
-						example.build(c, s, "Default")
+						variant := "Default"
+						if example.name == "Data charts" {
+							variant = "Bar chart"
+						}
+						example.build(c, s, variant)
 					})
 				}, 540, 900)
 				click := func(label string) {
@@ -167,7 +209,7 @@ func TestControlExampleInteractions(t *testing.T) {
 				}
 				changed := false
 				switch example.name {
-				case "Bar chart", "Line chart", "Area chart", "Stacked bar chart", "Donut chart":
+				case "Data charts":
 					click("Update data")
 					changed = s.on
 				case "Relationship graph":
@@ -249,8 +291,12 @@ func TestControlExampleInteractions(t *testing.T) {
 					click(label)
 					tt.Type("Hello")
 					changed = s.text == "Hello"
-				case "TextBoxBuffer":
-					click("Name")
+				case "TextBoxBuffer", "TextBoxBuffer (multiline)":
+					label := "Name"
+					if example.name == "TextBoxBuffer (multiline)" {
+						label = "Notes"
+					}
+					click(label)
 					tt.Type("Hello")
 					changed = s.buffer.String() == "Hello"
 				case "Select":
@@ -259,7 +305,7 @@ func TestControlExampleInteractions(t *testing.T) {
 						click("Large")
 					}
 					changed = s.choice == "Large"
-				case "Progress":
+				case "Progress", "ProgressRing":
 					click("Default value")
 					tt.Key(0, ui.KeyRight)
 					changed = s.value != 40
@@ -321,12 +367,10 @@ func TestControlVariantLayout(t *testing.T) {
 	for _, name := range []string{"Text", "TextBox", "TextBox (multiline)", "Select", "Tabs", "Collapsible", "Image", "Slider"} {
 		for _, dark := range []bool{false, true} {
 			for _, width := range []int{900, 280} {
-				g := &Gallery{page: pageFromKey("controls/" + name)}
-				example, _ := controlExampleFor(g.page)
-				for _, textExample := range textBoxControlCatalog {
-					if textExample.name == name {
-						example = textExample
-					}
+				g := &Gallery{}
+				example := sectionExample(name)
+				if example.build == nil {
+					example, _ = controlExampleFor(pageFromKey("controls/" + name))
 				}
 				tt := ui.NewTester(func(c *ui.Context) {
 					c.SetTheme(theme.Palette(dark))
@@ -428,10 +472,7 @@ func TestHoneycombExampleAddRemove(t *testing.T) {
 }
 
 func TestControlReadOnlyExamples(t *testing.T) {
-	for _, example := range textBoxControlCatalog {
-		if example.name != "TextBox" && example.name != "TextBox (multiline)" {
-			continue
-		}
+	for _, example := range controlSections["TextBox"][:2] {
 		s := (&Gallery{}).controlState(example.name, "Read only")
 		before := s.text
 		tt := ui.NewTester(func(c *ui.Context) { example.build(c, s, "Read only") }, 540, 300)

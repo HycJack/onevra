@@ -62,8 +62,6 @@
   "both": "Both",
   "bottomPane": "Bottom pane",
   "box": "Box",
-  "bufferTextAreas": "Buffer text areas",
-  "bufferTextBoxes": "Buffer text boxes",
   "builtWithMygo": "Built with MyGo",
   "builtWithOnevra": "Built with Onevra",
   "builtWithOnevraPoweredByMygoWrittenInGo": "Built with Onevra · Powered by MyGo · Written in Go",
@@ -619,8 +617,6 @@
   "templatePreviewChangesStayInThisSessionNoNotificationsAreSen": "Explore grouped settings with this notification example. Changes last only for this session and do not send notifications.",
   "terminalUnavailable": "Terminal unavailable",
   "textAndAn": "text and an ",
-  "textAreas": "Text areas",
-  "textBoxes": "Text boxes",
   "textInput": "Text input",
   "thePageUnderneathStaysOpen": "The page underneath stays open.",
   "theme": "Theme",
@@ -1178,5 +1174,9 @@
   "variantTextAndPaths": "Text and paths",
   "variantElementEffect": "Element effect",
   "variantBackdrop": "Backdrop",
-  "percentageSplitPanes": "Percentage split panes"
+  "dataCharts": "Data charts",
+  "dateTimePickers": "Date & time pickers",
+  "colorPickers": "Color pickers",
+  "dialogs": "Dialogs",
+  "disclosure": "Disclosure"
 }

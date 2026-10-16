@@ -43,32 +43,51 @@ type controlState struct {
 	day                    time.Time
 }
 
-var textBoxControlCatalog = []controlExample{
-	{"TextBox", "Text boxes", "Text input", []string{"Empty", "Filled", "Read only", "Search"}, controlTextBox},
-	{"TextBox (multiline)", "Text areas", "Text input", []string{"Empty", "Filled", "Read only"}, controlTextBoxMultiline},
-}
-
-var textBoxBufferControlCatalog = []controlExample{
-	{"TextBoxBuffer", "Buffer text boxes", "Text input", []string{"Empty", "Filled", "Read only", "Search"}, controlTextBoxBuffer},
-	{"TextBoxBuffer (multiline)", "Buffer text areas", "Text input", []string{"Empty", "Filled", "Read only"}, controlTextBoxBufferMultiline},
+// controlSections lists the components a page gathers. Each section keeps its
+// own variants and state under the component's name.
+var controlSections = map[string][]controlExample{
+	"Date & time pickers": {
+		{"TimePicker", "TimePicker", "Date & time", []string{"Default"}, controlTimePicker},
+		{"Calendar", "Calendar", "Date & time", []string{"Default"}, controlCalendar},
+		{"CalendarPicker", "CalendarPicker", "Date & time", []string{"Default"}, controlCalendarPicker},
+	},
+	"Color pickers": {
+		{"ColorView", "ColorView", "Color", []string{"Default"}, controlColorView},
+		{"ColorPicker", "ColorPicker", "Color", []string{"Default", "Outlined", "Rounded"}, controlColorPicker},
+	},
+	"Dialogs": {
+		{"Dialog", "Dialog", "Feedback & overlays", []string{"Default", "Protected"}, controlDialog},
+		{"AlertDialog", "AlertDialog", "Feedback & overlays", []string{"Confirmation", "Notice"}, controlAlertDialog},
+	},
+	"TextBox": {
+		{"TextBox", "TextBox", "Text input", []string{"Empty", "Filled", "Read only", "Search"}, controlTextBox},
+		{"TextBox (multiline)", "TextBox (multiline)", "Text input", []string{"Empty", "Filled", "Read only"}, controlTextBoxMultiline},
+		{"TextBoxBuffer", "TextBoxBuffer", "Text input", []string{"Empty", "Filled", "Read only", "Search"}, controlTextBoxBuffer},
+		{"TextBoxBuffer (multiline)", "TextBoxBuffer (multiline)", "Text input", []string{"Empty", "Filled", "Read only"}, controlTextBoxBufferMultiline},
+	},
+	"Progress": {
+		{"Progress", "Progress", "Feedback & overlays", []string{"Progress"}, controlProgress},
+		{"ProgressRing", "ProgressRing", "Feedback & overlays", []string{"ProgressRing"}, controlProgress},
+		{"Spinner", "Spinner", "Feedback & overlays", []string{"Ring", "Spokes", "Tinted"}, controlSpinner},
+	},
+	"Disclosure": {
+		{"Accordion", "Accordion", "Layout & containers", []string{"Default"}, controlAccordion},
+		{"Collapsible", "Collapsible", "Layout & containers", []string{"Right arrow", "Left arrow"}, controlCollapsible},
+	},
+	"Split panes": {
+		{"Split", "Split", "Layout & containers", []string{"Horizontal", "Vertical"}, controlSplit},
+		{"SplitPercent", "SplitPercent", "Layout & containers", []string{"Horizontal", "Vertical"}, controlSplitPercent},
+	},
 }
 
 var controlCatalog = []controlExample{
-	{"Bar chart", "Bar chart", "Charts", []string{"Default"}, controlBarChart},
-	{"Line chart", "Line chart", "Charts", []string{"Default"}, controlLineChart},
-	{"Area chart", "Area chart", "Charts", []string{"Default"}, controlAreaChart},
-	{"Stacked bar chart", "Stacked bar chart", "Charts", []string{"Default"}, controlStackedBarChart},
-	{"Donut chart", "Donut chart", "Charts", []string{"Default"}, controlDonutChart},
+	{"Data charts", "Data charts", "Charts", []string{"Bar chart", "Line chart", "Area chart", "Stacked bar chart", "Donut chart"}, controlChart},
 	{"Relationship graph", "Relationship graph", "Charts", []string{"Default"}, controlGraph},
-	{"TimePicker", "TimePicker", "Date & time", []string{"Default"}, controlTimePicker},
-	{"Calendar", "Calendar", "Date & time", []string{"Default"}, controlCalendar},
-	{"CalendarPicker", "CalendarPicker", "Date & time", []string{"Default"}, controlCalendarPicker},
-	{"ColorView", "ColorView", "Color", []string{"Default"}, controlColorView},
-	{"ColorPicker", "ColorPicker", "Color", []string{"Default", "Outlined", "Rounded"}, controlColorPicker},
+	{"Date & time pickers", "Date & time pickers", "Date & time", nil, nil},
+	{"Color pickers", "Color pickers", "Color", nil, nil},
 	{"Tooltip", "Tooltip", "Feedback & overlays", []string{"Default"}, controlTooltip},
 	{"Popover", "Popover", "Feedback & overlays", []string{"Default"}, controlPopover},
-	{"Dialog", "Dialog", "Feedback & overlays", []string{"Default", "Protected"}, controlDialog},
-	{"AlertDialog", "AlertDialog", "Feedback & overlays", []string{"Confirmation", "Notice"}, controlAlertDialog},
+	{"Dialogs", "Dialogs", "Feedback & overlays", nil, nil},
 	{"Badge", "Badge", "Feedback & overlays", []string{"Default", "Accent"}, controlBadge},
 	{"Toast", "Toast", "Feedback & overlays", []string{"Status", "Actions", "Progress"}, controlToast},
 	{"Chat", "Chat", "Content display", []string{"Default"}, controlChat},
@@ -76,19 +95,16 @@ var controlCatalog = []controlExample{
 	{"Breadcrumbs", "Breadcrumbs", "Actions & navigation", []string{"Default"}, controlBreadcrumbs},
 	{"Rating", "Rating", "Selection & values", []string{"Default"}, controlRating},
 	{"Text", "Text", "Content display", []string{"Default", "Editable"}, controlText},
-	{"TextBox", "TextBox", "Text input", []string{"TextBox", "TextBox (multiline)"}, controlTextBox},
-	{"TextBoxBuffer", "TextBoxBuffer", "Text input", []string{"TextBoxBuffer", "TextBoxBuffer (multiline)"}, controlTextBoxBuffer},
+	{"TextBox", "TextBox", "Text input", nil, nil},
 	{"Button", "Buttons", "Actions & navigation", []string{"Button", "ToggleButton"}, controlButton},
 	{"Selection", "Selection", "Selection & values", []string{"Checkbox", "Switch", "Radio"}, controlSelection},
 	{"Select", "Selects", "Selection & values", []string{"Default", "Selected", "Searchable", "NativeSelect"}, controlSelect},
 	{"Menu", "Menus", "Feedback & overlays", []string{"Left-click", "Right-click"}, controlMenu},
 	{"NumberInput", "NumberInput", "Selection & values", []string{"Integer", "Decimal", "Scrub", "Without stepper"}, controlNumberInput},
 	{"Slider", "Sliders", "Selection & values", []string{"Default", "Step", "Range", "Stepped range"}, controlSlider},
-	{"Progress", "Progress", "Feedback & overlays", []string{"Progress", "ProgressRing"}, controlProgress},
-	{"Spinner", "Spinner", "Feedback & overlays", []string{"Ring", "Spokes", "Tinted"}, controlSpinner},
+	{"Progress", "Progress", "Feedback & overlays", nil, nil},
 	{"Tabs", "Tabs", "Actions & navigation", []string{"Underline", "Segmented control"}, controlTabs},
-	{"Accordion", "Accordion", "Layout & containers", []string{"Default"}, controlAccordion},
-	{"Collapsible", "Collapsible", "Layout & containers", []string{"Right arrow", "Left arrow"}, controlCollapsible},
+	{"Disclosure", "Disclosure", "Layout & containers", nil, nil},
 	{"Image", "Images", "Content display", []string{"Contain", "Cover", "Stretch", "Rounded", "Grayscale"}, controlImage},
 	{"List", "List", "Content display", []string{"Default"}, controlList},
 	{"GridView", "GridView", "Content display", []string{"Default"}, controlGridView},
@@ -96,17 +112,14 @@ var controlCatalog = []controlExample{
 	{"Table", "Table", "Content display", []string{"Table", "TableVirtualized"}, controlTable},
 	{"Sidebar", "Sidebar", "Actions & navigation", []string{"Default"}, controlSidebar},
 	{"Honeycomb", "Honeycomb", "Selection & values", []string{"Default"}, controlHoneycomb},
-	{"Split", "Split panes", "Layout & containers", []string{"Horizontal", "Vertical"}, controlSplit},
-	{"SplitPercent", "Percentage split panes", "Layout & containers", []string{"Horizontal", "Vertical"}, controlSplitPercent},
+	{"Split panes", "Split panes", "Layout & containers", nil, nil},
 	{"ScrollView", "Scroll views", "Layout & containers", []string{"Vertical", "Horizontal", "Both", "Insets"}, controlScrollView},
 }
 
 // controlToolbars hold page-level sample actions, which the titlebar shows
 // after the page title so the content stays with the example itself.
 var controlToolbars = map[string]func(*ui.Context, *controlState){
-	"Bar chart": chartToolbar, "Line chart": chartToolbar, "Area chart": chartToolbar,
-	"Stacked bar chart": chartToolbar, "Donut chart": chartToolbar,
-	"Relationship graph": graphToolbar, "Honeycomb": honeycombToolbar, "Chat": chatToolbar,
+	"Data charts": chartToolbar, "Relationship graph": graphToolbar, "Honeycomb": honeycombToolbar, "Chat": chatToolbar,
 }
 
 func controlPageStart() galleryPage { return mygoPageStart + galleryPage(len(mygoCatalog)) }
@@ -117,6 +130,19 @@ func controlExampleFor(page galleryPage) (controlExample, bool) {
 		return controlExample{}, false
 	}
 	return controlCatalog[i], true
+}
+
+// pageComponents names the components a gathered page shows, so command
+// search finds the page by any of them.
+func pageComponents(example controlExample) []string {
+	if example.name == "Data charts" {
+		return example.variants
+	}
+	var names []string
+	for _, section := range controlSections[example.name] {
+		names = append(names, section.name)
+	}
+	return names
 }
 
 func (g *Gallery) controlState(name, variant string) *controlState {
@@ -169,13 +195,17 @@ func (g *Gallery) controlsLocalized(c *ui.Context, example controlExample) {
 	}
 	components.ScrollView(c, components.ScrollViewOptions{}).Key("controls-" + example.name).Fill().Children(func() {
 		ui.Column(c).FillWidth().MinWidth(0).Padding(t.Space(6)).Gap(t.Space(6)).Children(func() {
-			if example.name == "TextBox" || example.name == "TextBoxBuffer" {
-				catalog := textBoxControlCatalog
-				if example.name == "TextBoxBuffer" {
-					catalog = textBoxBufferControlCatalog
+			if sections := controlSections[example.name]; sections != nil {
+				for _, section := range sections {
+					g.controlVariants(c, section, true)
 				}
-				for _, textExample := range catalog {
-					g.controlVariants(c, textExample, true)
+				return
+			}
+			if example.name == "Data charts" {
+				// Every chart follows the titlebar's data actions.
+				s := g.controlState(example.name, "Default")
+				for _, variant := range example.variants {
+					g.controlSection(c, variant, func() { example.build(c, s, variant) })
 				}
 				return
 			}
@@ -188,7 +218,7 @@ func (g *Gallery) controlsLocalized(c *ui.Context, example controlExample) {
 				})
 				return
 			}
-			if example.name == "Button" || example.name == "Selection" || example.name == "Progress" || example.name == "Tree" || example.name == "Table" {
+			if example.name == "Button" || example.name == "Selection" || example.name == "Tree" || example.name == "Table" {
 				for _, variant := range example.variants {
 					g.controlSection(c, variant, func() {
 						example.build(c, g.controlState(example.name, variant), variant)
@@ -208,25 +238,14 @@ func (g *Gallery) controlsLocalized(c *ui.Context, example controlExample) {
 // the page, so only a section within a page gets its own heading.
 func (g *Gallery) controlVariants(c *ui.Context, example controlExample, heading bool) {
 	t := c.Theme()
-	if example.name == "Text" || example.name == "Collapsible" {
-		ui.Column(c).Key(example.name).FillWidth().MinWidth(0).Gap(t.Space(4)).Children(func() {
-			for _, variant := range example.variants {
-				ui.Column(c).Key(variant).FillWidth().MinWidth(0).Gap(12).Children(func() {
-					components.Text(c, tr(c, variant)).TextColor(t.TextMuted)
-					example.build(c, g.controlState(example.name, variant), variant)
-				})
-			}
-		})
-		return
-	}
 	variants := func() {
 		ui.Row(c).FillWidth().MinWidth(0).Wrap().AlignItems(ui.Start).Gap(t.Space(4)).Children(func() {
 			for _, variant := range example.variants {
 				cell := ui.Column(c).Key(variant).MinWidth(0).MaxWidthPercent(100).Gap(12)
 				switch example.name {
-				case "Text", "GridView", "Bar chart", "Line chart", "Area chart", "Stacked bar chart", "Donut chart", "Relationship graph":
+				case "Text", "GridView":
 					cell.FillWidth()
-				case "TextBox", "TextBox (multiline)", "TextBoxBuffer", "TextBoxBuffer (multiline)", "NumberInput", "Slider", "Sidebar", "List", "Split", "SplitPercent", "ScrollView", "Progress", "Accordion", "Collapsible":
+				case "TextBox", "TextBox (multiline)", "TextBoxBuffer", "TextBoxBuffer (multiline)", "NumberInput", "Slider", "Sidebar", "List", "Split", "SplitPercent", "ScrollView", "Progress", "ProgressRing", "Accordion", "Collapsible":
 					cell.Width(240)
 				}
 				cell.Children(func() {
@@ -237,6 +256,18 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample, heading
 				})
 			}
 		})
+	}
+	if example.name == "Text" || example.name == "Collapsible" {
+		variants = func() {
+			ui.Column(c).FillWidth().MinWidth(0).Gap(t.Space(4)).Children(func() {
+				for _, variant := range example.variants {
+					ui.Column(c).Key(variant).FillWidth().MinWidth(0).Gap(12).Children(func() {
+						components.Text(c, tr(c, variant)).TextColor(t.TextMuted)
+						example.build(c, g.controlState(example.name, variant), variant)
+					})
+				}
+			})
+		}
 	}
 	if !heading {
 		ui.Column(c).Key(example.name).FillWidth().MinWidth(0).Children(variants)

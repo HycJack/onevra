@@ -173,10 +173,10 @@ func TestMyGoVariantIsolation(t *testing.T) {
 func TestMyGoNavigationAndState(t *testing.T) {
 	g := &Gallery{}
 	tt := ui.NewTester(g.Left, 220, 5000)
-	if err := tt.Click("Collapsible"); err != nil {
+	if err := tt.Click("Disclosure"); err != nil {
 		t.Fatal(err)
 	}
-	if example, ok := controlExampleFor(g.page); !ok || example.name != "Collapsible" {
+	if example, ok := controlExampleFor(g.page); !ok || example.name != "Disclosure" {
 		t.Fatal("collapsible route not selected")
 	}
 	detailsPage := g.page

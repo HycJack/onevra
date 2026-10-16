@@ -11,33 +11,29 @@ import (
 )
 
 type chartDemoState struct {
-	selection chart.State
-	empty     bool
+	// Each chart keeps its own selection; the data actions apply to all.
+	selections map[string]*chart.State
+	empty      bool
 }
 
-func controlBarChart(c *ui.Context, s *controlState, _ string) {
-	controlChart(c, s, "Bar chart", chart.Bar)
+// selection returns a chart's selection, starting with none.
+func (d *chartDemoState) selection(name string) *chart.State {
+	if d.selections == nil {
+		d.selections = make(map[string]*chart.State)
+	}
+	if d.selections[name] == nil {
+		d.selections[name] = &chart.State{Index: -1}
+	}
+	return d.selections[name]
 }
 
-func controlLineChart(c *ui.Context, s *controlState, _ string) {
-	controlChart(c, s, "Line chart", chart.Line)
-}
-
-func controlAreaChart(c *ui.Context, s *controlState, _ string) {
-	controlChart(c, s, "Area chart", chart.Area)
-}
-
-func controlStackedBarChart(c *ui.Context, s *controlState, _ string) {
-	controlChart(c, s, "Stacked bar chart", chart.StackedBar)
-}
-
-func controlDonutChart(c *ui.Context, s *controlState, _ string) {
-	controlChart(c, s, "Donut chart", nil)
+var chartViews = map[string]func(*ui.Context, *chart.State, chart.Data, chart.Options) ui.Element{
+	"Bar chart": chart.Bar, "Line chart": chart.Line, "Area chart": chart.Area, "Stacked bar chart": chart.StackedBar,
 }
 
 func chartDemo(s *controlState) *chartDemoState {
 	if s.chart == nil {
-		s.chart = &chartDemoState{selection: chart.State{Index: -1}}
+		s.chart = &chartDemoState{}
 	}
 	return s.chart
 }
@@ -62,8 +58,9 @@ func emptyStateToggle(c *ui.Context, empty *bool) {
 	}
 }
 
-func controlChart(c *ui.Context, s *controlState, name string, render func(*ui.Context, *chart.State, chart.Data, chart.Options) ui.Element) {
-	chartDemo(s)
+// controlChart shows the chart a variant names.
+func controlChart(c *ui.Context, s *controlState, name string) {
+	d := chartDemo(s)
 	t := c.Theme()
 	ui.Column(c).FillWidth().MinWidth(0).Padding(t.Space(4)).Gap(t.Space(4)).
 		Radius(t.Radius*1.5).Background(t.Surface).Border(1, t.Border.Alpha(.5)).Children(func() {
@@ -76,21 +73,22 @@ func controlChart(c *ui.Context, s *controlState, name string, render func(*ui.C
 		if s.on {
 			values = []float64{62, 43, 71, 54, 78, 65}
 		}
+		selection := d.selection(name)
 		if name == "Donut chart" {
 			components.Text(c, tr(c, "chartDistribution")).Bold()
 			labels := []string{"chartDesign", "chartDevelopment", "chartResearch", "chartPlanning"}
 			var slices []chart.Slice
-			if !s.chart.empty {
+			if !d.empty {
 				for i, label := range labels {
 					slices = append(slices, chart.Slice{ID: label, Label: tr(c, label), Value: values[i]})
 				}
 			}
-			chart.Donut(c, &s.chart.selection, slices, opts)
+			chart.Donut(c, selection, slices, opts)
 			return
 		}
 		components.Text(c, tr(c, "chartDaily")).Bold()
 		var data chart.Data
-		if !s.chart.empty {
+		if !d.empty {
 			for _, day := range []string{"chartMon", "chartTue", "chartWed", "chartThu", "chartFri", "chartSat"} {
 				data.Labels = append(data.Labels, tr(c, day))
 			}
@@ -99,6 +97,6 @@ func controlChart(c *ui.Context, s *controlState, name string, render func(*ui.C
 				{ID: "previous", Label: tr(c, "chartPrevious"), Values: []float64{26, 34, 28, 48, 43, 57}},
 			}
 		}
-		render(c, &s.chart.selection, data, opts)
+		chartViews[name](c, selection, data, opts)
 	})
 }

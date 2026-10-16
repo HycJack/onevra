@@ -64,11 +64,8 @@ func captureCatalog(t *testing.T, controls bool) {
 				if controls && example.name == "Popover" {
 					g.controlState("Popover", "Default").dialogOpen = true
 				}
-				if controls && example.name == "Dialog" {
+				if controls && example.name == "Dialogs" {
 					g.controlState("Dialog", "Default").dialogOpen = true
-				}
-				if controls && example.name == "AlertDialog" {
-					g.controlState("AlertDialog", "Confirmation").dialogOpen = true
 				}
 				if controls && example.name == "Tree" {
 					s := g.controlState("Tree", "Tree")

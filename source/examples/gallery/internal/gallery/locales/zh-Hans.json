@@ -38,8 +38,6 @@
   "both": "双向",
   "bottomPane": "下方区域",
   "box": "容器",
-  "bufferTextAreas": "缓冲多行文本框",
-  "bufferTextBoxes": "缓冲文本框",
   "builtWithMygo": "使用 MyGo 构建",
   "builtWithOnevra": "使用 Onevra 构建",
   "builtWithOnevraPoweredByMygoWrittenInGo": "使用 Onevra 构建 · 由 MyGo 驱动 · 使用 Go 编写",
@@ -382,8 +380,6 @@
   "templatePreviewChangesStayInThisSessionNoNotificationsAreSen": "通过通知设置示例体验分组表单。更改仅在当前会话中保留，不会发送通知。",
   "terminalUnavailable": "终端不可用",
   "textAndAn": "文本和",
-  "textAreas": "多行文本框",
-  "textBoxes": "文本框",
   "textInput": "文本输入",
   "thePageUnderneathStaysOpen": "下方页面保持打开。",
   "theme": "主题",
@@ -794,5 +790,9 @@
   "variantTextAndPaths": "文字与路径",
   "variantElementEffect": "元素特效",
   "variantBackdrop": "背景",
-  "percentageSplitPanes": "百分比分割区域"
+  "dataCharts": "数据图表",
+  "dateTimePickers": "日期和时间选择器",
+  "colorPickers": "颜色选择器",
+  "dialogs": "对话框",
+  "disclosure": "折叠面板"
 }

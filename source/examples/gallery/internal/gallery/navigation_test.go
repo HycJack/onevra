@@ -197,15 +197,15 @@ func TestChineseNavigationNames(t *testing.T) {
 		}
 	}
 	tt := ui.NewTester(g.Left, 240, 6000)
-	if err := tt.Click("时间选择器"); err != nil {
+	if err := tt.Click("日期和时间选择器"); err != nil {
 		t.Fatal(err)
 	}
 	example, ok := controlExampleFor(g.page)
-	if !ok || example.name != "TimePicker" {
+	if !ok || example.name != "Date & time pickers" {
 		t.Fatal("translated navigation selected wrong page")
 	}
 	g.chooseLanguage("en")
-	if example, ok := controlExampleFor(g.page); !ok || example.name != "TimePicker" {
+	if example, ok := controlExampleFor(g.page); !ok || example.name != "Date & time pickers" {
 		t.Fatal("language switch changed route")
 	}
 }

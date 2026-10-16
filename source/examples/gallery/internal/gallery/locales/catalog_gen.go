@@ -424,26 +424,6 @@ func (msgs Messages) Box() string {
 	return Catalog.Format(msgs.locale, "box", nil)
 }
 
-// BufferTextAreas says "Buffer text areas"
-// in the language the app shows.
-func BufferTextAreas() string { return In(i18n.Locale()).BufferTextAreas() }
-
-// BufferTextAreas says "Buffer text areas"
-// in the language of msgs.
-func (msgs Messages) BufferTextAreas() string {
-	return Catalog.Format(msgs.locale, "bufferTextAreas", nil)
-}
-
-// BufferTextBoxes says "Buffer text boxes"
-// in the language the app shows.
-func BufferTextBoxes() string { return In(i18n.Locale()).BufferTextBoxes() }
-
-// BufferTextBoxes says "Buffer text boxes"
-// in the language of msgs.
-func (msgs Messages) BufferTextBoxes() string {
-	return Catalog.Format(msgs.locale, "bufferTextBoxes", nil)
-}
-
 // BuiltWithMygo says "Built with MyGo"
 // in the language the app shows.
 func BuiltWithMygo() string { return In(i18n.Locale()).BuiltWithMygo() }
@@ -3896,26 +3876,6 @@ func TextAndAn() string { return In(i18n.Locale()).TextAndAn() }
 // in the language of msgs.
 func (msgs Messages) TextAndAn() string {
 	return Catalog.Format(msgs.locale, "textAndAn", nil)
-}
-
-// TextAreas says "Text areas"
-// in the language the app shows.
-func TextAreas() string { return In(i18n.Locale()).TextAreas() }
-
-// TextAreas says "Text areas"
-// in the language of msgs.
-func (msgs Messages) TextAreas() string {
-	return Catalog.Format(msgs.locale, "textAreas", nil)
-}
-
-// TextBoxes says "Text boxes"
-// in the language the app shows.
-func TextBoxes() string { return In(i18n.Locale()).TextBoxes() }
-
-// TextBoxes says "Text boxes"
-// in the language of msgs.
-func (msgs Messages) TextBoxes() string {
-	return Catalog.Format(msgs.locale, "textBoxes", nil)
 }
 
 // TextInput says "Text input"
@@ -8040,12 +8000,52 @@ func (msgs Messages) VariantBackdrop() string {
 	return Catalog.Format(msgs.locale, "variantBackdrop", nil)
 }
 
-// PercentageSplitPanes says "Percentage split panes"
+// DataCharts says "Data charts"
 // in the language the app shows.
-func PercentageSplitPanes() string { return In(i18n.Locale()).PercentageSplitPanes() }
+func DataCharts() string { return In(i18n.Locale()).DataCharts() }
 
-// PercentageSplitPanes says "Percentage split panes"
+// DataCharts says "Data charts"
 // in the language of msgs.
-func (msgs Messages) PercentageSplitPanes() string {
-	return Catalog.Format(msgs.locale, "percentageSplitPanes", nil)
+func (msgs Messages) DataCharts() string {
+	return Catalog.Format(msgs.locale, "dataCharts", nil)
+}
+
+// DateTimePickers says "Date & time pickers"
+// in the language the app shows.
+func DateTimePickers() string { return In(i18n.Locale()).DateTimePickers() }
+
+// DateTimePickers says "Date & time pickers"
+// in the language of msgs.
+func (msgs Messages) DateTimePickers() string {
+	return Catalog.Format(msgs.locale, "dateTimePickers", nil)
+}
+
+// ColorPickers says "Color pickers"
+// in the language the app shows.
+func ColorPickers() string { return In(i18n.Locale()).ColorPickers() }
+
+// ColorPickers says "Color pickers"
+// in the language of msgs.
+func (msgs Messages) ColorPickers() string {
+	return Catalog.Format(msgs.locale, "colorPickers", nil)
+}
+
+// Dialogs says "Dialogs"
+// in the language the app shows.
+func Dialogs() string { return In(i18n.Locale()).Dialogs() }
+
+// Dialogs says "Dialogs"
+// in the language of msgs.
+func (msgs Messages) Dialogs() string {
+	return Catalog.Format(msgs.locale, "dialogs", nil)
+}
+
+// Disclosure says "Disclosure"
+// in the language the app shows.
+func Disclosure() string { return In(i18n.Locale()).Disclosure() }
+
+// Disclosure says "Disclosure"
+// in the language of msgs.
+func (msgs Messages) Disclosure() string {
+	return Catalog.Format(msgs.locale, "disclosure", nil)
 }
