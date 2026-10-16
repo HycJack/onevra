@@ -1187,5 +1187,18 @@
   "workspaceTeam": "Team",
   "tagImportant": "Important",
   "tagInProgress": "In progress",
-  "tagDone": "Finished"
+  "tagDone": "Finished",
+  "componentIconbutton": "IconButton",
+  "iconAndText": "Icon and text",
+  "shellToolbar": "Shell toolbar",
+  "copy": "Copy",
+  "share": "Share",
+  "download": "Download",
+  "edit": "Edit",
+  "favorite": "Favorite",
+  "refresh": "Refresh",
+  "filter": "Filter",
+  "upload": "Upload",
+  "redo": "Redo",
+  "newFolder": "New folder"
 }

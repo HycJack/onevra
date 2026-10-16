@@ -803,5 +803,18 @@
   "workspaceTeam": "团队",
   "tagImportant": "重要",
   "tagInProgress": "进行中",
-  "tagDone": "已完成"
+  "tagDone": "已完成",
+  "componentIconbutton": "图标按钮",
+  "iconAndText": "图标与文本",
+  "shellToolbar": "Shell 工具栏",
+  "copy": "复制",
+  "share": "分享",
+  "download": "下载",
+  "edit": "编辑",
+  "favorite": "收藏",
+  "refresh": "刷新",
+  "filter": "筛选",
+  "upload": "上传",
+  "redo": "重做",
+  "newFolder": "新建文件夹"
 }

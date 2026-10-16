@@ -97,7 +97,7 @@ var controlCatalog = []controlExample{
 	{"Rating", "Rating", "Selection & values", []string{"Default"}, controlRating},
 	{"Text", "Text", "Content display", []string{"Default", "Editable"}, controlText},
 	{"TextBox", "TextBox", "Text input", nil, nil},
-	{"Button", "Buttons", "Actions & navigation", []string{"Button", "ToggleButton"}, controlButton},
+	{"Button", "Buttons", "Actions & navigation", []string{"Button", "Icon and text", "IconButton", "Toolbar", "ToggleButton"}, controlButton},
 	{"Selection", "Selection", "Selection & values", []string{"Checkbox", "Switch", "Radio"}, controlSelection},
 	{"Select", "Selects", "Selection & values", []string{"Default", "Selected", "Searchable", "NativeSelect"}, controlSelect},
 	{"Menu", "Menus", "Feedback & overlays", []string{"Left-click", "Right-click"}, controlMenu},

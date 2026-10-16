@@ -8139,3 +8139,133 @@ func TagDone() string { return In(i18n.Locale()).TagDone() }
 func (msgs Messages) TagDone() string {
 	return Catalog.Format(msgs.locale, "tagDone", nil)
 }
+
+// ComponentIconbutton says "IconButton"
+// in the language the app shows.
+func ComponentIconbutton() string { return In(i18n.Locale()).ComponentIconbutton() }
+
+// ComponentIconbutton says "IconButton"
+// in the language of msgs.
+func (msgs Messages) ComponentIconbutton() string {
+	return Catalog.Format(msgs.locale, "componentIconbutton", nil)
+}
+
+// IconAndText says "Icon and text"
+// in the language the app shows.
+func IconAndText() string { return In(i18n.Locale()).IconAndText() }
+
+// IconAndText says "Icon and text"
+// in the language of msgs.
+func (msgs Messages) IconAndText() string {
+	return Catalog.Format(msgs.locale, "iconAndText", nil)
+}
+
+// ShellToolbar says "Shell toolbar"
+// in the language the app shows.
+func ShellToolbar() string { return In(i18n.Locale()).ShellToolbar() }
+
+// ShellToolbar says "Shell toolbar"
+// in the language of msgs.
+func (msgs Messages) ShellToolbar() string {
+	return Catalog.Format(msgs.locale, "shellToolbar", nil)
+}
+
+// Copy says "Copy"
+// in the language the app shows.
+func Copy() string { return In(i18n.Locale()).Copy() }
+
+// Copy says "Copy"
+// in the language of msgs.
+func (msgs Messages) Copy() string {
+	return Catalog.Format(msgs.locale, "copy", nil)
+}
+
+// Share says "Share"
+// in the language the app shows.
+func Share() string { return In(i18n.Locale()).Share() }
+
+// Share says "Share"
+// in the language of msgs.
+func (msgs Messages) Share() string {
+	return Catalog.Format(msgs.locale, "share", nil)
+}
+
+// Download says "Download"
+// in the language the app shows.
+func Download() string { return In(i18n.Locale()).Download() }
+
+// Download says "Download"
+// in the language of msgs.
+func (msgs Messages) Download() string {
+	return Catalog.Format(msgs.locale, "download", nil)
+}
+
+// Edit says "Edit"
+// in the language the app shows.
+func Edit() string { return In(i18n.Locale()).Edit() }
+
+// Edit says "Edit"
+// in the language of msgs.
+func (msgs Messages) Edit() string {
+	return Catalog.Format(msgs.locale, "edit", nil)
+}
+
+// Favorite says "Favorite"
+// in the language the app shows.
+func Favorite() string { return In(i18n.Locale()).Favorite() }
+
+// Favorite says "Favorite"
+// in the language of msgs.
+func (msgs Messages) Favorite() string {
+	return Catalog.Format(msgs.locale, "favorite", nil)
+}
+
+// Refresh says "Refresh"
+// in the language the app shows.
+func Refresh() string { return In(i18n.Locale()).Refresh() }
+
+// Refresh says "Refresh"
+// in the language of msgs.
+func (msgs Messages) Refresh() string {
+	return Catalog.Format(msgs.locale, "refresh", nil)
+}
+
+// Filter says "Filter"
+// in the language the app shows.
+func Filter() string { return In(i18n.Locale()).Filter() }
+
+// Filter says "Filter"
+// in the language of msgs.
+func (msgs Messages) Filter() string {
+	return Catalog.Format(msgs.locale, "filter", nil)
+}
+
+// Upload says "Upload"
+// in the language the app shows.
+func Upload() string { return In(i18n.Locale()).Upload() }
+
+// Upload says "Upload"
+// in the language of msgs.
+func (msgs Messages) Upload() string {
+	return Catalog.Format(msgs.locale, "upload", nil)
+}
+
+// Redo says "Redo"
+// in the language the app shows.
+func Redo() string { return In(i18n.Locale()).Redo() }
+
+// Redo says "Redo"
+// in the language of msgs.
+func (msgs Messages) Redo() string {
+	return Catalog.Format(msgs.locale, "redo", nil)
+}
+
+// NewFolder says "New folder"
+// in the language the app shows.
+func NewFolder() string { return In(i18n.Locale()).NewFolder() }
+
+// NewFolder says "New folder"
+// in the language of msgs.
+func (msgs Messages) NewFolder() string {
+	return Catalog.Format(msgs.locale, "newFolder", nil)
+}

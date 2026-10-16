@@ -20,7 +20,7 @@ func TestButtonPreview(t *testing.T) {
 			if _, ok := tt.Find("Button"); !ok || tt.HasText("Default") {
 				t.Fatal("button section must use the component name")
 			}
-			for _, label := range []string{"Primary", "Secondary", "Outline", "Ghost", "Link", "Toolbar"} {
+			for _, label := range []string{"Primary", "Secondary", "Outline", "Ghost", "Link"} {
 				r, ok := tt.Find(label)
 				if !ok || r.X < 20 || r.X+r.W > float32(width)-20 {
 					t.Fatalf("%s overflows preview: %+v", label, r)
@@ -29,7 +29,7 @@ func TestButtonPreview(t *testing.T) {
 					t.Fatal(err)
 				}
 			}
-			if g.controlState("Button", "Button").button.clicks != [6]int{1, 1, 1, 1, 1, 1} {
+			if g.controlState("Button", "Button").button.clicks != [5]int{1, 1, 1, 1, 1} {
 				t.Fatal("preview lost button interactions")
 			}
 		}
@@ -64,7 +64,7 @@ func TestButtonTogglePreview(t *testing.T) {
 			if !s.on || s.toggles[1] {
 				t.Fatal("toggle preview did not update independent values")
 			}
-			if g.controlState("Button", "Button").button.clicks != [6]int{} {
+			if g.controlState("Button", "Button").button.clicks != [5]int{} {
 				t.Fatal("toggle state leaked into other button examples")
 			}
 			if pageFromKey("controls/ToggleButton") != lucidePage {
@@ -83,7 +83,7 @@ func TestControlButtonWrap(t *testing.T) {
 				ui.Column(c).Fill().Gap(12).Children(func() { controlButton(c, s, "Default") })
 			}, width, 300)
 			var previous ui.Rect
-			for i, label := range []string{"Primary", "Secondary", "Outline", "Ghost", "Link", "Toolbar"} {
+			for i, label := range []string{"Primary", "Secondary", "Outline", "Ghost", "Link"} {
 				r, ok := tt.Find(label)
 				if !ok {
 					t.Fatalf("missing button %s", label)
@@ -104,7 +104,7 @@ func TestControlButtonWrap(t *testing.T) {
 					t.Fatal(err)
 				}
 			}
-			if s.button.clicks != [6]int{1, 1, 1, 1, 1, 1} {
+			if s.button.clicks != [5]int{1, 1, 1, 1, 1} {
 				t.Fatalf("unexpected per-button clicks: %v", s.button.clicks)
 			}
 		}
@@ -154,7 +154,7 @@ func TestButtonIndependentCounts(t *testing.T) {
 	tt := ui.NewTester(func(c *ui.Context) {
 		controlButton(c, s, "Button")
 	}, 540, 300)
-	labels := []string{"Primary", "Secondary", "Outline", "Ghost", "Link", "Toolbar"}
+	labels := []string{"Primary", "Secondary", "Outline", "Ghost", "Link"}
 	for i, label := range labels {
 		for range i + 1 {
 			if err := tt.Click(label); err != nil {
@@ -183,5 +183,45 @@ func TestButtonIndependentCounts(t *testing.T) {
 	}
 	if tt.HasText("Clicks:") {
 		t.Fatal("unexpected shared click counter")
+	}
+}
+
+func TestButtonIconAndToolbarPreview(t *testing.T) {
+	for _, dark := range []bool{false, true} {
+		for _, width := range []int{540, 280} {
+			g := &Gallery{}
+			example, _ := controlExampleFor(pageFromKey("controls/Button"))
+			tt := ui.NewTester(func(c *ui.Context) {
+				c.SetTheme(theme.Palette(dark))
+				g.Controls(c, example)
+			}, width, 1400)
+			link, _ := tt.Find("Link")
+			toolbar, ok := tt.Find("Filter")
+			if !ok || toolbar.Y < link.Y+link.H {
+				t.Fatalf("toolbar button must sit below the standard buttons: %+v, %+v", toolbar, link)
+			}
+			for _, section := range []string{"Icon and text", "IconButton", "Shell toolbar"} {
+				if !tt.HasText(section) {
+					t.Fatalf("missing %s example", section)
+				}
+			}
+			for _, label := range []string{"New", "Edit", "Copy", "Favorite", "Filter", "Upload", "Redo", "New folder", "Settings"} {
+				r, ok := tt.Find(label)
+				if !ok || r.X < 20 || r.X+r.W > float32(width)-20 {
+					t.Fatalf("%s overflows preview: %+v", label, r)
+				}
+				if err := tt.Click(label); err != nil {
+					t.Fatal(err)
+				}
+			}
+			actions := g.controlState("Button", "Toolbar").button.actions
+			if actions["filter"] != 1 || actions["upload"] != 1 || actions["redo"] != 1 || actions["newFolder"] != 1 || actions["settings"] != 1 {
+				t.Fatalf("toolbar actions = %v", actions)
+			}
+			_ = tt.Click("Delete")
+			if g.controlState("Button", "IconButton").button.actions["delete"] != 0 {
+				t.Fatal("disabled icon button reported a click")
+			}
+		}
 	}
 }
