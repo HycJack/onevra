@@ -33,6 +33,7 @@ type controlState struct {
 	index                  int
 	button                 buttonExampleState
 	toggles                [2]bool
+	folders                [3]bool
 	value                  float64
 	high                   float64
 	honeycomb              string
@@ -110,7 +111,7 @@ var controlCatalog = []controlExample{
 	{"GridView", "GridView", "Content display", []string{"Default"}, controlGridView},
 	{"Tree", "Tree", "Content display", []string{"Tree", "TreeVirtualized"}, controlTree},
 	{"Table", "Table", "Content display", []string{"Table", "TableVirtualized"}, controlTable},
-	{"Sidebar", "Sidebar", "Actions & navigation", []string{"Default"}, controlSidebar},
+	{"Sidebar", "Sidebar", "Actions & navigation", []string{"Default", "File tree", "Collapsible groups", "Custom leading"}, controlSidebar},
 	{"Honeycomb", "Honeycomb", "Selection & values", []string{"Default"}, controlHoneycomb},
 	{"Split panes", "Split panes", "Layout & containers", nil, nil},
 	{"ScrollView", "Scroll views", "Layout & containers", []string{"Vertical", "Horizontal", "Both", "Insets"}, controlScrollView},
@@ -171,6 +172,10 @@ func (g *Gallery) controlState(name, variant string) *controlState {
 	}
 	if name == "Breadcrumbs" {
 		s.text = ""
+	}
+	if name == "Sidebar" {
+		s.choice = map[string]string{"File tree": "main.go", "Collapsible groups": "home", "Custom leading": "personal2"}[variant]
+		s.folders = [3]bool{true, variant == "Collapsible groups", false}
 	}
 	g.controlStates[key] = s
 	return s

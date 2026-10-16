@@ -1178,5 +1178,16 @@
   "dateTimePickers": "Date & time pickers",
   "colorPickers": "Color pickers",
   "dialogs": "Dialogs",
-  "disclosure": "Disclosure"
+  "disclosure": "Disclosure",
+  "sidebarFileTree": "File tree",
+  "sidebarCollapsibleGroups": "Collapsible groups",
+  "sidebarCustomLeading": "Custom leading",
+  "explorer": "Explorer",
+  "workspaces": "Workspaces",
+  "recent": "Recent",
+  "shared": "Shared",
+  "workspaceTeam": "Team",
+  "tagImportant": "Important",
+  "tagInProgress": "In progress",
+  "tagDone": "Finished"
 }

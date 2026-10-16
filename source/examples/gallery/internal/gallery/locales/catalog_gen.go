@@ -8049,3 +8049,113 @@ func Disclosure() string { return In(i18n.Locale()).Disclosure() }
 func (msgs Messages) Disclosure() string {
 	return Catalog.Format(msgs.locale, "disclosure", nil)
 }
+
+// SidebarFileTree says "File tree"
+// in the language the app shows.
+func SidebarFileTree() string { return In(i18n.Locale()).SidebarFileTree() }
+
+// SidebarFileTree says "File tree"
+// in the language of msgs.
+func (msgs Messages) SidebarFileTree() string {
+	return Catalog.Format(msgs.locale, "sidebarFileTree", nil)
+}
+
+// SidebarCollapsibleGroups says "Collapsible groups"
+// in the language the app shows.
+func SidebarCollapsibleGroups() string { return In(i18n.Locale()).SidebarCollapsibleGroups() }
+
+// SidebarCollapsibleGroups says "Collapsible groups"
+// in the language of msgs.
+func (msgs Messages) SidebarCollapsibleGroups() string {
+	return Catalog.Format(msgs.locale, "sidebarCollapsibleGroups", nil)
+}
+
+// SidebarCustomLeading says "Custom leading"
+// in the language the app shows.
+func SidebarCustomLeading() string { return In(i18n.Locale()).SidebarCustomLeading() }
+
+// SidebarCustomLeading says "Custom leading"
+// in the language of msgs.
+func (msgs Messages) SidebarCustomLeading() string {
+	return Catalog.Format(msgs.locale, "sidebarCustomLeading", nil)
+}
+
+// Explorer says "Explorer"
+// in the language the app shows.
+func Explorer() string { return In(i18n.Locale()).Explorer() }
+
+// Explorer says "Explorer"
+// in the language of msgs.
+func (msgs Messages) Explorer() string {
+	return Catalog.Format(msgs.locale, "explorer", nil)
+}
+
+// Workspaces says "Workspaces"
+// in the language the app shows.
+func Workspaces() string { return In(i18n.Locale()).Workspaces() }
+
+// Workspaces says "Workspaces"
+// in the language of msgs.
+func (msgs Messages) Workspaces() string {
+	return Catalog.Format(msgs.locale, "workspaces", nil)
+}
+
+// Recent says "Recent"
+// in the language the app shows.
+func Recent() string { return In(i18n.Locale()).Recent() }
+
+// Recent says "Recent"
+// in the language of msgs.
+func (msgs Messages) Recent() string {
+	return Catalog.Format(msgs.locale, "recent", nil)
+}
+
+// Shared says "Shared"
+// in the language the app shows.
+func Shared() string { return In(i18n.Locale()).Shared() }
+
+// Shared says "Shared"
+// in the language of msgs.
+func (msgs Messages) Shared() string {
+	return Catalog.Format(msgs.locale, "shared", nil)
+}
+
+// WorkspaceTeam says "Team"
+// in the language the app shows.
+func WorkspaceTeam() string { return In(i18n.Locale()).WorkspaceTeam() }
+
+// WorkspaceTeam says "Team"
+// in the language of msgs.
+func (msgs Messages) WorkspaceTeam() string {
+	return Catalog.Format(msgs.locale, "workspaceTeam", nil)
+}
+
+// TagImportant says "Important"
+// in the language the app shows.
+func TagImportant() string { return In(i18n.Locale()).TagImportant() }
+
+// TagImportant says "Important"
+// in the language of msgs.
+func (msgs Messages) TagImportant() string {
+	return Catalog.Format(msgs.locale, "tagImportant", nil)
+}
+
+// TagInProgress says "In progress"
+// in the language the app shows.
+func TagInProgress() string { return In(i18n.Locale()).TagInProgress() }
+
+// TagInProgress says "In progress"
+// in the language of msgs.
+func (msgs Messages) TagInProgress() string {
+	return Catalog.Format(msgs.locale, "tagInProgress", nil)
+}
+
+// TagDone says "Finished"
+// in the language the app shows.
+func TagDone() string { return In(i18n.Locale()).TagDone() }
+
+// TagDone says "Finished"
+// in the language of msgs.
+func (msgs Messages) TagDone() string {
+	return Catalog.Format(msgs.locale, "tagDone", nil)
+}
