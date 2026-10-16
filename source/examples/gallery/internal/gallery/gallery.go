@@ -37,6 +37,8 @@ type Gallery struct {
 	audioOutput    bool
 	systemServices bool
 	gamepads       bool
+	// dev marks a development build with a sidebar badge and page grid.
+	dev bool
 	// stateKey asks MyGo to remember the window; empty keeps it disk-free.
 	stateKey string
 	openURL  func(string) error
@@ -48,6 +50,7 @@ func (g *Gallery) New() *sidebar.Shell {
 }
 
 func (g *Gallery) newWindow(hidden bool) *sidebar.Shell {
+	g.dev = mygo.IsDev()
 	g.createTerminal = newShellTerminal
 	g.createWebView = g.newWebView
 	g.audioOutput, g.gamepads, g.systemServices = true, true, true
@@ -109,7 +112,18 @@ func (g *Gallery) Left(c *ui.Context) {
 }
 
 func (g *Gallery) leftLocalized(c *ui.Context) {
-	ui.Column(c).Fill().Padding(sidebar.HeaderHeight(c), 0, 0, 0).Children(func() { g.navigation(c) })
+	ui.Column(c).Fill().Padding(sidebar.HeaderHeight(c), 0, 0, 0).Children(func() {
+		if g.dev {
+			// Share the shell's floating header without replacing its native controls.
+			t := c.Theme()
+			ui.Row(c).Absolute().Top(0).Right(10).Height(sidebar.HeaderHeight(c)).
+				AlignItems(ui.Center).Children(func() {
+				components.Badge(c, "Dev").AlignSelf(ui.Center).
+					Background(t.Accent).TextColor(t.AccentText).Border(0, t.Accent)
+			})
+		}
+		g.navigation(c)
+	})
 }
 
 func (g *Gallery) navigation(c *ui.Context) {
@@ -196,8 +210,19 @@ func (g *Gallery) View(c *ui.Context) {
 	g.withLanguage(c, func() { g.viewLocalized(c) })
 }
 
+// pageGrid reports whether a development build shows a grid behind the page.
+// Welcome and Terminal keep their dedicated backgrounds.
+func (g *Gallery) pageGrid() bool {
+	example, upstream := mygoExampleFor(g.page)
+	return g.dev && g.page != welcomePage && !(upstream && example.name == "Terminal")
+}
+
 func (g *Gallery) viewLocalized(c *ui.Context) {
-	content := ui.Column(c).Fill().Padding(sidebar.HeaderHeight(c), 0, 0, 0)
+	content := ui.Column(c)
+	if g.pageGrid() {
+		content = components.PixelGrid(c, components.PixelGridOptions{Spacing: 22, MajorEvery: -1}).Column()
+	}
+	content.Fill().Padding(sidebar.HeaderHeight(c), 0, 0, 0)
 	if g.page == welcomePage {
 		welcomeBackground(c, content)
 	}
