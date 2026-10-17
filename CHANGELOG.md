@@ -6,6 +6,7 @@ User-facing updates for Onevra library consumers.
 
 - Add `components.BadgeOptions` with tones and a leading icon.
 - Add `components.CollapsibleOptions.Leading`.
+- Add `components.HoldToConfirm`.
 - Add `components.HoneycombItem.Overlay` and `components.HoneycombOptions.OnPress`.
 - Add `components.SidebarItemWithSlots` and `components.SidebarItemWithContent`.
 - Add `components.SplitOptions.Default`.

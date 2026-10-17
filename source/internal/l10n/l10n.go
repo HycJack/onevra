@@ -45,3 +45,8 @@ func (m Messages) Text(key string) string { return catalog.Format(m.locale, key,
 func (m Messages) Label(key, label string) string {
 	return strings.TrimSpace(catalog.Format(m.locale, key, map[string]any{"label": label}))
 }
+
+// Format returns the message of key with its arguments.
+func (m Messages) Format(key string, args map[string]any) string {
+	return catalog.Format(m.locale, key, args)
+}

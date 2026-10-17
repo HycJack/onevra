@@ -1,6 +1,7 @@
 package components
 
 import (
+	"math"
 	"time"
 
 	"github.com/egoist/mygo/i18n"
@@ -52,6 +53,7 @@ type localization struct {
 	NoSettings                string
 	CloseSettings             string
 	CloseToast                string
+	HoldDone                  string
 	Weekdays                  [7]string
 
 	messages     l10n.Messages
@@ -82,7 +84,7 @@ func localized(c *ui.Context) localization {
 		{&words.SearchSettings, "searchSettings"}, {&words.SearchSettingsPlaceholder, "searchSettingsPlaceholder"},
 		{&words.SettingsCategory, "settingsCategory"}, {&words.SearchResults, "searchResults"},
 		{&words.NoSettings, "noSettings"}, {&words.CloseSettings, "closeSettings"},
-		{&words.CloseToast, "closeToast"},
+		{&words.CloseToast, "closeToast"}, {&words.HoldDone, "holdDone"},
 	} {
 		*field.value = m.Text(field.key)
 	}
@@ -131,4 +133,11 @@ func (l localization) numberAction(action, label string) string {
 	}
 	return l.messages.Label(key, label)
 }
+
+// holdHint describes how to complete a hold of d, rounded to a tenth of a
+// second.
+func (l localization) holdHint(d time.Duration) string {
+	return l.messages.Format("holdHint", map[string]any{"seconds": math.Round(d.Seconds()*10) / 10})
+}
+
 func (l localization) firstWeekday() time.Weekday { return l.region.FirstWeekday }

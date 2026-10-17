@@ -826,5 +826,16 @@
   "componentTaginput": "标签输入框",
   "topics": "主题",
   "addATag": "添加标签",
-  "pressEnterOrCommaToAdd": "按回车键或逗号添加。"
+  "pressEnterOrCommaToAdd": "按回车键或逗号添加。",
+  "componentHoldToConfirm": "长按确认",
+  "holdDanger": "危险",
+  "holdNeutral": "中性",
+  "holdToArchive": "按住以归档",
+  "holdArchived": "已归档",
+  "holdToDeleteProject": "按住以删除项目",
+  "holdDeleted": "已删除",
+  "holdToSignOut": "按住以退出登录",
+  "holdSignedOut": "已退出登录",
+  "holdKeepHolding": "继续按住…",
+  "holdReset": "重置"
 }

@@ -3,6 +3,7 @@ package gallery
 import (
 	"slices"
 	"testing"
+	"time"
 
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/shells/sidebar"
@@ -36,7 +37,7 @@ func controlComponents() []controlExample {
 }
 
 func TestControlPages(t *testing.T) {
-	if len(controlCatalog) != 35 {
+	if len(controlCatalog) != 36 {
 		t.Fatal("missing control examples")
 	}
 	for i, example := range controlCatalog {
@@ -289,6 +290,16 @@ func TestControlExampleInteractions(t *testing.T) {
 				case "Button":
 					click("Primary")
 					changed = s.button.clicks[0] == 1
+				case "HoldToConfirm":
+					r, ok := tt.Find("Hold to archive")
+					if !ok {
+						t.Fatal("missing hold button")
+					}
+					tt.Press(r.X+r.W/2, r.Y+r.H/2)
+					tt.Advance(1300 * time.Millisecond)
+					tt.Frame()
+					tt.Release(r.X+r.W/2, r.Y+r.H/2)
+					changed = s.on
 				case "TextBox", "TextBox (multiline)":
 					label := "Name"
 					if example.name == "TextBox (multiline)" {

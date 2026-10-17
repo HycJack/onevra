@@ -16,6 +16,7 @@ var newPages = map[string]bool{
 	"controls/Split panes":        true,
 	"controls/Shader backgrounds": true,
 	"controls/TagInput":           true,
+	"controls/HoldToConfirm":      true,
 	"mygo/Global shortcuts":       true,
 	"mygo/Gradients & blur":       true,
 	"mygo/Shaders":                true,

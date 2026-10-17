@@ -113,5 +113,14 @@
         "type": "String"
       }
     }
+  },
+  "holdDone": "Done",
+  "holdHint": "{seconds, plural, one {Press and hold for # second to confirm. With a keyboard, hold Space or Enter.} other {Press and hold for # seconds to confirm. With a keyboard, hold Space or Enter.}}",
+  "@holdHint": {
+    "placeholders": {
+      "seconds": {
+        "type": "num"
+      }
+    }
   }
 }

@@ -8359,3 +8359,113 @@ func PressEnterOrCommaToAdd() string { return In(i18n.Locale()).PressEnterOrComm
 func (msgs Messages) PressEnterOrCommaToAdd() string {
 	return Catalog.Format(msgs.locale, "pressEnterOrCommaToAdd", nil)
 }
+
+// ComponentHoldToConfirm says "HoldToConfirm"
+// in the language the app shows.
+func ComponentHoldToConfirm() string { return In(i18n.Locale()).ComponentHoldToConfirm() }
+
+// ComponentHoldToConfirm says "HoldToConfirm"
+// in the language of msgs.
+func (msgs Messages) ComponentHoldToConfirm() string {
+	return Catalog.Format(msgs.locale, "componentHoldToConfirm", nil)
+}
+
+// HoldDanger says "Danger"
+// in the language the app shows.
+func HoldDanger() string { return In(i18n.Locale()).HoldDanger() }
+
+// HoldDanger says "Danger"
+// in the language of msgs.
+func (msgs Messages) HoldDanger() string {
+	return Catalog.Format(msgs.locale, "holdDanger", nil)
+}
+
+// HoldNeutral says "Neutral"
+// in the language the app shows.
+func HoldNeutral() string { return In(i18n.Locale()).HoldNeutral() }
+
+// HoldNeutral says "Neutral"
+// in the language of msgs.
+func (msgs Messages) HoldNeutral() string {
+	return Catalog.Format(msgs.locale, "holdNeutral", nil)
+}
+
+// HoldToArchive says "Hold to archive"
+// in the language the app shows.
+func HoldToArchive() string { return In(i18n.Locale()).HoldToArchive() }
+
+// HoldToArchive says "Hold to archive"
+// in the language of msgs.
+func (msgs Messages) HoldToArchive() string {
+	return Catalog.Format(msgs.locale, "holdToArchive", nil)
+}
+
+// HoldArchived says "Archived"
+// in the language the app shows.
+func HoldArchived() string { return In(i18n.Locale()).HoldArchived() }
+
+// HoldArchived says "Archived"
+// in the language of msgs.
+func (msgs Messages) HoldArchived() string {
+	return Catalog.Format(msgs.locale, "holdArchived", nil)
+}
+
+// HoldToDeleteProject says "Hold to delete project"
+// in the language the app shows.
+func HoldToDeleteProject() string { return In(i18n.Locale()).HoldToDeleteProject() }
+
+// HoldToDeleteProject says "Hold to delete project"
+// in the language of msgs.
+func (msgs Messages) HoldToDeleteProject() string {
+	return Catalog.Format(msgs.locale, "holdToDeleteProject", nil)
+}
+
+// HoldDeleted says "Deleted"
+// in the language the app shows.
+func HoldDeleted() string { return In(i18n.Locale()).HoldDeleted() }
+
+// HoldDeleted says "Deleted"
+// in the language of msgs.
+func (msgs Messages) HoldDeleted() string {
+	return Catalog.Format(msgs.locale, "holdDeleted", nil)
+}
+
+// HoldToSignOut says "Hold to sign out"
+// in the language the app shows.
+func HoldToSignOut() string { return In(i18n.Locale()).HoldToSignOut() }
+
+// HoldToSignOut says "Hold to sign out"
+// in the language of msgs.
+func (msgs Messages) HoldToSignOut() string {
+	return Catalog.Format(msgs.locale, "holdToSignOut", nil)
+}
+
+// HoldSignedOut says "Signed out"
+// in the language the app shows.
+func HoldSignedOut() string { return In(i18n.Locale()).HoldSignedOut() }
+
+// HoldSignedOut says "Signed out"
+// in the language of msgs.
+func (msgs Messages) HoldSignedOut() string {
+	return Catalog.Format(msgs.locale, "holdSignedOut", nil)
+}
+
+// HoldKeepHolding says "Keep holding…"
+// in the language the app shows.
+func HoldKeepHolding() string { return In(i18n.Locale()).HoldKeepHolding() }
+
+// HoldKeepHolding says "Keep holding…"
+// in the language of msgs.
+func (msgs Messages) HoldKeepHolding() string {
+	return Catalog.Format(msgs.locale, "holdKeepHolding", nil)
+}
+
+// HoldReset says "Reset"
+// in the language the app shows.
+func HoldReset() string { return In(i18n.Locale()).HoldReset() }
+
+// HoldReset says "Reset"
+// in the language of msgs.
+func (msgs Messages) HoldReset() string {
+	return Catalog.Format(msgs.locale, "holdReset", nil)
+}

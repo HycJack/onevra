@@ -57,5 +57,7 @@
   "tagAdded": "已添加{label}",
   "tagRemoved": "已移除{label}",
   "tagSelected": "已选中{label}。按退格键将其移除。",
-  "tagExists": "{label}已存在"
+  "tagExists": "{label}已存在",
+  "holdDone": "完成",
+  "holdHint": "按住 {seconds} 秒以确认。使用键盘时，按住空格键或回车键。"
 }

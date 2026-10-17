@@ -1203,5 +1203,16 @@
   "componentTaginput": "TagInput",
   "topics": "Topics",
   "addATag": "Add a tag",
-  "pressEnterOrCommaToAdd": "Press Enter or comma to add."
+  "pressEnterOrCommaToAdd": "Press Enter or comma to add.",
+  "componentHoldToConfirm": "HoldToConfirm",
+  "holdDanger": "Danger",
+  "holdNeutral": "Neutral",
+  "holdToArchive": "Hold to archive",
+  "holdArchived": "Archived",
+  "holdToDeleteProject": "Hold to delete project",
+  "holdDeleted": "Deleted",
+  "holdToSignOut": "Hold to sign out",
+  "holdSignedOut": "Signed out",
+  "holdKeepHolding": "Keep holding…",
+  "holdReset": "Reset"
 }
