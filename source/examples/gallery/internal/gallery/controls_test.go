@@ -195,8 +195,11 @@ func TestControlExampleInteractions(t *testing.T) {
 							ui.Row(c).Children(func() { toolbar(c, s) })
 						}
 						variant := "Default"
-						if example.name == "Data charts" {
+						switch example.name {
+						case "Data charts":
 							variant = "Bar chart"
+						case "Badge":
+							variant = "Live updates"
 						}
 						example.build(c, s, variant)
 					})
@@ -263,7 +266,10 @@ func TestControlExampleInteractions(t *testing.T) {
 					tt.Key(0, ui.KeyTab)
 					tt.Key(0, ui.KeyRight)
 					changed = s.index == 1
-				case "Badge", "Image", "Spinner":
+				case "Badge":
+					click("Next status")
+					changed = s.badge.status == 1 && tt.HasText("Syncing")
+				case "Image", "Spinner":
 					return // Display-only components have no interaction state.
 				case "ScrollView":
 					return // ScrollView interactions are covered in the component tests.

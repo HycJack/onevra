@@ -805,5 +805,22 @@
   "filter": "筛选",
   "upload": "上传",
   "redo": "重做",
-  "newFolder": "新建文件夹"
+  "newFolder": "新建文件夹",
+  "badgeTones": "色调",
+  "badgeIcons": "图标",
+  "badgeLiveUpdates": "实时更新",
+  "badgeNeutral": "中性",
+  "badgeSuccess": "成功",
+  "badgeWarning": "警告",
+  "badgeDanger": "危险",
+  "badgeVerified": "已验证",
+  "badgeBeta": "测试版",
+  "badgeOffline": "离线",
+  "badgeQueued": "排队中",
+  "badgeSyncing": "同步中",
+  "badgeSynced": "已同步",
+  "badgeSyncFailed": "同步失败",
+  "badgeNextStatus": "下一个状态",
+  "badgeAddUnread": "增加未读",
+  "badgeUnread": "{count} 条未读"
 }

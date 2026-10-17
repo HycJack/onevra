@@ -8151,3 +8151,173 @@ func NewFolder() string { return In(i18n.Locale()).NewFolder() }
 func (msgs Messages) NewFolder() string {
 	return Catalog.Format(msgs.locale, "newFolder", nil)
 }
+
+// BadgeTones says "Tones"
+// in the language the app shows.
+func BadgeTones() string { return In(i18n.Locale()).BadgeTones() }
+
+// BadgeTones says "Tones"
+// in the language of msgs.
+func (msgs Messages) BadgeTones() string {
+	return Catalog.Format(msgs.locale, "badgeTones", nil)
+}
+
+// BadgeIcons says "Icons"
+// in the language the app shows.
+func BadgeIcons() string { return In(i18n.Locale()).BadgeIcons() }
+
+// BadgeIcons says "Icons"
+// in the language of msgs.
+func (msgs Messages) BadgeIcons() string {
+	return Catalog.Format(msgs.locale, "badgeIcons", nil)
+}
+
+// BadgeLiveUpdates says "Live updates"
+// in the language the app shows.
+func BadgeLiveUpdates() string { return In(i18n.Locale()).BadgeLiveUpdates() }
+
+// BadgeLiveUpdates says "Live updates"
+// in the language of msgs.
+func (msgs Messages) BadgeLiveUpdates() string {
+	return Catalog.Format(msgs.locale, "badgeLiveUpdates", nil)
+}
+
+// BadgeNeutral says "Neutral"
+// in the language the app shows.
+func BadgeNeutral() string { return In(i18n.Locale()).BadgeNeutral() }
+
+// BadgeNeutral says "Neutral"
+// in the language of msgs.
+func (msgs Messages) BadgeNeutral() string {
+	return Catalog.Format(msgs.locale, "badgeNeutral", nil)
+}
+
+// BadgeSuccess says "Success"
+// in the language the app shows.
+func BadgeSuccess() string { return In(i18n.Locale()).BadgeSuccess() }
+
+// BadgeSuccess says "Success"
+// in the language of msgs.
+func (msgs Messages) BadgeSuccess() string {
+	return Catalog.Format(msgs.locale, "badgeSuccess", nil)
+}
+
+// BadgeWarning says "Warning"
+// in the language the app shows.
+func BadgeWarning() string { return In(i18n.Locale()).BadgeWarning() }
+
+// BadgeWarning says "Warning"
+// in the language of msgs.
+func (msgs Messages) BadgeWarning() string {
+	return Catalog.Format(msgs.locale, "badgeWarning", nil)
+}
+
+// BadgeDanger says "Danger"
+// in the language the app shows.
+func BadgeDanger() string { return In(i18n.Locale()).BadgeDanger() }
+
+// BadgeDanger says "Danger"
+// in the language of msgs.
+func (msgs Messages) BadgeDanger() string {
+	return Catalog.Format(msgs.locale, "badgeDanger", nil)
+}
+
+// BadgeVerified says "Verified"
+// in the language the app shows.
+func BadgeVerified() string { return In(i18n.Locale()).BadgeVerified() }
+
+// BadgeVerified says "Verified"
+// in the language of msgs.
+func (msgs Messages) BadgeVerified() string {
+	return Catalog.Format(msgs.locale, "badgeVerified", nil)
+}
+
+// BadgeBeta says "Beta"
+// in the language the app shows.
+func BadgeBeta() string { return In(i18n.Locale()).BadgeBeta() }
+
+// BadgeBeta says "Beta"
+// in the language of msgs.
+func (msgs Messages) BadgeBeta() string {
+	return Catalog.Format(msgs.locale, "badgeBeta", nil)
+}
+
+// BadgeOffline says "Offline"
+// in the language the app shows.
+func BadgeOffline() string { return In(i18n.Locale()).BadgeOffline() }
+
+// BadgeOffline says "Offline"
+// in the language of msgs.
+func (msgs Messages) BadgeOffline() string {
+	return Catalog.Format(msgs.locale, "badgeOffline", nil)
+}
+
+// BadgeQueued says "Queued"
+// in the language the app shows.
+func BadgeQueued() string { return In(i18n.Locale()).BadgeQueued() }
+
+// BadgeQueued says "Queued"
+// in the language of msgs.
+func (msgs Messages) BadgeQueued() string {
+	return Catalog.Format(msgs.locale, "badgeQueued", nil)
+}
+
+// BadgeSyncing says "Syncing"
+// in the language the app shows.
+func BadgeSyncing() string { return In(i18n.Locale()).BadgeSyncing() }
+
+// BadgeSyncing says "Syncing"
+// in the language of msgs.
+func (msgs Messages) BadgeSyncing() string {
+	return Catalog.Format(msgs.locale, "badgeSyncing", nil)
+}
+
+// BadgeSynced says "Synced"
+// in the language the app shows.
+func BadgeSynced() string { return In(i18n.Locale()).BadgeSynced() }
+
+// BadgeSynced says "Synced"
+// in the language of msgs.
+func (msgs Messages) BadgeSynced() string {
+	return Catalog.Format(msgs.locale, "badgeSynced", nil)
+}
+
+// BadgeSyncFailed says "Sync failed"
+// in the language the app shows.
+func BadgeSyncFailed() string { return In(i18n.Locale()).BadgeSyncFailed() }
+
+// BadgeSyncFailed says "Sync failed"
+// in the language of msgs.
+func (msgs Messages) BadgeSyncFailed() string {
+	return Catalog.Format(msgs.locale, "badgeSyncFailed", nil)
+}
+
+// BadgeNextStatus says "Next status"
+// in the language the app shows.
+func BadgeNextStatus() string { return In(i18n.Locale()).BadgeNextStatus() }
+
+// BadgeNextStatus says "Next status"
+// in the language of msgs.
+func (msgs Messages) BadgeNextStatus() string {
+	return Catalog.Format(msgs.locale, "badgeNextStatus", nil)
+}
+
+// BadgeAddUnread says "Add unread"
+// in the language the app shows.
+func BadgeAddUnread() string { return In(i18n.Locale()).BadgeAddUnread() }
+
+// BadgeAddUnread says "Add unread"
+// in the language of msgs.
+func (msgs Messages) BadgeAddUnread() string {
+	return Catalog.Format(msgs.locale, "badgeAddUnread", nil)
+}
+
+// BadgeUnread says "{count, plural, one {# unread} other {# unread}}"
+// in the language the app shows.
+func BadgeUnread(count int) string { return In(i18n.Locale()).BadgeUnread(count) }
+
+// BadgeUnread says "{count, plural, one {# unread} other {# unread}}"
+// in the language of msgs.
+func (msgs Messages) BadgeUnread(count int) string {
+	return Catalog.Format(msgs.locale, "badgeUnread", map[string]any{"count": count})
+}

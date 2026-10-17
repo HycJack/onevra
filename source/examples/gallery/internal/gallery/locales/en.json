@@ -1175,5 +1175,29 @@
   "filter": "Filter",
   "upload": "Upload",
   "redo": "Redo",
-  "newFolder": "New folder"
+  "newFolder": "New folder",
+  "badgeTones": "Tones",
+  "badgeIcons": "Icons",
+  "badgeLiveUpdates": "Live updates",
+  "badgeNeutral": "Neutral",
+  "badgeSuccess": "Success",
+  "badgeWarning": "Warning",
+  "badgeDanger": "Danger",
+  "badgeVerified": "Verified",
+  "badgeBeta": "Beta",
+  "badgeOffline": "Offline",
+  "badgeQueued": "Queued",
+  "badgeSyncing": "Syncing",
+  "badgeSynced": "Synced",
+  "badgeSyncFailed": "Sync failed",
+  "badgeNextStatus": "Next status",
+  "badgeAddUnread": "Add unread",
+  "badgeUnread": "{count, plural, one {# unread} other {# unread}}",
+  "@badgeUnread": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
 }

@@ -3,8 +3,10 @@ package components
 import (
 	"bytes"
 	"testing"
+	"time"
 
 	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/source/icons/lucide"
 	"github.com/oneo-me/onevra/source/theme"
 )
 
@@ -33,13 +35,39 @@ func TestRichTextComposition(t *testing.T) {
 
 func TestBadge(t *testing.T) {
 	for _, dark := range []bool{false, true} {
+		for tone := BadgeNeutral; tone <= BadgeDanger; tone++ {
+			tt := ui.NewTester(func(c *ui.Context) {
+				c.SetTheme(theme.Palette(dark))
+				Badge(c, "New", BadgeOptions{Tone: tone, Icon: lucide.Check()}).Label("status")
+			}, 200, 100)
+			r, ok := tt.Find("status")
+			if !ok || r.W <= 0 || r.H <= 0 || r.W >= 200 || !tt.HasText("New") {
+				t.Fatalf("missing badge: rect=%v found=%v texts=%v", r, ok, tt.Texts())
+			}
+		}
+	}
+}
+
+func TestBadgeMorph(t *testing.T) {
+	for _, reduce := range []bool{false, true} {
+		text := "9"
 		tt := ui.NewTester(func(c *ui.Context) {
-			c.SetTheme(theme.Palette(dark))
-			Badge(c, "New").Label("status")
-		}, 200, 100)
-		r, ok := tt.Find("status")
-		if !ok || r.W <= 0 || r.H <= 0 || r.W >= 200 {
-			t.Fatalf("missing badge: rect=%v found=%v texts=%v", r, ok, tt.Texts())
+			Badge(c, text).Label("count")
+		}, 300, 100)
+		tt.SetPreferences(ui.Preferences{ReduceMotion: reduce})
+		tt.Frame()
+		narrow, _ := tt.Find("count")
+		text = "1,234 items"
+		tt.Frame()
+		during, _ := tt.Find("count")
+		tt.Advance(time.Second)
+		tt.Frame()
+		wide, _ := tt.Find("count")
+		if wide.W <= narrow.W || !tt.HasText(text) || tt.HasText("9") {
+			t.Fatalf("settled badge: %v → %v, texts=%v", narrow, wide, tt.Texts())
+		}
+		if moving := during.W < wide.W; moving == reduce {
+			t.Fatalf("reduce motion %v: width %v during, %v settled", reduce, during.W, wide.W)
 		}
 	}
 }

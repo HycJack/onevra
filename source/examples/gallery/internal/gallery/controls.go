@@ -43,6 +43,7 @@ type controlState struct {
 	split, splitPercent    float32
 	color                  ui.Color
 	day                    time.Time
+	badge                  struct{ status, unread int }
 }
 
 // controlSections lists the components a page gathers. Each section keeps its
@@ -91,7 +92,7 @@ var controlCatalog = []controlExample{
 	{"Tooltip", "Tooltip", "Feedback & overlays", []string{"Default"}, controlTooltip},
 	{"Popover", "Popover", "Feedback & overlays", []string{"Default"}, controlPopover},
 	{"Dialogs", "Dialogs", "Feedback & overlays", nil, nil},
-	{"Badge", "Badge", "Feedback & overlays", []string{"Default", "Accent"}, controlBadge},
+	{"Badge", "Badge", "Feedback & overlays", []string{"Tones", "Icons", "Live updates"}, controlBadge},
 	{"Toast", "Toast", "Feedback & overlays", []string{"Status", "Actions", "Progress"}, controlToast},
 	{"Chat", "Chat", "Conversation", []string{"Default"}, controlChat},
 	{"RichText", "RichText", "Content display", []string{"Default"}, controlRichText},
