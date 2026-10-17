@@ -285,6 +285,7 @@ export const content: Record<Locale, LandingContent> = {
             "Progress",
             "ProgressRing",
             "Spinner",
+            "Skeleton",
           ],
         },
         {
@@ -580,6 +581,7 @@ export const content: Record<Locale, LandingContent> = {
             "Progress",
             "ProgressRing",
             "Spinner",
+            "Skeleton",
           ],
         },
         {

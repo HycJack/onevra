@@ -27,3 +27,30 @@ func controlProgress(c *ui.Context, s *controlState, variant string) {
 	components.Text(c, tr(c, "indeterminate")).TextColor(c.Theme().TextMuted)
 	build(c, -1).Label(msg(c).ActivityOf(tr(c, variant)))
 }
+
+// controlSkeleton shows placeholders; the Content variant swaps one for a
+// profile, with the loading state in the switch rather than background work.
+func controlSkeleton(c *ui.Context, s *controlState, variant string) {
+	t := c.Theme()
+	switch variant {
+	case "Avatar":
+		components.Skeleton(c, components.SkeletonOptions{Lines: 2, Avatar: true})
+		return
+	case "Content":
+	default:
+		components.Skeleton(c, components.SkeletonOptions{})
+		return
+	}
+	loading := !s.on
+	components.Switch(c, &loading, tr(c, "loading"))
+	s.on = !loading
+	components.SkeletonContent(c, loading, components.SkeletonOptions{Lines: 2, Avatar: true}, func() {
+		ui.Row(c).FillWidth().AlignItems(ui.Start).Gap(t.Space(4)).Children(func() {
+			ui.Box(c).Size(t.Space(9), t.Space(9)).Shrink(0).Radius(t.Space(4.5)).Background(t.Accent)
+			ui.Column(c).Grow(1).MinWidth(0).Gap(t.Space(1)).Children(func() {
+				components.Text(c, tr(c, "skeletonSampleName")).Bold()
+				components.Text(c, tr(c, "skeletonSampleBio")).TextColor(t.TextMuted)
+			})
+		})
+	})
+}

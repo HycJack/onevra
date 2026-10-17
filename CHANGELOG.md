@@ -9,6 +9,7 @@ User-facing updates for Onevra library consumers.
 - Add `components.HoldToConfirm`.
 - Add `components.HoneycombItem.Overlay` and `components.HoneycombOptions.OnPress`.
 - Add `components.SidebarItemWithSlots` and `components.SidebarItemWithContent`.
+- Add `components.Skeleton` and `components.SkeletonContent`.
 - Add `components.SplitOptions.Default`.
 - Add `components.TagInput`.
 - Add `shaders.Ripple`.

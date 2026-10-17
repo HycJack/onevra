@@ -17,6 +17,7 @@ var newPages = map[string]bool{
 	"controls/Shader backgrounds": true,
 	"controls/TagInput":           true,
 	"controls/HoldToConfirm":      true,
+	"controls/Skeleton":           true,
 	"mygo/Global shortcuts":       true,
 	"mygo/Gradients & blur":       true,
 	"mygo/Shaders":                true,

@@ -51,6 +51,7 @@
   "searchCommands": "搜索命令",
   "searchCommandsPlaceholder": "搜索命令…",
   "noMatchingCommands": "没有匹配的命令",
+  "loadingContent": "正在加载内容",
   "loading": "正在加载…",
   "commands": "命令",
   "removeTag": "移除{label}",

@@ -994,6 +994,16 @@ func (msgs Messages) ComponentSidebar() string {
 	return Catalog.Format(msgs.locale, "componentSidebar", nil)
 }
 
+// ComponentSkeleton says "Skeleton"
+// in the language the app shows.
+func ComponentSkeleton() string { return In(i18n.Locale()).ComponentSkeleton() }
+
+// ComponentSkeleton says "Skeleton"
+// in the language of msgs.
+func (msgs Messages) ComponentSkeleton() string {
+	return Catalog.Format(msgs.locale, "componentSkeleton", nil)
+}
+
 // ComponentSpacer says "Spacer"
 // in the language the app shows.
 func ComponentSpacer() string { return In(i18n.Locale()).ComponentSpacer() }
@@ -2230,6 +2240,46 @@ func Loading() string { return In(i18n.Locale()).Loading() }
 // in the language of msgs.
 func (msgs Messages) Loading() string {
 	return Catalog.Format(msgs.locale, "loading", nil)
+}
+
+// Avatar says "Avatar"
+// in the language the app shows.
+func Avatar() string { return In(i18n.Locale()).Avatar() }
+
+// Avatar says "Avatar"
+// in the language of msgs.
+func (msgs Messages) Avatar() string {
+	return Catalog.Format(msgs.locale, "avatar", nil)
+}
+
+// LoadedContent says "Content"
+// in the language the app shows.
+func LoadedContent() string { return In(i18n.Locale()).LoadedContent() }
+
+// LoadedContent says "Content"
+// in the language of msgs.
+func (msgs Messages) LoadedContent() string {
+	return Catalog.Format(msgs.locale, "loadedContent", nil)
+}
+
+// SkeletonSampleName says "Ada Lovelace"
+// in the language the app shows.
+func SkeletonSampleName() string { return In(i18n.Locale()).SkeletonSampleName() }
+
+// SkeletonSampleName says "Ada Lovelace"
+// in the language of msgs.
+func (msgs Messages) SkeletonSampleName() string {
+	return Catalog.Format(msgs.locale, "skeletonSampleName", nil)
+}
+
+// SkeletonSampleBio says "Wrote the first published algorithm intended for a machine."
+// in the language the app shows.
+func SkeletonSampleBio() string { return In(i18n.Locale()).SkeletonSampleBio() }
+
+// SkeletonSampleBio says "Wrote the first published algorithm intended for a machine."
+// in the language of msgs.
+func (msgs Messages) SkeletonSampleBio() string {
+	return Catalog.Format(msgs.locale, "skeletonSampleBio", nil)
 }
 
 // LoadingTerminal says "Loading terminal"

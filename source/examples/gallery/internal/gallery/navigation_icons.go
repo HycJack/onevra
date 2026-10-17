@@ -38,6 +38,7 @@ var navigationIcons = map[string]func() *ui.SVG{
 	"Slider":              lucide.SlidersHorizontal,
 	"Progress":            lucide.RectangleEllipsis,
 	"Spinner":             lucide.LoaderCircle,
+	"Skeleton":            lucide.SquareDashedText,
 	"Tabs":                lucide.PanelsTopLeft,
 	"Accordion":           lucide.ListChevronsDownUp,
 	"Collapsible":         lucide.ChevronsUpDown,

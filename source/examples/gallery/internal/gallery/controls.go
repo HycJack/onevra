@@ -110,6 +110,7 @@ var controlCatalog = []controlExample{
 	{"NumberInput", "NumberInput", "Selection & values", []string{"Integer", "Decimal", "Scrub", "Without stepper"}, controlNumberInput},
 	{"Slider", "Sliders", "Selection & values", []string{"Default", "Step", "Range", "Stepped range"}, controlSlider},
 	{"Progress", "Progress", "Feedback & overlays", nil, nil},
+	{"Skeleton", "Skeleton", "Feedback & overlays", []string{"Default", "Avatar", "Content"}, controlSkeleton},
 	{"Tabs", "Tabs", "Actions & navigation", []string{"Underline", "Segmented control", "Highlight"}, controlTabs},
 	{"Disclosure", "Disclosure", "Layout & containers", nil, nil},
 	{"Image", "Images", "Content display", []string{"Contain", "Cover", "Stretch", "Rounded", "Grayscale"}, controlImage},
@@ -268,7 +269,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample, heading
 					cell.FillWidth()
 				case "TagInput":
 					cell.Width(320)
-				case "TextBox", "TextBox (multiline)", "TextBoxBuffer", "TextBoxBuffer (multiline)", "NumberInput", "Slider", "Sidebar", "List", "Split", "SplitPercent", "ScrollView", "Progress", "ProgressRing", "Accordion", "Collapsible":
+				case "TextBox", "TextBox (multiline)", "TextBoxBuffer", "TextBoxBuffer (multiline)", "NumberInput", "Slider", "Sidebar", "List", "Split", "SplitPercent", "ScrollView", "Progress", "ProgressRing", "Skeleton", "Accordion", "Collapsible":
 					cell.Width(240)
 				}
 				cell.Children(func() {
