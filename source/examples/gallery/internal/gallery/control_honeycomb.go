@@ -7,7 +7,6 @@ import (
 
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
-	"github.com/oneo-me/onevra/source/components/shaders"
 	"github.com/oneo-me/onevra/source/icons/lucide"
 	"github.com/oneo-me/onevra/source/shells/sidebar"
 )
@@ -145,15 +144,8 @@ func controlHoneycomb(c *ui.Context, s *controlState, _ string) {
 			selectedLabel = msg(c).SelectedS(label)
 		}
 	}
-	// The honeycomb takes its presses for the pan, and passes them on to the
-	// background behind it to ripple.
-	bg := shaders.SignalField(c, shaders.Options{})
-	bg.Column().Children(func() {
-		ui.Box(c).FillWidth().Grow(1).Shrink(1).MinWidth(0).MinHeight(0).Children(func() {
-			if chosen := components.Honeycomb(c, components.HoneycombOptions{Items: items, Selected: selected,
-				SelectedLabel: selectedLabel, OnPress: func() { shaders.Ripple(c, bg) }}); chosen != "" {
-				s.honeycomb = chosen
-			}
-		})
-	})
+	if chosen := components.Honeycomb(c, components.HoneycombOptions{Items: items, Selected: selected,
+		SelectedLabel: selectedLabel}); chosen != "" {
+		s.honeycomb = chosen
+	}
 }
