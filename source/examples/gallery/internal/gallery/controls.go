@@ -83,7 +83,7 @@ var controlSections = map[string][]controlExample{
 }
 
 var controlCatalog = []controlExample{
-	{"Signal field", "Signal field", "Shaders", []string{"Default"}, controlSignalField},
+	{"Shader backgrounds", "Shader backgrounds", "Shaders", []string{"Default"}, controlShaderBackgrounds},
 	{"Data charts", "Data charts", "Charts", []string{"Bar chart", "Line chart", "Area chart", "Stacked bar chart", "Donut chart"}, controlChart},
 	{"Relationship graph", "Relationship graph", "Charts", []string{"Default"}, controlGraph},
 	{"Date & time pickers", "Date & time pickers", "Date & time", nil, nil},

@@ -7500,64 +7500,24 @@ func (msgs Messages) ComponentSignalField() string {
 	return Catalog.Format(msgs.locale, "componentSignalField", nil)
 }
 
-// ShaderWelcomeTitle says "What should we build today?"
+// ComponentShaderBackgrounds says "Shader backgrounds"
 // in the language the app shows.
-func ShaderWelcomeTitle() string { return In(i18n.Locale()).ShaderWelcomeTitle() }
+func ComponentShaderBackgrounds() string { return In(i18n.Locale()).ComponentShaderBackgrounds() }
 
-// ShaderWelcomeTitle says "What should we build today?"
+// ComponentShaderBackgrounds says "Shader backgrounds"
 // in the language of msgs.
-func (msgs Messages) ShaderWelcomeTitle() string {
-	return Catalog.Format(msgs.locale, "shaderWelcomeTitle", nil)
+func (msgs Messages) ComponentShaderBackgrounds() string {
+	return Catalog.Format(msgs.locale, "componentShaderBackgrounds", nil)
 }
 
-// ShaderWelcomeSubtitle says "Describe a task, and the agent plans, edits and verifies it with you."
+// ShaderBackground says "Background"
 // in the language the app shows.
-func ShaderWelcomeSubtitle() string { return In(i18n.Locale()).ShaderWelcomeSubtitle() }
+func ShaderBackground() string { return In(i18n.Locale()).ShaderBackground() }
 
-// ShaderWelcomeSubtitle says "Describe a task, and the agent plans, edits and verifies it with you."
+// ShaderBackground says "Background"
 // in the language of msgs.
-func (msgs Messages) ShaderWelcomeSubtitle() string {
-	return Catalog.Format(msgs.locale, "shaderWelcomeSubtitle", nil)
-}
-
-// ShaderWelcomePrompt says "Ask the agent anything"
-// in the language the app shows.
-func ShaderWelcomePrompt() string { return In(i18n.Locale()).ShaderWelcomePrompt() }
-
-// ShaderWelcomePrompt says "Ask the agent anything"
-// in the language of msgs.
-func (msgs Messages) ShaderWelcomePrompt() string {
-	return Catalog.Format(msgs.locale, "shaderWelcomePrompt", nil)
-}
-
-// ShaderWelcomeReview says "Review this branch"
-// in the language the app shows.
-func ShaderWelcomeReview() string { return In(i18n.Locale()).ShaderWelcomeReview() }
-
-// ShaderWelcomeReview says "Review this branch"
-// in the language of msgs.
-func (msgs Messages) ShaderWelcomeReview() string {
-	return Catalog.Format(msgs.locale, "shaderWelcomeReview", nil)
-}
-
-// ShaderWelcomeTests says "Write missing tests"
-// in the language the app shows.
-func ShaderWelcomeTests() string { return In(i18n.Locale()).ShaderWelcomeTests() }
-
-// ShaderWelcomeTests says "Write missing tests"
-// in the language of msgs.
-func (msgs Messages) ShaderWelcomeTests() string {
-	return Catalog.Format(msgs.locale, "shaderWelcomeTests", nil)
-}
-
-// ShaderWelcomeExplain says "Explain the codebase"
-// in the language the app shows.
-func ShaderWelcomeExplain() string { return In(i18n.Locale()).ShaderWelcomeExplain() }
-
-// ShaderWelcomeExplain says "Explain the codebase"
-// in the language of msgs.
-func (msgs Messages) ShaderWelcomeExplain() string {
-	return Catalog.Format(msgs.locale, "shaderWelcomeExplain", nil)
+func (msgs Messages) ShaderBackground() string {
+	return Catalog.Format(msgs.locale, "shaderBackground", nil)
 }
 
 // ShaderIntensity says "Intensity"

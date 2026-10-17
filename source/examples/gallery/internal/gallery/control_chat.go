@@ -240,6 +240,20 @@ func chatDemoTurnView(c *ui.Context, s *chatDemoState, turn *chatDemoTurn) {
 }
 
 func chatDemoComposer(c *ui.Context, s *chatDemoState) {
+	result := chat.GlassComposer(c, &s.layout, &s.draft, chatDemoComposerOptions(c, s))
+	s.dropped(result.Dropped)
+	if result.Send {
+		s.start(strings.TrimSpace(s.draft), s.files, c.Now())
+		s.draft, s.files = "", nil
+	}
+	if result.Stop {
+		s.stop(c.Now())
+	}
+}
+
+// chatDemoComposerOptions fills the composer's slots: pickers, attachments,
+// the context meter and the toolbar below the card.
+func chatDemoComposerOptions(c *ui.Context, s *chatDemoState) chat.ComposerOptions {
 	options := chat.ComposerOptions{
 		Label: tr(c, "chatMessage"), Placeholder: tr(c, "chatPlaceholder"),
 		SendLabel: tr(c, "chatSend"), StopLabel: tr(c, "chatStop"),
@@ -259,17 +273,14 @@ func chatDemoComposer(c *ui.Context, s *chatDemoState) {
 			}
 		}
 	}
-	result := chat.GlassComposer(c, &s.layout, &s.draft, options)
-	// The demonstration names dropped files without reading them.
-	for _, path := range result.Dropped {
+	return options
+}
+
+// dropped attaches files dropped on the composer; the demonstration names
+// them without reading them.
+func (s *chatDemoState) dropped(paths []string) {
+	for _, path := range paths {
 		s.files = append(s.files, chatDemoFile{name: filepath.Base(path), image: chatDemoImage(path)})
-	}
-	if result.Send {
-		s.start(strings.TrimSpace(s.draft), s.files, c.Now())
-		s.draft, s.files = "", nil
-	}
-	if result.Stop {
-		s.stop(c.Now())
 	}
 }
 

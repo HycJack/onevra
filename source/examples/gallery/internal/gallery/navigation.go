@@ -13,11 +13,12 @@ var navigationGroups = []string{
 // publishing a version, keep the pages it ships and remove those from earlier
 // versions.
 var newPages = map[string]bool{
-	"controls/Split panes":  true,
-	"mygo/Global shortcuts": true,
-	"mygo/Gradients & blur": true,
-	"mygo/Shaders":          true,
-	"mygo/Live chart":       true,
+	"controls/Split panes":        true,
+	"controls/Shader backgrounds": true,
+	"mygo/Global shortcuts":       true,
+	"mygo/Gradients & blur":       true,
+	"mygo/Shaders":                true,
+	"mygo/Live chart":             true,
 }
 
 type navigationEntry struct {

@@ -351,10 +351,9 @@ func TestControlExampleInteractions(t *testing.T) {
 				case "Tabs":
 					click("Style")
 					changed = s.index == 1
-				case "Signal field":
-					click("Review this branch")
+				case "Shader backgrounds":
 					click("Pause drift")
-					changed = s.shader.prompt == "Review this branch" && s.shader.still
+					changed = s.shader.still
 				}
 				if changed == disabled {
 					t.Fatalf("changed=%t, disabled=%t", changed, disabled)

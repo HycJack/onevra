@@ -7,7 +7,7 @@ import (
 
 // Keys are stable example names, not translated navigation labels. Keep SVGs lazy.
 var navigationIcons = map[string]func() *ui.SVG{
-	"Signal field":       lucide.Grip,
+	"Shader backgrounds": lucide.Orbit,
 	"Data charts":        lucide.ChartColumn,
 	"Relationship graph": lucide.Waypoints,
 

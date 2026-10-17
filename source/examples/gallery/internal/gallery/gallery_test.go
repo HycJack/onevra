@@ -61,9 +61,9 @@ func TestDevGridSkipsDedicatedBackgrounds(t *testing.T) {
 	if g.pageGrid() {
 		t.Fatal("Welcome should keep its dedicated background")
 	}
-	g.page = pageFromKey("controls/Signal field")
+	g.page = pageFromKey("controls/Shader backgrounds")
 	if g.pageGrid() {
-		t.Fatal("Signal field should keep its dedicated background")
+		t.Fatal("Shader backgrounds should keep their dedicated background")
 	}
 	g.page = terminal
 	if g.pageGrid() || g.exampleGrid() {
