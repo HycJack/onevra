@@ -21,7 +21,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	configDir := filepath.Join(home, ".oneo", "onevra")
+	configDir := filepath.Join(home, ".onevra")
 	if err := os.MkdirAll(configDir, 0700); err != nil {
 		log.Fatal(err)
 	}

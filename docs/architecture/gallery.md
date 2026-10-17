@@ -8,7 +8,7 @@ The [entry point](../../source/examples/gallery/main.go) owns startup, appearanc
 
 ### Presentation state
 
-Production startup stores application data under `~/.oneo/onevra`. The disk-free `Gallery.New` path keeps examples and native tests isolated from real settings.
+Production startup stores application data under `~/.onevra`. The disk-free `Gallery.New` path keeps examples and native tests isolated from real settings.
 
 - `state.json` retains window geometry, sidebar width and expansion, the named navigation route and the last shown application version. Window geometry, including maximized and full-screen state, goes through MyGo's window-state store; Gallery only maps it into this file.
 - `config.json` retains appearance, language, and command-palette preferences. Changes apply and save immediately.
