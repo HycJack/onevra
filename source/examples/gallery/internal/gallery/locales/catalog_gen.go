@@ -5814,6 +5814,16 @@ func (msgs Messages) NewComponents() string {
 	return Catalog.Format(msgs.locale, "newComponents", nil)
 }
 
+// UpdatedComponents says "Updated components"
+// in the language the app shows.
+func UpdatedComponents() string { return In(i18n.Locale()).UpdatedComponents() }
+
+// UpdatedComponents says "Updated components"
+// in the language of msgs.
+func (msgs Messages) UpdatedComponents() string {
+	return Catalog.Format(msgs.locale, "updatedComponents", nil)
+}
+
 // NavigationMyGo says "MyGo"
 // in the language the app shows.
 func NavigationMyGo() string { return In(i18n.Locale()).NavigationMyGo() }
@@ -8370,6 +8380,8 @@ func BadgeUnread(count int) string { return In(i18n.Locale()).BadgeUnread(count)
 // in the language of msgs.
 func (msgs Messages) BadgeUnread(count int) string {
 	return Catalog.Format(msgs.locale, "badgeUnread", map[string]any{"count": count})
+}
+
 // ComponentTaginput says "TagInput"
 // in the language the app shows.
 func ComponentTaginput() string { return In(i18n.Locale()).ComponentTaginput() }

@@ -156,8 +156,10 @@ func TestCodeAndGameGroups(t *testing.T) {
 			for _, entry := range group.entries {
 				got = append(got, entry.label)
 			}
-			// Pages in New components leave their purpose group.
-			entries = slices.DeleteFunc(slices.Clone(entries), func(name string) bool { return newPages["mygo/"+name] })
+			// Pages in New or Updated components leave their purpose group.
+			entries = slices.DeleteFunc(slices.Clone(entries), func(name string) bool {
+				return newPages["mygo/"+name] || updatedPages["mygo/"+name]
+			})
 			if fmt.Sprint(got) != fmt.Sprint(entries) {
 				t.Fatalf("%s = %v, want %v", group.label, got, entries)
 			}
@@ -205,6 +207,67 @@ func TestNewComponentsGroup(t *testing.T) {
 		for _, entry := range group.entries {
 			if newPages[pageKey(entry.page)] {
 				t.Fatalf("%s repeats in %s", entry.label, group.label)
+			}
+		}
+	}
+}
+
+func TestUpdatedComponentsGroup(t *testing.T) {
+	groups := navigationCatalog()
+	if len(groups) < 3 || groups[1].label != newGroupLabel || groups[2].label != updatedGroupLabel {
+		t.Fatalf("Updated components group must follow New components: %v", groups)
+	}
+	want := map[galleryPage]bool{}
+	for key := range updatedPages {
+		if newPages[key] {
+			t.Fatalf("updated page %q is also new", key)
+		}
+		if pageKey(pageFromKey(key)) != key {
+			t.Fatalf("updated page %q has no route", key)
+		}
+		want[pageFromKey(key)] = true
+	}
+	for _, entry := range groups[2].entries {
+		if isMyGoPage(entry.page) {
+			t.Fatalf("MyGo page %s is listed outside the MyGo entry", entry.label)
+		}
+		if !want[entry.page] {
+			t.Fatalf("unexpected Updated components entry: %s", entry.label)
+		}
+		delete(want, entry.page)
+	}
+	if len(want) != 0 {
+		t.Fatalf("missing Updated components entries: %v", want)
+	}
+	// Updated pages leave their purpose group, as new pages do. MyGo pages
+	// belong to the MyGo entry's own Updated group, when it has any.
+	for _, group := range append(groups[3:], mygoNavigationGroups()...) {
+		if group.label == updatedGroupLabel {
+			continue
+		}
+		for _, entry := range group.entries {
+			if updatedPages[pageKey(entry.page)] {
+				t.Fatalf("%s repeats in %s", entry.label, group.label)
+			}
+		}
+	}
+}
+
+func TestUpdatedComponentsGroupRenders(t *testing.T) {
+	for _, lang := range []string{"en", "zh-Hans"} {
+		g := &Gallery{language: newTranslator(lang, "en")}
+		tt := ui.NewTester(g.Left, 220, 6000)
+		index, ok := tt.Find(g.text(updatedGroupLabel))
+		if !ok {
+			t.Fatalf("%s: missing Updated components group", lang)
+		}
+		lucide, ok := tt.Find(g.text("Lucide"))
+		if !ok || index.Y >= lucide.Y {
+			t.Fatalf("%s: Updated components group is not above the icon library", lang)
+		}
+		for _, entry := range updatedNavigationEntries(false) {
+			if !tt.HasText(g.text(entry.label)) {
+				t.Fatalf("%s: missing %s", lang, entry.label)
 			}
 		}
 	}

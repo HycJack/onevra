@@ -93,7 +93,7 @@ func TestMyGoGroupedNavigation(t *testing.T) {
 	}
 	for _, group := range navigationGroups {
 		for _, entry := range controlCatalog {
-			if entry.group == group && !newPages["controls/"+entry.name] {
+			if entry.group == group && !newPages["controls/"+entry.name] && !updatedPages["controls/"+entry.name] {
 				consume(entry.label)
 			}
 		}
