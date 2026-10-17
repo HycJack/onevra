@@ -31,6 +31,7 @@ type controlState struct {
 	text                   string
 	buffer                 *ui.TextBuffer
 	query                  string
+	tags                   []string
 	index                  int
 	button                 buttonExampleState
 	toggles                [2]bool
@@ -100,6 +101,7 @@ var controlCatalog = []controlExample{
 	{"Rating", "Rating", "Selection & values", []string{"Default"}, controlRating},
 	{"Text", "Text", "Content display", []string{"Default", "Editable"}, controlText},
 	{"TextBox", "TextBox", "Text input", nil, nil},
+	{"TagInput", "TagInput", "Text input", []string{"Default", "Empty"}, controlTagInput},
 	{"Button", "Buttons", "Actions & navigation", []string{"Button", "Icon and text", "IconButton", "Toolbar", "ToggleButton"}, controlButton},
 	{"Selection", "Selection", "Selection & values", []string{"Checkbox", "Switch", "Radio"}, controlSelection},
 	{"Select", "Selects", "Selection & values", []string{"Default", "Selected", "Searchable", "NativeSelect"}, controlSelect},
@@ -169,6 +171,9 @@ func (g *Gallery) controlState(name, variant string) *controlState {
 	}
 	if name == "TextBoxBuffer" || name == "TextBoxBuffer (multiline)" {
 		s.buffer = ui.NewTextBuffer(s.text)
+	}
+	if name == "TagInput" && variant != "Empty" {
+		s.tags = []string{"design", "motion"}
 	}
 	if name == "Rating" && variant != "Empty" {
 		s.index = 3
@@ -260,6 +265,8 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample, heading
 				switch example.name {
 				case "Text", "GridView":
 					cell.FillWidth()
+				case "TagInput":
+					cell.Width(320)
 				case "TextBox", "TextBox (multiline)", "TextBoxBuffer", "TextBoxBuffer (multiline)", "NumberInput", "Slider", "Sidebar", "List", "Split", "SplitPercent", "ScrollView", "Progress", "ProgressRing", "Accordion", "Collapsible":
 					cell.Width(240)
 				}

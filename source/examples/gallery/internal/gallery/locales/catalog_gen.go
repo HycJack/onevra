@@ -8320,4 +8320,42 @@ func BadgeUnread(count int) string { return In(i18n.Locale()).BadgeUnread(count)
 // in the language of msgs.
 func (msgs Messages) BadgeUnread(count int) string {
 	return Catalog.Format(msgs.locale, "badgeUnread", map[string]any{"count": count})
+// ComponentTaginput says "TagInput"
+// in the language the app shows.
+func ComponentTaginput() string { return In(i18n.Locale()).ComponentTaginput() }
+
+// ComponentTaginput says "TagInput"
+// in the language of msgs.
+func (msgs Messages) ComponentTaginput() string {
+	return Catalog.Format(msgs.locale, "componentTaginput", nil)
+}
+
+// Topics says "Topics"
+// in the language the app shows.
+func Topics() string { return In(i18n.Locale()).Topics() }
+
+// Topics says "Topics"
+// in the language of msgs.
+func (msgs Messages) Topics() string {
+	return Catalog.Format(msgs.locale, "topics", nil)
+}
+
+// AddATag says "Add a tag"
+// in the language the app shows.
+func AddATag() string { return In(i18n.Locale()).AddATag() }
+
+// AddATag says "Add a tag"
+// in the language of msgs.
+func (msgs Messages) AddATag() string {
+	return Catalog.Format(msgs.locale, "addATag", nil)
+}
+
+// PressEnterOrCommaToAdd says "Press Enter or comma to add."
+// in the language the app shows.
+func PressEnterOrCommaToAdd() string { return In(i18n.Locale()).PressEnterOrCommaToAdd() }
+
+// PressEnterOrCommaToAdd says "Press Enter or comma to add."
+// in the language of msgs.
+func (msgs Messages) PressEnterOrCommaToAdd() string {
+	return Catalog.Format(msgs.locale, "pressEnterOrCommaToAdd", nil)
 }

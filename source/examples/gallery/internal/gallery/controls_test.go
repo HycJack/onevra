@@ -36,7 +36,7 @@ func controlComponents() []controlExample {
 }
 
 func TestControlPages(t *testing.T) {
-	if len(controlCatalog) != 34 {
+	if len(controlCatalog) != 35 {
 		t.Fatal("missing control examples")
 	}
 	for i, example := range controlCatalog {
@@ -323,6 +323,11 @@ func TestControlExampleInteractions(t *testing.T) {
 					click("Default divider")
 					tt.Key(0, ui.KeyRight)
 					changed = s.splitPercent != 30
+				case "TagInput":
+					click("Topics")
+					tt.Type("native")
+					tt.Key(0, ui.KeyEnter)
+					changed = slices.Contains(s.tags, "native")
 				case "NumberInput":
 					click("Quantity")
 					tt.Key(0, ui.KeyUp)

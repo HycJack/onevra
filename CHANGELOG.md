@@ -9,6 +9,7 @@ User-facing updates for Onevra library consumers.
 - Add `components.HoneycombItem.Overlay` and `components.HoneycombOptions.OnPress`.
 - Add `components.SidebarItemWithSlots` and `components.SidebarItemWithContent`.
 - Add `components.SplitOptions.Default`.
+- Add `components.TagInput`.
 - Add `shaders.Ripple`.
 - Add `components.TreeItemWithLeading`.
 - Let `chat.Shimmer` shrink and end in an ellipsis.

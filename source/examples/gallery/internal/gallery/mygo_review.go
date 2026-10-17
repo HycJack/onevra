@@ -52,7 +52,7 @@ var mygoHandled = map[string]mygoDecision{
 	"Toolbar":              {Reason: "No Onevra Toolbar component is needed"},
 	"Table":                {Replacement: "components.TableVirtualized", Reason: "Onevra ordinary or virtualized table with neutral selection, no hover face and application-owned sorting"},
 	"OutlineTable":         {Reason: "No Onevra OutlineTable component is needed"},
-	"TokenField":           {Reason: "No Onevra TokenField component is needed"},
+	"TokenField":           {Replacement: "components.TagInput", Reason: "Onevra pill tags with a Backspace pick, gliding motion and duplicate feedback; applications own suggestions"},
 	"Scroll":               {Replacement: "components.ScrollView", Reason: "Unified scroll container with vertical scrolling by default"},
 	"ScrollHorizontal":     {Replacement: "components.ScrollView", Reason: "Horizontal ScrollView axes"},
 	"ScrollBoth":           {Replacement: "components.ScrollView", Reason: "Both ScrollView axes"},

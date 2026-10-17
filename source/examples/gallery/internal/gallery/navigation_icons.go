@@ -34,6 +34,7 @@ var navigationIcons = map[string]func() *ui.SVG{
 	"Select":              lucide.ListFilter,
 	"Menu":                lucide.Menu,
 	"NumberInput":         lucide.Hash,
+	"TagInput":            lucide.Tags,
 	"Slider":              lucide.SlidersHorizontal,
 	"Progress":            lucide.RectangleEllipsis,
 	"Spinner":             lucide.LoaderCircle,

@@ -1199,5 +1199,9 @@
         "type": "int"
       }
     }
-  }
+  },
+  "componentTaginput": "TagInput",
+  "topics": "Topics",
+  "addATag": "Add a tag",
+  "pressEnterOrCommaToAdd": "Press Enter or comma to add."
 }

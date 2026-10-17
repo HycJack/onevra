@@ -52,5 +52,10 @@
   "searchCommandsPlaceholder": "搜索命令…",
   "noMatchingCommands": "没有匹配的命令",
   "loading": "正在加载…",
-  "commands": "命令"
+  "commands": "命令",
+  "removeTag": "移除{label}",
+  "tagAdded": "已添加{label}",
+  "tagRemoved": "已移除{label}",
+  "tagSelected": "已选中{label}。按退格键将其移除。",
+  "tagExists": "{label}已存在"
 }

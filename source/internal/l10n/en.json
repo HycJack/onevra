@@ -73,5 +73,45 @@
   "searchCommandsPlaceholder": "Search commands…",
   "noMatchingCommands": "No matching commands",
   "loading": "Loading…",
-  "commands": "Commands"
+  "commands": "Commands",
+  "removeTag": "Remove {label}",
+  "@removeTag": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "tagAdded": "Added {label}",
+  "@tagAdded": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "tagRemoved": "Removed {label}",
+  "@tagRemoved": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "tagSelected": "{label} selected. Press Backspace to remove it.",
+  "@tagSelected": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "tagExists": "{label} is already added",
+  "@tagExists": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  }
 }

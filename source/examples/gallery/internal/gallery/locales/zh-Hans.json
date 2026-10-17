@@ -822,5 +822,9 @@
   "badgeSyncFailed": "同步失败",
   "badgeNextStatus": "下一个状态",
   "badgeAddUnread": "增加未读",
-  "badgeUnread": "{count} 条未读"
+  "badgeUnread": "{count} 条未读",
+  "componentTaginput": "标签输入框",
+  "topics": "主题",
+  "addATag": "添加标签",
+  "pressEnterOrCommaToAdd": "按回车键或逗号添加。"
 }
