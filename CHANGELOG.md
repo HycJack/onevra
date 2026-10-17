@@ -13,6 +13,7 @@ User-facing updates for Onevra library consumers.
 - Add `components.TreeItemWithLeading`.
 - Let `chat.Shimmer` shrink and end in an ellipsis.
 - Animate `components.Badge` text and icon changes.
+- Stack `components.Toasts` behind the newest toast and fan them out on hover or focus.
 - Fix development-build panics when a closing `components.Dialog` contains `components.Checkbox`, `components.Radio`, `components.Accordion`, `components.Slider` or color controls.
 
 ## [0.2026.11] - 2026-10-16

@@ -153,3 +153,58 @@ func TestToastsPlacement(t *testing.T) {
 		}
 	}
 }
+
+// Older toasts tuck behind the newest, smaller and peeking toward the window,
+// and fan out while the pointer rests on the stack.
+func TestToastsStack(t *testing.T) {
+	for _, placement := range []ToastPlacement{ToastBottom, ToastTop} {
+		added := false
+		tt := ui.NewTester(func(c *ui.Context) {
+			if !added {
+				added = true
+				for _, title := range []string{"Toast A", "Toast B", "Toast C"} {
+					c.AddToast(ui.Toast{Title: title, Timeout: -1})
+				}
+			}
+			Toasts(c, ToastOptions{Placement: placement})
+		}, 800, 600)
+		tt.SetPreferences(ui.Preferences{ReduceMotion: true})
+		find := func() (a, b, c ui.Rect) {
+			t.Helper()
+			var rs [3]ui.Rect
+			for i, s := range []string{"Toast A", "Toast B", "Toast C"} {
+				r, ok := tt.Find(s)
+				if !ok {
+					t.Fatalf("%v: missing %q in %q", placement, s, tt.Texts())
+				}
+				rs[i] = r
+			}
+			return rs[0], rs[1], rs[2]
+		}
+		// dy is how far toward the window an older toast is from a newer one.
+		dy := func(older, newer ui.Rect) float32 {
+			if placement.Top() {
+				return older.Y - newer.Y
+			}
+			return newer.Y - older.Y
+		}
+		a, b, c := find()
+		if d1, d2 := dy(b, c), dy(a, b); d1 <= 0 || d1 > 20 || d2 <= 0 || d2 > 20 {
+			t.Fatalf("%v: collapsed toasts do not peek: %+v %+v %+v", placement, a, b, c)
+		}
+		if !(a.W < b.W && b.W < c.W) {
+			t.Fatalf("%v: collapsed toasts do not shrink with depth: %+v %+v %+v", placement, a, b, c)
+		}
+		tt.Move(c.X, c.Y)
+		tt.Frame()
+		a, b, c = find()
+		if dy(b, c) < 40 || dy(a, b) < 40 || a.W != c.W {
+			t.Fatalf("%v: hovered toasts do not fan out: %+v %+v %+v", placement, a, b, c)
+		}
+		tt.Move(1, 1)
+		tt.Frame()
+		if a, b, c = find(); dy(b, c) > 20 {
+			t.Fatalf("%v: toasts stay fanned out: %+v %+v %+v", placement, a, b, c)
+		}
+	}
+}
