@@ -100,7 +100,7 @@ The [gallery example](../../source/examples/gallery/internal/gallery/control_cha
 
 ## Localization
 
-Component and Shell control names are a MyGo library catalog in namespace `onevra` ([l10n](../../source/internal/l10n/en.json)), in English and Simplified Chinese. They follow the window's language (`ui.Context.Locale`, set with `mygo.App.SetLocale`); applications change or add translations with `onevra.<key>` messages in their own catalogs. Calendar dates and the first weekday follow the user's regional formats, as MyGo's date controls do.
+Component and Shell control names are a MyGo library catalog in namespace `onevra` ([l10n](../../source/internal/l10n/en.json)), in English, Simplified and Traditional Chinese, Japanese and Korean. They follow the window's language (`ui.Context.Locale`, set with `mygo.App.SetLocale`); applications change or add translations with `onevra.<key>` messages in their own catalogs. Calendar dates and the first weekday follow the user's regional formats, as MyGo's date controls do.
 
 The catalog is the only source of these names; there is no per-scope or per-Shell override. Explicit control labels belong to the caller. Calendar presentation never changes stored dates, time zones or selection; numeric editors keep canonical numeric syntax. Keep keys and selection values independent of translated text.
 

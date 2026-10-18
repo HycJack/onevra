@@ -1,0 +1,13 @@
+{
+  "@@locale": "zh-Hant",
+  "note": "筆記",
+  "placeholder": "寫點什麼…",
+  "words": "{count} 個詞",
+  "saved": "已儲存",
+  "notSaved": "未儲存",
+  "edited": "已編輯",
+  "readOnly": "唯讀",
+  "conflict": "其他應用程式修改了這篇筆記。儲存以保留你的版本，或還原為對方的版本。",
+  "revert": "還原",
+  "save": "儲存"
+}

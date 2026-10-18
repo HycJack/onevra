@@ -24,22 +24,25 @@ func messages(t *testing.T, tag string) map[string]any {
 }
 
 func TestTranslationsAreComplete(t *testing.T) {
-	en, zh := messages(t, "en"), messages(t, "zh-Hans")
-	for key := range en {
-		if strings.HasPrefix(key, "@") {
-			continue
+	en := messages(t, "en")
+	for _, tag := range []string{"zh-Hans", "zh-Hant", "ja", "ko"} {
+		tr := messages(t, tag)
+		for key := range en {
+			if strings.HasPrefix(key, "@") {
+				continue
+			}
+			if _, ok := tr[key]; !ok {
+				t.Errorf("%s lacks %s", tag, key)
+			}
+			// Each translated message resolves through the catalog rather than falling back.
+			if _, args := en["@"+key]; !args && In(tag).Text(key) == en[key] {
+				t.Errorf("%s %s falls back to English", tag, key)
+			}
 		}
-		if _, ok := zh[key]; !ok {
-			t.Errorf("zh-Hans lacks %s", key)
-		}
-		// Each Chinese message resolves through the catalog rather than falling back.
-		if _, args := en["@"+key]; !args && In("zh-Hans").Text(key) == en[key] {
-			t.Errorf("zh-Hans %s falls back to English", key)
-		}
-	}
-	for key := range zh {
-		if _, ok := en[key]; !ok && !strings.HasPrefix(key, "@") {
-			t.Errorf("zh-Hans has unknown key %s", key)
+		for key := range tr {
+			if _, ok := en[key]; !ok && !strings.HasPrefix(key, "@") {
+				t.Errorf("%s has unknown key %s", tag, key)
+			}
 		}
 	}
 }
@@ -50,6 +53,11 @@ func TestMessages(t *testing.T) {
 	}
 	if got := In("zh-Hans-CN").Text("closeWindow"); got != "关闭窗口" {
 		t.Fatalf("zh-Hans-CN falls back to zh-Hans: %q", got)
+	}
+	for locale, want := range map[string]string{"zh-TW": "關閉視窗", "ja-JP": "ウインドウを閉じる", "ko-KR": "창 닫기"} {
+		if got := In(locale).Text("closeWindow"); got != want {
+			t.Fatalf("%s: %q", locale, got)
+		}
 	}
 	if got := In("en").Label("numberAdjust", ""); got != "Adjust" {
 		t.Fatalf("empty label leaves a trimmed name: %q", got)

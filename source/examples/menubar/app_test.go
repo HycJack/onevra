@@ -97,8 +97,8 @@ func TestPanelToolbar(t *testing.T) {
 func TestLanguages(t *testing.T) {
 	a := &application{config: defaultConfig(), note: "Keep this draft"}
 	for _, tc := range []struct{ choice, system, want string }{
-		{"system", "zh-CN", "zh-Hans"}, {"system", "zh-SG", "zh-Hans"}, {"system", "zh-TW", "en"},
-		{"system", "de-DE", "en"}, {"en", "zh-CN", "en"}, {"zh-Hans", "en-US", "zh-Hans"},
+		{"system", "zh-CN", "zh-Hans"}, {"system", "zh-SG", "zh-Hans"}, {"system", "zh-TW", "zh-Hant"},
+		{"system", "ja-JP", "ja"}, {"system", "ko-KR", "ko"}, {"system", "de-DE", "en"}, {"en", "zh-CN", "en"}, {"zh-Hans", "en-US", "zh-Hans"},
 	} {
 		a.config.Language, a.locale = tc.choice, tc.system
 		if got := a.language(); got != tc.want {
@@ -106,7 +106,7 @@ func TestLanguages(t *testing.T) {
 		}
 	}
 	catalogs := map[string]map[string]any{}
-	for _, code := range []string{"en", "zh-Hans"} {
+	for _, code := range languages {
 		data, err := os.ReadFile(filepath.Join("locales", code+".json"))
 		if err != nil {
 			t.Fatal(err)
@@ -117,20 +117,24 @@ func TestLanguages(t *testing.T) {
 		}
 		catalogs[code] = catalog
 	}
-	if len(catalogs["en"]) != len(catalogs["zh-Hans"]) {
-		t.Fatal("catalog sizes differ")
+	for _, code := range languages {
+		if len(catalogs[code]) != len(catalogs["en"]) {
+			t.Fatalf("%s catalog size differs", code)
+		}
 	}
 	a.locale = "en-US"
 	for key := range catalogs["en"] {
 		if strings.HasPrefix(key, "@") {
 			continue
 		}
-		a.config.Language = "zh-Hans"
-		if catalogs["zh-Hans"][key] == nil || a.text(key) != catalogs["zh-Hans"][key] {
-			t.Errorf("missing zh-Hans/%s", key)
+		for _, code := range languages {
+			a.config.Language = code
+			if catalogs[code][key] == nil || a.text(key) != catalogs[code][key] {
+				t.Errorf("missing %s/%s", code, key)
+			}
 		}
 	}
-	for _, value := range []string{"system", "en", "zh-Hans", "light", "dark", "dock", "tray", "both", "quit"} {
+	for _, value := range append([]string{"system", "light", "dark", "dock", "tray", "both", "quit"}, languages...) {
 		if _, ok := catalogs["en"][optionKey(value)]; !ok {
 			t.Errorf("no message for setting value %s", value)
 		}

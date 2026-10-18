@@ -1,0 +1,13 @@
+{
+  "@@locale": "ko",
+  "note": "메모",
+  "placeholder": "메모 작성…",
+  "words": "{count}단어",
+  "saved": "저장됨",
+  "notSaved": "저장되지 않음",
+  "edited": "편집됨",
+  "readOnly": "읽기 전용",
+  "conflict": "다른 앱에서 이 메모를 변경했습니다. 내 버전을 유지하려면 저장하고, 다른 앱의 버전을 사용하려면 되돌리세요.",
+  "revert": "되돌리기",
+  "save": "저장"
+}

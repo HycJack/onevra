@@ -338,9 +338,9 @@ func TestLawnPausesWithoutFocus(t *testing.T) {
 	}
 }
 
-// TestLawnMessages checks that the example's catalog covers both languages.
+// TestLawnMessages checks that the example's catalog covers every language.
 func TestLawnMessages(t *testing.T) {
-	for _, lang := range []string{"en", "zh-Hans"} {
+	for _, lang := range []string{"en", "zh-Hans", "zh-Hant", "ja", "ko"} {
 		m := locales.In(lang)
 		if m.Title() == "" || m.LawnHint() == "" || m.LawnScene() == "" {
 			t.Fatalf("%s: missing messages", lang)

@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Localize component and Shell labels in Traditional Chinese, Japanese and Korean.
+
 ## [0.2026.12] - 2026-10-18
 
 - Add `components.Avatar` and `components.AvatarGroup`.

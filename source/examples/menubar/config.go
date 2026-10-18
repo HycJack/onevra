@@ -5,6 +5,7 @@ import (
 	"errors"
 	"os"
 	"path/filepath"
+	"slices"
 )
 
 // Preferences belong to this application, not to Onevra or its window shell.
@@ -16,12 +17,15 @@ type config struct {
 	Welcomed    bool   `json:"welcomed"`
 }
 
+// languages are the catalog languages Settings offers besides following the system.
+var languages = []string{"en", "zh-Hans", "zh-Hant", "ja", "ko"}
+
 func defaultConfig() config {
 	return config{Language: "system", Appearance: "system", CloseAction: "dock", Panel: true}
 }
 
 func (c *config) normalize() {
-	if c.Language != "en" && c.Language != "zh-Hans" {
+	if !slices.Contains(languages, c.Language) {
 		c.Language = "system"
 	}
 	if c.Appearance != "light" && c.Appearance != "dark" {

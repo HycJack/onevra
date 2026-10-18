@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/egoist/mygo"
+	"github.com/egoist/mygo/i18n"
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
 	"github.com/oneo-me/onevra/source/icons/lucide"
@@ -142,10 +143,10 @@ func (g *Gallery) settingsCategories() []components.SettingsCategory {
 	return []components.SettingsCategory{
 		{ID: "general", Title: g.text("general"), Section: g.text("application"), Icon: lucide.Settings(),
 			Groups: []components.SettingsGroup{{ID: "language", Items: []components.SettingsItem{{
-				ID: "language", Title: g.text("language"), Description: g.text("appliesImmediatelyToMenusAndControls"), Keywords: []string{"language", "English", "中文", g.text("followSystem")},
+				ID: "language", Title: g.text("language"), Description: g.text("appliesImmediatelyToMenusAndControls"), Keywords: []string{"language", "English", "中文", "日本語", "한국어", g.text("followSystem")},
 				Build: func(c *ui.Context) {
 					choice := g.config.Language
-					if settingsSelect(c, &choice, g.text("languagePreference"), []string{"", "en", "zh-Hans"}).Changed() {
+					if settingsSelect(c, &choice, g.text("languagePreference"), append([]string{""}, languages...)).Changed() {
 						g.chooseLanguage(choice)
 						c.Invalidate()
 					}
@@ -187,10 +188,9 @@ func settingChoiceLabel(c *ui.Context, choice string) string {
 	switch choice {
 	case "":
 		return tr(c, "followSystem")
-	case "en":
-		return "English"
-	case "zh-Hans":
-		return "简体中文"
+	case "en", "zh-Hans", "zh-Hant", "ja", "ko":
+		// Each language is named in itself.
+		return i18n.Autonym(choice)
 	case "system":
 		return tr(c, "system")
 	case "light":

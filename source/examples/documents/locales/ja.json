@@ -1,0 +1,13 @@
+{
+  "@@locale": "ja",
+  "note": "メモ",
+  "placeholder": "メモを書く…",
+  "words": "{count} 語",
+  "saved": "保存済み",
+  "notSaved": "未保存",
+  "edited": "編集済み",
+  "readOnly": "読み取り専用",
+  "conflict": "ほかのアプリがこのメモを変更しました。保存して自分の内容を残すか、相手の内容に戻してください。",
+  "revert": "元に戻す",
+  "save": "保存"
+}

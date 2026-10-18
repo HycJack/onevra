@@ -22,7 +22,7 @@ import (
 func TestLanguageResolution(t *testing.T) {
 	for _, tc := range []struct{ choice, system, want string }{
 		{"", "zh-CN", "zh-Hans"}, {"", "zh-SG", "zh-Hans"}, {"", "zh-Hans", "zh-Hans"},
-		{"", "zh-TW", "en"}, {"", "zh-Hant-HK", "en"}, {"", "de-DE", "en"},
+		{"", "zh-TW", "zh-Hant"}, {"", "zh-Hant-HK", "zh-Hant"}, {"", "ja-JP", "ja"}, {"", "ko-KR", "ko"}, {"", "de-DE", "en"},
 		{"", "C", "en"}, {"", "garbage!", "en"}, {"en", "zh-CN", "en"},
 		{"zh-Hans", "en-US", "zh-Hans"}, {"unknown", "zh-CN", "zh-Hans"},
 	} {
@@ -41,7 +41,7 @@ func TestLanguageResolution(t *testing.T) {
 
 func TestLanguageCatalogs(t *testing.T) {
 	catalogs := map[string]map[string]any{}
-	for _, code := range []string{"en", "zh-Hans"} {
+	for _, code := range languages {
 		data, err := os.ReadFile(filepath.Join("locales", code+".json"))
 		if err != nil {
 			t.Fatal(err)
@@ -57,20 +57,24 @@ func TestLanguageCatalogs(t *testing.T) {
 		if strings.HasPrefix(id, "@") {
 			continue
 		}
-		zh, ok := catalogs["zh-Hans"][id].(string)
-		if !ok || zh == "" {
-			t.Errorf("missing Chinese: %q", id)
-			continue
-		}
-		a, b := placeholders.FindAllString(en.(string), -1), placeholders.FindAllString(zh, -1)
-		slices.Sort(a)
-		slices.Sort(b)
-		if !slices.Equal(a, b) {
-			t.Errorf("placeholder mismatch: %q", id)
+		for _, code := range languages[1:] {
+			message, ok := catalogs[code][id].(string)
+			if !ok || message == "" {
+				t.Errorf("missing %s: %q", code, id)
+				continue
+			}
+			a, b := placeholders.FindAllString(en.(string), -1), placeholders.FindAllString(message, -1)
+			slices.Sort(a)
+			slices.Sort(b)
+			if !slices.Equal(a, b) {
+				t.Errorf("%s placeholder mismatch: %q", code, id)
+			}
 		}
 	}
-	if len(catalogs["en"]) != len(catalogs["zh-Hans"])+countMetadata(catalogs["en"])-countMetadata(catalogs["zh-Hans"]) {
-		t.Fatal("catalog keys differ")
+	for _, code := range languages[1:] {
+		if len(catalogs["en"]) != len(catalogs[code])+countMetadata(catalogs["en"])-countMetadata(catalogs[code]) {
+			t.Fatalf("%s catalog keys differ", code)
+		}
 	}
 	// Every explicit source message must exist in both catalogs.
 	files, _ := filepath.Glob("*.go")

@@ -149,8 +149,8 @@ func (a *application) settingsView(c *ui.Context, width float32) {
 	categories := []components.SettingsCategory{{
 		ID: "general", Title: a.text("general"), Section: a.text("application"), Icon: lucide.Settings(),
 		Groups: []components.SettingsGroup{{ID: "preferences", Items: []components.SettingsItem{
-			{ID: "language", Title: a.text("language"), Keywords: []string{"English", "中文"}, Build: func(c *ui.Context) {
-				a.selectSetting(c, &a.config.Language, "language", []string{"system", "en", "zh-Hans"})
+			{ID: "language", Title: a.text("language"), Keywords: []string{"English", "中文", "日本語", "한국어"}, Build: func(c *ui.Context) {
+				a.selectSetting(c, &a.config.Language, "language", append([]string{"system"}, languages...))
 			}},
 			{ID: "appearance", Title: a.text("appearance"), Keywords: []string{"theme", "light", "dark"}, Build: func(c *ui.Context) {
 				a.selectSetting(c, &a.config.Appearance, "appearance", []string{"system", "light", "dark"})

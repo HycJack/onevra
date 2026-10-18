@@ -1,0 +1,15 @@
+{
+  "@@locale": "ja",
+  "title": "Onevra 芝生防衛戦",
+  "lawnHint": "落ちてくる太陽を集め、種のカードを選ぶか 1～3 キーを押して、芝生に植えます。ひまわりは太陽を生み出し、ピーシューターは同じ列を撃ち、ウォールナッツはゾンビを食い止めます。右クリックか Esc キーで種の選択を解除し、R キーでやり直します。",
+  "lawnScene": "芝生",
+  "lawnPlaying": "芝生を守ろう",
+  "lawnPaused": "一時停止中：芝生をクリックして再開",
+  "lawnLost": "ゾンビに脳みそを食べられた！",
+  "lawnWon": "芝生を守り抜いた！",
+  "lawnDefeated": "倒したゾンビ：{defeated}/{total}",
+  "lawnDefeatedEndless": "倒したゾンビ：{defeated}",
+  "lawnEndless": "エンドレスモード",
+  "lawnMusic": "音楽",
+  "lawnRestart": "ゲームをやり直す"
+}

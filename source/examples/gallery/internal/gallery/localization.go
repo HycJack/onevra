@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"runtime"
+	"slices"
 
 	"github.com/egoist/mygo"
 	"github.com/egoist/mygo/i18n"
@@ -40,7 +41,10 @@ var sourceKeys = func() map[string]string {
 // A translator says the gallery's messages in the language Settings chose.
 type translator struct{ code string }
 
-func validLanguage(code string) bool { return code == "" || code == "en" || code == "zh-Hans" }
+// languages are the catalog languages Settings offers besides following the system.
+var languages = []string{"en", "zh-Hans", "zh-Hant", "ja", "ko"}
+
+func validLanguage(code string) bool { return code == "" || slices.Contains(languages, code) }
 
 // newTranslator resolves a choice, "" following the user's language, against
 // the languages of the catalog.

@@ -9,13 +9,15 @@ import (
 
 	// MyGo's own strings in the app's languages.
 	_ "github.com/egoist/mygo/locales/zh-Hans"
+	_ "github.com/egoist/mygo/locales/zh-Hant"
 )
 
 //go:embed *.json
 var files embed.FS
 
-// Catalog holds the messages in en, the source language, and zh-Hans. It is
-// registered with package i18n, which makes its languages the app's.
+// Catalog holds the messages in en, the source language, and ja, ko,
+// zh-Hans and zh-Hant. It is registered with package i18n, which makes its
+// languages the app's.
 var Catalog *i18n.Catalog
 
 func init() {
@@ -232,6 +234,36 @@ func ZhHans() string { return In(i18n.Locale()).ZhHans() }
 // in the language of msgs.
 func (msgs Messages) ZhHans() string {
 	return Catalog.Format(msgs.locale, "zhHans", nil)
+}
+
+// ZhHant says "繁體中文"
+// in the language the app shows.
+func ZhHant() string { return In(i18n.Locale()).ZhHant() }
+
+// ZhHant says "繁體中文"
+// in the language of msgs.
+func (msgs Messages) ZhHant() string {
+	return Catalog.Format(msgs.locale, "zhHant", nil)
+}
+
+// Ja says "日本語"
+// in the language the app shows.
+func Ja() string { return In(i18n.Locale()).Ja() }
+
+// Ja says "日本語"
+// in the language of msgs.
+func (msgs Messages) Ja() string {
+	return Catalog.Format(msgs.locale, "ja", nil)
+}
+
+// Ko says "한국어"
+// in the language the app shows.
+func Ko() string { return In(i18n.Locale()).Ko() }
+
+// Ko says "한국어"
+// in the language of msgs.
+func (msgs Messages) Ko() string {
+	return Catalog.Format(msgs.locale, "ko", nil)
 }
 
 // Light says "Light"

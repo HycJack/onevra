@@ -1,0 +1,15 @@
+{
+  "@@locale": "ko",
+  "title": "Onevra 잔디 방어전",
+  "lawnHint": "떨어지는 햇빛을 모으고 씨앗 카드를 고르거나 1–3을 눌러 잔디밭에 심으세요. 해바라기는 햇빛을 만들고, 완두콩 슈터는 자기 줄을 따라 쏘며, 호두는 좀비를 막아 냅니다. 오른쪽 클릭이나 Esc 키로 씨앗 선택을 취소하고, R 키로 다시 시작합니다.",
+  "lawnScene": "잔디밭",
+  "lawnPlaying": "잔디밭을 지키세요",
+  "lawnPaused": "일시 정지됨: 잔디밭을 클릭하면 계속합니다",
+  "lawnLost": "좀비가 당신의 뇌를 먹어 버렸습니다!",
+  "lawnWon": "잔디밭을 지켜 냈습니다!",
+  "lawnDefeated": "처치한 좀비: {defeated}/{total}",
+  "lawnDefeatedEndless": "처치한 좀비: {defeated}",
+  "lawnEndless": "무한 모드",
+  "lawnMusic": "음악",
+  "lawnRestart": "게임 다시 시작"
+}

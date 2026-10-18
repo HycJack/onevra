@@ -8,7 +8,7 @@ import (
 )
 
 func TestStatus(t *testing.T) {
-	for _, lang := range []string{"en", "zh-Hans"} {
+	for _, lang := range []string{"en", "zh-Hans", "zh-Hant", "ja", "ko"} {
 		m := locales.In(lang)
 		for state, want := range map[mygo.DocumentState]string{
 			{}:                             m.NotSaved(),
