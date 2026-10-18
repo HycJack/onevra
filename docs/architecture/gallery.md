@@ -43,10 +43,11 @@ reports that a browser cannot provide them. The preview also adds pages for
 Icon, PixelGrid, Settings and the command palette, which the Gallery shows in
 its chrome or development backgrounds instead of as control pages.
 
-`PreviewEntries` feeds `website/app/lib/preview-manifest.json`, which is
-regenerated with `bun run preview:manifest` after a page or component name
-changes. The frame follows the site's light or dark appearance through
-`data-mygo-theme`, takes its language from the route, and is sized by the page.
+`PreviewEntries` feeds `website/app/lib/preview-manifest.json`, which the
+website's scripts generate before every development, build and typecheck run
+instead of committing it. The frame follows the site's light or dark appearance
+through `data-mygo-theme`, takes its language from the route, and is sized by
+the page.
 Changing components changes only the frame's fragment, so the running app
 redraws the next page instead of loading the WebAssembly again.
 

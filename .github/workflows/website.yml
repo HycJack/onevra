@@ -41,13 +41,6 @@ jobs:
         working-directory: website
         run: bun install --frozen-lockfile
 
-      - name: Regenerate the component preview catalog
-        working-directory: website
-        run: bun run preview:manifest
-
-      - name: Check the component preview catalog
-        run: git diff --exit-code -- website/app/lib/preview-manifest.json
-
       - name: Typecheck
         working-directory: website
         run: bun run typecheck

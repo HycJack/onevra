@@ -4,12 +4,15 @@
   "type": "module",
   "packageManager": "bun@1.4.3",
   "scripts": {
+    "predev": "bun run preview:manifest",
     "dev": "bun --conditions=development node_modules/@react-router/dev/bin.cjs dev",
+    "prebuild": "bun run preview:manifest",
     "build": "react-router build",
     "preview": "bun scripts/preview-pages.mjs",
     "prebuild:pages": "bun run preview:manifest",
     "build:pages": "react-router build && bun scripts/prepare-pages.mjs",
     "preview:manifest": "bun scripts/preview-manifest.mjs",
+    "pretypecheck": "bun run preview:manifest",
     "typecheck": "react-router typegen && tsc",
     "format": "prettier --write \"**/*.{ts,tsx}\""
   },

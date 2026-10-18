@@ -40,8 +40,7 @@ The site is served under the `/onevra/` base path, so the dev server uses
 
 The [Website workflow](../.github/workflows/website.yml) builds the site and
 publishes it with GitHub Pages whenever `website/**` or `source/**` changes on
-`main`. It also checks that the committed component catalog matches the Go
-source.
+`main`.
 
 Enable it once under **Settings → Pages → Build and deployment → Source →
 GitHub Actions**. GitHub Pages is only available for private repositories on
@@ -76,10 +75,11 @@ for browsers,
   changes only the frame's fragment, so the running app redraws the next page
   instead of loading the WebAssembly again. The frame follows the site's light or
   dark appearance, and the language comes from the page route.
-- [`app/lib/preview-manifest.json`](app/lib/preview-manifest.json) is generated
-  from `go run ./examples/gallery/web -manifest`. Run
-  `bun run preview:manifest` after adding or renaming a Gallery component page,
-  and commit the result.
+- `app/lib/preview-manifest.json` is generated from
+  `go run ./examples/gallery/web -manifest` before `dev`, `build`,
+  `build:pages` and `typecheck`, so it always matches the Go source and is not
+  committed. Run `bun run preview:manifest` to refresh it while the dev server
+  is running.
 - The previews share the Gallery's demonstrations rather than duplicating them.
   Native window chrome, menus, trays, notifications and file dialogs report that
   a browser cannot provide them.
@@ -94,7 +94,7 @@ for browsers,
 | `app/components/component-browser.tsx` | The components page and its preview frame. |
 | `app/lib/content.ts` | English and Simplified Chinese copy and code samples. |
 | `app/lib/preview.ts` | Component catalog lookup, slugs and the frame URL. |
-| `app/lib/preview-manifest.json` | Generated component pages from the Go Gallery. |
+| `app/lib/preview-manifest.json` | Generated component pages from the Go Gallery; not committed. |
 | `app/lib/site.ts` | Shared links and the locale helper. |
 | `app/components/ui` | shadcn/ui components. |
 | `preview/index.html` | The page that loads the WebAssembly preview app. |

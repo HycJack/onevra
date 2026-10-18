@@ -8,3 +8,6 @@ build
 
 # typescript
 *.tsbuildinfo
+
+# Generated from the Go Gallery by `bun run preview:manifest`
+/app/lib/preview-manifest.json
