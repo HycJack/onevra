@@ -37,7 +37,7 @@ func controlComponents() []controlExample {
 }
 
 func TestControlPages(t *testing.T) {
-	if len(controlCatalog) != 43 {
+	if len(controlCatalog) != 44 {
 		t.Fatal("missing control examples")
 	}
 	for i, example := range controlCatalog {
@@ -229,6 +229,9 @@ func TestControlExampleInteractions(t *testing.T) {
 				case "Treemap":
 					click("Update data")
 					changed = s.treemap.updated
+				case "Flow diagram":
+					click("Add a step")
+					changed = len(s.flow.added) == 1
 				case "Calendar":
 					before := s.day
 					tt.Key(0, ui.KeyTab)

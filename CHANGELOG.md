@@ -9,6 +9,7 @@ User-facing updates for Onevra library consumers.
 - Add `components.Carousel`.
 - Add `chart.Bubble`.
 - Add `chart.SplitBar`.
+- Add `components/flow`.
 - Add `components.CollapsibleOptions.Leading`.
 - Add `components.HoldToConfirm`.
 - Add `components.FloatingButtonGroup`.

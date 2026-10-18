@@ -52,7 +52,7 @@ func main() {
 - Element handles are valid only for the current build pass. Bind a `ui.Handle` for identity or geometry across frames.
 - The application owns the theme. Choose light/dark/system with `mygo.Theme.SetSource` (before `App.Run` for a saved preference). Pass `Theme: theme.Onevra` (or a function returning your own `*ui.Theme`) in Shell options; without a Shell, call `theme.Apply(c)` or `c.SetTheme` at the top of the root builder. Components never call `Context.SetTheme`.
 - Keep application messages in MyGo catalogs (`i18n` in `mygo.json`, typed functions from `mygo generate`) and pass translated labels explicitly. Component-owned labels follow the window's language from Onevra's catalog; change them with `onevra.<key>` messages. Keep keys and stored values independent of translated text.
-- Complex views each have their own package in `components/chart`, `components/graph`, `components/treemap`, `components/command` and `components/chat`. Keep their documents and results in retained state, prepared outside builders.
+- Complex views each have their own package in `components/chart`, `components/graph`, `components/treemap`, `components/flow`, `components/command` and `components/chat`. Keep their documents and results in retained state, prepared outside builders.
 
 ## Choosing controls
 
@@ -79,6 +79,7 @@ Use Onevra's control whenever one exists; it replaces MyGo's styled widget of th
 | Categorical charts, donuts, bubbles and part-to-whole bars | `components/chart`: `Bar`, `Line`, `Area`, `StackedBar`, `Donut`, `Bubble`, `SplitBar`; see the [usage example](../../source/components/chart/example_test.go) |
 | Relationship graph | `components/graph`: `View`; see the [usage example](../../source/components/graph/example_test.go) |
 | Treemap of nested sizes, such as disk usage | `components/treemap`: `View`; see the [usage example](../../source/components/treemap/example_test.go) |
+| Flow diagram with automatic layout | `components/flow`: `View` and `Card`; see the [usage example](../../source/components/flow/example_test.go) |
 | Pan and zoom on a custom canvas | `components/gesture`: `Navigation.Handle` for wheel and pinch zoom and touchpad panning, or `Classify` inside an existing `HandleInput` |
 | Settings surface | `components.Settings` |
 | Conversation transcript and composer | `components/chat`: `Turn`, `FloatingConversation`, `GlassComposer`; fill composer slots with `Chip`, `Picker`, `SwitchChip`, `Attachment` (also for images in mixed rows), `ContextMeter` and `QuotaSummary`; stream replies with MyGo's `markdown.Stream` |
@@ -93,7 +94,7 @@ Use MyGo directly for:
 - MyGo's unstyled bases when building a new reusable control.
 - A MyGo widget with no Onevra equivalent. Onevra intentionally omits Divider, Meter, Form, Field, Toolbar and OutlineTable: compose dividers from Box or borders before reaching for the upstream widget. For a segmented control, use `components.Tabs` with `TabsSegmented` instead of `ui.Segmented`.
 
-Charts accept application-owned data and formatting, with generic empty and detail slots. Keep series/slice IDs stable and state separate per chart; `chart.State{Index: -1}` starts unselected. Prepare large datasets outside builders; these views do not downsample or virtualize data. Graphs keep layout and camera in one retained `graph.State` per view and need stable node IDs.
+Charts accept application-owned data and formatting, with generic empty and detail slots. Keep series/slice IDs stable and state separate per chart; `chart.State{Index: -1}` starts unselected. Prepare large datasets outside builders; these views do not downsample or virtualize data. Graphs and flow diagrams keep layout and camera in one retained `graph.State` or `flow.State` per view and need stable node IDs.
 
 The authoritative replacement and exclusion map, with reasons, is `examples/gallery/internal/gallery/mygo_review.go` in the Onevra module.
 

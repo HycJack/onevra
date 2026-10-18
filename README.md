@@ -133,7 +133,7 @@ components.Checkbox(c, &agreed, "I agree")
 components.Switch(c, &wifi, "Wi-Fi")
 ```
 
-Components read the frame theme and work independently of Shell; a standalone window installs its theme with `c.SetTheme` or `theme.Apply` at the top of its builder. See the [component contract](source/components/doc.go) and [theme usage](source/theme/doc.go). Complex components each have a separate package under `components/`: `chart`, `graph`, `treemap`, `gesture`, `command` and `chat`. See [complex component composition](docs/architecture/components.md#complex-component-composition).
+Components read the frame theme and work independently of Shell; a standalone window installs its theme with `c.SetTheme` or `theme.Apply` at the top of its builder. See the [component contract](source/components/doc.go) and [theme usage](source/theme/doc.go). Complex components each have a separate package under `components/`: `chart`, `graph`, `treemap`, `flow`, `gesture`, `command` and `chat`. See [complex component composition](docs/architecture/components.md#complex-component-composition).
 
 ## Contributing
 

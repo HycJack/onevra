@@ -6348,6 +6348,416 @@ func (msgs Messages) TreemapDays(count int) string {
 	return Catalog.Format(msgs.locale, "treemapDays", map[string]any{"count": count})
 }
 
+// FlowDiagram says "Flow diagram"
+// in the language the app shows.
+func FlowDiagram() string { return In(i18n.Locale()).FlowDiagram() }
+
+// FlowDiagram says "Flow diagram"
+// in the language of msgs.
+func (msgs Messages) FlowDiagram() string {
+	return Catalog.Format(msgs.locale, "flowDiagram", nil)
+}
+
+// FlowLabel says "Plan with {nodes} steps and {links} links. Click a step to select it, double-click to open it, drag to pan, and use t…"
+// in the language the app shows.
+func FlowLabel(nodes int, links int) string { return In(i18n.Locale()).FlowLabel(nodes, links) }
+
+// FlowLabel says "Plan with {nodes} steps and {links} links. Click a step to select it, double-click to open it, drag to pan, and use t…"
+// in the language of msgs.
+func (msgs Messages) FlowLabel(nodes int, links int) string {
+	return Catalog.Format(msgs.locale, "flowLabel", map[string]any{"nodes": nodes, "links": links})
+}
+
+// FlowEmpty says "No steps planned yet"
+// in the language the app shows.
+func FlowEmpty() string { return In(i18n.Locale()).FlowEmpty() }
+
+// FlowEmpty says "No steps planned yet"
+// in the language of msgs.
+func (msgs Messages) FlowEmpty() string {
+	return Catalog.Format(msgs.locale, "flowEmpty", nil)
+}
+
+// FlowAdd says "Add a step"
+// in the language the app shows.
+func FlowAdd() string { return In(i18n.Locale()).FlowAdd() }
+
+// FlowAdd says "Add a step"
+// in the language of msgs.
+func (msgs Messages) FlowAdd() string {
+	return Catalog.Format(msgs.locale, "flowAdd", nil)
+}
+
+// FlowReset says "Remove added steps"
+// in the language the app shows.
+func FlowReset() string { return In(i18n.Locale()).FlowReset() }
+
+// FlowReset says "Remove added steps"
+// in the language of msgs.
+func (msgs Messages) FlowReset() string {
+	return Catalog.Format(msgs.locale, "flowReset", nil)
+}
+
+// FlowLeftToRight says "Lay out left to right"
+// in the language the app shows.
+func FlowLeftToRight() string { return In(i18n.Locale()).FlowLeftToRight() }
+
+// FlowLeftToRight says "Lay out left to right"
+// in the language of msgs.
+func (msgs Messages) FlowLeftToRight() string {
+	return Catalog.Format(msgs.locale, "flowLeftToRight", nil)
+}
+
+// FlowTopToBottom says "Lay out top to bottom"
+// in the language the app shows.
+func FlowTopToBottom() string { return In(i18n.Locale()).FlowTopToBottom() }
+
+// FlowTopToBottom says "Lay out top to bottom"
+// in the language of msgs.
+func (msgs Messages) FlowTopToBottom() string {
+	return Catalog.Format(msgs.locale, "flowTopToBottom", nil)
+}
+
+// FlowZoomIn says "Zoom in"
+// in the language the app shows.
+func FlowZoomIn() string { return In(i18n.Locale()).FlowZoomIn() }
+
+// FlowZoomIn says "Zoom in"
+// in the language of msgs.
+func (msgs Messages) FlowZoomIn() string {
+	return Catalog.Format(msgs.locale, "flowZoomIn", nil)
+}
+
+// FlowZoomOut says "Zoom out"
+// in the language the app shows.
+func FlowZoomOut() string { return In(i18n.Locale()).FlowZoomOut() }
+
+// FlowZoomOut says "Zoom out"
+// in the language of msgs.
+func (msgs Messages) FlowZoomOut() string {
+	return Catalog.Format(msgs.locale, "flowZoomOut", nil)
+}
+
+// FlowSelected says "Selected: {title}"
+// in the language the app shows.
+func FlowSelected(title string) string { return In(i18n.Locale()).FlowSelected(title) }
+
+// FlowSelected says "Selected: {title}"
+// in the language of msgs.
+func (msgs Messages) FlowSelected(title string) string {
+	return Catalog.Format(msgs.locale, "flowSelected", map[string]any{"title": title})
+}
+
+// FlowNewStep says "Follow-up step {number}"
+// in the language the app shows.
+func FlowNewStep(number int) string { return In(i18n.Locale()).FlowNewStep(number) }
+
+// FlowNewStep says "Follow-up step {number}"
+// in the language of msgs.
+func (msgs Messages) FlowNewStep(number int) string {
+	return Catalog.Format(msgs.locale, "flowNewStep", map[string]any{"number": number})
+}
+
+// FlowNewStepDetail says "Added to watch the layout adapt"
+// in the language the app shows.
+func FlowNewStepDetail() string { return In(i18n.Locale()).FlowNewStepDetail() }
+
+// FlowNewStepDetail says "Added to watch the layout adapt"
+// in the language of msgs.
+func (msgs Messages) FlowNewStepDetail() string {
+	return Catalog.Format(msgs.locale, "flowNewStepDetail", nil)
+}
+
+// FlowExperiment says "Experiment #{number}"
+// in the language the app shows.
+func FlowExperiment(number int) string { return In(i18n.Locale()).FlowExperiment(number) }
+
+// FlowExperiment says "Experiment #{number}"
+// in the language of msgs.
+func (msgs Messages) FlowExperiment(number int) string {
+	return Catalog.Format(msgs.locale, "flowExperiment", map[string]any{"number": number})
+}
+
+// FlowDone says "Done"
+// in the language the app shows.
+func FlowDone() string { return In(i18n.Locale()).FlowDone() }
+
+// FlowDone says "Done"
+// in the language of msgs.
+func (msgs Messages) FlowDone() string {
+	return Catalog.Format(msgs.locale, "flowDone", nil)
+}
+
+// FlowRunning says "In progress"
+// in the language the app shows.
+func FlowRunning() string { return In(i18n.Locale()).FlowRunning() }
+
+// FlowRunning says "In progress"
+// in the language of msgs.
+func (msgs Messages) FlowRunning() string {
+	return Catalog.Format(msgs.locale, "flowRunning", nil)
+}
+
+// FlowPlanned says "Planned"
+// in the language the app shows.
+func FlowPlanned() string { return In(i18n.Locale()).FlowPlanned() }
+
+// FlowPlanned says "Planned"
+// in the language of msgs.
+func (msgs Messages) FlowPlanned() string {
+	return Catalog.Format(msgs.locale, "flowPlanned", nil)
+}
+
+// FlowWaiting says "Waiting"
+// in the language the app shows.
+func FlowWaiting() string { return In(i18n.Locale()).FlowWaiting() }
+
+// FlowWaiting says "Waiting"
+// in the language of msgs.
+func (msgs Messages) FlowWaiting() string {
+	return Catalog.Format(msgs.locale, "flowWaiting", nil)
+}
+
+// FlowDependsOn says "depends on"
+// in the language the app shows.
+func FlowDependsOn() string { return In(i18n.Locale()).FlowDependsOn() }
+
+// FlowDependsOn says "depends on"
+// in the language of msgs.
+func (msgs Messages) FlowDependsOn() string {
+	return Catalog.Format(msgs.locale, "flowDependsOn", nil)
+}
+
+// FlowInforms says "informs"
+// in the language the app shows.
+func FlowInforms() string { return In(i18n.Locale()).FlowInforms() }
+
+// FlowInforms says "informs"
+// in the language of msgs.
+func (msgs Messages) FlowInforms() string {
+	return Catalog.Format(msgs.locale, "flowInforms", nil)
+}
+
+// FlowGoal says "Launch the redesigned website"
+// in the language the app shows.
+func FlowGoal() string { return In(i18n.Locale()).FlowGoal() }
+
+// FlowGoal says "Launch the redesigned website"
+// in the language of msgs.
+func (msgs Messages) FlowGoal() string {
+	return Catalog.Format(msgs.locale, "flowGoal", nil)
+}
+
+// FlowGoalDetail says "Goal defined"
+// in the language the app shows.
+func FlowGoalDetail() string { return In(i18n.Locale()).FlowGoalDetail() }
+
+// FlowGoalDetail says "Goal defined"
+// in the language of msgs.
+func (msgs Messages) FlowGoalDetail() string {
+	return Catalog.Format(msgs.locale, "flowGoalDetail", nil)
+}
+
+// FlowAudit says "Audit the current site"
+// in the language the app shows.
+func FlowAudit() string { return In(i18n.Locale()).FlowAudit() }
+
+// FlowAudit says "Audit the current site"
+// in the language of msgs.
+func (msgs Messages) FlowAudit() string {
+	return Catalog.Format(msgs.locale, "flowAudit", nil)
+}
+
+// FlowAuditDetail says "Inventory pages, traffic and gaps"
+// in the language the app shows.
+func FlowAuditDetail() string { return In(i18n.Locale()).FlowAuditDetail() }
+
+// FlowAuditDetail says "Inventory pages, traffic and gaps"
+// in the language of msgs.
+func (msgs Messages) FlowAuditDetail() string {
+	return Catalog.Format(msgs.locale, "flowAuditDetail", nil)
+}
+
+// FlowContent says "Rewrite the key pages"
+// in the language the app shows.
+func FlowContent() string { return In(i18n.Locale()).FlowContent() }
+
+// FlowContent says "Rewrite the key pages"
+// in the language of msgs.
+func (msgs Messages) FlowContent() string {
+	return Catalog.Format(msgs.locale, "flowContent", nil)
+}
+
+// FlowContentDetail says "Shorter copy for the top ten pages"
+// in the language the app shows.
+func FlowContentDetail() string { return In(i18n.Locale()).FlowContentDetail() }
+
+// FlowContentDetail says "Shorter copy for the top ten pages"
+// in the language of msgs.
+func (msgs Messages) FlowContentDetail() string {
+	return Catalog.Format(msgs.locale, "flowContentDetail", nil)
+}
+
+// FlowNavigation says "Prototype the navigation"
+// in the language the app shows.
+func FlowNavigation() string { return In(i18n.Locale()).FlowNavigation() }
+
+// FlowNavigation says "Prototype the navigation"
+// in the language of msgs.
+func (msgs Messages) FlowNavigation() string {
+	return Catalog.Format(msgs.locale, "flowNavigation", nil)
+}
+
+// FlowNavigationDetail says "Compare two menu structures"
+// in the language the app shows.
+func FlowNavigationDetail() string { return In(i18n.Locale()).FlowNavigationDetail() }
+
+// FlowNavigationDetail says "Compare two menu structures"
+// in the language of msgs.
+func (msgs Messages) FlowNavigationDetail() string {
+	return Catalog.Format(msgs.locale, "flowNavigationDetail", nil)
+}
+
+// FlowSpeed says "Measure page speed"
+// in the language the app shows.
+func FlowSpeed() string { return In(i18n.Locale()).FlowSpeed() }
+
+// FlowSpeed says "Measure page speed"
+// in the language of msgs.
+func (msgs Messages) FlowSpeed() string {
+	return Catalog.Format(msgs.locale, "flowSpeed", nil)
+}
+
+// FlowSpeedDetail says "Lab and field measurements"
+// in the language the app shows.
+func FlowSpeedDetail() string { return In(i18n.Locale()).FlowSpeedDetail() }
+
+// FlowSpeedDetail says "Lab and field measurements"
+// in the language of msgs.
+func (msgs Messages) FlowSpeedDetail() string {
+	return Catalog.Format(msgs.locale, "flowSpeedDetail", nil)
+}
+
+// FlowMenus says "Short menus test best"
+// in the language the app shows.
+func FlowMenus() string { return In(i18n.Locale()).FlowMenus() }
+
+// FlowMenus says "Short menus test best"
+// in the language of msgs.
+func (msgs Messages) FlowMenus() string {
+	return Catalog.Format(msgs.locale, "flowMenus", nil)
+}
+
+// FlowMenusDetail says "From the navigation prototype"
+// in the language the app shows.
+func FlowMenusDetail() string { return In(i18n.Locale()).FlowMenusDetail() }
+
+// FlowMenusDetail says "From the navigation prototype"
+// in the language of msgs.
+func (msgs Messages) FlowMenusDetail() string {
+	return Catalog.Format(msgs.locale, "flowMenusDetail", nil)
+}
+
+// FlowRetest says "Retest on the staging server"
+// in the language the app shows.
+func FlowRetest() string { return In(i18n.Locale()).FlowRetest() }
+
+// FlowRetest says "Retest on the staging server"
+// in the language of msgs.
+func (msgs Messages) FlowRetest() string {
+	return Catalog.Format(msgs.locale, "flowRetest", nil)
+}
+
+// FlowRetestDetail says "Waiting for the server to return"
+// in the language the app shows.
+func FlowRetestDetail() string { return In(i18n.Locale()).FlowRetestDetail() }
+
+// FlowRetestDetail says "Waiting for the server to return"
+// in the language of msgs.
+func (msgs Messages) FlowRetestDetail() string {
+	return Catalog.Format(msgs.locale, "flowRetestDetail", nil)
+}
+
+// FlowImages says "Images slow the home page"
+// in the language the app shows.
+func FlowImages() string { return In(i18n.Locale()).FlowImages() }
+
+// FlowImages says "Images slow the home page"
+// in the language of msgs.
+func (msgs Messages) FlowImages() string {
+	return Catalog.Format(msgs.locale, "flowImages", nil)
+}
+
+// FlowImagesDetail says "From the speed measurements"
+// in the language the app shows.
+func FlowImagesDetail() string { return In(i18n.Locale()).FlowImagesDetail() }
+
+// FlowImagesDetail says "From the speed measurements"
+// in the language of msgs.
+func (msgs Messages) FlowImagesDetail() string {
+	return Catalog.Format(msgs.locale, "flowImagesDetail", nil)
+}
+
+// FlowReview says "Review the launch"
+// in the language the app shows.
+func FlowReview() string { return In(i18n.Locale()).FlowReview() }
+
+// FlowReview says "Review the launch"
+// in the language of msgs.
+func (msgs Messages) FlowReview() string {
+	return Catalog.Format(msgs.locale, "flowReview", nil)
+}
+
+// FlowReviewDetail says "Check that every goal is met"
+// in the language the app shows.
+func FlowReviewDetail() string { return In(i18n.Locale()).FlowReviewDetail() }
+
+// FlowReviewDetail says "Check that every goal is met"
+// in the language of msgs.
+func (msgs Messages) FlowReviewDetail() string {
+	return Catalog.Format(msgs.locale, "flowReviewDetail", nil)
+}
+
+// FlowReady says "Ready to launch"
+// in the language the app shows.
+func FlowReady() string { return In(i18n.Locale()).FlowReady() }
+
+// FlowReady says "Ready to launch"
+// in the language of msgs.
+func (msgs Messages) FlowReady() string {
+	return Catalog.Format(msgs.locale, "flowReady", nil)
+}
+
+// FlowReadyDetail says "The launch review passed"
+// in the language the app shows.
+func FlowReadyDetail() string { return In(i18n.Locale()).FlowReadyDetail() }
+
+// FlowReadyDetail says "The launch review passed"
+// in the language of msgs.
+func (msgs Messages) FlowReadyDetail() string {
+	return Catalog.Format(msgs.locale, "flowReadyDetail", nil)
+}
+
+// FlowNotes says "Write the release notes"
+// in the language the app shows.
+func FlowNotes() string { return In(i18n.Locale()).FlowNotes() }
+
+// FlowNotes says "Write the release notes"
+// in the language of msgs.
+func (msgs Messages) FlowNotes() string {
+	return Catalog.Format(msgs.locale, "flowNotes", nil)
+}
+
+// FlowNotesDetail says "Summarize what changed"
+// in the language the app shows.
+func FlowNotesDetail() string { return In(i18n.Locale()).FlowNotesDetail() }
+
+// FlowNotesDetail says "Summarize what changed"
+// in the language of msgs.
+func (msgs Messages) FlowNotesDetail() string {
+	return Catalog.Format(msgs.locale, "flowNotesDetail", nil)
+}
+
 // ComponentRichTextEditor says "Rich text editor"
 // in the language the app shows.
 func ComponentRichTextEditor() string { return In(i18n.Locale()).ComponentRichTextEditor() }

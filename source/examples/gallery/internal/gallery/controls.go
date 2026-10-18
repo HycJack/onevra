@@ -20,6 +20,7 @@ type controlState struct {
 	bubble                 *bubbleDemoState
 	graph                  *graphDemoState
 	treemap                *treemapDemoState
+	flow                   *flowDemoState
 	shader                 *shaderDemoState
 	dialogOpen, nestedOpen bool
 	tree                   components.TreeVirtualizedState[string]
@@ -99,6 +100,7 @@ var controlCatalog = []controlExample{
 	{"Bubble chart", "Bubble chart", "Charts", []string{"Default"}, controlBubbleChart},
 	{"Relationship graph", "Relationship graph", "Charts", []string{"Default"}, controlGraph},
 	{"Treemap", "Treemap", "Charts", []string{"Default"}, controlTreemap},
+	{"Flow diagram", "Flow diagram", "Charts", []string{"Default"}, controlFlow},
 	{"Date & time pickers", "Date & time pickers", "Date & time", nil, nil},
 	{"Color pickers", "Color pickers", "Color", nil, nil},
 	{"Tooltip", "Tooltip", "Feedback & overlays", []string{"Default"}, controlTooltip},
@@ -142,7 +144,7 @@ var controlCatalog = []controlExample{
 // controlToolbars hold page-level sample actions, which the titlebar shows
 // after the page title so the content stays with the example itself.
 var controlToolbars = map[string]func(*ui.Context, *controlState){
-	"Data charts": chartToolbar, "Bubble chart": bubbleToolbar, "Relationship graph": graphToolbar, "Treemap": treemapToolbar, "Honeycomb": honeycombToolbar, "Chat": chatToolbar,
+	"Data charts": chartToolbar, "Bubble chart": bubbleToolbar, "Relationship graph": graphToolbar, "Treemap": treemapToolbar, "Flow diagram": flowToolbar, "Honeycomb": honeycombToolbar, "Chat": chatToolbar,
 }
 
 func controlPageStart() galleryPage { return mygoPageStart + galleryPage(len(mygoCatalog)) }
@@ -227,7 +229,7 @@ func (g *Gallery) controlsLocalized(c *ui.Context, example controlExample) {
 		})
 		return
 	}
-	if example.name == "Relationship graph" || example.name == "Treemap" || example.name == "Honeycomb" {
+	if example.name == "Relationship graph" || example.name == "Treemap" || example.name == "Flow diagram" || example.name == "Honeycomb" {
 		// These views fill the page instead of scrolling.
 		ui.Column(c).Key("controls-" + example.name).Fill().MinWidth(0).MinHeight(0).Padding(t.Space(6)).Gap(12).Children(func() {
 			example.build(c, g.controlState(example.name, "Default"), "Default")

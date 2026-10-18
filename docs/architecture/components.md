@@ -52,17 +52,21 @@ Layout, camera, hover and reveal advance in `Draw` on the UI thread. Initial tic
 
 [Gestures](../../source/components/gesture/gesture.go): wheels and pinches zoom, touchpads pan. MyGo 0.5.5 neither tells smoothed mice from touchpads nor reports pinches; a macOS adapter reads scroll phases and observes magnify events.
 
+### Flow diagrams
+
+The [flow component](../../source/components/flow/flow.go) lays out directed diagrams in ranks: it reverses cycle-closing edges, ranks nodes to keep edges short, orders ranks to reduce crossings and routes orthogonal edges between ranks. Applications build node content, or use `Card`, and own selection and opening.
+
+Content is measured on the frame after it is built; the diagram shows once every node has a size and lays out again, moving nodes, when content resizes. Layout reruns in full on topology or size changes; applications bound diagram size. The camera uses the graph's [gestures](../../source/components/gesture/gesture.go).
+
 ### Commands
 
 The [command component](../../source/components/command/command.go) separates a command view from its dialog. The [view](../../source/components/command/view.go) fills any bounded host, such as a panel window, without painting a surface; the [dialog](../../source/components/command/dialog.go) hosts it in Onevra's modal surface and adds dismissal and focus restoration. Applications retain query and active-command state, supply stable command identities and localized metadata, register window shortcuts, and handle activation. Hosts can show results immediately or start with a compact search field that expands after a committed query and collapses when cleared. Filtering uses local metadata, a synchronous host ranking applied to the same frame's query, or host-supplied results; asynchronous search, stale-result rejection, command execution and history remain application-owned. Loading and errors replace actionable results.
 
-Search keeps keyboard focus while arrows move the active result through Onevra's non-selecting List; MyGo owns virtual layout and text editing. When the query or results change, the first available command becomes active and the list returns to the top, unless the host chose the active command in the same frame. The dialog lets the modal scope establish initial focus so the overlay retains its original opener for restoration; other hosts request search focus through the state, for example after showing a hidden window. Composition-aware dismissal prevents Escape ending an input-method composition from also closing the dialog. Public accessibility metadata exposes the active command, but native assistive-technology review remains necessary. See the [compilable usage example](../../source/components/command/example_test.go).
+Search keeps keyboard focus while arrows move the active result through Onevra's non-selecting List; MyGo owns virtual layout and text editing. When the query or results change, the first available command becomes active and the list returns to the top, unless the host chose the active command in the same frame. The dialog lets the modal scope set initial focus so the overlay keeps its opener for restoration; other hosts request search focus through the state, as after showing a hidden window. Composition-aware dismissal prevents Escape ending an input-method composition from also closing the dialog. Accessibility metadata exposes the active command; native assistive-technology review remains necessary. See the [compilable usage example](../../source/components/command/example_test.go).
 
-On macOS, palettes can optionally select an already enabled keyboard input source through the existing MyGo responder’s [AppKit input context](https://developer.apple.com/documentation/appkit/nstextinputcontext/selectedkeyboardinputsource). This small native adapter fills an upstream API gap without intercepting events or implementing text input. Selection waits for search focus and committed composition, runs once per opening, and normally restores the preceding source on dismissal if the active context and selected source still match.
+On macOS, palettes can select an enabled keyboard input source through the MyGo responder’s [AppKit input context](https://developer.apple.com/documentation/appkit/nstextinputcontext/selectedkeyboardinputsource). This small adapter fills an upstream gap without intercepting events or implementing text input. Selection waits for search focus and committed composition, runs once per opening, and normally restores the previous source on dismissal if the context and source still match.
 
-Hosts may retain the selected source instead. Unavailable sources leave search usable and expose an error through retained state. Embedded hosts release the session when removing the palette; all hosts release it before window destruction.
-
-See the [input-source lifecycle API](../../source/components/command/input_source.go).
+Hosts may retain the selected source instead. Unavailable sources leave search usable and report an error through retained state. Embedded hosts release the session on removal, all hosts before window destruction; see the [input-source lifecycle API](../../source/components/command/input_source.go).
 
 ### Code and Markdown
 
@@ -102,7 +106,7 @@ The catalog is the only source of these names; there is no per-scope or per-Shel
 
 ## Page container and layout
 
-Plain Shell hides the system title bar and places content below a draggable strip with native macOS/Linux window controls or Onevra caption buttons on Windows; its opaque theme background covers the whole window, including the strip, with no header inset. `ShellOptions.HeaderLeading` replaces the header title with leading content and `HeaderActions` builds trailing controls before the Windows caption buttons. Transient tray panels are MyGo flyouts shown as system popovers, drawn by the application where the platform lacks one.
+Plain Shell hides the system title bar and places content below a draggable strip with native macOS/Linux window controls or Onevra caption buttons on Windows; its opaque theme background covers the whole window, including the strip, with no header inset. `ShellOptions.HeaderLeading` replaces the title and `HeaderActions` builds trailing controls before Windows caption buttons. Transient tray panels are MyGo flyouts shown as system popovers, drawn by the application where the platform lacks one.
 
 The sidebar page container reserves space for system window controls and overlays a transparent draggable header with a Lucide sidebar control. The toggle keeps additional clearance from macOS traffic lights. Its default page contains a collapsible left sidebar and a flexible main region.
 
@@ -124,7 +128,7 @@ MyGo's animation values drive the sidebar reveal, without a separate timer or an
 
 The public [Settings component](../../source/components/settings.go) renders application-defined categories, groups and setting rows independently of Shell or Dialog. Applications provide stable identities, localized metadata and synchronous control builders, and retain both presentation state and setting values.
 
-Settings owns navigation, searchable presentation and the default row layout, including optional group header actions, which are not searched, and descriptions that applications may compose from inline text and links while search still matches their plain text; it does not load configuration, persist changes or prescribe when values take effect. Rows are slots rather than a fixed form: applications may add leading content, stack wide controls below the text or build the entire row, while the row's metadata keeps it searchable. Hosts choose the narrow presentation from the space allocated to the surface, so embedded settings do not incorrectly use the full window width.
+Settings owns navigation, searchable presentation and the default row layout, including unsearched group header actions and descriptions composed from inline text and links, whose plain text search still matches; it does not load configuration, persist changes or prescribe when values take effect. Rows are slots: applications may add leading content, stack wide controls below the text or build the whole row, whose metadata keeps it searchable. Hosts choose the narrow presentation from the surface's own space, not the window width.
 
 Small surfaces can omit search or navigation. Without navigation, every category appears on one page, so an application that wants its own navigation passes only the selected category.
 

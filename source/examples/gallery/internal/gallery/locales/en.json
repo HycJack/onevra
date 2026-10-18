@@ -972,6 +972,78 @@
       }
     }
   },
+  "flowDiagram": "Flow diagram",
+  "flowLabel": "Plan with {nodes} steps and {links} links. Click a step to select it, double-click to open it, drag to pan, and use the wheel or pinch to zoom.",
+  "@flowLabel": {
+    "placeholders": {
+      "nodes": {
+        "type": "int"
+      },
+      "links": {
+        "type": "int"
+      }
+    }
+  },
+  "flowEmpty": "No steps planned yet",
+  "flowAdd": "Add a step",
+  "flowReset": "Remove added steps",
+  "flowLeftToRight": "Lay out left to right",
+  "flowTopToBottom": "Lay out top to bottom",
+  "flowZoomIn": "Zoom in",
+  "flowZoomOut": "Zoom out",
+  "flowSelected": "Selected: {title}",
+  "@flowSelected": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "flowNewStep": "Follow-up step {number}",
+  "@flowNewStep": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "flowNewStepDetail": "Added to watch the layout adapt",
+  "flowExperiment": "Experiment #{number}",
+  "@flowExperiment": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "flowDone": "Done",
+  "flowRunning": "In progress",
+  "flowPlanned": "Planned",
+  "flowWaiting": "Waiting",
+  "flowDependsOn": "depends on",
+  "flowInforms": "informs",
+  "flowGoal": "Launch the redesigned website",
+  "flowGoalDetail": "Goal defined",
+  "flowAudit": "Audit the current site",
+  "flowAuditDetail": "Inventory pages, traffic and gaps",
+  "flowContent": "Rewrite the key pages",
+  "flowContentDetail": "Shorter copy for the top ten pages",
+  "flowNavigation": "Prototype the navigation",
+  "flowNavigationDetail": "Compare two menu structures",
+  "flowSpeed": "Measure page speed",
+  "flowSpeedDetail": "Lab and field measurements",
+  "flowMenus": "Short menus test best",
+  "flowMenusDetail": "From the navigation prototype",
+  "flowRetest": "Retest on the staging server",
+  "flowRetestDetail": "Waiting for the server to return",
+  "flowImages": "Images slow the home page",
+  "flowImagesDetail": "From the speed measurements",
+  "flowReview": "Review the launch",
+  "flowReviewDetail": "Check that every goal is met",
+  "flowReady": "Ready to launch",
+  "flowReadyDetail": "The launch review passed",
+  "flowNotes": "Write the release notes",
+  "flowNotesDetail": "Summarize what changed",
   "componentRichTextEditor": "Rich text editor",
   "componentMarkdownStream": "Markdown stream",
   "timeline": "Timeline",

@@ -12,6 +12,7 @@ var navigationIcons = map[string]func() *ui.SVG{
 	"Bubble chart":       lucide.ChartScatter,
 	"Relationship graph": lucide.Waypoints,
 	"Treemap":            lucide.LayoutDashboard,
+	"Flow diagram":       lucide.Workflow,
 
 	"Transforms":            lucide.Rotate3d,
 	"Motion":                lucide.Activity,
