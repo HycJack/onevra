@@ -35,18 +35,40 @@ const (
 // track and shows its label in a heavier weight, like a macOS segmented
 // control. TabsHighlight slides a rounded block behind the chosen tab's label.
 func Tabs(c *ui.Context, selected *int, variant TabsVariant, labels ...string) ui.TabsParts {
+	return TabsWithLeading(c, selected, variant, nil, labels...)
+}
+
+// TabsWithLeading is Tabs with an application-built leading slot before each
+// tab's label, for example an icon. The builder receives the tab's index and
+// the theme-scaled icon size as a suggestion, and inherits the tab's text
+// color; a nil builder leaves no leading space. Keep it non-interactive and
+// free of I/O or background work.
+func TabsWithLeading(c *ui.Context, selected *int, variant TabsVariant, leading func(c *ui.Context, i int, size float32), labels ...string) ui.TabsParts {
 	tabs := ui.TabsBase(c, selected, len(labels))
 	switch variant {
 	case TabsSegmented:
-		return segmentedTabs(c, tabs, selected, labels)
+		return segmentedTabs(c, tabs, selected, labels, leading)
 	case TabsHighlight:
-		return highlightTabs(c, tabs, selected, labels)
+		return highlightTabs(c, tabs, selected, labels, leading)
 	}
-	return underlinedTabs(c, tabs, selected, labels)
+	return underlinedTabs(c, tabs, selected, labels, leading)
+}
+
+// tabContent builds tab i's leading slot, when given, and its label.
+func tabContent(c *ui.Context, tab ui.Element, i int, label string, leading func(c *ui.Context, i int, size float32)) ui.Element {
+	t := c.Theme()
+	var text ui.Element
+	tab.AlignItems(ui.Center).Gap(t.Space(1.5)).Children(func() {
+		if leading != nil {
+			leading(c, i, t.Space(3.5))
+		}
+		text = Text(c, label).SingleLine()
+	})
+	return text
 }
 
 // underlinedTabs puts the accent underline under the chosen tab.
-func underlinedTabs(c *ui.Context, tabs ui.TabsParts, selected *int, labels []string) ui.TabsParts {
+func underlinedTabs(c *ui.Context, tabs ui.TabsParts, selected *int, labels []string, leading func(c *ui.Context, i int, size float32)) ui.TabsParts {
 	t := c.Theme()
 	tabs.List.Gap(t.Space(1))
 	var active ui.Element
@@ -68,7 +90,7 @@ func underlinedTabs(c *ui.Context, tabs ui.TabsParts, selected *int, labels []st
 					p.FocusRing(r, [4]float32{t.Radius, t.Radius, t.Radius, t.Radius})
 				}
 			})
-			tab.Children(func() { Text(c, label).SingleLine() })
+			tabContent(c, tab, i, label, leading)
 		}
 	})
 	if len(labels) > 0 {
@@ -90,7 +112,7 @@ func underlinedTabs(c *ui.Context, tabs ui.TabsParts, selected *int, labels []st
 
 // segmentedTabs puts the chosen tab on a raised thumb inside a recessed track,
 // as macOS draws a segmented control.
-func segmentedTabs(c *ui.Context, tabs ui.TabsParts, selected *int, labels []string) ui.TabsParts {
+func segmentedTabs(c *ui.Context, tabs ui.TabsParts, selected *int, labels []string, leading func(c *ui.Context, i int, size float32)) ui.TabsParts {
 	t := c.Theme()
 	// The track is recessed from the page and the thumb raised from it, with a
 	// cast shadow: the same raised face a toolbar button uses.
@@ -119,12 +141,9 @@ func segmentedTabs(c *ui.Context, tabs ui.TabsParts, selected *int, labels []str
 					p.FocusRing(r, [4]float32{pill, pill, pill, pill})
 				}
 			})
-			tab.Children(func() {
-				text := Text(c, label).SingleLine()
-				if on {
-					text.FontWeight(600)
-				}
-			})
+			if text := tabContent(c, tab, i, label, leading); on {
+				text.FontWeight(600)
+			}
 		}
 	})
 	if len(labels) > 0 {
@@ -142,7 +161,7 @@ func segmentedTabs(c *ui.Context, tabs ui.TabsParts, selected *int, labels []str
 
 // highlightTabs sets the chosen tab on a filled block that slides behind the
 // labels, as Figma marks its chosen tab.
-func highlightTabs(c *ui.Context, tabs ui.TabsParts, selected *int, labels []string) ui.TabsParts {
+func highlightTabs(c *ui.Context, tabs ui.TabsParts, selected *int, labels []string, leading func(c *ui.Context, i int, size float32)) ui.TabsParts {
 	t := c.Theme()
 	radius := [4]float32{t.Radius, t.Radius, t.Radius, t.Radius}
 	tabs.List.Gap(t.Space(0.5)).AlignSelf(ui.Start)
@@ -165,7 +184,7 @@ func highlightTabs(c *ui.Context, tabs ui.TabsParts, selected *int, labels []str
 					p.FocusRing(r, radius)
 				}
 			})
-			tab.Children(func() { Text(c, label).SingleLine() })
+			tabContent(c, tab, i, label, leading)
 		}
 	})
 	if len(labels) > 0 {

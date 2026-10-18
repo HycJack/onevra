@@ -33,6 +33,30 @@ func TestTabsClick(t *testing.T) {
 	}
 }
 
+// Each tab's leading slot precedes its label and leaves the tab clickable.
+func TestTabsWithLeading(t *testing.T) {
+	for _, variant := range []TabsVariant{TabsUnderline, TabsSegmented, TabsHighlight} {
+		selected := 0
+		marks := []string{"[g]", "[a]"}
+		tt := ui.NewTester(func(c *ui.Context) {
+			TabsWithLeading(c, &selected, variant, func(c *ui.Context, i int, _ float32) { Text(c, marks[i]) }, "General", "Appearance")
+		}, 400, 100)
+		for i, label := range []string{"General", "Appearance"} {
+			mark, ok := tt.Find(marks[i])
+			text, _ := tt.Find(label)
+			if !ok || mark.X+mark.W > text.X {
+				t.Fatalf("variant=%v: %s at %v, label at %v", variant, marks[i], mark, text)
+			}
+		}
+		if err := tt.Click("[a]"); err != nil {
+			t.Fatal(err)
+		}
+		if selected != 1 {
+			t.Errorf("variant=%v: selected=%d, want 1", variant, selected)
+		}
+	}
+}
+
 func TestTabsIndicatorAnimation(t *testing.T) {
 	for _, mode := range []bool{false, true} {
 		selected := 0

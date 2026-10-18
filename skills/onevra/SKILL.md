@@ -69,7 +69,7 @@ Use Onevra's control whenever one exists; it replaces MyGo's styled widget of th
 | Select, combobox, autocomplete | `components.Select` (searchable), `components.NativeSelect` |
 | Number, slider, date, time, color | `NumberInput`, `Slider`, `Calendar`/`CalendarPicker`, `TimePicker`, `ColorPicker`/`ColorView` |
 | Scroll, list, grid, tree, outline, table | `ScrollView`, `List`, `GridView`, `Tree`, `TreeVirtualized`, `Table`, `TableVirtualized` |
-| Tabs, accordion, collapsible, split, breadcrumbs, sidebar | The Onevra component of the same name; `components.Tabs` takes `TabsUnderline`, `TabsSegmented` or `TabsHighlight` |
+| Tabs, accordion, collapsible, split, breadcrumbs, sidebar | The Onevra component of the same name; `components.Tabs` takes `TabsUnderline`, `TabsSegmented` or `TabsHighlight`, and `TabsWithLeading` adds icons before labels |
 | Circular item picker in a magnified honeycomb | `components.Honeycomb` |
 | Slides browsed by dragging, swiping or arrows, with optional rotation | `components.Carousel` with an application-owned `CarouselState` |
 | One-by-one triage of a deck, swiped left or right with undo | `components.CardStack` with an application-owned `CardStackState` |
