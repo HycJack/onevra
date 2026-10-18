@@ -273,7 +273,7 @@ func (v *view) tip(c *ui.Context, d Detail, x, y float32, opts Options) {
 		}
 		n := d.Path[len(d.Path)-1]
 		ui.Column(c).MaxWidth(t.Space(70)).Padding(t.Space(1.5), t.Space(2)).Gap(t.Space(.5)).
-			Radius(t.Radius).Material(glass.Glass{Tint: t.Text}).TextColor(t.Background).FontSize(t.FontSize-1).
+			Radius(t.Radius).Material(glass.Glass{Style: glass.Clear, Tint: t.Text}).TextColor(t.Background).FontSize(t.FontSize-1).
 			Shadow(0, t.Space(.5), t.Space(2), 0, ui.RGBA(0, 0, 0, .14)).Children(func() {
 			if len(d.Path) > 1 {
 				components.Text(c, pathLabel(d.Path[:len(d.Path)-1])).Opacity(.7)

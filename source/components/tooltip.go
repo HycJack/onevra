@@ -27,7 +27,7 @@ func Tooltip(c *ui.Context, anchor ui.Element, text string) ui.Element {
 func styleTip(c *ui.Context, tip ui.Element) ui.Element {
 	t := c.Theme()
 	return tip.MaxWidth(t.Space(80)).Padding(t.Space(1.5), t.Space(2)).
-		Radius(t.Radius).Material(glass.Glass{Tint: t.Text}).TextColor(t.Background).
+		Radius(t.Radius).Material(glass.Glass{Style: glass.Clear, Tint: t.Text}).TextColor(t.Background).
 		FontSize(t.FontSize-1).
 		Shadow(0, t.Space(.5), t.Space(2), 0, ui.RGBA(0, 0, 0, .14))
 }
