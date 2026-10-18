@@ -4,6 +4,9 @@ import { Logo } from "~/components/logo"
 import type { LandingContent } from "~/lib/content"
 import { localeFromPathname, site } from "~/lib/site"
 
+const footerLinkClass =
+  "text-sm text-muted-foreground transition-colors hover:text-foreground"
+
 export function SiteFooter({ content }: { content: LandingContent }) {
   const locale = localeFromPathname(useLocation().pathname)
   const homeHref = locale === "zh" ? "/zh" : "/"
@@ -35,16 +38,20 @@ export function SiteFooter({ content }: { content: LandingContent }) {
             <ul className="flex flex-col gap-2">
               {group.links.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={linkHref(link.href)}
-                    target={link.href.startsWith("http") ? "_blank" : undefined}
-                    rel={
-                      link.href.startsWith("http") ? "noreferrer" : undefined
-                    }
-                    className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-                  >
-                    {link.label}
-                  </a>
+                  {link.href.startsWith("http") ? (
+                    <a
+                      href={link.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className={footerLinkClass}
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link to={linkHref(link.href)} className={footerLinkClass}>
+                      {link.label}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>

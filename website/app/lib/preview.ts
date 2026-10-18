@@ -26,7 +26,7 @@ export const defaultPreviewSlug = "button"
 
 /**
  * Pages by their own slug and by every component they demonstrate, so a
- * link to /components?c=calendar opens the date and time pickers page.
+ * link to /components/calendar opens the date and time pickers page.
  */
 const previewAliases = new Map<string, PreviewEntry>()
 for (const entry of previewEntries) {
@@ -38,6 +38,11 @@ for (const entry of previewEntries) {
 
 export function findPreview(slug: string | null): PreviewEntry | undefined {
   return slug ? previewAliases.get(slug.toLowerCase()) : undefined
+}
+
+/** The page demonstrating a component, by its Go name such as "TextBox". */
+export function findComponentPreview(name: string): PreviewEntry | undefined {
+  return previewAliases.get(previewAlias(name))
 }
 
 function previewAlias(value: string): string {
@@ -69,6 +74,12 @@ export function previewGroups(locale: Locale): PreviewGroup[] {
 
 export function previewName(entry: PreviewEntry, locale: Locale): string {
   return locale === "zh" ? entry.nameZh : entry.name
+}
+
+/** The site path of a component page, or of the page list without a slug. */
+export function componentsHref(locale: Locale, slug?: string): string {
+  const base = locale === "zh" ? "/zh/components" : "/components"
+  return slug ? `${base}/${slug}` : base
 }
 
 /**

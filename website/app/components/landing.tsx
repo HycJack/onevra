@@ -18,7 +18,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card"
 import { Separator } from "~/components/ui/separator"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs"
 import { content, type LandingContent } from "~/lib/content"
+import { componentsHref, findComponentPreview } from "~/lib/preview"
 import { site, type Locale } from "~/lib/site"
+import { cn } from "~/lib/utils"
 
 const swatches = [
   { name: "primary", className: "bg-primary" },
@@ -90,7 +92,6 @@ function Hero({
   content: LandingContent
   locale: Locale
 }) {
-  const componentsHref = locale === "zh" ? "/zh/components" : "/components"
   return (
     <section className="relative overflow-hidden">
       <div
@@ -107,7 +108,7 @@ function Hero({
           {highlightAccent(c.hero.description, c.hero.highlight)}
         </p>
         <div className="flex flex-col gap-3 sm:flex-row">
-          <Button size="lg" render={<Link to={componentsHref} />}>
+          <Button size="lg" render={<Link to={componentsHref(locale)} />}>
             {c.hero.primary}
           </Button>
           <Button
@@ -140,7 +141,6 @@ function CatalogSection({
   content: LandingContent
   locale: Locale
 }) {
-  const componentsHref = locale === "zh" ? "/zh/components" : "/components"
   return (
     <section
       id="components"
@@ -157,14 +157,27 @@ function CatalogSection({
               <CardTitle>{group.title}</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-wrap gap-1.5">
-              {group.items.map((item) => (
-                <span
-                  key={item}
-                  className="rounded-md border bg-background px-2 py-0.5 font-mono text-xs text-muted-foreground"
-                >
-                  {item}
-                </span>
-              ))}
+              {group.items.map((item) => {
+                const preview = findComponentPreview(item)
+                const chip =
+                  "rounded-md border bg-background px-2 py-0.5 font-mono text-xs text-muted-foreground"
+                return preview ? (
+                  <Link
+                    key={item}
+                    to={componentsHref(locale, preview.slug)}
+                    className={cn(
+                      chip,
+                      "transition-colors hover:border-primary/40 hover:text-foreground"
+                    )}
+                  >
+                    {item}
+                  </Link>
+                ) : (
+                  <span key={item} className={chip}>
+                    {item}
+                  </span>
+                )
+              })}
             </CardContent>
           </Card>
         ))}
@@ -174,7 +187,7 @@ function CatalogSection({
         <Button
           variant="outline"
           size="sm"
-          render={<Link to={componentsHref} />}
+          render={<Link to={componentsHref(locale)} />}
         >
           {c.hero.primary}
           <ArrowRight data-icon="inline-end" />

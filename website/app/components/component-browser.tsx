@@ -1,5 +1,6 @@
 import { ExternalLink } from "lucide-react"
-import { Link, useSearchParams } from "react-router"
+import { useEffect } from "react"
+import { Link, useNavigate, useParams } from "react-router"
 
 import { SiteFooter } from "~/components/site-footer"
 import { SiteHeader } from "~/components/site-header"
@@ -7,6 +8,7 @@ import { Badge } from "~/components/ui/badge"
 import { Button } from "~/components/ui/button"
 import { componentsPage, content } from "~/lib/content"
 import {
+  componentsHref,
   defaultPreviewSlug,
   findPreview,
   previewEntries,
@@ -18,23 +20,55 @@ import {
 import { site, type Locale } from "~/lib/site"
 import { cn } from "~/lib/utils"
 
+/** The page a route's slug names, or the default for none or an unknown one. */
+function selectedPreview(slug: string | undefined): PreviewEntry {
+  return (
+    findPreview(slug ?? null) ??
+    findPreview(defaultPreviewSlug) ??
+    previewEntries[0]
+  )
+}
+
+/** Route metadata naming the selected component in the page title. */
+export function componentsMeta(locale: Locale, slug: string | undefined) {
+  const page = componentsPage[locale]
+  const title = slug
+    ? `${previewName(selectedPreview(slug), locale)} — ${page.meta.title}`
+    : page.meta.title
+  return [
+    { title },
+    { name: "description", content: page.meta.description },
+    { property: "og:title", content: title },
+    { property: "og:description", content: page.meta.description },
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary_large_image" },
+  ]
+}
+
 export function ComponentBrowser({ locale }: { locale: Locale }) {
   const landing = content[locale]
   const page = componentsPage[locale]
   const groups = previewGroups(locale)
-  const [params, setParams] = useSearchParams()
-  const requested = params.get("c")
-  const selected =
-    findPreview(requested) ??
-    findPreview(defaultPreviewSlug) ??
-    previewEntries[0]
+  const navigate = useNavigate()
+  const { slug: requested } = useParams()
+  const selected = selectedPreview(requested)
   const title = previewName(selected, locale)
   const frameSrc = previewFrameUrl(locale, selected.slug)
+  const otherLocale = locale === "en" ? "zh" : "en"
+
+  // An alias such as /components/calendar or an unknown slug settles on the
+  // page actually shown, so the address stays shareable and matches the list.
+  useEffect(() => {
+    if (requested && requested !== selected.slug) {
+      navigate(componentsHref(locale, selected.slug), {
+        replace: true,
+        preventScrollReset: true,
+      })
+    }
+  }, [requested, selected.slug, locale, navigate])
 
   function choose(slug: string) {
-    const next = new URLSearchParams(params)
-    next.set("c", slug)
-    setParams(next, { preventScrollReset: true })
+    navigate(componentsHref(locale, slug), { preventScrollReset: true })
   }
 
   return (
@@ -42,7 +76,10 @@ export function ComponentBrowser({ locale }: { locale: Locale }) {
       <SiteHeader
         locale={locale}
         content={landing}
-        localeHref={locale === "en" ? "/zh/components" : "/components"}
+        localeHref={componentsHref(
+          otherLocale,
+          requested ? selected.slug : undefined
+        )}
       />
 
       <main className="flex-1">
@@ -199,7 +236,7 @@ function SidebarLink({
 }) {
   return (
     <Link
-      to={`?c=${entry.slug}`}
+      to={componentsHref(locale, entry.slug)}
       preventScrollReset
       aria-current={selected ? "page" : undefined}
       className={cn(

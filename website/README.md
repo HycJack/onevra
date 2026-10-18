@@ -61,7 +61,9 @@ uploaded to Pages.
 ## Component previews
 
 `/components` and `/zh/components` list the Gallery's component
-demonstrations and frame a live preview. The preview is the Gallery's own Go app
+demonstrations and frame a live preview. Each demonstration is prerendered at
+`/components/<slug>` with its own title; a component alias such as
+`/components/calendar` settles on the page that demonstrates it. The preview is the Gallery's own Go app
 for browsers,
 [`source/examples/gallery/web`](../source/examples/gallery/web/main.go), built by
 [`scripts/preview-wasm.ts`](scripts/preview-wasm.ts).
@@ -87,7 +89,7 @@ for browsers,
 | Path | Purpose |
 | --- | --- |
 | `app/root.tsx` | Document shell, theme bootstrap and error boundary. |
-| `app/routes.ts` | Route table: `/`, `/components` and their `/zh` pages. |
+| `app/routes.ts` | Route table: `/`, `/components/:slug?` and their `/zh` pages. |
 | `app/components/landing.tsx` | The landing page sections. |
 | `app/components/component-browser.tsx` | The components page and its preview frame. |
 | `app/lib/content.ts` | English and Simplified Chinese copy and code samples. |

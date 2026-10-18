@@ -40,13 +40,13 @@ export function SiteHeader({
 
         <nav className="ml-4 hidden items-center gap-1 md:flex">
           {content.nav.map((item) => (
-            <a
+            <Link
               key={item.href}
-              href={sectionHref(item.href)}
+              to={sectionHref(item.href)}
               className="rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
               {item.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
