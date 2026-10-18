@@ -50,3 +50,8 @@ func (m Messages) Label(key, label string) string {
 func (m Messages) Format(key string, args map[string]any) string {
 	return catalog.Format(m.locale, key, args)
 }
+
+// Count returns the message of key for count, a plural-aware integer.
+func (m Messages) Count(key string, count int) string {
+	return catalog.Format(m.locale, key, map[string]any{"count": count})
+}

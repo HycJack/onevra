@@ -78,6 +78,10 @@ var controlSections = map[string][]controlExample{
 		{"Accordion", "Accordion", "Layout & containers", []string{"Default"}, controlAccordion},
 		{"Collapsible", "Collapsible", "Layout & containers", []string{"Right arrow", "Left arrow"}, controlCollapsible},
 	},
+	"Avatars": {
+		{"Avatar", "Avatar", "Content display", []string{"Initials", "Photo", "Status"}, controlAvatar},
+		{"AvatarGroup", "AvatarGroup", "Content display", []string{"Default", "Overflow", "Changing members"}, controlAvatarGroup},
+	},
 	"Split panes": {
 		{"Split", "Split", "Layout & containers", []string{"Horizontal", "Vertical"}, controlSplit},
 		{"SplitPercent", "SplitPercent", "Layout & containers", []string{"Horizontal", "Vertical"}, controlSplitPercent},
@@ -97,6 +101,7 @@ var controlCatalog = []controlExample{
 	{"Toast", "Toast", "Feedback & overlays", []string{"Status", "Actions", "Progress"}, controlToast},
 	{"Chat", "Chat", "Conversation", []string{"Default"}, controlChat},
 	{"RichText", "RichText", "Content display", []string{"Default"}, controlRichText},
+	{"Avatars", "Avatars", "Content display", nil, nil},
 	{"Breadcrumbs", "Breadcrumbs", "Actions & navigation", []string{"Default"}, controlBreadcrumbs},
 	{"Rating", "Rating", "Selection & values", []string{"Default"}, controlRating},
 	{"Text", "Text", "Content display", []string{"Default", "Editable"}, controlText},

@@ -123,5 +123,30 @@
         "type": "num"
       }
     }
+  },
+  "avatarOnline": "{label}, online",
+  "@avatarOnline": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "avatarOffline": "{label}, offline",
+  "@avatarOffline": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "avatarGroup": "Team members",
+  "avatarGroupMore": "{count, plural, one {# more member} other {# more members}}",
+  "@avatarGroupMore": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

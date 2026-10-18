@@ -8531,3 +8531,103 @@ func HoldReset() string { return In(i18n.Locale()).HoldReset() }
 func (msgs Messages) HoldReset() string {
 	return Catalog.Format(msgs.locale, "holdReset", nil)
 }
+
+// Avatars says "Avatars"
+// in the language the app shows.
+func Avatars() string { return In(i18n.Locale()).Avatars() }
+
+// Avatars says "Avatars"
+// in the language of msgs.
+func (msgs Messages) Avatars() string {
+	return Catalog.Format(msgs.locale, "avatars", nil)
+}
+
+// ComponentAvatar says "Avatar"
+// in the language the app shows.
+func ComponentAvatar() string { return In(i18n.Locale()).ComponentAvatar() }
+
+// ComponentAvatar says "Avatar"
+// in the language of msgs.
+func (msgs Messages) ComponentAvatar() string {
+	return Catalog.Format(msgs.locale, "componentAvatar", nil)
+}
+
+// ComponentAvatarGroup says "AvatarGroup"
+// in the language the app shows.
+func ComponentAvatarGroup() string { return In(i18n.Locale()).ComponentAvatarGroup() }
+
+// ComponentAvatarGroup says "AvatarGroup"
+// in the language of msgs.
+func (msgs Messages) ComponentAvatarGroup() string {
+	return Catalog.Format(msgs.locale, "componentAvatarGroup", nil)
+}
+
+// AvatarInitials says "Initials"
+// in the language the app shows.
+func AvatarInitials() string { return In(i18n.Locale()).AvatarInitials() }
+
+// AvatarInitials says "Initials"
+// in the language of msgs.
+func (msgs Messages) AvatarInitials() string {
+	return Catalog.Format(msgs.locale, "avatarInitials", nil)
+}
+
+// AvatarPhoto says "Photo"
+// in the language the app shows.
+func AvatarPhoto() string { return In(i18n.Locale()).AvatarPhoto() }
+
+// AvatarPhoto says "Photo"
+// in the language of msgs.
+func (msgs Messages) AvatarPhoto() string {
+	return Catalog.Format(msgs.locale, "avatarPhoto", nil)
+}
+
+// AvatarOverflow says "Overflow"
+// in the language the app shows.
+func AvatarOverflow() string { return In(i18n.Locale()).AvatarOverflow() }
+
+// AvatarOverflow says "Overflow"
+// in the language of msgs.
+func (msgs Messages) AvatarOverflow() string {
+	return Catalog.Format(msgs.locale, "avatarOverflow", nil)
+}
+
+// AvatarChangingMembers says "Changing members"
+// in the language the app shows.
+func AvatarChangingMembers() string { return In(i18n.Locale()).AvatarChangingMembers() }
+
+// AvatarChangingMembers says "Changing members"
+// in the language of msgs.
+func (msgs Messages) AvatarChangingMembers() string {
+	return Catalog.Format(msgs.locale, "avatarChangingMembers", nil)
+}
+
+// AvatarEditors says "Editors"
+// in the language the app shows.
+func AvatarEditors() string { return In(i18n.Locale()).AvatarEditors() }
+
+// AvatarEditors says "Editors"
+// in the language of msgs.
+func (msgs Messages) AvatarEditors() string {
+	return Catalog.Format(msgs.locale, "avatarEditors", nil)
+}
+
+// AddMember says "Add member"
+// in the language the app shows.
+func AddMember() string { return In(i18n.Locale()).AddMember() }
+
+// AddMember says "Add member"
+// in the language of msgs.
+func (msgs Messages) AddMember() string {
+	return Catalog.Format(msgs.locale, "addMember", nil)
+}
+
+// RemoveMember says "Remove member"
+// in the language the app shows.
+func RemoveMember() string { return In(i18n.Locale()).RemoveMember() }
+
+// RemoveMember says "Remove member"
+// in the language of msgs.
+func (msgs Messages) RemoveMember() string {
+	return Catalog.Format(msgs.locale, "removeMember", nil)
+}

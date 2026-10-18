@@ -37,7 +37,7 @@ func controlComponents() []controlExample {
 }
 
 func TestControlPages(t *testing.T) {
-	if len(controlCatalog) != 37 {
+	if len(controlCatalog) != 38 {
 		t.Fatal("missing control examples")
 	}
 	for i, example := range controlCatalog {
@@ -199,6 +199,8 @@ func TestControlExampleInteractions(t *testing.T) {
 						switch example.name {
 						case "Data charts":
 							variant = "Bar chart"
+						case "AvatarGroup":
+							variant = "Changing members"
 						case "Badge":
 							variant = "Live updates"
 						case "Skeleton":
@@ -269,10 +271,13 @@ func TestControlExampleInteractions(t *testing.T) {
 					tt.Key(0, ui.KeyTab)
 					tt.Key(0, ui.KeyRight)
 					changed = s.index == 1
+				case "AvatarGroup":
+					click("Remove member")
+					changed = s.index == 4
 				case "Badge":
 					click("Next status")
 					changed = s.badge.status == 1 && tt.HasText("Syncing")
-				case "Image", "Spinner":
+				case "Image", "Spinner", "Avatar":
 					return // Display-only components have no interaction state.
 				case "ScrollView":
 					return // ScrollView interactions are covered in the component tests.

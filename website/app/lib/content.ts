@@ -290,7 +290,7 @@ export const content: Record<Locale, LandingContent> = {
         },
         {
           title: "Surfaces and media",
-          items: ["Settings", "SearchSettings", "Image", "PixelGrid"],
+          items: ["Settings", "SearchSettings", "Image", "PixelGrid", "Avatar", "AvatarGroup"],
         },
         {
           title: "Shells and icons",
@@ -586,7 +586,7 @@ export const content: Record<Locale, LandingContent> = {
         },
         {
           title: "界面与媒体",
-          items: ["Settings", "SearchSettings", "Image", "PixelGrid"],
+          items: ["Settings", "SearchSettings", "Image", "PixelGrid", "Avatar", "AvatarGroup"],
         },
         {
           title: "窗口外壳与图标",

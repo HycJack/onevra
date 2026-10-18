@@ -60,5 +60,9 @@
   "tagSelected": "已选中{label}。按退格键将其移除。",
   "tagExists": "{label}已存在",
   "holdDone": "完成",
-  "holdHint": "按住 {seconds} 秒以确认。使用键盘时，按住空格键或回车键。"
+  "holdHint": "按住 {seconds} 秒以确认。使用键盘时，按住空格键或回车键。",
+  "avatarOnline": "{label}，在线",
+  "avatarOffline": "{label}，离线",
+  "avatarGroup": "团队成员",
+  "avatarGroupMore": "另外 {count} 位成员"
 }

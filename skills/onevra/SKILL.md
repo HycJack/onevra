@@ -73,6 +73,7 @@ Use Onevra's control whenever one exists; it replaces MyGo's styled widget of th
 | Modal, alert, popover, tooltip | `Dialog`, `AlertDialog`, `Popover`, `Tooltip` |
 | Toast | MyGo's `c.Toast`, `ToastAction`, `AddToast`; Shell builds them with `components.Toasts`, which standalone hosts call themselves; place them with `ShellOptions.Toasts` (`components.ToastOptions`). `ui.Toast.Type` takes `components.ToastInfo`/`Success`/`Warning`/`Error` |
 | Progress, spinner, badge, rating, icon, image | The Onevra component of the same name; icons from `icons/lucide` |
+| Avatar or avatar group | `components.Avatar`, `components.AvatarGroup` |
 | Categorical charts and donuts | `components/chart`: `Bar`, `Line`, `Area`, `StackedBar`, `Donut`; see the [usage example](../../source/components/chart/example_test.go) |
 | Relationship graph | `components/graph`: `View`; see the [usage example](../../source/components/graph/example_test.go) |
 | Pan and zoom on a custom canvas | `components/gesture`: `Navigation.Handle` for wheel and pinch zoom and touchpad panning, or `Classify` inside an existing `HandleInput` |
@@ -87,7 +88,7 @@ Use MyGo directly for:
 - Specialized charts and continuous/time axes from `ui/chart`, and element transforms, motion methods and timelines. Use `LayoutBounds` for layout calculations and local pointer coordinates; `Element.Bounds` includes visual transforms.
 - Native menus and context menus, `Flyout`, `WebView`, `ui/editor` code, snippet and diff views, the `ui/richtext` editor, `ui/markdown` documents and streaming replies, and every MyGo plugin, including Glass. Do not write Onevra-style replacements.
 - MyGo's unstyled bases when building a new reusable control.
-- A MyGo widget with no Onevra equivalent. Onevra intentionally omits Divider, Avatar, Meter, Form, Field, Toolbar and OutlineTable: compose dividers from Box or borders before reaching for the upstream widget. For a segmented control, use `components.Tabs` with `TabsSegmented` instead of `ui.Segmented`.
+- A MyGo widget with no Onevra equivalent. Onevra intentionally omits Divider, Meter, Form, Field, Toolbar and OutlineTable: compose dividers from Box or borders before reaching for the upstream widget. For a segmented control, use `components.Tabs` with `TabsSegmented` instead of `ui.Segmented`.
 
 Charts accept application-owned data and formatting, with generic empty and detail slots. Keep series/slice IDs stable and state separate per chart; `chart.State{Index: -1}` starts unselected. Prepare large datasets outside builders; these views do not downsample or virtualize data. Graphs keep layout and camera in one retained `graph.State` per view and need stable node IDs.
 

@@ -843,5 +843,15 @@
   "holdToSignOut": "按住以退出登录",
   "holdSignedOut": "已退出登录",
   "holdKeepHolding": "继续按住…",
-  "holdReset": "重置"
+  "holdReset": "重置",
+  "avatars": "头像",
+  "componentAvatar": "头像",
+  "componentAvatarGroup": "头像组",
+  "avatarInitials": "姓名缩写",
+  "avatarPhoto": "照片",
+  "avatarOverflow": "折叠溢出",
+  "avatarChangingMembers": "成员变化",
+  "avatarEditors": "编辑者",
+  "addMember": "添加成员",
+  "removeMember": "移除成员"
 }

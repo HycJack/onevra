@@ -41,7 +41,7 @@ var mygoHandled = map[string]mygoDecision{
 	"Outline":              {Replacement: "components.TreeVirtualized", Reason: "Onevra virtualized tree with neutral selection and double-click disclosure"},
 	"Progress":             {Replacement: "components.Progress", Reason: "Onevra determinate and indeterminate progress bar"},
 	"Spinner":              {Replacement: "components.Spinner", Reason: "Onevra ring and spoke activity indicators"},
-	"Avatar":               {Reason: "No Onevra Avatar component is needed"},
+	"Avatar":               {Replacement: "components.Avatar", Reason: "Onevra photo or initials avatar with presence, sizes and an overlapping AvatarGroup"},
 	"Meter":                {Reason: "No Onevra Meter component is needed"},
 	"BackButton":           {Reason: "No Onevra BackButton component is needed"},
 	"ForwardButton":        {Reason: "No Onevra ForwardButton component is needed"},

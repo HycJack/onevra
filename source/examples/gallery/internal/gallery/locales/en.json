@@ -1220,5 +1220,15 @@
   "holdToSignOut": "Hold to sign out",
   "holdSignedOut": "Signed out",
   "holdKeepHolding": "Keep holding…",
-  "holdReset": "Reset"
+  "holdReset": "Reset",
+  "avatars": "Avatars",
+  "componentAvatar": "Avatar",
+  "componentAvatarGroup": "AvatarGroup",
+  "avatarInitials": "Initials",
+  "avatarPhoto": "Photo",
+  "avatarOverflow": "Overflow",
+  "avatarChangingMembers": "Changing members",
+  "avatarEditors": "Editors",
+  "addMember": "Add member",
+  "removeMember": "Remove member"
 }

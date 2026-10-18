@@ -4,6 +4,7 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Add `components.Avatar` and `components.AvatarGroup`.
 - Add `components.BadgeOptions` with tones and a leading icon.
 - Add `components.CollapsibleOptions.Leading`.
 - Add `components.HoldToConfirm`.
