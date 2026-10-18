@@ -168,5 +168,25 @@
   },
   "chartTotal": "Total",
   "chartOff": "Off",
-  "chartKeepOneSegment": "At least one segment must stay visible"
+  "chartKeepOneSegment": "At least one segment must stay visible",
+  "stepperProgress": "Progress",
+  "stepperComplete": "All steps complete",
+  "stepperCompleted": "Completed",
+  "stepperCurrent": "Current step",
+  "stepperUpcoming": "Not started",
+  "stepperError": "Error",
+  "stepperAnnounce": "Step {step} of {count}: {label}",
+  "@stepperAnnounce": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      },
+      "label": {
+        "type": "String"
+      }
+    }
+  }
 }

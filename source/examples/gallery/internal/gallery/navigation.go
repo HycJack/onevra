@@ -18,6 +18,7 @@ var newPages = map[string]bool{
 	"controls/ImageCompare":          true,
 	"controls/Split panes":           true,
 	"controls/Shader backgrounds":    true,
+	"controls/Stepper":               true,
 	"controls/Bubble chart":          true,
 	"controls/TagInput":              true,
 	"controls/HoldToConfirm":         true,

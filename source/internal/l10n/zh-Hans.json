@@ -74,5 +74,12 @@
   "slideOf": "第 {index} 张，共 {count} 张",
   "chartTotal": "总计",
   "chartOff": "已关闭",
-  "chartKeepOneSegment": "至少需要保留一个分段"
+  "chartKeepOneSegment": "至少需要保留一个分段",
+  "stepperProgress": "进度",
+  "stepperComplete": "所有步骤已完成",
+  "stepperCompleted": "已完成",
+  "stepperCurrent": "当前步骤",
+  "stepperUpcoming": "未开始",
+  "stepperError": "错误",
+  "stepperAnnounce": "第 {step} 步，共 {count} 步：{label}"
 }

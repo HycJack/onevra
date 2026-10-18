@@ -953,5 +953,17 @@
   "imageCompareBefore": "处理前",
   "imageCompareAfter": "处理后",
   "imageCompareOf": "{label}对比",
-  "imageCompareShare": "处理前占画面的 {percent, number, integer}%。"
+  "imageCompareShare": "处理前占画面的 {percent, number, integer}%。",
+  "steps": "步骤条",
+  "stepperAccountHint": "登录信息",
+  "stepperShipping": "配送",
+  "stepperShippingHint": "收货地址",
+  "stepperPayment": "支付",
+  "stepperPaymentHint": "银行卡或钱包",
+  "stepperReview": "确认",
+  "stepperReviewHint": "确认订单",
+  "stepperCardDeclined": "银行卡被拒，请换一张卡。",
+  "stepperNext": "下一步",
+  "stepperPaymentFailed": "支付失败",
+  "stepperBack": "返回"
 }

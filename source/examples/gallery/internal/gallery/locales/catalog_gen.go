@@ -9631,3 +9631,123 @@ func ImageCompareShare(percent int) string { return In(i18n.Locale()).ImageCompa
 func (msgs Messages) ImageCompareShare(percent int) string {
 	return Catalog.Format(msgs.locale, "imageCompareShare", map[string]any{"percent": percent})
 }
+
+// Steps says "Steps"
+// in the language the app shows.
+func Steps() string { return In(i18n.Locale()).Steps() }
+
+// Steps says "Steps"
+// in the language of msgs.
+func (msgs Messages) Steps() string {
+	return Catalog.Format(msgs.locale, "steps", nil)
+}
+
+// StepperAccountHint says "Sign-in details"
+// in the language the app shows.
+func StepperAccountHint() string { return In(i18n.Locale()).StepperAccountHint() }
+
+// StepperAccountHint says "Sign-in details"
+// in the language of msgs.
+func (msgs Messages) StepperAccountHint() string {
+	return Catalog.Format(msgs.locale, "stepperAccountHint", nil)
+}
+
+// StepperShipping says "Shipping"
+// in the language the app shows.
+func StepperShipping() string { return In(i18n.Locale()).StepperShipping() }
+
+// StepperShipping says "Shipping"
+// in the language of msgs.
+func (msgs Messages) StepperShipping() string {
+	return Catalog.Format(msgs.locale, "stepperShipping", nil)
+}
+
+// StepperShippingHint says "Delivery address"
+// in the language the app shows.
+func StepperShippingHint() string { return In(i18n.Locale()).StepperShippingHint() }
+
+// StepperShippingHint says "Delivery address"
+// in the language of msgs.
+func (msgs Messages) StepperShippingHint() string {
+	return Catalog.Format(msgs.locale, "stepperShippingHint", nil)
+}
+
+// StepperPayment says "Payment"
+// in the language the app shows.
+func StepperPayment() string { return In(i18n.Locale()).StepperPayment() }
+
+// StepperPayment says "Payment"
+// in the language of msgs.
+func (msgs Messages) StepperPayment() string {
+	return Catalog.Format(msgs.locale, "stepperPayment", nil)
+}
+
+// StepperPaymentHint says "Card or wallet"
+// in the language the app shows.
+func StepperPaymentHint() string { return In(i18n.Locale()).StepperPaymentHint() }
+
+// StepperPaymentHint says "Card or wallet"
+// in the language of msgs.
+func (msgs Messages) StepperPaymentHint() string {
+	return Catalog.Format(msgs.locale, "stepperPaymentHint", nil)
+}
+
+// StepperReview says "Review"
+// in the language the app shows.
+func StepperReview() string { return In(i18n.Locale()).StepperReview() }
+
+// StepperReview says "Review"
+// in the language of msgs.
+func (msgs Messages) StepperReview() string {
+	return Catalog.Format(msgs.locale, "stepperReview", nil)
+}
+
+// StepperReviewHint says "Confirm the order"
+// in the language the app shows.
+func StepperReviewHint() string { return In(i18n.Locale()).StepperReviewHint() }
+
+// StepperReviewHint says "Confirm the order"
+// in the language of msgs.
+func (msgs Messages) StepperReviewHint() string {
+	return Catalog.Format(msgs.locale, "stepperReviewHint", nil)
+}
+
+// StepperCardDeclined says "Card declined. Try another card."
+// in the language the app shows.
+func StepperCardDeclined() string { return In(i18n.Locale()).StepperCardDeclined() }
+
+// StepperCardDeclined says "Card declined. Try another card."
+// in the language of msgs.
+func (msgs Messages) StepperCardDeclined() string {
+	return Catalog.Format(msgs.locale, "stepperCardDeclined", nil)
+}
+
+// StepperNext says "Next"
+// in the language the app shows.
+func StepperNext() string { return In(i18n.Locale()).StepperNext() }
+
+// StepperNext says "Next"
+// in the language of msgs.
+func (msgs Messages) StepperNext() string {
+	return Catalog.Format(msgs.locale, "stepperNext", nil)
+}
+
+// StepperPaymentFailed says "Payment failed"
+// in the language the app shows.
+func StepperPaymentFailed() string { return In(i18n.Locale()).StepperPaymentFailed() }
+
+// StepperPaymentFailed says "Payment failed"
+// in the language of msgs.
+func (msgs Messages) StepperPaymentFailed() string {
+	return Catalog.Format(msgs.locale, "stepperPaymentFailed", nil)
+}
+
+// StepperBack says "Back"
+// in the language the app shows.
+func StepperBack() string { return In(i18n.Locale()).StepperBack() }
+
+// StepperBack says "Back"
+// in the language of msgs.
+func (msgs Messages) StepperBack() string {
+	return Catalog.Format(msgs.locale, "stepperBack", nil)
+}

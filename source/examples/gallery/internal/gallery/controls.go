@@ -125,6 +125,7 @@ var controlCatalog = []controlExample{
 	{"Slider", "Sliders", "Selection & values", []string{"Default", "Step", "Range", "Stepped range"}, controlSlider},
 	{"Progress", "Progress", "Feedback & overlays", nil, nil},
 	{"Skeleton", "Skeleton", "Feedback & overlays", []string{"Default", "Avatar", "Content"}, controlSkeleton},
+	{"Stepper", "Steps", "Feedback & overlays", []string{"Horizontal", "Vertical", "Compact"}, controlStepper},
 	{"Tabs", "Tabs", "Actions & navigation", []string{"Underline", "Segmented control", "Highlight"}, controlTabs},
 	{"Floating button group", "Floating button group", "Actions & navigation", []string{"Muted", "Raised", "Vertical"}, controlFloatingButtonGroup},
 	{"Disclosure", "Disclosure", "Layout & containers", nil, nil},
@@ -302,7 +303,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample, heading
 			}
 		})
 	}
-	if example.name == "Text" || example.name == "Collapsible" || example.name == "Tabs" || example.name == "Carousel" || example.name == "ImageCompare" {
+	if example.name == "Text" || example.name == "Collapsible" || example.name == "Tabs" || example.name == "Stepper" || example.name == "Carousel" || example.name == "ImageCompare" {
 		variants = func() {
 			ui.Column(c).FillWidth().MinWidth(0).Gap(t.Space(4)).Children(func() {
 				for _, variant := range example.variants {

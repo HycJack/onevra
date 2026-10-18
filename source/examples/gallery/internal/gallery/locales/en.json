@@ -1368,5 +1368,17 @@
       }
     }
   },
-  "imageCompareShare": "Before covers {percent, number, integer}% of the frame."
+  "imageCompareShare": "Before covers {percent, number, integer}% of the frame.",
+  "steps": "Steps",
+  "stepperAccountHint": "Sign-in details",
+  "stepperShipping": "Shipping",
+  "stepperShippingHint": "Delivery address",
+  "stepperPayment": "Payment",
+  "stepperPaymentHint": "Card or wallet",
+  "stepperReview": "Review",
+  "stepperReviewHint": "Confirm the order",
+  "stepperCardDeclined": "Card declined. Try another card.",
+  "stepperNext": "Next",
+  "stepperPaymentFailed": "Payment failed",
+  "stepperBack": "Back"
 }

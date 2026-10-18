@@ -18,6 +18,7 @@ User-facing updates for Onevra library consumers.
 - Add `components.SidebarItemWithSlots` and `components.SidebarItemWithContent`.
 - Add `components.Skeleton` and `components.SkeletonContent`.
 - Add `components.SplitOptions.Default`.
+- Add `components.Stepper`.
 - Add `components.TagInput`.
 - Add `shaders.Ripple`.
 - Add `components.TreeItemWithLeading`.

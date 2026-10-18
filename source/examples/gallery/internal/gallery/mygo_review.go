@@ -71,7 +71,7 @@ var mygoHandled = map[string]mygoDecision{
 	"Switch":          {Replacement: "components.Switch", Reason: "Onevra switch styling"},
 	"Radio":           {Replacement: "components.Radio", Reason: "Onevra radio styling"},
 	"NumberInput":     {Replacement: "components.NumberInput", Reason: "Onevra numeric text field with integrated vertical step buttons"},
-	"Stepper":         {Reason: "Step buttons are integrated into NumberInput; no standalone Stepper is needed"},
+	"Stepper":         {Reason: "Step buttons are integrated into NumberInput; components.Stepper is a flow progress indicator, not a numeric stepper"},
 	"TextInputBuffer": {Replacement: "components.TextBoxBuffer", Reason: "Onevra single-line input with application-owned indexed storage"},
 	"TextAreaBuffer":  {Replacement: "components.TextBoxBuffer", Reason: "Onevra multiline input with application-owned indexed storage"},
 	"TextInput":       {Replacement: "components.TextBox", Reason: "Onevra single-line text input"},

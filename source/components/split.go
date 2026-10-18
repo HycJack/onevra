@@ -6,12 +6,13 @@ import (
 	"github.com/egoist/mygo/ui"
 )
 
-// Orientation describes the arrangement of panes, not the divider line.
+// Orientation describes the arrangement of a control's parts, such as a
+// Split's panes, not its divider line, or a Stepper's steps.
 type Orientation uint8
 
 const (
-	Horizontal Orientation = iota // Left and right panes.
-	Vertical                      // Top and bottom panes.
+	Horizontal Orientation = iota // Left and right panes; steps in a row.
+	Vertical                      // Top and bottom panes; steps in a column.
 )
 
 // SplitOptions configures a two-pane resizable layout.
