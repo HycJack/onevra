@@ -64,5 +64,12 @@
   "avatarOnline": "{label}，在线",
   "avatarOffline": "{label}，离线",
   "avatarGroup": "团队成员",
-  "avatarGroupMore": "另外 {count} 位成员"
+  "avatarGroupMore": "另外 {count} 位成员",
+  "slides": "幻灯片",
+  "chooseSlide": "选择幻灯片",
+  "previousSlide": "上一张",
+  "nextSlide": "下一张",
+  "startRotation": "开始自动轮播",
+  "pauseRotation": "暂停自动轮播",
+  "slideOf": "第 {index} 张，共 {count} 张"
 }

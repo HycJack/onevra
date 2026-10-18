@@ -57,6 +57,9 @@ func TestMessages(t *testing.T) {
 	if got := In("zh-Hans").Label("numberIncrease", "数量"); got != "增加数量" {
 		t.Fatalf("Chinese label: %q", got)
 	}
+	if got := In("en").Format("slideOf", map[string]any{"index": 2, "count": 5}); got != "2 of 5" {
+		t.Fatalf("formatted message: %q", got)
+	}
 }
 
 func TestApplicationOverrides(t *testing.T) {

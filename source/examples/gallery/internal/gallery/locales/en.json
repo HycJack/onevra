@@ -1230,5 +1230,18 @@
   "avatarChangingMembers": "Changing members",
   "avatarEditors": "Editors",
   "addMember": "Add member",
-  "removeMember": "Remove member"
+  "removeMember": "Remove member",
+  "componentCarousel": "Carousel",
+  "rotating": "Rotating",
+  "carouselDestinations": "Destinations",
+  "carouselMountains": "Mountains",
+  "carouselMountainsCaption": "Ridge trails above the clouds",
+  "carouselForest": "Forest",
+  "carouselForestCaption": "Quiet paths under old trees",
+  "carouselDesert": "Desert",
+  "carouselDesertCaption": "Long light over the dunes",
+  "carouselCamp": "Campsite",
+  "carouselCampCaption": "A night beside the lake",
+  "carouselHarbour": "Harbour",
+  "carouselHarbourCaption": "Boats at the morning quay"
 }

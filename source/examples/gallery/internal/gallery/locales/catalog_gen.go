@@ -8631,3 +8631,133 @@ func RemoveMember() string { return In(i18n.Locale()).RemoveMember() }
 func (msgs Messages) RemoveMember() string {
 	return Catalog.Format(msgs.locale, "removeMember", nil)
 }
+
+// ComponentCarousel says "Carousel"
+// in the language the app shows.
+func ComponentCarousel() string { return In(i18n.Locale()).ComponentCarousel() }
+
+// ComponentCarousel says "Carousel"
+// in the language of msgs.
+func (msgs Messages) ComponentCarousel() string {
+	return Catalog.Format(msgs.locale, "componentCarousel", nil)
+}
+
+// Rotating says "Rotating"
+// in the language the app shows.
+func Rotating() string { return In(i18n.Locale()).Rotating() }
+
+// Rotating says "Rotating"
+// in the language of msgs.
+func (msgs Messages) Rotating() string {
+	return Catalog.Format(msgs.locale, "rotating", nil)
+}
+
+// CarouselDestinations says "Destinations"
+// in the language the app shows.
+func CarouselDestinations() string { return In(i18n.Locale()).CarouselDestinations() }
+
+// CarouselDestinations says "Destinations"
+// in the language of msgs.
+func (msgs Messages) CarouselDestinations() string {
+	return Catalog.Format(msgs.locale, "carouselDestinations", nil)
+}
+
+// CarouselMountains says "Mountains"
+// in the language the app shows.
+func CarouselMountains() string { return In(i18n.Locale()).CarouselMountains() }
+
+// CarouselMountains says "Mountains"
+// in the language of msgs.
+func (msgs Messages) CarouselMountains() string {
+	return Catalog.Format(msgs.locale, "carouselMountains", nil)
+}
+
+// CarouselMountainsCaption says "Ridge trails above the clouds"
+// in the language the app shows.
+func CarouselMountainsCaption() string { return In(i18n.Locale()).CarouselMountainsCaption() }
+
+// CarouselMountainsCaption says "Ridge trails above the clouds"
+// in the language of msgs.
+func (msgs Messages) CarouselMountainsCaption() string {
+	return Catalog.Format(msgs.locale, "carouselMountainsCaption", nil)
+}
+
+// CarouselForest says "Forest"
+// in the language the app shows.
+func CarouselForest() string { return In(i18n.Locale()).CarouselForest() }
+
+// CarouselForest says "Forest"
+// in the language of msgs.
+func (msgs Messages) CarouselForest() string {
+	return Catalog.Format(msgs.locale, "carouselForest", nil)
+}
+
+// CarouselForestCaption says "Quiet paths under old trees"
+// in the language the app shows.
+func CarouselForestCaption() string { return In(i18n.Locale()).CarouselForestCaption() }
+
+// CarouselForestCaption says "Quiet paths under old trees"
+// in the language of msgs.
+func (msgs Messages) CarouselForestCaption() string {
+	return Catalog.Format(msgs.locale, "carouselForestCaption", nil)
+}
+
+// CarouselDesert says "Desert"
+// in the language the app shows.
+func CarouselDesert() string { return In(i18n.Locale()).CarouselDesert() }
+
+// CarouselDesert says "Desert"
+// in the language of msgs.
+func (msgs Messages) CarouselDesert() string {
+	return Catalog.Format(msgs.locale, "carouselDesert", nil)
+}
+
+// CarouselDesertCaption says "Long light over the dunes"
+// in the language the app shows.
+func CarouselDesertCaption() string { return In(i18n.Locale()).CarouselDesertCaption() }
+
+// CarouselDesertCaption says "Long light over the dunes"
+// in the language of msgs.
+func (msgs Messages) CarouselDesertCaption() string {
+	return Catalog.Format(msgs.locale, "carouselDesertCaption", nil)
+}
+
+// CarouselCamp says "Campsite"
+// in the language the app shows.
+func CarouselCamp() string { return In(i18n.Locale()).CarouselCamp() }
+
+// CarouselCamp says "Campsite"
+// in the language of msgs.
+func (msgs Messages) CarouselCamp() string {
+	return Catalog.Format(msgs.locale, "carouselCamp", nil)
+}
+
+// CarouselCampCaption says "A night beside the lake"
+// in the language the app shows.
+func CarouselCampCaption() string { return In(i18n.Locale()).CarouselCampCaption() }
+
+// CarouselCampCaption says "A night beside the lake"
+// in the language of msgs.
+func (msgs Messages) CarouselCampCaption() string {
+	return Catalog.Format(msgs.locale, "carouselCampCaption", nil)
+}
+
+// CarouselHarbour says "Harbour"
+// in the language the app shows.
+func CarouselHarbour() string { return In(i18n.Locale()).CarouselHarbour() }
+
+// CarouselHarbour says "Harbour"
+// in the language of msgs.
+func (msgs Messages) CarouselHarbour() string {
+	return Catalog.Format(msgs.locale, "carouselHarbour", nil)
+}
+
+// CarouselHarbourCaption says "Boats at the morning quay"
+// in the language the app shows.
+func CarouselHarbourCaption() string { return In(i18n.Locale()).CarouselHarbourCaption() }
+
+// CarouselHarbourCaption says "Boats at the morning quay"
+// in the language of msgs.
+func (msgs Messages) CarouselHarbourCaption() string {
+	return Catalog.Format(msgs.locale, "carouselHarbourCaption", nil)
+}

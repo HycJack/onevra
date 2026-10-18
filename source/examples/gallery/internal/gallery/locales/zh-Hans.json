@@ -853,5 +853,18 @@
   "avatarChangingMembers": "成员变化",
   "avatarEditors": "编辑者",
   "addMember": "添加成员",
-  "removeMember": "移除成员"
+  "removeMember": "移除成员",
+  "componentCarousel": "轮播",
+  "rotating": "自动轮播",
+  "carouselDestinations": "目的地",
+  "carouselMountains": "群山",
+  "carouselMountainsCaption": "云海之上的山脊步道",
+  "carouselForest": "森林",
+  "carouselForestCaption": "古树下的幽静小径",
+  "carouselDesert": "沙漠",
+  "carouselDesertCaption": "沙丘上的悠长光影",
+  "carouselCamp": "营地",
+  "carouselCampCaption": "湖畔的一夜",
+  "carouselHarbour": "港湾",
+  "carouselHarbourCaption": "清晨码头的船只"
 }

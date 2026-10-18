@@ -39,6 +39,7 @@ type controlState struct {
 	value                  float64
 	high                   float64
 	honeycomb              string
+	carousel               components.CarouselState
 	honeycombItems         []honeycombDemoItem
 	honeycombNext          int
 	split, splitPercent    float32
@@ -119,6 +120,7 @@ var controlCatalog = []controlExample{
 	{"Tabs", "Tabs", "Actions & navigation", []string{"Underline", "Segmented control", "Highlight"}, controlTabs},
 	{"Disclosure", "Disclosure", "Layout & containers", nil, nil},
 	{"Image", "Images", "Content display", []string{"Contain", "Cover", "Stretch", "Rounded", "Grayscale"}, controlImage},
+	{"Carousel", "Carousel", "Content display", []string{"Default", "Rotating"}, controlCarousel},
 	{"List", "List", "Content display", []string{"Default"}, controlList},
 	{"GridView", "GridView", "Content display", []string{"Default"}, controlGridView},
 	{"Tree", "Tree", "Content display", []string{"Tree", "TreeVirtualized"}, controlTree},
@@ -184,6 +186,10 @@ func (g *Gallery) controlState(name, variant string) *controlState {
 	}
 	if name == "Rating" && variant != "Empty" {
 		s.index = 3
+	}
+	if name == "Carousel" {
+		// Rotation starts with the page, as the viewer chose this example.
+		s.carousel.Playing = variant == "Rotating"
 	}
 	if name == "Breadcrumbs" {
 		s.text = ""
@@ -286,7 +292,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample, heading
 			}
 		})
 	}
-	if example.name == "Text" || example.name == "Collapsible" || example.name == "Tabs" {
+	if example.name == "Text" || example.name == "Collapsible" || example.name == "Tabs" || example.name == "Carousel" {
 		variants = func() {
 			ui.Column(c).FillWidth().MinWidth(0).Gap(t.Space(4)).Children(func() {
 				for _, variant := range example.variants {

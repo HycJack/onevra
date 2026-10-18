@@ -13,6 +13,7 @@ var navigationGroups = []string{
 // publishing a version, keep the pages it ships and remove those from earlier
 // versions.
 var newPages = map[string]bool{
+	"controls/Carousel":           true,
 	"controls/Split panes":        true,
 	"controls/Shader backgrounds": true,
 	"controls/TagInput":           true,

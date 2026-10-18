@@ -148,5 +148,22 @@
         "type": "int"
       }
     }
+  },
+  "slides": "Slides",
+  "chooseSlide": "Choose a slide",
+  "previousSlide": "Previous slide",
+  "nextSlide": "Next slide",
+  "startRotation": "Start slide rotation",
+  "pauseRotation": "Pause slide rotation",
+  "slideOf": "{index} of {count}",
+  "@slideOf": {
+    "placeholders": {
+      "index": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }
