@@ -5354,6 +5354,16 @@ func (msgs Messages) SplitBar() string {
 	return Catalog.Format(msgs.locale, "splitBar", nil)
 }
 
+// BubbleChart says "Bubble chart"
+// in the language the app shows.
+func BubbleChart() string { return In(i18n.Locale()).BubbleChart() }
+
+// BubbleChart says "Bubble chart"
+// in the language of msgs.
+func (msgs Messages) BubbleChart() string {
+	return Catalog.Format(msgs.locale, "bubbleChart", nil)
+}
+
 // ChartEmpty says "Show empty state"
 // in the language the app shows.
 func ChartEmpty() string { return In(i18n.Locale()).ChartEmpty() }
@@ -5474,6 +5484,86 @@ func (msgs Messages) ChartPlanning() string {
 	return Catalog.Format(msgs.locale, "chartPlanning", nil)
 }
 
+// ChartReview says "Review"
+// in the language the app shows.
+func ChartReview() string { return In(i18n.Locale()).ChartReview() }
+
+// ChartReview says "Review"
+// in the language of msgs.
+func (msgs Messages) ChartReview() string {
+	return Catalog.Format(msgs.locale, "chartReview", nil)
+}
+
+// ChartSupport says "Support"
+// in the language the app shows.
+func ChartSupport() string { return In(i18n.Locale()).ChartSupport() }
+
+// ChartSupport says "Support"
+// in the language of msgs.
+func (msgs Messages) ChartSupport() string {
+	return Catalog.Format(msgs.locale, "chartSupport", nil)
+}
+
+// ChartTesting says "Testing"
+// in the language the app shows.
+func ChartTesting() string { return In(i18n.Locale()).ChartTesting() }
+
+// ChartTesting says "Testing"
+// in the language of msgs.
+func (msgs Messages) ChartTesting() string {
+	return Catalog.Format(msgs.locale, "chartTesting", nil)
+}
+
+// ChartOperations says "Operations"
+// in the language the app shows.
+func ChartOperations() string { return In(i18n.Locale()).ChartOperations() }
+
+// ChartOperations says "Operations"
+// in the language of msgs.
+func (msgs Messages) ChartOperations() string {
+	return Catalog.Format(msgs.locale, "chartOperations", nil)
+}
+
+// ChartDocumentation says "Documentation"
+// in the language the app shows.
+func ChartDocumentation() string { return In(i18n.Locale()).ChartDocumentation() }
+
+// ChartDocumentation says "Documentation"
+// in the language of msgs.
+func (msgs Messages) ChartDocumentation() string {
+	return Catalog.Format(msgs.locale, "chartDocumentation", nil)
+}
+
+// ChartMarketing says "Marketing"
+// in the language the app shows.
+func ChartMarketing() string { return In(i18n.Locale()).ChartMarketing() }
+
+// ChartMarketing says "Marketing"
+// in the language of msgs.
+func (msgs Messages) ChartMarketing() string {
+	return Catalog.Format(msgs.locale, "chartMarketing", nil)
+}
+
+// BubbleAdd says "Add category"
+// in the language the app shows.
+func BubbleAdd() string { return In(i18n.Locale()).BubbleAdd() }
+
+// BubbleAdd says "Add category"
+// in the language of msgs.
+func (msgs Messages) BubbleAdd() string {
+	return Catalog.Format(msgs.locale, "bubbleAdd", nil)
+}
+
+// BubbleRemove says "Remove category"
+// in the language the app shows.
+func BubbleRemove() string { return In(i18n.Locale()).BubbleRemove() }
+
+// BubbleRemove says "Remove category"
+// in the language of msgs.
+func (msgs Messages) BubbleRemove() string {
+	return Catalog.Format(msgs.locale, "bubbleRemove", nil)
+}
+
 // ChartTraffic says "Traffic by source"
 // in the language the app shows.
 func ChartTraffic() string { return In(i18n.Locale()).ChartTraffic() }
@@ -5552,6 +5642,7 @@ func ChartOther() string { return In(i18n.Locale()).ChartOther() }
 // in the language of msgs.
 func (msgs Messages) ChartOther() string {
 	return Catalog.Format(msgs.locale, "chartOther", nil)
+}
 }
 
 // Audio says "Audio"

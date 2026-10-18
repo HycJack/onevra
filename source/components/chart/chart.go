@@ -28,8 +28,8 @@ type Data struct {
 	Series []Series
 }
 
-// Slice is a donut category. IDs have the same requirements as Series.ID.
-// Only finite positive values take space in the ring and its legend.
+// Slice is a donut or bubble category. IDs have the same requirements as
+// Series.ID. Only finite positive values take space in the chart and legend.
 type Slice struct {
 	ID, Label string
 	Value     float64

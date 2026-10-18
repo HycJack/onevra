@@ -17,6 +17,7 @@ type controlExample struct {
 type controlState struct {
 	chat                   *chatDemoState
 	chart                  *chartDemoState
+	bubble                 *bubbleDemoState
 	graph                  *graphDemoState
 	treemap                *treemapDemoState
 	shader                 *shaderDemoState
@@ -93,6 +94,7 @@ var controlSections = map[string][]controlExample{
 var controlCatalog = []controlExample{
 	{"Shader backgrounds", "Shader backgrounds", "Shaders", []string{"Default"}, controlShaderBackgrounds},
 	{"Data charts", "Data charts", "Charts", []string{"Bar chart", "Line chart", "Area chart", "Stacked bar chart", "Donut chart", "Split bar"}, controlChart},
+	{"Bubble chart", "Bubble chart", "Charts", []string{"Default"}, controlBubbleChart},
 	{"Relationship graph", "Relationship graph", "Charts", []string{"Default"}, controlGraph},
 	{"Treemap", "Treemap", "Charts", []string{"Default"}, controlTreemap},
 	{"Date & time pickers", "Date & time pickers", "Date & time", nil, nil},
@@ -136,7 +138,7 @@ var controlCatalog = []controlExample{
 // controlToolbars hold page-level sample actions, which the titlebar shows
 // after the page title so the content stays with the example itself.
 var controlToolbars = map[string]func(*ui.Context, *controlState){
-	"Data charts": chartToolbar, "Relationship graph": graphToolbar, "Treemap": treemapToolbar, "Honeycomb": honeycombToolbar, "Chat": chatToolbar,
+	"Data charts": chartToolbar, "Bubble chart": bubbleToolbar, "Relationship graph": graphToolbar, "Treemap": treemapToolbar, "Honeycomb": honeycombToolbar, "Chat": chatToolbar,
 }
 
 func controlPageStart() galleryPage { return mygoPageStart + galleryPage(len(mygoCatalog)) }
@@ -278,7 +280,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample, heading
 			for _, variant := range example.variants {
 				cell := ui.Column(c).Key(variant).MinWidth(0).MaxWidthPercent(100).Gap(12)
 				switch example.name {
-				case "Text", "GridView":
+				case "Text", "GridView", "Bubble chart":
 					cell.FillWidth()
 				case "TagInput":
 					cell.Width(320)

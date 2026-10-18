@@ -109,6 +109,9 @@ func TestDisabledCharts(t *testing.T) {
 		"Donut": func(c *ui.Context, state *State) {
 			Donut(c, state, []Slice{{ID: "a", Label: "Alpha", Value: 2}, {ID: "b", Label: "Beta", Value: 3}}, Options{Label: "Plot"})
 		},
+		"Bubble": func(c *ui.Context, state *State) {
+			Bubble(c, state, []Slice{{ID: "a", Label: "Alpha", Value: 2}, {ID: "b", Label: "Beta", Value: 3}}, Options{Label: "Plot"})
+		},
 	}
 	for name, view := range cartesianViews {
 		views[name] = func(c *ui.Context, state *State) { view(c, state, sample, Options{Label: "Plot"}) }
@@ -207,6 +210,126 @@ func TestDonutSelectionAndFiltering(t *testing.T) {
 	tt.Frame()
 	if state.Index != -1 || !tt.HasText("Empty") {
 		t.Fatal("empty donut kept a selection")
+	}
+}
+
+func TestBubblePacking(t *testing.T) {
+	values := []float64{1, .02, .5, .5, .3, .9, .1, .05, .7, .25}
+	for _, aspect := range []float64{.5, 1, 2.5, 4} {
+		circles := pack(values, aspect)
+		x0, y0, x1, y1, area := 0.0, 0.0, 0.0, 0.0, 0.0
+		for i, a := range circles {
+			if want := math.Sqrt(values[i]) * circles[0].r; math.Abs(a.r-want) > 1e-9 {
+				t.Fatalf("radius %d = %g, want area proportional to value (%g)", i, a.r, want)
+			}
+			for _, b := range circles[i+1:] {
+				if math.Hypot(a.x-b.x, a.y-b.y) < a.r+b.r {
+					t.Fatalf("aspect %g: bubbles overlap: %+v %+v", aspect, a, b)
+				}
+			}
+			x0, y0, x1, y1 = min(x0, a.x-a.r), min(y0, a.y-a.r), max(x1, a.x+a.r), max(y1, a.y+a.r)
+			area += math.Pi * a.r * a.r
+		}
+		if math.Abs(x0+x1) > 1e-9 || math.Abs(y0+y1) > 1e-9 {
+			t.Fatalf("aspect %g: pack is not centered", aspect)
+		}
+		if extent := max((x1-x0)/aspect, y1-y0); math.Abs(extent-1) > 1e-9 {
+			t.Fatalf("aspect %g: pack does not fill the view: %g", aspect, extent)
+		}
+		if density := area / aspect; density < .5 {
+			t.Fatalf("aspect %g: pack covers only %.2f of the view", aspect, density)
+		}
+	}
+	for _, b := range viewBubbles(pack(values, 2), ui.Rect{X: 10, Y: 20, W: 300, H: 120}, 2) {
+		if b.x-b.r < 10+bubbleMargin-.01 || b.x+b.r > 310-bubbleMargin+.01 || b.y-b.r < 20+bubbleMargin-.01 || b.y+b.r > 140-bubbleMargin+.01 {
+			t.Fatalf("bubble outside the plot: %+v", b)
+		}
+	}
+}
+
+func TestBubbleSprings(t *testing.T) {
+	data := []Slice{{ID: "a", Label: "Alpha", Value: 9}, {ID: "b", Label: "Beta", Value: 4}}
+	rest := map[bubbleKey]bool{}
+	tt := ui.NewTester(func(c *ui.Context) {
+		e := Bubble(c, nil, data, Options{Label: "Plot"})
+		for _, s := range data {
+			for part := range bubbleLifted {
+				rest[bubbleKey{s.ID, part}] = e.Settled(bubbleKey{s.ID, part})
+			}
+		}
+	}, 400, 500)
+	settled := func(id string, part uint8) bool { return rest[bubbleKey{id, part}] }
+	if settled("a", bubbleR) || !settled("a", bubbleX) {
+		t.Fatal("bubbles should grow in place on first display")
+	}
+	tt.Advance(2 * time.Second)
+	tt.Frame()
+	if !settled("a", bubbleR) || !settled("b", bubbleR) {
+		t.Fatal("springs did not settle")
+	}
+	data = append(data, Slice{ID: "c", Label: "Gamma", Value: 1})
+	tt.Frame()
+	if settled("a", bubbleR) || settled("c", bubbleR) || !settled("c", bubbleX) {
+		t.Fatal("bubbles should spring to a new pack while a new one grows in place")
+	}
+	tt.Advance(2 * time.Second)
+	tt.Frame()
+	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
+	data[0].Value = 1
+	tt.Frame()
+	if !settled("a", bubbleR) || !settled("b", bubbleX) {
+		t.Fatal("Reduced Motion should skip the springs")
+	}
+}
+
+func TestBubbleSelectionAndFiltering(t *testing.T) {
+	data := []Slice{{ID: "a", Label: "Alpha", Value: 9}, {ID: "zero", Label: "Zero"}, {ID: "b", Label: "Beta", Value: 1}, {ID: "bad", Label: "Invalid", Value: math.NaN()}}
+	state := State{Index: -1}
+	tt := ui.NewTester(func(c *ui.Context) {
+		theme.Apply(c)
+		Bubble(c, &state, data, Options{Label: "Plot", EmptyText: "Empty", FormatValue: func(v float64) string { return fmt.Sprintf("%.0f h", v) }})
+	}, 320, 500)
+	if tt.HasText("Zero") || tt.HasText("Invalid") {
+		t.Fatal("bubbles did not filter invalid values")
+	}
+	if err := tt.Click("Beta"); err != nil {
+		t.Fatal(err)
+	}
+	if state.Index != 2 || !tt.HasText("Beta  1 h") {
+		t.Fatal("legend selection lost input index or formatting")
+	}
+	if err := tt.Click("Plot"); err != nil {
+		t.Fatal(err)
+	}
+	tt.Key(0, ui.KeyHome)
+	tt.Key(0, ui.KeyRight)
+	if state.Index != 2 {
+		t.Fatal("keyboard selection did not skip zero values")
+	}
+	tt.Key(0, ui.KeyEscape)
+	if state.Index != -1 {
+		t.Fatal("Escape did not clear bubble selection")
+	}
+	r, _ := tt.Find("Plot")
+	tt.Move(r.X+2, r.Y+2)
+	if state.Index != -1 {
+		t.Fatal("space between bubbles should not select one")
+	}
+	tt.Advance(2 * time.Second)
+	aspect := bubbleAspect(r.W, r.H)
+	largest := viewBubbles(pack([]float64{1, 1. / 9}, aspect), r, aspect)[0]
+	tt.Move(largest.x, largest.y)
+	if state.Index != 0 {
+		t.Fatal("hovering the largest bubble did not select it")
+	}
+	tt.SetDark(true)
+	if tt.Image() == nil {
+		t.Fatal("bubbles did not render")
+	}
+	data = nil
+	tt.Frame()
+	if state.Index != -1 || !tt.HasText("Empty") {
+		t.Fatal("empty bubble chart kept a selection")
 	}
 }
 

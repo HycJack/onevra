@@ -37,7 +37,7 @@ func controlComponents() []controlExample {
 }
 
 func TestControlPages(t *testing.T) {
-	if len(controlCatalog) != 40 {
+	if len(controlCatalog) != 41 {
 		t.Fatal("missing control examples")
 	}
 	for i, example := range controlCatalog {
@@ -220,6 +220,9 @@ func TestControlExampleInteractions(t *testing.T) {
 				case "Data charts":
 					click("Update data")
 					changed = s.on
+				case "Bubble chart":
+					click("Add category")
+					changed = s.bubble.count == bubbleInitialCount+1
 				case "Relationship graph":
 					click("Add note")
 					changed = s.graph.added == 1

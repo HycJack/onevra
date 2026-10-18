@@ -42,6 +42,7 @@ The settings toolbar action opens a Onevra Dialog over the current page. macOS S
 | Content display / Chat | Conversation folding, bounded details, composer pickers, attachments, context meter and usage limits, and a simulated streamed reply started from Send or the titlebar; no model or file access |
 | Plugins / Terminal | MyGo shell session, retained across navigation and closed with Gallery |
 | Charts / Data charts | Bar, line, area, stacked bar, donut and split bar sections of the public chart component, with per-chart selection, legends, and data updates and empty states shared through the titlebar |
+| Charts / Bubble chart | The packed bubble chart, with titlebar actions that update values, add or remove categories and show the empty state |
 | Layout & containers / Transforms | Editable Onevra controls and anchored popovers under composed transforms, plus a perspective card |
 | Layout & containers / Motion | Retargetable spring presets, replayable keyframes and animated poses |
 | Games / Canvas | Offscreen canvas, smooth and pixelated bitmap regions and painter transforms |

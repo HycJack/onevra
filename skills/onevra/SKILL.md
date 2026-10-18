@@ -75,7 +75,7 @@ Use Onevra's control whenever one exists; it replaces MyGo's styled widget of th
 | Toast | MyGo's `c.Toast`, `ToastAction`, `AddToast`; Shell builds them with `components.Toasts`, which standalone hosts call themselves; place them with `ShellOptions.Toasts` (`components.ToastOptions`). `ui.Toast.Type` takes `components.ToastInfo`/`Success`/`Warning`/`Error` |
 | Progress, spinner, badge, rating, icon, image | The Onevra component of the same name; icons from `icons/lucide` |
 | Avatar or avatar group | `components.Avatar`, `components.AvatarGroup` |
-| Categorical charts, donuts and part-to-whole bars | `components/chart`: `Bar`, `Line`, `Area`, `StackedBar`, `Donut`, `SplitBar`; see the [usage example](../../source/components/chart/example_test.go) |
+| Categorical charts, donuts, bubbles and part-to-whole bars | `components/chart`: `Bar`, `Line`, `Area`, `StackedBar`, `Donut`, `Bubble`, `SplitBar`; see the [usage example](../../source/components/chart/example_test.go) |
 | Relationship graph | `components/graph`: `View`; see the [usage example](../../source/components/graph/example_test.go) |
 | Treemap of nested sizes, such as disk usage | `components/treemap`: `View`; see the [usage example](../../source/components/treemap/example_test.go) |
 | Pan and zoom on a custom canvas | `components/gesture`: `Navigation.Handle` for wheel and pinch zoom and touchpad panning, or `Classify` inside an existing `HandleInput` |

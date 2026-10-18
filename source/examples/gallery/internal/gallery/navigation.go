@@ -16,6 +16,7 @@ var newPages = map[string]bool{
 	"controls/Carousel":           true,
 	"controls/Split panes":        true,
 	"controls/Shader backgrounds": true,
+	"controls/Bubble chart":       true,
 	"controls/TagInput":           true,
 	"controls/HoldToConfirm":      true,
 	"controls/Skeleton":           true,

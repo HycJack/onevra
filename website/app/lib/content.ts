@@ -306,7 +306,7 @@ export const content: Record<Locale, LandingContent> = {
       items: [
         {
           name: "components/chart",
-          exports: ["Bar", "Line", "Area", "StackedBar", "Donut"],
+          exports: ["Bar", "Line", "Area", "StackedBar", "Donut", "Bubble"],
           description:
             "Categorical charts with smooth updates, interactive legends, keyboard selection and custom empty and detail content.",
         },
@@ -602,7 +602,7 @@ export const content: Record<Locale, LandingContent> = {
       items: [
         {
           name: "components/chart",
-          exports: ["Bar", "Line", "Area", "StackedBar", "Donut"],
+          exports: ["Bar", "Line", "Area", "StackedBar", "Donut", "Bubble"],
           description:
             "分类图表支持平滑更新、交互图例、键盘选中，以及自定义空状态与详情内容。",
         },
