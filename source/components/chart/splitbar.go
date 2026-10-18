@@ -180,7 +180,7 @@ func (s split) summary(data []Slice, percent func(float64) string) string {
 type splitMotion struct {
 	edges   []float64
 	width   float32
-	hover   radialHover
+	hover   shapeHover
 	legend  string
 	shake   string
 	rows    map[string]int // outside label rows by slice ID

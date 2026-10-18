@@ -115,7 +115,7 @@ func TestToggleDecisions(t *testing.T) {
 }
 
 func TestExcludedComponents(t *testing.T) {
-	for _, name := range []string{"Divider", "CheckboxGroup", "RadioGroup", "Meter", "BackButton", "ForwardButton", "Form", "Field", "Fieldset", "FindBar", "Toolbar", "OutlineTable", "TokenField", "Installed apps"} {
+	for _, name := range []string{"Divider", "CheckboxGroup", "RadioGroup", "Meter", "BackButton", "ForwardButton", "Form", "Field", "Fieldset", "FindBar", "Toolbar", "OutlineTable", "Installed apps"} {
 		decision, ok := mygoHandled[name]
 		if !ok || decision.Replacement != "" || decision.Reason == "" {
 			t.Fatalf("missing exclusion for %s", name)

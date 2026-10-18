@@ -380,6 +380,9 @@ func TestControlExampleInteractions(t *testing.T) {
 				case "Sidebar":
 					click("Files")
 					changed = s.index == 1
+				case "Floating button group":
+					click("Comment")
+					changed = s.floating.edits == 1
 				case "Card stack":
 					click("Shortlist")
 					changed = len(s.cards.Decisions) == 1
