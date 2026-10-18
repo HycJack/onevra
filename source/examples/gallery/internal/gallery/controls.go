@@ -46,6 +46,7 @@ type controlState struct {
 	honeycombItems         []honeycombDemoItem
 	honeycombNext          int
 	split, splitPercent    float32
+	compare                float32
 	color                  ui.Color
 	day                    time.Time
 	badge                  struct{ status, unread int }
@@ -126,6 +127,7 @@ var controlCatalog = []controlExample{
 	{"Floating button group", "Floating button group", "Actions & navigation", []string{"Muted", "Raised", "Vertical"}, controlFloatingButtonGroup},
 	{"Disclosure", "Disclosure", "Layout & containers", nil, nil},
 	{"Image", "Images", "Content display", []string{"Contain", "Cover", "Stretch", "Rounded", "Grayscale"}, controlImage},
+	{"ImageCompare", "ImageCompare", "Content display", []string{"Horizontal", "Vertical"}, controlImageCompare},
 	{"Carousel", "Carousel", "Content display", []string{"Default", "Rotating"}, controlCarousel},
 	{"List", "List", "Content display", []string{"Default"}, controlList},
 	{"GridView", "GridView", "Content display", []string{"Default"}, controlGridView},
@@ -174,7 +176,7 @@ func (g *Gallery) controlState(name, variant string) *controlState {
 	if s := g.controlStates[key]; s != nil {
 		return s
 	}
-	s := &controlState{day: time.Now(), color: ui.RGB(110, 90, 230), on: variant == "On", choice: "Small", value: 40, high: 80, split: 100, splitPercent: 30, toggles: [2]bool{false, true}}
+	s := &controlState{day: time.Now(), color: ui.RGB(110, 90, 230), on: variant == "On", choice: "Small", value: 40, high: 80, split: 100, splitPercent: 30, compare: 50, toggles: [2]bool{false, true}}
 	if variant == "Selected" {
 		s.choice, s.index = "Large", 1
 	}
@@ -298,7 +300,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample, heading
 			}
 		})
 	}
-	if example.name == "Text" || example.name == "Collapsible" || example.name == "Tabs" || example.name == "Carousel" {
+	if example.name == "Text" || example.name == "Collapsible" || example.name == "Tabs" || example.name == "Carousel" || example.name == "ImageCompare" {
 		variants = func() {
 			ui.Column(c).FillWidth().MinWidth(0).Gap(t.Space(4)).Children(func() {
 				for _, variant := range example.variants {

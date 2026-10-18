@@ -9171,3 +9171,53 @@ func HideLayer() string { return In(i18n.Locale()).HideLayer() }
 func (msgs Messages) HideLayer() string {
 	return Catalog.Format(msgs.locale, "hideLayer", nil)
 }
+
+// ComponentImagecompare says "ImageCompare"
+// in the language the app shows.
+func ComponentImagecompare() string { return In(i18n.Locale()).ComponentImagecompare() }
+
+// ComponentImagecompare says "ImageCompare"
+// in the language of msgs.
+func (msgs Messages) ComponentImagecompare() string {
+	return Catalog.Format(msgs.locale, "componentImagecompare", nil)
+}
+
+// ImageCompareBefore says "Before"
+// in the language the app shows.
+func ImageCompareBefore() string { return In(i18n.Locale()).ImageCompareBefore() }
+
+// ImageCompareBefore says "Before"
+// in the language of msgs.
+func (msgs Messages) ImageCompareBefore() string {
+	return Catalog.Format(msgs.locale, "imageCompareBefore", nil)
+}
+
+// ImageCompareAfter says "After"
+// in the language the app shows.
+func ImageCompareAfter() string { return In(i18n.Locale()).ImageCompareAfter() }
+
+// ImageCompareAfter says "After"
+// in the language of msgs.
+func (msgs Messages) ImageCompareAfter() string {
+	return Catalog.Format(msgs.locale, "imageCompareAfter", nil)
+}
+
+// ImageCompareOf says "{label} comparison"
+// in the language the app shows.
+func ImageCompareOf(label string) string { return In(i18n.Locale()).ImageCompareOf(label) }
+
+// ImageCompareOf says "{label} comparison"
+// in the language of msgs.
+func (msgs Messages) ImageCompareOf(label string) string {
+	return Catalog.Format(msgs.locale, "imageCompareOf", map[string]any{"label": label})
+}
+
+// ImageCompareShare says "Before covers {percent, number, integer}% of the frame."
+// in the language the app shows.
+func ImageCompareShare(percent int) string { return In(i18n.Locale()).ImageCompareShare(percent) }
+
+// ImageCompareShare says "Before covers {percent, number, integer}% of the frame."
+// in the language of msgs.
+func (msgs Messages) ImageCompareShare(percent int) string {
+	return Catalog.Format(msgs.locale, "imageCompareShare", map[string]any{"percent": percent})
+}

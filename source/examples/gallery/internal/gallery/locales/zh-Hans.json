@@ -907,5 +907,10 @@
   "zoomOut": "缩小",
   "zoomToFit": "缩放至适合",
   "lockLayer": "锁定图层",
-  "hideLayer": "隐藏图层"
+  "hideLayer": "隐藏图层",
+  "componentImagecompare": "图片对比",
+  "imageCompareBefore": "处理前",
+  "imageCompareAfter": "处理后",
+  "imageCompareOf": "{label}对比",
+  "imageCompareShare": "处理前占画面的 {percent, number, integer}%。"
 }

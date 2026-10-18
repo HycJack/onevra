@@ -15,6 +15,7 @@ var navigationGroups = []string{
 var newPages = map[string]bool{
 	"controls/Carousel":              true,
 	"controls/Floating button group": true,
+	"controls/ImageCompare":          true,
 	"controls/Split panes":           true,
 	"controls/Shader backgrounds":    true,
 	"controls/Bubble chart":          true,

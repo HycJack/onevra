@@ -1284,5 +1284,17 @@
   "zoomOut": "Zoom out",
   "zoomToFit": "Zoom to fit",
   "lockLayer": "Lock layer",
-  "hideLayer": "Hide layer"
+  "hideLayer": "Hide layer",
+  "componentImagecompare": "ImageCompare",
+  "imageCompareBefore": "Before",
+  "imageCompareAfter": "After",
+  "imageCompareOf": "{label} comparison",
+  "@imageCompareOf": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "imageCompareShare": "Before covers {percent, number, integer}% of the frame."
 }

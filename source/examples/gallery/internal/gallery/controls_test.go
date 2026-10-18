@@ -37,7 +37,7 @@ func controlComponents() []controlExample {
 }
 
 func TestControlPages(t *testing.T) {
-	if len(controlCatalog) != 42 {
+	if len(controlCatalog) != 43 {
 		t.Fatal("missing control examples")
 	}
 	for i, example := range controlCatalog {
@@ -352,6 +352,10 @@ func TestControlExampleInteractions(t *testing.T) {
 					tt.Type("native")
 					tt.Key(0, ui.KeyEnter)
 					changed = slices.Contains(s.tags, "native")
+				case "ImageCompare":
+					click("Default comparison")
+					tt.Key(0, ui.KeyRight)
+					changed = s.compare != 50
 				case "NumberInput":
 					click("Quantity")
 					tt.Key(0, ui.KeyUp)
