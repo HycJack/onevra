@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+## [0.2026.12] - 2026-10-18
+
 - Add `components.Avatar` and `components.AvatarGroup`.
 - Add `components.BadgeOptions` with tones and a leading icon.
 - Add `components.CardStack`.

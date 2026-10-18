@@ -177,8 +177,13 @@ func TestNewComponentsGroup(t *testing.T) {
 		t.Fatalf("New components group must follow Overview: %v", groups)
 	}
 	mygoGroups := mygoNavigationGroups()
-	if mygoGroups[0].label != newGroupLabel {
-		t.Fatalf("MyGo list must start with its New components group: %v", mygoGroups[0])
+	// The MyGo list has a New components group only while MyGo pages are new.
+	if len(newNavigationEntries(true)) > 0 {
+		if mygoGroups[0].label != newGroupLabel {
+			t.Fatalf("MyGo list must start with its New components group: %v", mygoGroups[0])
+		}
+	} else {
+		mygoGroups = append([]navigationGroup{{}}, mygoGroups...)
 	}
 	want := map[galleryPage]bool{}
 	for key := range newPages {

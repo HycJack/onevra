@@ -16,7 +16,6 @@ var newPages = map[string]bool{
 	"controls/Carousel":              true,
 	"controls/Floating button group": true,
 	"controls/ImageCompare":          true,
-	"controls/Split panes":           true,
 	"controls/Shader backgrounds":    true,
 	"controls/Stepper":               true,
 	"controls/Bubble chart":          true,
@@ -27,10 +26,6 @@ var newPages = map[string]bool{
 	"controls/Treemap":               true,
 	"controls/Flow diagram":          true,
 	"controls/Card stack":            true,
-	"mygo/Global shortcuts":          true,
-	"mygo/Gradients & blur":          true,
-	"mygo/Shaders":                   true,
-	"mygo/Live chart":                true,
 }
 
 // updatedPages are the routes whose components changed in the latest published
@@ -38,14 +33,15 @@ var newPages = map[string]bool{
 // purpose groups. Keep this list disjoint from newPages. When publishing a
 // version, keep the pages it changes and remove those from earlier versions.
 var updatedPages = map[string]bool{
-	"controls/Badge":      true,
-	"controls/Chat":       true,
-	"controls/Dialogs":    true,
-	"controls/Disclosure": true,
-	"controls/Honeycomb":  true,
-	"controls/Sidebar":    true,
-	"controls/Toast":      true,
-	"controls/Tree":       true,
+	"controls/Badge":       true,
+	"controls/Chat":        true,
+	"controls/Dialogs":     true,
+	"controls/Disclosure":  true,
+	"controls/Honeycomb":   true,
+	"controls/Sidebar":     true,
+	"controls/Split panes": true,
+	"controls/Toast":       true,
+	"controls/Tree":        true,
 }
 
 type navigationEntry struct {
