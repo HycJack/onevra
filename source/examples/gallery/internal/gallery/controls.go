@@ -18,6 +18,7 @@ type controlState struct {
 	chat                   *chatDemoState
 	chart                  *chartDemoState
 	graph                  *graphDemoState
+	treemap                *treemapDemoState
 	shader                 *shaderDemoState
 	dialogOpen, nestedOpen bool
 	tree                   components.TreeVirtualizedState[string]
@@ -93,6 +94,7 @@ var controlCatalog = []controlExample{
 	{"Shader backgrounds", "Shader backgrounds", "Shaders", []string{"Default"}, controlShaderBackgrounds},
 	{"Data charts", "Data charts", "Charts", []string{"Bar chart", "Line chart", "Area chart", "Stacked bar chart", "Donut chart", "Split bar"}, controlChart},
 	{"Relationship graph", "Relationship graph", "Charts", []string{"Default"}, controlGraph},
+	{"Treemap", "Treemap", "Charts", []string{"Default"}, controlTreemap},
 	{"Date & time pickers", "Date & time pickers", "Date & time", nil, nil},
 	{"Color pickers", "Color pickers", "Color", nil, nil},
 	{"Tooltip", "Tooltip", "Feedback & overlays", []string{"Default"}, controlTooltip},
@@ -134,7 +136,7 @@ var controlCatalog = []controlExample{
 // controlToolbars hold page-level sample actions, which the titlebar shows
 // after the page title so the content stays with the example itself.
 var controlToolbars = map[string]func(*ui.Context, *controlState){
-	"Data charts": chartToolbar, "Relationship graph": graphToolbar, "Honeycomb": honeycombToolbar, "Chat": chatToolbar,
+	"Data charts": chartToolbar, "Relationship graph": graphToolbar, "Treemap": treemapToolbar, "Honeycomb": honeycombToolbar, "Chat": chatToolbar,
 }
 
 func controlPageStart() galleryPage { return mygoPageStart + galleryPage(len(mygoCatalog)) }
@@ -219,7 +221,7 @@ func (g *Gallery) controlsLocalized(c *ui.Context, example controlExample) {
 		})
 		return
 	}
-	if example.name == "Relationship graph" || example.name == "Honeycomb" {
+	if example.name == "Relationship graph" || example.name == "Treemap" || example.name == "Honeycomb" {
 		// These views fill the page instead of scrolling.
 		ui.Column(c).Key("controls-" + example.name).Fill().MinWidth(0).MinHeight(0).Padding(t.Space(6)).Gap(12).Children(func() {
 			example.build(c, g.controlState(example.name, "Default"), "Default")

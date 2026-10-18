@@ -133,7 +133,7 @@ components.Checkbox(c, &agreed, "I agree")
 components.Switch(c, &wifi, "Wi-Fi")
 ```
 
-组件读取当前帧主题，可脱离 Shell 独立使用；独立窗口在构建函数开头通过 `c.SetTheme` 或 `theme.Apply` 安装主题。参见[组件契约](source/components/doc.go)和[主题用法](source/theme/doc.go)。复杂组件各自在 `components/` 下保留独立包：`chart`、`graph`、`gesture`、`command` 和 `chat`。详见[复杂组件组合](docs/architecture/components.md#complex-component-composition)。
+组件读取当前帧主题，可脱离 Shell 独立使用；独立窗口在构建函数开头通过 `c.SetTheme` 或 `theme.Apply` 安装主题。参见[组件契约](source/components/doc.go)和[主题用法](source/theme/doc.go)。复杂组件各自在 `components/` 下保留独立包：`chart`、`graph`、`treemap`、`gesture`、`command` 和 `chat`。详见[复杂组件组合](docs/architecture/components.md#complex-component-composition)。
 
 ## 参与开发
 

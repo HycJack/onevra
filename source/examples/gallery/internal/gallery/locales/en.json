@@ -947,6 +947,15 @@
     }
   },
   "graphOpened": "Opened: {title}",
+  "treemap": "Treemap",
+  "treemapLabel": "Disk usage by folder",
+  "treemapHome": "Home",
+  "treemapReclaimable": "Reclaimable",
+  "treemapEmpty": "No folders to measure",
+  "treemapKeys": "Click a folder to drill in and use the breadcrumbs to go back. Arrow keys move between folders, Enter drills in and Escape goes up.",
+  "treemapOpened": "Opened: {name}",
+  "treemapUnused": "Days unused",
+  "treemapDays": "{count, plural, one {# day} other {# days}}",
   "@graphOpened": {
     "placeholders": {
       "title": {

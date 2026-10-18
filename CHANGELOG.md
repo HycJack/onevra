@@ -17,6 +17,7 @@ User-facing updates for Onevra library consumers.
 - Add `components.TagInput`.
 - Add `shaders.Ripple`.
 - Add `components.TreeItemWithLeading`.
+- Add `treemap.View`.
 - Let `chat.Shimmer` shrink and end in an ellipsis.
 - Animate `components.Badge` text and icon changes.
 - Stack `components.Toasts` behind the newest toast and fan them out on hover or focus.

@@ -20,6 +20,7 @@ var newPages = map[string]bool{
 	"controls/HoldToConfirm":      true,
 	"controls/Skeleton":           true,
 	"controls/Avatars":            true,
+	"controls/Treemap":            true,
 	"mygo/Global shortcuts":       true,
 	"mygo/Gradients & blur":       true,
 	"mygo/Shaders":                true,

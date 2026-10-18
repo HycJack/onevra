@@ -10,6 +10,7 @@ var navigationIcons = map[string]func() *ui.SVG{
 	"Shader backgrounds": lucide.Orbit,
 	"Data charts":        lucide.ChartColumn,
 	"Relationship graph": lucide.Waypoints,
+	"Treemap":            lucide.LayoutDashboard,
 
 	"Transforms":          lucide.Rotate3d,
 	"Motion":              lucide.Activity,

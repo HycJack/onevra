@@ -6168,6 +6168,96 @@ func (msgs Messages) GraphOpened(title string) string {
 	return Catalog.Format(msgs.locale, "graphOpened", map[string]any{"title": title})
 }
 
+// Treemap says "Treemap"
+// in the language the app shows.
+func Treemap() string { return In(i18n.Locale()).Treemap() }
+
+// Treemap says "Treemap"
+// in the language of msgs.
+func (msgs Messages) Treemap() string {
+	return Catalog.Format(msgs.locale, "treemap", nil)
+}
+
+// TreemapLabel says "Disk usage by folder"
+// in the language the app shows.
+func TreemapLabel() string { return In(i18n.Locale()).TreemapLabel() }
+
+// TreemapLabel says "Disk usage by folder"
+// in the language of msgs.
+func (msgs Messages) TreemapLabel() string {
+	return Catalog.Format(msgs.locale, "treemapLabel", nil)
+}
+
+// TreemapHome says "Home"
+// in the language the app shows.
+func TreemapHome() string { return In(i18n.Locale()).TreemapHome() }
+
+// TreemapHome says "Home"
+// in the language of msgs.
+func (msgs Messages) TreemapHome() string {
+	return Catalog.Format(msgs.locale, "treemapHome", nil)
+}
+
+// TreemapReclaimable says "Reclaimable"
+// in the language the app shows.
+func TreemapReclaimable() string { return In(i18n.Locale()).TreemapReclaimable() }
+
+// TreemapReclaimable says "Reclaimable"
+// in the language of msgs.
+func (msgs Messages) TreemapReclaimable() string {
+	return Catalog.Format(msgs.locale, "treemapReclaimable", nil)
+}
+
+// TreemapEmpty says "No folders to measure"
+// in the language the app shows.
+func TreemapEmpty() string { return In(i18n.Locale()).TreemapEmpty() }
+
+// TreemapEmpty says "No folders to measure"
+// in the language of msgs.
+func (msgs Messages) TreemapEmpty() string {
+	return Catalog.Format(msgs.locale, "treemapEmpty", nil)
+}
+
+// TreemapKeys says "Click a folder to drill in and use the breadcrumbs to go back. Arrow keys move between folders, Enter drills in and E…"
+// in the language the app shows.
+func TreemapKeys() string { return In(i18n.Locale()).TreemapKeys() }
+
+// TreemapKeys says "Click a folder to drill in and use the breadcrumbs to go back. Arrow keys move between folders, Enter drills in and E…"
+// in the language of msgs.
+func (msgs Messages) TreemapKeys() string {
+	return Catalog.Format(msgs.locale, "treemapKeys", nil)
+}
+
+// TreemapOpened says "Opened: {name}"
+// in the language the app shows.
+func TreemapOpened(name string) string { return In(i18n.Locale()).TreemapOpened(name) }
+
+// TreemapOpened says "Opened: {name}"
+// in the language of msgs.
+func (msgs Messages) TreemapOpened(name string) string {
+	return Catalog.Format(msgs.locale, "treemapOpened", map[string]any{"name": name})
+}
+
+// TreemapUnused says "Days unused"
+// in the language the app shows.
+func TreemapUnused() string { return In(i18n.Locale()).TreemapUnused() }
+
+// TreemapUnused says "Days unused"
+// in the language of msgs.
+func (msgs Messages) TreemapUnused() string {
+	return Catalog.Format(msgs.locale, "treemapUnused", nil)
+}
+
+// TreemapDays says "{count, plural, one {# day} other {# days}}"
+// in the language the app shows.
+func TreemapDays(count int) string { return In(i18n.Locale()).TreemapDays(count) }
+
+// TreemapDays says "{count, plural, one {# day} other {# days}}"
+// in the language of msgs.
+func (msgs Messages) TreemapDays(count int) string {
+	return Catalog.Format(msgs.locale, "treemapDays", map[string]any{"count": count})
+}
+
 // ComponentRichTextEditor says "Rich text editor"
 // in the language the app shows.
 func ComponentRichTextEditor() string { return In(i18n.Locale()).ComponentRichTextEditor() }

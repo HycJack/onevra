@@ -40,6 +40,10 @@ Numeric updates transition together through MyGo's animation channel, including 
 
 These views target bounded categorical datasets, with work proportional to the data; applications own aggregation or sampling. Continuous/time axes, zooming and specialized charts can compose upstream primitives. The component reuses MyGo's Cartesian selection, with a coordinate adaptation for transformed plots in 0.4.3; radial selection composes MyGo's shortcuts and slice hit testing.
 
+### Treemaps
+
+The [treemap component](../../source/components/treemap/treemap.go) paints squarified, nested tiles on one canvas. Applications own the tree, labels, formatting, shading measure and opening leaves; state keeps the drilled branch. Clicks drill a level and built-in breadcrumbs lead back; one affine zoom carries both levels, and data changes morph tiles. Only the active tile is exposed.
+
 ### Relationship graphs
 
 The [graph component](../../source/components/graph/graph.go) draws a force-directed graph. Applications supply stable node IDs, groups, sizes, colors and edge styles, and open nodes. Groups seed placement and even hue spacing; palettes, colors, forces, hover depth and empty or overlay slots are replaceable.
@@ -76,9 +80,9 @@ MyGo owns keyboard disclosure semantics, input methods and scrolling. Enter send
 
 Composition does not disable the Send button; Enter still belongs to the input method. The card accepts dropped file paths or host-selected native data formats without preparing them. A paste callback lets hosts attach clipboard content while preserving normal text editing when declined.
 
-File chips, which can show an image thumbnail, and image-only preview tiles have optional removal actions; mixed attachment rows use chips so they keep one height; slots hold attachments, accessory controls, non-shrinking trailing controls beside Send or Stop, and a footer row. Hosts can disable sending while preparing attachments, without blocking editing. Applications accept the draft and perform cancellation themselves.
+File chips and image tiles have optional removal actions; slots hold attachments, accessory controls, non-shrinking trailing controls beside Send or Stop, and a footer row. Hosts can disable sending while preparing attachments, without blocking editing. Applications accept the draft and perform cancellation themselves.
 
-The package supplies controls styled for these slots: setting chips, grouped and searchable pickers for choices such as a model, reasoning level or branch, a switch chip, a context-window meter, account usage limits with a refresh countdown, refresh and open actions and a footer summary and a shimmering label for live work. Levels fill with the accent and turn to warning and danger colors near their limits. Applications supply the options, measurements and labels, and apply each choice; the controls hold no model, repository, account or permission policy.
+The package supplies chips, pickers, meters, usage limits and a shimmering label styled for these slots. Applications supply the options, measurements and labels, and apply each choice; the controls hold no model, repository, account or permission policy.
 
 Streaming replies use MyGo's `markdown.Stream`, which parses only appended text and reveals it at an even pace; applications switch to `markdown.View` once the reply completes. Applications may show a running reply as prose after the activity groups and pass it as the final response once complete.
 

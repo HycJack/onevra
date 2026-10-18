@@ -52,7 +52,7 @@ func main() {
 - Element handles are valid only for the current build pass. Bind a `ui.Handle` for identity or geometry across frames.
 - The application owns the theme. Choose light/dark/system with `mygo.Theme.SetSource` (before `App.Run` for a saved preference). Pass `Theme: theme.Onevra` (or a function returning your own `*ui.Theme`) in Shell options; without a Shell, call `theme.Apply(c)` or `c.SetTheme` at the top of the root builder. Components never call `Context.SetTheme`.
 - Keep application messages in MyGo catalogs (`i18n` in `mygo.json`, typed functions from `mygo generate`) and pass translated labels explicitly. Component-owned labels follow the window's language from Onevra's catalog; change them with `onevra.<key>` messages. Keep keys and stored values independent of translated text.
-- Complex views each have their own package in `components/chart`, `components/graph`, `components/command` and `components/chat`. Keep their documents and results in retained state, prepared outside builders.
+- Complex views each have their own package in `components/chart`, `components/graph`, `components/treemap`, `components/command` and `components/chat`. Keep their documents and results in retained state, prepared outside builders.
 
 ## Choosing controls
 
@@ -77,6 +77,7 @@ Use Onevra's control whenever one exists; it replaces MyGo's styled widget of th
 | Avatar or avatar group | `components.Avatar`, `components.AvatarGroup` |
 | Categorical charts, donuts and part-to-whole bars | `components/chart`: `Bar`, `Line`, `Area`, `StackedBar`, `Donut`, `SplitBar`; see the [usage example](../../source/components/chart/example_test.go) |
 | Relationship graph | `components/graph`: `View`; see the [usage example](../../source/components/graph/example_test.go) |
+| Treemap of nested sizes, such as disk usage | `components/treemap`: `View`; see the [usage example](../../source/components/treemap/example_test.go) |
 | Pan and zoom on a custom canvas | `components/gesture`: `Navigation.Handle` for wheel and pinch zoom and touchpad panning, or `Classify` inside an existing `HandleInput` |
 | Settings surface | `components.Settings` |
 | Conversation transcript and composer | `components/chat`: `Turn`, `FloatingConversation`, `GlassComposer`; fill composer slots with `Chip`, `Picker`, `SwitchChip`, `Attachment` (also for images in mixed rows), `ContextMeter` and `QuotaSummary`; stream replies with MyGo's `markdown.Stream` |
