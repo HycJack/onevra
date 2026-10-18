@@ -36,6 +36,7 @@ type controlState struct {
 	tags                   []string
 	index                  int
 	button                 buttonExampleState
+	floating               floatingGroupState
 	toggles                [2]bool
 	folders                [3]bool
 	value                  float64
@@ -122,6 +123,7 @@ var controlCatalog = []controlExample{
 	{"Progress", "Progress", "Feedback & overlays", nil, nil},
 	{"Skeleton", "Skeleton", "Feedback & overlays", []string{"Default", "Avatar", "Content"}, controlSkeleton},
 	{"Tabs", "Tabs", "Actions & navigation", []string{"Underline", "Segmented control", "Highlight"}, controlTabs},
+	{"Floating button group", "Floating button group", "Actions & navigation", []string{"Muted", "Raised", "Vertical"}, controlFloatingButtonGroup},
 	{"Disclosure", "Disclosure", "Layout & containers", nil, nil},
 	{"Image", "Images", "Content display", []string{"Contain", "Cover", "Stretch", "Rounded", "Grayscale"}, controlImage},
 	{"Carousel", "Carousel", "Content display", []string{"Default", "Rotating"}, controlCarousel},

@@ -1270,5 +1270,19 @@
   "carouselCamp": "Campsite",
   "carouselCampCaption": "A night beside the lake",
   "carouselHarbour": "Harbour",
-  "carouselHarbourCaption": "Boats at the morning quay"
+  "carouselHarbourCaption": "Boats at the morning quay",
+  "componentFloatingButtonGroup": "Floating button group",
+  "muted": "Muted",
+  "raised": "Raised",
+  "boardActions": "Board actions",
+  "canvasTools": "Canvas tools",
+  "comment": "Comment",
+  "copied": "Copied",
+  "present": "Present",
+  "stopPresenting": "Stop",
+  "zoomIn": "Zoom in",
+  "zoomOut": "Zoom out",
+  "zoomToFit": "Zoom to fit",
+  "lockLayer": "Lock layer",
+  "hideLayer": "Hide layer"
 }

@@ -61,6 +61,7 @@ Use Onevra's control whenever one exists; it replaces MyGo's styled widget of th
 | Need | Use |
 | --- | --- |
 | Button, icon button, link, primary button, menu button | `components.Button` with a variant; `components.IconButton` for icon-only actions with a tooltip, plain or raised; `ButtonToolbar` matches `TabsSegmented`'s chosen segment; `.Menu(...)` for menus; `components.HoldToConfirm` for destructive actions confirmed by holding |
+| Action toolbar, floating editor or selection toolbar, tools rail | `components.FloatingButtonGroup`, muted or raised, in a row or column |
 | Text, editable text, rich inline text | `components.Text`, `components.RichText` |
 | Text input, text area, search field | `components.TextBox`, `components.TextBoxBuffer` |
 | Tags or other short free-form values | `components.TagInput` instead of `ui.TokenField` |

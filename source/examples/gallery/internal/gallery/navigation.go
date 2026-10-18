@@ -13,19 +13,20 @@ var navigationGroups = []string{
 // publishing a version, keep the pages it ships and remove those from earlier
 // versions.
 var newPages = map[string]bool{
-	"controls/Carousel":           true,
-	"controls/Split panes":        true,
-	"controls/Shader backgrounds": true,
-	"controls/Bubble chart":       true,
-	"controls/TagInput":           true,
-	"controls/HoldToConfirm":      true,
-	"controls/Skeleton":           true,
-	"controls/Avatars":            true,
-	"controls/Treemap":            true,
-	"mygo/Global shortcuts":       true,
-	"mygo/Gradients & blur":       true,
-	"mygo/Shaders":                true,
-	"mygo/Live chart":             true,
+	"controls/Carousel":              true,
+	"controls/Floating button group": true,
+	"controls/Split panes":           true,
+	"controls/Shader backgrounds":    true,
+	"controls/Bubble chart":          true,
+	"controls/TagInput":              true,
+	"controls/HoldToConfirm":         true,
+	"controls/Skeleton":              true,
+	"controls/Avatars":               true,
+	"controls/Treemap":               true,
+	"mygo/Global shortcuts":          true,
+	"mygo/Gradients & blur":          true,
+	"mygo/Shaders":                   true,
+	"mygo/Live chart":                true,
 }
 
 // updatedPages are the routes whose components changed in the latest published

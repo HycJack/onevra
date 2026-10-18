@@ -37,7 +37,7 @@ func controlComponents() []controlExample {
 }
 
 func TestControlPages(t *testing.T) {
-	if len(controlCatalog) != 41 {
+	if len(controlCatalog) != 42 {
 		t.Fatal("missing control examples")
 	}
 	for i, example := range controlCatalog {

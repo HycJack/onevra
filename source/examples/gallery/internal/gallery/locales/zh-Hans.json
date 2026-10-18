@@ -893,5 +893,19 @@
   "carouselCamp": "营地",
   "carouselCampCaption": "湖畔的一夜",
   "carouselHarbour": "港湾",
-  "carouselHarbourCaption": "清晨码头的船只"
+  "carouselHarbourCaption": "清晨码头的船只",
+  "componentFloatingButtonGroup": "浮动按钮组",
+  "muted": "柔和",
+  "raised": "浮起",
+  "boardActions": "画板操作",
+  "canvasTools": "画布工具",
+  "comment": "评论",
+  "copied": "已复制",
+  "present": "演示",
+  "stopPresenting": "停止",
+  "zoomIn": "放大",
+  "zoomOut": "缩小",
+  "zoomToFit": "缩放至适合",
+  "lockLayer": "锁定图层",
+  "hideLayer": "隐藏图层"
 }

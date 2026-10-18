@@ -5643,7 +5643,6 @@ func ChartOther() string { return In(i18n.Locale()).ChartOther() }
 func (msgs Messages) ChartOther() string {
 	return Catalog.Format(msgs.locale, "chartOther", nil)
 }
-}
 
 // Audio says "Audio"
 // in the language the app shows.
@@ -9031,4 +9030,144 @@ func CarouselHarbourCaption() string { return In(i18n.Locale()).CarouselHarbourC
 // in the language of msgs.
 func (msgs Messages) CarouselHarbourCaption() string {
 	return Catalog.Format(msgs.locale, "carouselHarbourCaption", nil)
+}
+
+// ComponentFloatingButtonGroup says "Floating button group"
+// in the language the app shows.
+func ComponentFloatingButtonGroup() string { return In(i18n.Locale()).ComponentFloatingButtonGroup() }
+
+// ComponentFloatingButtonGroup says "Floating button group"
+// in the language of msgs.
+func (msgs Messages) ComponentFloatingButtonGroup() string {
+	return Catalog.Format(msgs.locale, "componentFloatingButtonGroup", nil)
+}
+
+// Muted says "Muted"
+// in the language the app shows.
+func Muted() string { return In(i18n.Locale()).Muted() }
+
+// Muted says "Muted"
+// in the language of msgs.
+func (msgs Messages) Muted() string {
+	return Catalog.Format(msgs.locale, "muted", nil)
+}
+
+// Raised says "Raised"
+// in the language the app shows.
+func Raised() string { return In(i18n.Locale()).Raised() }
+
+// Raised says "Raised"
+// in the language of msgs.
+func (msgs Messages) Raised() string {
+	return Catalog.Format(msgs.locale, "raised", nil)
+}
+
+// BoardActions says "Board actions"
+// in the language the app shows.
+func BoardActions() string { return In(i18n.Locale()).BoardActions() }
+
+// BoardActions says "Board actions"
+// in the language of msgs.
+func (msgs Messages) BoardActions() string {
+	return Catalog.Format(msgs.locale, "boardActions", nil)
+}
+
+// CanvasTools says "Canvas tools"
+// in the language the app shows.
+func CanvasTools() string { return In(i18n.Locale()).CanvasTools() }
+
+// CanvasTools says "Canvas tools"
+// in the language of msgs.
+func (msgs Messages) CanvasTools() string {
+	return Catalog.Format(msgs.locale, "canvasTools", nil)
+}
+
+// Comment says "Comment"
+// in the language the app shows.
+func Comment() string { return In(i18n.Locale()).Comment() }
+
+// Comment says "Comment"
+// in the language of msgs.
+func (msgs Messages) Comment() string {
+	return Catalog.Format(msgs.locale, "comment", nil)
+}
+
+// Copied says "Copied"
+// in the language the app shows.
+func Copied() string { return In(i18n.Locale()).Copied() }
+
+// Copied says "Copied"
+// in the language of msgs.
+func (msgs Messages) Copied() string {
+	return Catalog.Format(msgs.locale, "copied", nil)
+}
+
+// Present says "Present"
+// in the language the app shows.
+func Present() string { return In(i18n.Locale()).Present() }
+
+// Present says "Present"
+// in the language of msgs.
+func (msgs Messages) Present() string {
+	return Catalog.Format(msgs.locale, "present", nil)
+}
+
+// StopPresenting says "Stop"
+// in the language the app shows.
+func StopPresenting() string { return In(i18n.Locale()).StopPresenting() }
+
+// StopPresenting says "Stop"
+// in the language of msgs.
+func (msgs Messages) StopPresenting() string {
+	return Catalog.Format(msgs.locale, "stopPresenting", nil)
+}
+
+// ZoomIn says "Zoom in"
+// in the language the app shows.
+func ZoomIn() string { return In(i18n.Locale()).ZoomIn() }
+
+// ZoomIn says "Zoom in"
+// in the language of msgs.
+func (msgs Messages) ZoomIn() string {
+	return Catalog.Format(msgs.locale, "zoomIn", nil)
+}
+
+// ZoomOut says "Zoom out"
+// in the language the app shows.
+func ZoomOut() string { return In(i18n.Locale()).ZoomOut() }
+
+// ZoomOut says "Zoom out"
+// in the language of msgs.
+func (msgs Messages) ZoomOut() string {
+	return Catalog.Format(msgs.locale, "zoomOut", nil)
+}
+
+// ZoomToFit says "Zoom to fit"
+// in the language the app shows.
+func ZoomToFit() string { return In(i18n.Locale()).ZoomToFit() }
+
+// ZoomToFit says "Zoom to fit"
+// in the language of msgs.
+func (msgs Messages) ZoomToFit() string {
+	return Catalog.Format(msgs.locale, "zoomToFit", nil)
+}
+
+// LockLayer says "Lock layer"
+// in the language the app shows.
+func LockLayer() string { return In(i18n.Locale()).LockLayer() }
+
+// LockLayer says "Lock layer"
+// in the language of msgs.
+func (msgs Messages) LockLayer() string {
+	return Catalog.Format(msgs.locale, "lockLayer", nil)
+}
+
+// HideLayer says "Hide layer"
+// in the language the app shows.
+func HideLayer() string { return In(i18n.Locale()).HideLayer() }
+
+// HideLayer says "Hide layer"
+// in the language of msgs.
+func (msgs Messages) HideLayer() string {
+	return Catalog.Format(msgs.locale, "hideLayer", nil)
 }

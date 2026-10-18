@@ -11,6 +11,7 @@ User-facing updates for Onevra library consumers.
 - Add `chart.SplitBar`.
 - Add `components.CollapsibleOptions.Leading`.
 - Add `components.HoldToConfirm`.
+- Add `components.FloatingButtonGroup`.
 - Add `components.HoneycombItem.Overlay` and `components.HoneycombOptions.OnPress`.
 - Add `components.SidebarItemWithSlots` and `components.SidebarItemWithContent`.
 - Add `components.Skeleton` and `components.SkeletonContent`.

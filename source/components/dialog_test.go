@@ -145,6 +145,7 @@ func TestDialogTransitions(t *testing.T) {
 					IconButton(c, lucide.Settings(), "Settings", IconButtonPlain)
 					Checkbox(c, &checked, "Check")
 					Radio(c, &choice, 1, "Choice")
+					FloatingButtonGroup(c, "Actions", FloatingButtonGroupMuted, ui.Horizontal, []FloatingButtonGroupItem{{ID: "share", Label: "Share", Toggle: true, On: true}})
 				})
 			}
 			if nested {
@@ -162,6 +163,10 @@ func TestDialogTransitions(t *testing.T) {
 			t.Fatalf("nested=%v: backdrop did not fade in", nested)
 		}
 		tt.Advance(time.Second)
+		if r, ok := tt.Find("Share"); ok {
+			tt.Move(r.X+r.W/2, r.Y+r.H/2)
+			tt.Advance(time.Second)
+		}
 		if r, ok := tt.Find("Settings"); ok {
 			tt.Move(r.X+r.W/2, r.Y+r.H/2)
 		}
