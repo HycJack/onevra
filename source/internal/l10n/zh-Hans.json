@@ -81,5 +81,18 @@
   "stepperCurrent": "当前步骤",
   "stepperUpcoming": "未开始",
   "stepperError": "错误",
-  "stepperAnnounce": "第 {step} 步，共 {count} 步：{label}"
+  "stepperAnnounce": "第 {step} 步，共 {count} 步：{label}",
+  "cardStack": "卡片",
+  "cardStackPass": "跳过",
+  "cardStackKeep": "保留",
+  "cardStackUndo": "撤销",
+  "cardStackStartOver": "重新开始",
+  "cardStackReviewed": "已看完所有卡片",
+  "cardStackHint": "拖动最上面的卡片，或用左右方向键{left}或{right}。按退格键撤销上一次决定。",
+  "cardStackCard": "{label}，第 {index} 张，共 {count} 张",
+  "cardStackDecided": "{label}：{action}。",
+  "cardStackOutcome": "{label}{outcome}。",
+  "cardStackRemaining": "{count, plural, =0 {已看完所有卡片。} other {还剩 # 张。}}",
+  "cardStackRestored": "已恢复{label}。",
+  "cardStackRestoredAll": "所有卡片都已放回。"
 }

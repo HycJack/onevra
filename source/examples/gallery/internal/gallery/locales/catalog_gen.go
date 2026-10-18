@@ -9751,3 +9751,263 @@ func StepperBack() string { return In(i18n.Locale()).StepperBack() }
 func (msgs Messages) StepperBack() string {
 	return Catalog.Format(msgs.locale, "stepperBack", nil)
 }
+
+// ComponentCardStack says "Card stack"
+// in the language the app shows.
+func ComponentCardStack() string { return In(i18n.Locale()).ComponentCardStack() }
+
+// ComponentCardStack says "Card stack"
+// in the language of msgs.
+func (msgs Messages) ComponentCardStack() string {
+	return Catalog.Format(msgs.locale, "componentCardStack", nil)
+}
+
+// CardStackSkip says "Skip"
+// in the language the app shows.
+func CardStackSkip() string { return In(i18n.Locale()).CardStackSkip() }
+
+// CardStackSkip says "Skip"
+// in the language of msgs.
+func (msgs Messages) CardStackSkip() string {
+	return Catalog.Format(msgs.locale, "cardStackSkip", nil)
+}
+
+// CardStackShortlist says "Shortlist"
+// in the language the app shows.
+func CardStackShortlist() string { return In(i18n.Locale()).CardStackShortlist() }
+
+// CardStackShortlist says "Shortlist"
+// in the language of msgs.
+func (msgs Messages) CardStackShortlist() string {
+	return Catalog.Format(msgs.locale, "cardStackShortlist", nil)
+}
+
+// CardStackSkipped says "skipped"
+// in the language the app shows.
+func CardStackSkipped() string { return In(i18n.Locale()).CardStackSkipped() }
+
+// CardStackSkipped says "skipped"
+// in the language of msgs.
+func (msgs Messages) CardStackSkipped() string {
+	return Catalog.Format(msgs.locale, "cardStackSkipped", nil)
+}
+
+// CardStackShortlisted says "shortlisted"
+// in the language the app shows.
+func CardStackShortlisted() string { return In(i18n.Locale()).CardStackShortlisted() }
+
+// CardStackShortlisted says "shortlisted"
+// in the language of msgs.
+func (msgs Messages) CardStackShortlisted() string {
+	return Catalog.Format(msgs.locale, "cardStackShortlisted", nil)
+}
+
+// CardStackDestinations says "Destinations"
+// in the language the app shows.
+func CardStackDestinations() string { return In(i18n.Locale()).CardStackDestinations() }
+
+// CardStackDestinations says "Destinations"
+// in the language of msgs.
+func (msgs Messages) CardStackDestinations() string {
+	return Catalog.Format(msgs.locale, "cardStackDestinations", nil)
+}
+
+// CardStackShortlistS says "Shortlist: {names}"
+// in the language the app shows.
+func CardStackShortlistS(names string) string { return In(i18n.Locale()).CardStackShortlistS(names) }
+
+// CardStackShortlistS says "Shortlist: {names}"
+// in the language of msgs.
+func (msgs Messages) CardStackShortlistS(names string) string {
+	return Catalog.Format(msgs.locale, "cardStackShortlistS", map[string]any{"names": names})
+}
+
+// CardStackShortlistEmpty says "Nothing shortlisted yet"
+// in the language the app shows.
+func CardStackShortlistEmpty() string { return In(i18n.Locale()).CardStackShortlistEmpty() }
+
+// CardStackShortlistEmpty says "Nothing shortlisted yet"
+// in the language of msgs.
+func (msgs Messages) CardStackShortlistEmpty() string {
+	return Catalog.Format(msgs.locale, "cardStackShortlistEmpty", nil)
+}
+
+// DestinationLisbon says "Lisbon"
+// in the language the app shows.
+func DestinationLisbon() string { return In(i18n.Locale()).DestinationLisbon() }
+
+// DestinationLisbon says "Lisbon"
+// in the language of msgs.
+func (msgs Messages) DestinationLisbon() string {
+	return Catalog.Format(msgs.locale, "destinationLisbon", nil)
+}
+
+// DestinationLisbonPlace says "Portugal"
+// in the language the app shows.
+func DestinationLisbonPlace() string { return In(i18n.Locale()).DestinationLisbonPlace() }
+
+// DestinationLisbonPlace says "Portugal"
+// in the language of msgs.
+func (msgs Messages) DestinationLisbonPlace() string {
+	return Catalog.Format(msgs.locale, "destinationLisbonPlace", nil)
+}
+
+// DestinationLisbonNote says "Tiled hills, late trams and long evenings by the river."
+// in the language the app shows.
+func DestinationLisbonNote() string { return In(i18n.Locale()).DestinationLisbonNote() }
+
+// DestinationLisbonNote says "Tiled hills, late trams and long evenings by the river."
+// in the language of msgs.
+func (msgs Messages) DestinationLisbonNote() string {
+	return Catalog.Format(msgs.locale, "destinationLisbonNote", nil)
+}
+
+// DestinationKyoto says "Kyoto"
+// in the language the app shows.
+func DestinationKyoto() string { return In(i18n.Locale()).DestinationKyoto() }
+
+// DestinationKyoto says "Kyoto"
+// in the language of msgs.
+func (msgs Messages) DestinationKyoto() string {
+	return Catalog.Format(msgs.locale, "destinationKyoto", nil)
+}
+
+// DestinationKyotoPlace says "Japan"
+// in the language the app shows.
+func DestinationKyotoPlace() string { return In(i18n.Locale()).DestinationKyotoPlace() }
+
+// DestinationKyotoPlace says "Japan"
+// in the language of msgs.
+func (msgs Messages) DestinationKyotoPlace() string {
+	return Catalog.Format(msgs.locale, "destinationKyotoPlace", nil)
+}
+
+// DestinationKyotoNote says "Quiet temples, moss gardens and lantern-lit lanes."
+// in the language the app shows.
+func DestinationKyotoNote() string { return In(i18n.Locale()).DestinationKyotoNote() }
+
+// DestinationKyotoNote says "Quiet temples, moss gardens and lantern-lit lanes."
+// in the language of msgs.
+func (msgs Messages) DestinationKyotoNote() string {
+	return Catalog.Format(msgs.locale, "destinationKyotoNote", nil)
+}
+
+// DestinationReykjavik says "Reykjavík"
+// in the language the app shows.
+func DestinationReykjavik() string { return In(i18n.Locale()).DestinationReykjavik() }
+
+// DestinationReykjavik says "Reykjavík"
+// in the language of msgs.
+func (msgs Messages) DestinationReykjavik() string {
+	return Catalog.Format(msgs.locale, "destinationReykjavik", nil)
+}
+
+// DestinationReykjavikPlace says "Iceland"
+// in the language the app shows.
+func DestinationReykjavikPlace() string { return In(i18n.Locale()).DestinationReykjavikPlace() }
+
+// DestinationReykjavikPlace says "Iceland"
+// in the language of msgs.
+func (msgs Messages) DestinationReykjavikPlace() string {
+	return Catalog.Format(msgs.locale, "destinationReykjavikPlace", nil)
+}
+
+// DestinationReykjavikNote says "Hot springs by day and the northern lights by night."
+// in the language the app shows.
+func DestinationReykjavikNote() string { return In(i18n.Locale()).DestinationReykjavikNote() }
+
+// DestinationReykjavikNote says "Hot springs by day and the northern lights by night."
+// in the language of msgs.
+func (msgs Messages) DestinationReykjavikNote() string {
+	return Catalog.Format(msgs.locale, "destinationReykjavikNote", nil)
+}
+
+// DestinationCapeTown says "Cape Town"
+// in the language the app shows.
+func DestinationCapeTown() string { return In(i18n.Locale()).DestinationCapeTown() }
+
+// DestinationCapeTown says "Cape Town"
+// in the language of msgs.
+func (msgs Messages) DestinationCapeTown() string {
+	return Catalog.Format(msgs.locale, "destinationCapeTown", nil)
+}
+
+// DestinationCapeTownPlace says "South Africa"
+// in the language the app shows.
+func DestinationCapeTownPlace() string { return In(i18n.Locale()).DestinationCapeTownPlace() }
+
+// DestinationCapeTownPlace says "South Africa"
+// in the language of msgs.
+func (msgs Messages) DestinationCapeTownPlace() string {
+	return Catalog.Format(msgs.locale, "destinationCapeTownPlace", nil)
+}
+
+// DestinationCapeTownNote says "A flat-topped mountain between two oceans."
+// in the language the app shows.
+func DestinationCapeTownNote() string { return In(i18n.Locale()).DestinationCapeTownNote() }
+
+// DestinationCapeTownNote says "A flat-topped mountain between two oceans."
+// in the language of msgs.
+func (msgs Messages) DestinationCapeTownNote() string {
+	return Catalog.Format(msgs.locale, "destinationCapeTownNote", nil)
+}
+
+// DestinationMarrakesh says "Marrakesh"
+// in the language the app shows.
+func DestinationMarrakesh() string { return In(i18n.Locale()).DestinationMarrakesh() }
+
+// DestinationMarrakesh says "Marrakesh"
+// in the language of msgs.
+func (msgs Messages) DestinationMarrakesh() string {
+	return Catalog.Format(msgs.locale, "destinationMarrakesh", nil)
+}
+
+// DestinationMarrakeshPlace says "Morocco"
+// in the language the app shows.
+func DestinationMarrakeshPlace() string { return In(i18n.Locale()).DestinationMarrakeshPlace() }
+
+// DestinationMarrakeshPlace says "Morocco"
+// in the language of msgs.
+func (msgs Messages) DestinationMarrakeshPlace() string {
+	return Catalog.Format(msgs.locale, "destinationMarrakeshPlace", nil)
+}
+
+// DestinationMarrakeshNote says "Spice markets, riads and rooftop sunsets."
+// in the language the app shows.
+func DestinationMarrakeshNote() string { return In(i18n.Locale()).DestinationMarrakeshNote() }
+
+// DestinationMarrakeshNote says "Spice markets, riads and rooftop sunsets."
+// in the language of msgs.
+func (msgs Messages) DestinationMarrakeshNote() string {
+	return Catalog.Format(msgs.locale, "destinationMarrakeshNote", nil)
+}
+
+// DestinationQueenstown says "Queenstown"
+// in the language the app shows.
+func DestinationQueenstown() string { return In(i18n.Locale()).DestinationQueenstown() }
+
+// DestinationQueenstown says "Queenstown"
+// in the language of msgs.
+func (msgs Messages) DestinationQueenstown() string {
+	return Catalog.Format(msgs.locale, "destinationQueenstown", nil)
+}
+
+// DestinationQueenstownPlace says "New Zealand"
+// in the language the app shows.
+func DestinationQueenstownPlace() string { return In(i18n.Locale()).DestinationQueenstownPlace() }
+
+// DestinationQueenstownPlace says "New Zealand"
+// in the language of msgs.
+func (msgs Messages) DestinationQueenstownPlace() string {
+	return Catalog.Format(msgs.locale, "destinationQueenstownPlace", nil)
+}
+
+// DestinationQueenstownNote says "Alpine lakes and mountains made for adventure."
+// in the language the app shows.
+func DestinationQueenstownNote() string { return In(i18n.Locale()).DestinationQueenstownNote() }
+
+// DestinationQueenstownNote says "Alpine lakes and mountains made for adventure."
+// in the language of msgs.
+func (msgs Messages) DestinationQueenstownNote() string {
+	return Catalog.Format(msgs.locale, "destinationQueenstownNote", nil)
+}

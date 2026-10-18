@@ -1380,5 +1380,38 @@
   "stepperCardDeclined": "Card declined. Try another card.",
   "stepperNext": "Next",
   "stepperPaymentFailed": "Payment failed",
-  "stepperBack": "Back"
+  "stepperBack": "Back",
+  "componentCardStack": "Card stack",
+  "cardStackSkip": "Skip",
+  "cardStackShortlist": "Shortlist",
+  "cardStackSkipped": "skipped",
+  "cardStackShortlisted": "shortlisted",
+  "cardStackDestinations": "Destinations",
+  "cardStackShortlistS": "Shortlist: {names}",
+  "@cardStackShortlistS": {
+    "placeholders": {
+      "names": {
+        "type": "String"
+      }
+    }
+  },
+  "cardStackShortlistEmpty": "Nothing shortlisted yet",
+  "destinationLisbon": "Lisbon",
+  "destinationLisbonPlace": "Portugal",
+  "destinationLisbonNote": "Tiled hills, late trams and long evenings by the river.",
+  "destinationKyoto": "Kyoto",
+  "destinationKyotoPlace": "Japan",
+  "destinationKyotoNote": "Quiet temples, moss gardens and lantern-lit lanes.",
+  "destinationReykjavik": "Reykjavík",
+  "destinationReykjavikPlace": "Iceland",
+  "destinationReykjavikNote": "Hot springs by day and the northern lights by night.",
+  "destinationCapeTown": "Cape Town",
+  "destinationCapeTownPlace": "South Africa",
+  "destinationCapeTownNote": "A flat-topped mountain between two oceans.",
+  "destinationMarrakesh": "Marrakesh",
+  "destinationMarrakeshPlace": "Morocco",
+  "destinationMarrakeshNote": "Spice markets, riads and rooftop sunsets.",
+  "destinationQueenstown": "Queenstown",
+  "destinationQueenstownPlace": "New Zealand",
+  "destinationQueenstownNote": "Alpine lakes and mountains made for adventure."
 }

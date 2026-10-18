@@ -58,6 +58,7 @@ var navigationIcons = map[string]func() *ui.SVG{
 	"Tree":                  lucide.ListTree,
 	"Sidebar":               lucide.PanelLeft,
 	"Honeycomb":             lucide.Hexagon,
+	"Card stack":            lucide.Layers,
 	"HoldToConfirm":         lucide.HandGrab,
 	"Split":                 lucide.Columns2,
 	"Split panes":           lucide.Columns2,

@@ -26,6 +26,7 @@ var newPages = map[string]bool{
 	"controls/Avatars":               true,
 	"controls/Treemap":               true,
 	"controls/Flow diagram":          true,
+	"controls/Card stack":            true,
 	"mygo/Global shortcuts":          true,
 	"mygo/Gradients & blur":          true,
 	"mygo/Shaders":                   true,

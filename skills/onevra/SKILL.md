@@ -72,6 +72,7 @@ Use Onevra's control whenever one exists; it replaces MyGo's styled widget of th
 | Tabs, accordion, collapsible, split, breadcrumbs, sidebar | The Onevra component of the same name; `components.Tabs` takes `TabsUnderline`, `TabsSegmented` or `TabsHighlight` |
 | Circular item picker in a magnified honeycomb | `components.Honeycomb` |
 | Slides browsed by dragging, swiping or arrows, with optional rotation | `components.Carousel` with an application-owned `CarouselState` |
+| One-by-one triage of a deck, swiped left or right with undo | `components.CardStack` with an application-owned `CardStackState` |
 | Modal, alert, popover, tooltip | `Dialog`, `AlertDialog`, `Popover`, `Tooltip` |
 | Toast | MyGo's `c.Toast`, `ToastAction`, `AddToast`; Shell builds them with `components.Toasts`, which standalone hosts call themselves; place them with `ShellOptions.Toasts` (`components.ToastOptions`). `ui.Toast.Type` takes `components.ToastInfo`/`Success`/`Warning`/`Error` |
 | Progress, spinner, badge, rating, icon, image | The Onevra component of the same name; icons from `icons/lucide` |

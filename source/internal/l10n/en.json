@@ -188,5 +188,75 @@
         "type": "String"
       }
     }
-  }
+  },
+  "cardStack": "Cards",
+  "cardStackPass": "Pass",
+  "cardStackKeep": "Keep",
+  "cardStackUndo": "Undo",
+  "cardStackStartOver": "Start over",
+  "cardStackReviewed": "All cards reviewed",
+  "cardStackHint": "Drag the top card, or use the left and right arrow keys to {left} or {right} it. Backspace undoes the last decision.",
+  "@cardStackHint": {
+    "placeholders": {
+      "left": {
+        "type": "String"
+      },
+      "right": {
+        "type": "String"
+      }
+    }
+  },
+  "cardStackCard": "{label}, {index} of {count}",
+  "@cardStackCard": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "index": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cardStackDecided": "{label}: {action}.",
+  "@cardStackDecided": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "action": {
+        "type": "String"
+      }
+    }
+  },
+  "cardStackOutcome": "{label} {outcome}.",
+  "@cardStackOutcome": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "outcome": {
+        "type": "String"
+      }
+    }
+  },
+  "cardStackRemaining": "{count, plural, =0 {All cards reviewed.} one {# left.} other {# left.}}",
+  "@cardStackRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cardStackRestored": "{label} restored.",
+  "@cardStackRestored": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "cardStackRestoredAll": "All cards are back in the stack."
 }

@@ -44,6 +44,7 @@ type controlState struct {
 	high                   float64
 	honeycomb              string
 	carousel               components.CarouselState
+	cards                  components.CardStackState
 	honeycombItems         []honeycombDemoItem
 	honeycombNext          int
 	split, splitPercent    float32
@@ -138,6 +139,7 @@ var controlCatalog = []controlExample{
 	{"Table", "Table", "Content display", []string{"Table", "TableVirtualized"}, controlTable},
 	{"Sidebar", "Sidebar", "Actions & navigation", []string{"Default", "File tree", "Collapsible groups", "Custom leading"}, controlSidebar},
 	{"Honeycomb", "Honeycomb", "Selection & values", []string{"Default"}, controlHoneycomb},
+	{"Card stack", "Card stack", "Selection & values", []string{"Default"}, controlCardStack},
 	{"Split panes", "Split panes", "Layout & containers", nil, nil},
 	{"ScrollView", "Scroll views", "Layout & containers", []string{"Vertical", "Horizontal", "Both", "Insets"}, controlScrollView},
 }
@@ -287,7 +289,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample, heading
 			for _, variant := range example.variants {
 				cell := ui.Column(c).Key(variant).MinWidth(0).MaxWidthPercent(100).Gap(12)
 				switch example.name {
-				case "Text", "GridView", "Bubble chart":
+				case "Text", "GridView", "Bubble chart", "Card stack":
 					cell.FillWidth()
 				case "TagInput":
 					cell.Width(320)
