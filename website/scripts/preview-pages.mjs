@@ -28,7 +28,13 @@ const server = Bun.serve({
       return new Response("Not found", { status: 404 })
     }
 
-    const file = Bun.file(target)
+    // GitHub Pages serves a directory's index.html for a path without its
+    // trailing slash, as /onevra/components for /onevra/components/index.html.
+    let file = Bun.file(target)
+    if (!(await file.exists()) && !relative.endsWith(".html")) {
+      const index = Bun.file(join(target, "index.html"))
+      if (await index.exists()) file = index
+    }
     if (await file.exists()) {
       return new Response(file)
     }

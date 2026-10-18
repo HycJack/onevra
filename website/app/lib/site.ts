@@ -16,5 +16,6 @@ export type Locale = "en" | "zh"
 
 /** Derives the locale from a router pathname with the basename stripped. */
 export function localeFromPathname(pathname: string): Locale {
-  return pathname.replace(/\/+$/, "").endsWith("/zh") ? "zh" : "en"
+  const path = pathname.replace(/\/+$/, "")
+  return path === "/zh" || path.startsWith("/zh/") ? "zh" : "en"
 }

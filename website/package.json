@@ -7,7 +7,9 @@
     "dev": "bun --conditions=development node_modules/@react-router/dev/bin.cjs dev",
     "build": "react-router build",
     "preview": "bun scripts/preview-pages.mjs",
+    "prebuild:pages": "bun run preview:manifest",
     "build:pages": "react-router build && bun scripts/prepare-pages.mjs",
+    "preview:manifest": "bun scripts/preview-manifest.mjs",
     "typecheck": "react-router typegen && tsc",
     "format": "prettier --write \"**/*.{ts,tsx}\""
   },

@@ -170,6 +170,14 @@ func pageComponents(example controlExample) []string {
 	for _, section := range controlSections[example.name] {
 		names = append(names, section.name)
 	}
+	// These pages demonstrate additional public components beside the page
+	// name, so search and the website's preview catalog can find them.
+	switch example.name {
+	case "Button":
+		names = append(names, "Button", "IconButton", "ToggleButton")
+	case "Select":
+		names = append(names, "Select", "NativeSelect")
+	}
 	return names
 }
 

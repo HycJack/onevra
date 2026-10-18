@@ -10,18 +10,28 @@ import { site, type Locale } from "~/lib/site"
 export function SiteHeader({
   locale,
   content,
+  localeHref,
 }: {
   locale: Locale
   content: LandingContent
+  /** Where the language switch goes on a page outside the landing. */
+  localeHref?: string
 }) {
+  const homeHref = locale === "zh" ? "/zh" : "/"
   const nextLocale = locale === "en" ? "zh" : "en"
-  const nextLocaleHref = locale === "en" ? "/zh" : "/"
+  const nextLocaleHref = localeHref ?? (locale === "en" ? "/zh" : "/")
+  const sectionHref = (href: string) =>
+    href.startsWith("/")
+      ? locale === "zh"
+        ? `/zh${href}`
+        : href
+      : `${homeHref}${href}`
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-md">
       <div className="mx-auto flex h-14 w-full max-w-6xl items-center gap-2 px-4 sm:px-6">
         <Link
-          to="/"
+          to={homeHref}
           className="flex items-center gap-2 rounded-md font-heading text-base font-semibold"
         >
           <Logo />
@@ -32,7 +42,7 @@ export function SiteHeader({
           {content.nav.map((item) => (
             <a
               key={item.href}
-              href={item.href}
+              href={sectionHref(item.href)}
               className="rounded-md px-2.5 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
             >
               {item.label}

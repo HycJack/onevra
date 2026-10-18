@@ -1,4 +1,5 @@
 import { ArrowRight, BookOpen, Package, Play, Terminal } from "lucide-react"
+import { Link } from "react-router"
 
 import { CodeBlock } from "~/components/code-block"
 import { CopyButton } from "~/components/copy-button"
@@ -67,8 +68,8 @@ export function Landing({ locale }: { locale: Locale }) {
       <SiteHeader locale={locale} content={c} />
 
       <main className="flex-1 overflow-x-clip">
-        <Hero content={c} />
-        <CatalogSection content={c} />
+        <Hero content={c} locale={locale} />
+        <CatalogSection content={c} locale={locale} />
         <ViewsSection content={c} />
         <CodeSection content={c} />
         <ThemingSection content={c} />
@@ -82,7 +83,14 @@ export function Landing({ locale }: { locale: Locale }) {
   )
 }
 
-function Hero({ content: c }: { content: LandingContent }) {
+function Hero({
+  content: c,
+  locale,
+}: {
+  content: LandingContent
+  locale: Locale
+}) {
+  const componentsHref = locale === "zh" ? "/zh/components" : "/components"
   return (
     <section className="relative overflow-hidden">
       <div
@@ -99,7 +107,7 @@ function Hero({ content: c }: { content: LandingContent }) {
           {highlightAccent(c.hero.description, c.hero.highlight)}
         </p>
         <div className="flex flex-col gap-3 sm:flex-row">
-          <Button size="lg" render={<a href="#components" />}>
+          <Button size="lg" render={<Link to={componentsHref} />}>
             {c.hero.primary}
           </Button>
           <Button
@@ -125,7 +133,14 @@ function Hero({ content: c }: { content: LandingContent }) {
   )
 }
 
-function CatalogSection({ content: c }: { content: LandingContent }) {
+function CatalogSection({
+  content: c,
+  locale,
+}: {
+  content: LandingContent
+  locale: Locale
+}) {
+  const componentsHref = locale === "zh" ? "/zh/components" : "/components"
   return (
     <section
       id="components"
@@ -154,7 +169,17 @@ function CatalogSection({ content: c }: { content: LandingContent }) {
           </Card>
         ))}
       </div>
-      <p className="mt-6 text-sm text-muted-foreground">{c.catalog.note}</p>
+      <div className="mt-6 flex flex-wrap items-center gap-3">
+        <p className="text-sm text-muted-foreground">{c.catalog.note}</p>
+        <Button
+          variant="outline"
+          size="sm"
+          render={<Link to={componentsHref} />}
+        >
+          {c.hero.primary}
+          <ArrowRight data-icon="inline-end" />
+        </Button>
+      </div>
     </section>
   )
 }

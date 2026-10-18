@@ -24,7 +24,7 @@ Shell configures and creates a MyGo window, installs its content container; Side
 
 The `icons/lucide` package supplies lazily parsed, shared MyGo SVGs independently of UI components. The `components.Icon` component accepts these named accessors or parsed SVGs while MyGo owns rendering, sizing, color and accessibility. Generated named accessors have no full-library runtime registry or eager parsing, so ordinary consumers need not retain every icon. Upstream resources and licenses are pinned and checked in; a Lucide checkout is only needed for [maintainer updates](docs/build.md#updating-lucide-icons), not consumer builds.
 
-The gallery is an independent consumer of the public API, not a dependency of the library. It keeps interactive demonstration values in memory, owns its presentation-state persistence and provides a place to review native behavior. See [Gallery](docs/architecture/gallery.md) for storage and verification.
+The gallery is an independent consumer of the public API, not a dependency of the library. It keeps interactive demonstration values in memory, owns its presentation-state persistence and provides a place to review native behavior. See [Gallery](docs/architecture/gallery.md) for storage and verification. Its `web` entry compiles the same control demonstrations for the website using MyGo's browser backend; the website supplies navigation and the frame, while native window chrome and desktop integrations are unavailable. See [browser preview](docs/architecture/gallery.md#browser-preview).
 
 The desktop, menu bar, launcher, documents and lawn defense starter applications are independent consumers under `source/examples/`. Each keeps its own lifecycle, preferences where it has them, MyGo message catalog and packaging configuration so it can be copied without importing another example. Their small application helpers are intentionally local, not a shared application framework.
 
@@ -38,9 +38,9 @@ There is one Go module under `source/`, with module path `github.com/oneo-me/one
 - `source/components/`: common controls and independent subpackages for complex components, usable without Shell; see [complex component composition](docs/architecture/components.md#complex-component-composition).
 - `source/icons/lucide/`: public icon assets and upstream provenance.
 - `source/tools/`: library maintenance commands such as the Lucide importer; these share the Go module but are not runtime library dependencies. Applications are packaged with MyGo's CLI, pinned as a Go tool.
-- `source/examples/gallery/`: standalone example, with presentation, native review tests and MyGo inventory tooling under its own `internal/` directory.
+- `source/examples/gallery/`: standalone example, with presentation, native review tests and MyGo inventory tooling under its own `internal/` directory; its `web` entry serves the website's browser preview.
 - [Development guide](docs/build.md): build, verification and release procedures.
-- `website/`: the official website, built with React Router and shadcn/ui and deployed to GitHub Pages; see [website/README.md](website/README.md).
+- `website/`: the official website, built with React Router and shadcn/ui and deployed to GitHub Pages; its `/components` page runs the Gallery's demonstrations as WebAssembly; see [website/README.md](website/README.md).
 
 The repository-root [`skills/onevra/`](skills/onevra/SKILL.md) is an Agent skill for consumer applications, covering usage, component choice, hidden tests and project layout. It is not part of the Go module.
 

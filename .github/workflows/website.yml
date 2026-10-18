@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - "website/**"
+      - "source/**"
       - ".github/workflows/website.yml"
   workflow_dispatch:
 
@@ -30,9 +31,22 @@ jobs:
         with:
           bun-version: 1.4.2
 
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: source/go.mod
+          cache-dependency-path: source/go.sum
+
       - name: Install dependencies
         working-directory: website
         run: bun install --frozen-lockfile
+
+      - name: Regenerate the component preview catalog
+        working-directory: website
+        run: bun run preview:manifest
+
+      - name: Check the component preview catalog
+        run: git diff --exit-code -- website/app/lib/preview-manifest.json
 
       - name: Typecheck
         working-directory: website

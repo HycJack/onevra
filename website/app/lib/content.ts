@@ -80,6 +80,22 @@ export interface LandingContent {
   footer: { description: string; groups: FooterGroup[]; builtWith: string }
 }
 
+/** Copy for the live component previews at /components. */
+export interface ComponentsPageContent {
+  meta: { title: string; description: string }
+  badge: string
+  title: string
+  description: string
+  hint: string
+  nav: string
+  choose: string
+  open: string
+  source: string
+  docs: string
+  frameTitle: string
+  note: string
+}
+
 const samples: CodeSample[] = [
   {
     name: "main.go",
@@ -187,7 +203,7 @@ export const content: Record<Locale, LandingContent> = {
         "Onevra is the MyGo component library: buttons, inputs, selection, navigation, collections, overlays, charts, graphs, a command palette, code and Markdown rendering, conversations and window shells.",
     },
     nav: [
-      { label: "Components", href: "#components" },
+      { label: "Components", href: "/components" },
       { label: "Views", href: "#views" },
       { label: "Code", href: "#code" },
       { label: "Theming", href: "#theming" },
@@ -449,7 +465,7 @@ export const content: Record<Locale, LandingContent> = {
         {
           title: "Product",
           links: [
-            { label: "Components", href: "#components" },
+            { label: "Components", href: "/components" },
             { label: "Views", href: "#views" },
             { label: "Install", href: "#install" },
             { label: "Gallery", href: site.gallery },
@@ -483,7 +499,7 @@ export const content: Record<Locale, LandingContent> = {
         "Onevra 是 MyGo 组件库：按钮、输入、选择、导航、集合、浮层，以及图表、关系图、命令面板、代码与 Markdown 渲染、对话和窗口外壳。",
     },
     nav: [
-      { label: "组件", href: "#components" },
+      { label: "组件预览", href: "/components" },
       { label: "复杂视图", href: "#views" },
       { label: "代码", href: "#code" },
       { label: "主题", href: "#theming" },
@@ -739,7 +755,7 @@ export const content: Record<Locale, LandingContent> = {
         {
           title: "产品",
           links: [
-            { label: "组件", href: "#components" },
+            { label: "组件", href: "/components" },
             { label: "复杂视图", href: "#views" },
             { label: "安装", href: "#install" },
             { label: "Gallery", href: site.gallery },
@@ -764,5 +780,46 @@ export const content: Record<Locale, LandingContent> = {
       ],
       builtWith: "由 React Router 与 shadcn/ui 构建，基于 MIT 许可证发布。",
     },
+  },
+}
+
+export const componentsPage: Record<Locale, ComponentsPageContent> = {
+  en: {
+    meta: {
+      title: "Components — Onevra",
+      description:
+        "Try every Onevra component in your browser. The Gallery's demonstrations render through MyGo's WebAssembly backend with the same drawing, input and theming as the desktop app.",
+    },
+    badge: "Live · WebAssembly",
+    title: "Every component, running here",
+    description:
+      "These are the Gallery's own demonstrations, compiled to WebAssembly and rendered by MyGo in your browser. Point, type, drag and open overlays; the controls behave as they do in a native window.",
+    hint: "Choose a component, then interact with it directly in the frame.",
+    nav: "Components",
+    choose: "Choose a component",
+    open: "Open full page",
+    source: "Gallery source",
+    docs: "Go package",
+    frameTitle: "Live preview of",
+    note: "Previews follow the site's light or dark appearance. Native window chrome, menus, trays and file dialogs are unavailable in a browser.",
+  },
+  zh: {
+    meta: {
+      title: "组件 — Onevra",
+      description:
+        "在浏览器中体验每个 Onevra 组件。预览来自 Gallery 的示例，由 MyGo 的 WebAssembly 后端渲染，绘制、输入与主题和桌面应用一致。",
+    },
+    badge: "在线 · WebAssembly",
+    title: "每个组件，都在这里运行",
+    description:
+      "这些是 Gallery 自带的示例，编译为 WebAssembly 后由 MyGo 在浏览器中渲染。你可以指向、输入、拖动并打开浮层，控件的行为与原生窗口一致。",
+    hint: "选择一个组件，然后直接在预览框中操作它。",
+    nav: "组件",
+    choose: "选择组件",
+    open: "在新页面打开",
+    source: "Gallery 源码",
+    docs: "Go 包文档",
+    frameTitle: "实时预览",
+    note: "预览会跟随网站的明暗外观。浏览器中无法使用原生窗口边框、菜单、托盘和文件对话框。",
   },
 }

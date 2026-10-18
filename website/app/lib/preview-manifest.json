@@ -1,0 +1,739 @@
+[
+  {
+    "slug": "shader-backgrounds",
+    "key": "controls/Shader backgrounds",
+    "name": "Shader backgrounds",
+    "nameZh": "着色器背景",
+    "group": "Shaders",
+    "groupZh": "着色器",
+    "variants": [
+      "Default"
+    ],
+    "components": [
+      "Shader backgrounds"
+    ]
+  },
+  {
+    "slug": "data-charts",
+    "key": "controls/Data charts",
+    "name": "Data charts",
+    "nameZh": "数据图表",
+    "group": "Charts",
+    "groupZh": "图表",
+    "variants": [
+      "Bar chart",
+      "Line chart",
+      "Area chart",
+      "Stacked bar chart",
+      "Donut chart",
+      "Split bar"
+    ],
+    "components": [
+      "Bar chart",
+      "Line chart",
+      "Area chart",
+      "Stacked bar chart",
+      "Donut chart",
+      "Split bar"
+    ]
+  },
+  {
+    "slug": "bubble-chart",
+    "key": "controls/Bubble chart",
+    "name": "Bubble chart",
+    "nameZh": "气泡图",
+    "group": "Charts",
+    "groupZh": "图表",
+    "variants": [
+      "Default"
+    ],
+    "components": [
+      "Bubble chart"
+    ]
+  },
+  {
+    "slug": "relationship-graph",
+    "key": "controls/Relationship graph",
+    "name": "Relationship graph",
+    "nameZh": "关系图谱",
+    "group": "Charts",
+    "groupZh": "图表",
+    "variants": [
+      "Default"
+    ],
+    "components": [
+      "Relationship graph"
+    ]
+  },
+  {
+    "slug": "treemap",
+    "key": "controls/Treemap",
+    "name": "Treemap",
+    "nameZh": "矩形树图",
+    "group": "Charts",
+    "groupZh": "图表",
+    "variants": [
+      "Default"
+    ],
+    "components": [
+      "Treemap"
+    ]
+  },
+  {
+    "slug": "flow-diagram",
+    "key": "controls/Flow diagram",
+    "name": "Flow diagram",
+    "nameZh": "流程图",
+    "group": "Charts",
+    "groupZh": "图表",
+    "variants": [
+      "Default"
+    ],
+    "components": [
+      "Flow diagram"
+    ]
+  },
+  {
+    "slug": "date-time-pickers",
+    "key": "controls/Date \u0026 time pickers",
+    "name": "Date \u0026 time pickers",
+    "nameZh": "日期和时间选择器",
+    "group": "Date \u0026 time",
+    "groupZh": "日期与时间",
+    "components": [
+      "TimePicker",
+      "Calendar",
+      "CalendarPicker"
+    ]
+  },
+  {
+    "slug": "color-pickers",
+    "key": "controls/Color pickers",
+    "name": "Color pickers",
+    "nameZh": "颜色选择器",
+    "group": "Color",
+    "groupZh": "颜色",
+    "components": [
+      "ColorView",
+      "ColorPicker"
+    ]
+  },
+  {
+    "slug": "tooltip",
+    "key": "controls/Tooltip",
+    "name": "Tooltip",
+    "nameZh": "工具提示",
+    "group": "Feedback \u0026 overlays",
+    "groupZh": "反馈与浮层",
+    "variants": [
+      "Default"
+    ],
+    "components": [
+      "Tooltip"
+    ]
+  },
+  {
+    "slug": "popover",
+    "key": "controls/Popover",
+    "name": "Popover",
+    "nameZh": "弹出面板",
+    "group": "Feedback \u0026 overlays",
+    "groupZh": "反馈与浮层",
+    "variants": [
+      "Default"
+    ],
+    "components": [
+      "Popover"
+    ]
+  },
+  {
+    "slug": "dialogs",
+    "key": "controls/Dialogs",
+    "name": "Dialogs",
+    "nameZh": "对话框",
+    "group": "Feedback \u0026 overlays",
+    "groupZh": "反馈与浮层",
+    "components": [
+      "Dialog",
+      "AlertDialog"
+    ]
+  },
+  {
+    "slug": "badge",
+    "key": "controls/Badge",
+    "name": "Badge",
+    "nameZh": "徽标",
+    "group": "Feedback \u0026 overlays",
+    "groupZh": "反馈与浮层",
+    "variants": [
+      "Tones",
+      "Icons",
+      "Live updates"
+    ],
+    "components": [
+      "Badge"
+    ]
+  },
+  {
+    "slug": "toast",
+    "key": "controls/Toast",
+    "name": "Toast",
+    "nameZh": "轻提示",
+    "group": "Feedback \u0026 overlays",
+    "groupZh": "反馈与浮层",
+    "variants": [
+      "Status",
+      "Actions",
+      "Progress"
+    ],
+    "components": [
+      "Toast"
+    ]
+  },
+  {
+    "slug": "chat",
+    "key": "controls/Chat",
+    "name": "Chat",
+    "nameZh": "对话",
+    "group": "Conversation",
+    "groupZh": "会话",
+    "variants": [
+      "Default"
+    ],
+    "components": [
+      "Chat"
+    ]
+  },
+  {
+    "slug": "rich-text",
+    "key": "controls/RichText",
+    "name": "RichText",
+    "nameZh": "富文本",
+    "group": "Content display",
+    "groupZh": "内容展示",
+    "variants": [
+      "Default"
+    ],
+    "components": [
+      "RichText"
+    ]
+  },
+  {
+    "slug": "avatars",
+    "key": "controls/Avatars",
+    "name": "Avatars",
+    "nameZh": "头像",
+    "group": "Content display",
+    "groupZh": "内容展示",
+    "components": [
+      "Avatar",
+      "AvatarGroup"
+    ]
+  },
+  {
+    "slug": "breadcrumbs",
+    "key": "controls/Breadcrumbs",
+    "name": "Breadcrumbs",
+    "nameZh": "面包屑导航",
+    "group": "Actions \u0026 navigation",
+    "groupZh": "操作与导航",
+    "variants": [
+      "Default"
+    ],
+    "components": [
+      "Breadcrumbs"
+    ]
+  },
+  {
+    "slug": "rating",
+    "key": "controls/Rating",
+    "name": "Rating",
+    "nameZh": "评分",
+    "group": "Selection \u0026 values",
+    "groupZh": "选择与数值",
+    "variants": [
+      "Default"
+    ],
+    "components": [
+      "Rating"
+    ]
+  },
+  {
+    "slug": "text",
+    "key": "controls/Text",
+    "name": "Text",
+    "nameZh": "文本",
+    "group": "Content display",
+    "groupZh": "内容展示",
+    "variants": [
+      "Default",
+      "Editable"
+    ],
+    "components": [
+      "Text"
+    ]
+  },
+  {
+    "slug": "text-box",
+    "key": "controls/TextBox",
+    "name": "TextBox",
+    "nameZh": "文本框",
+    "group": "Text input",
+    "groupZh": "文本输入",
+    "components": [
+      "TextBox",
+      "TextBox (multiline)",
+      "TextBoxBuffer",
+      "TextBoxBuffer (multiline)"
+    ]
+  },
+  {
+    "slug": "tag-input",
+    "key": "controls/TagInput",
+    "name": "TagInput",
+    "nameZh": "标签输入框",
+    "group": "Text input",
+    "groupZh": "文本输入",
+    "variants": [
+      "Default",
+      "Empty"
+    ],
+    "components": [
+      "TagInput"
+    ]
+  },
+  {
+    "slug": "button",
+    "key": "controls/Button",
+    "name": "Button",
+    "nameZh": "按钮",
+    "group": "Actions \u0026 navigation",
+    "groupZh": "操作与导航",
+    "variants": [
+      "Button",
+      "Icon and text",
+      "IconButton",
+      "Toolbar",
+      "ToggleButton"
+    ],
+    "components": [
+      "Button",
+      "IconButton",
+      "ToggleButton"
+    ]
+  },
+  {
+    "slug": "hold-to-confirm",
+    "key": "controls/HoldToConfirm",
+    "name": "HoldToConfirm",
+    "nameZh": "长按确认",
+    "group": "Actions \u0026 navigation",
+    "groupZh": "操作与导航",
+    "variants": [
+      "Accent",
+      "Danger",
+      "Neutral"
+    ],
+    "components": [
+      "HoldToConfirm"
+    ]
+  },
+  {
+    "slug": "selection",
+    "key": "controls/Selection",
+    "name": "Selection",
+    "nameZh": "选择控件",
+    "group": "Selection \u0026 values",
+    "groupZh": "选择与数值",
+    "variants": [
+      "Checkbox",
+      "Switch",
+      "Radio"
+    ],
+    "components": [
+      "Selection"
+    ]
+  },
+  {
+    "slug": "select",
+    "key": "controls/Select",
+    "name": "Select",
+    "nameZh": "Select",
+    "group": "Selection \u0026 values",
+    "groupZh": "选择与数值",
+    "variants": [
+      "Default",
+      "Selected",
+      "Searchable",
+      "NativeSelect"
+    ],
+    "components": [
+      "Select",
+      "NativeSelect"
+    ]
+  },
+  {
+    "slug": "menu",
+    "key": "controls/Menu",
+    "name": "Menu",
+    "nameZh": "Menu",
+    "group": "Feedback \u0026 overlays",
+    "groupZh": "反馈与浮层",
+    "variants": [
+      "Left-click",
+      "Right-click"
+    ],
+    "components": [
+      "Menu"
+    ]
+  },
+  {
+    "slug": "number-input",
+    "key": "controls/NumberInput",
+    "name": "NumberInput",
+    "nameZh": "数字输入框",
+    "group": "Selection \u0026 values",
+    "groupZh": "选择与数值",
+    "variants": [
+      "Integer",
+      "Decimal",
+      "Scrub",
+      "Without stepper"
+    ],
+    "components": [
+      "NumberInput"
+    ]
+  },
+  {
+    "slug": "slider",
+    "key": "controls/Slider",
+    "name": "Slider",
+    "nameZh": "Slider",
+    "group": "Selection \u0026 values",
+    "groupZh": "选择与数值",
+    "variants": [
+      "Default",
+      "Step",
+      "Range",
+      "Stepped range"
+    ],
+    "components": [
+      "Slider"
+    ]
+  },
+  {
+    "slug": "progress",
+    "key": "controls/Progress",
+    "name": "Progress",
+    "nameZh": "进度条",
+    "group": "Feedback \u0026 overlays",
+    "groupZh": "反馈与浮层",
+    "components": [
+      "Progress",
+      "ProgressRing",
+      "Spinner"
+    ]
+  },
+  {
+    "slug": "skeleton",
+    "key": "controls/Skeleton",
+    "name": "Skeleton",
+    "nameZh": "骨架屏",
+    "group": "Feedback \u0026 overlays",
+    "groupZh": "反馈与浮层",
+    "variants": [
+      "Default",
+      "Avatar",
+      "Content"
+    ],
+    "components": [
+      "Skeleton"
+    ]
+  },
+  {
+    "slug": "stepper",
+    "key": "controls/Stepper",
+    "name": "Stepper",
+    "nameZh": "步进器",
+    "group": "Feedback \u0026 overlays",
+    "groupZh": "反馈与浮层",
+    "variants": [
+      "Horizontal",
+      "Vertical",
+      "Compact"
+    ],
+    "components": [
+      "Stepper"
+    ]
+  },
+  {
+    "slug": "tabs",
+    "key": "controls/Tabs",
+    "name": "Tabs",
+    "nameZh": "标签页",
+    "group": "Actions \u0026 navigation",
+    "groupZh": "操作与导航",
+    "variants": [
+      "Underline",
+      "Segmented control",
+      "Highlight"
+    ],
+    "components": [
+      "Tabs"
+    ]
+  },
+  {
+    "slug": "floating-button-group",
+    "key": "controls/Floating button group",
+    "name": "Floating button group",
+    "nameZh": "浮动按钮组",
+    "group": "Actions \u0026 navigation",
+    "groupZh": "操作与导航",
+    "variants": [
+      "Muted",
+      "Raised",
+      "Vertical"
+    ],
+    "components": [
+      "Floating button group"
+    ]
+  },
+  {
+    "slug": "disclosure",
+    "key": "controls/Disclosure",
+    "name": "Disclosure",
+    "nameZh": "折叠面板",
+    "group": "Layout \u0026 containers",
+    "groupZh": "布局与容器",
+    "components": [
+      "Accordion",
+      "Collapsible"
+    ]
+  },
+  {
+    "slug": "image",
+    "key": "controls/Image",
+    "name": "Image",
+    "nameZh": "图像",
+    "group": "Content display",
+    "groupZh": "内容展示",
+    "variants": [
+      "Contain",
+      "Cover",
+      "Stretch",
+      "Rounded",
+      "Grayscale"
+    ],
+    "components": [
+      "Image"
+    ]
+  },
+  {
+    "slug": "image-compare",
+    "key": "controls/ImageCompare",
+    "name": "ImageCompare",
+    "nameZh": "图片对比",
+    "group": "Content display",
+    "groupZh": "内容展示",
+    "variants": [
+      "Horizontal",
+      "Vertical"
+    ],
+    "components": [
+      "ImageCompare"
+    ]
+  },
+  {
+    "slug": "carousel",
+    "key": "controls/Carousel",
+    "name": "Carousel",
+    "nameZh": "轮播",
+    "group": "Content display",
+    "groupZh": "内容展示",
+    "variants": [
+      "Default",
+      "Rotating"
+    ],
+    "components": [
+      "Carousel"
+    ]
+  },
+  {
+    "slug": "list",
+    "key": "controls/List",
+    "name": "List",
+    "nameZh": "列表",
+    "group": "Content display",
+    "groupZh": "内容展示",
+    "variants": [
+      "Default"
+    ],
+    "components": [
+      "List"
+    ]
+  },
+  {
+    "slug": "grid-view",
+    "key": "controls/GridView",
+    "name": "GridView",
+    "nameZh": "网格视图",
+    "group": "Content display",
+    "groupZh": "内容展示",
+    "variants": [
+      "Default"
+    ],
+    "components": [
+      "GridView"
+    ]
+  },
+  {
+    "slug": "tree",
+    "key": "controls/Tree",
+    "name": "Tree",
+    "nameZh": "树形视图",
+    "group": "Content display",
+    "groupZh": "内容展示",
+    "variants": [
+      "Tree",
+      "TreeVirtualized"
+    ],
+    "components": [
+      "Tree"
+    ]
+  },
+  {
+    "slug": "table",
+    "key": "controls/Table",
+    "name": "Table",
+    "nameZh": "表格",
+    "group": "Content display",
+    "groupZh": "内容展示",
+    "variants": [
+      "Table",
+      "TableVirtualized"
+    ],
+    "components": [
+      "Table"
+    ]
+  },
+  {
+    "slug": "sidebar",
+    "key": "controls/Sidebar",
+    "name": "Sidebar",
+    "nameZh": "侧边栏",
+    "group": "Actions \u0026 navigation",
+    "groupZh": "操作与导航",
+    "variants": [
+      "Default",
+      "File tree",
+      "Collapsible groups",
+      "Custom leading"
+    ],
+    "components": [
+      "Sidebar"
+    ]
+  },
+  {
+    "slug": "honeycomb",
+    "key": "controls/Honeycomb",
+    "name": "Honeycomb",
+    "nameZh": "蜂窝选择",
+    "group": "Selection \u0026 values",
+    "groupZh": "选择与数值",
+    "variants": [
+      "Default"
+    ],
+    "components": [
+      "Honeycomb"
+    ]
+  },
+  {
+    "slug": "card-stack",
+    "key": "controls/Card stack",
+    "name": "Card stack",
+    "nameZh": "卡片堆",
+    "group": "Selection \u0026 values",
+    "groupZh": "选择与数值",
+    "variants": [
+      "Default"
+    ],
+    "components": [
+      "Card stack"
+    ]
+  },
+  {
+    "slug": "split-panes",
+    "key": "controls/Split panes",
+    "name": "Split panes",
+    "nameZh": "分割区域",
+    "group": "Layout \u0026 containers",
+    "groupZh": "布局与容器",
+    "components": [
+      "Split",
+      "SplitPercent"
+    ]
+  },
+  {
+    "slug": "scroll-view",
+    "key": "controls/ScrollView",
+    "name": "ScrollView",
+    "nameZh": "ScrollView",
+    "group": "Layout \u0026 containers",
+    "groupZh": "布局与容器",
+    "variants": [
+      "Vertical",
+      "Horizontal",
+      "Both",
+      "Insets"
+    ],
+    "components": [
+      "ScrollView"
+    ]
+  },
+  {
+    "slug": "icon",
+    "key": "application/icon",
+    "name": "Icon",
+    "nameZh": "Icon",
+    "group": "Actions \u0026 navigation",
+    "groupZh": "操作与导航",
+    "components": [
+      "Icon"
+    ]
+  },
+  {
+    "slug": "pixel-grid",
+    "key": "application/pixel-grid",
+    "name": "PixelGrid",
+    "nameZh": "PixelGrid",
+    "group": "Layout \u0026 containers",
+    "groupZh": "布局与容器",
+    "components": [
+      "PixelGrid"
+    ]
+  },
+  {
+    "slug": "settings",
+    "key": "application/settings",
+    "name": "Settings",
+    "nameZh": "设置",
+    "group": "Feedback \u0026 overlays",
+    "groupZh": "反馈与浮层",
+    "components": [
+      "Settings",
+      "SearchSettings"
+    ]
+  },
+  {
+    "slug": "command-palette",
+    "key": "application/command",
+    "name": "Command palette",
+    "nameZh": "命令面板",
+    "group": "Feedback \u0026 overlays",
+    "groupZh": "反馈与浮层",
+    "components": [
+      "CommandView",
+      "CommandDialog"
+    ]
+  }
+]

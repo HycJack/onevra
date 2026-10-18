@@ -151,7 +151,9 @@ GOWORK=off go build ./...
 
 ## 官网
 
-官网位于 [website/](website)，使用 React Router 和 shadcn/ui 构建。[Website workflow](.github/workflows/website.yml) 会将其部署到 GitHub Pages。
+官网位于 [website/](website)，使用 React Router 和 shadcn/ui 构建。官网的 `/components` 页面以 WebAssembly 在浏览器中运行 Gallery 的示例，展示每个 Onevra 组件页面。[Website workflow](.github/workflows/website.yml) 会将其部署到 GitHub Pages。
+
+编译浏览器预览还需要 Go 1.27.1 或更高版本。
 
 ```sh
 cd website

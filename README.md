@@ -151,7 +151,9 @@ Formatting should produce no output. See [development checks](docs/build.md#deve
 
 ## Website
 
-The marketing site lives in [website/](website) and is built with React Router and shadcn/ui. The [Website workflow](.github/workflows/website.yml) deploys it to GitHub Pages.
+The marketing site lives in [website/](website) and is built with React Router and shadcn/ui. Its `/components` page runs the Gallery's demonstrations in the browser as WebAssembly, covering every Onevra component page. The [Website workflow](.github/workflows/website.yml) deploys it to GitHub Pages.
+
+Go 1.27.1 or later is also required to compile the browser previews.
 
 ```sh
 cd website

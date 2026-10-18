@@ -1,16 +1,24 @@
-import { Link } from "react-router"
+import { Link, useLocation } from "react-router"
 
 import { Logo } from "~/components/logo"
 import type { LandingContent } from "~/lib/content"
-import { site } from "~/lib/site"
+import { localeFromPathname, site } from "~/lib/site"
 
 export function SiteFooter({ content }: { content: LandingContent }) {
+  const locale = localeFromPathname(useLocation().pathname)
+  const homeHref = locale === "zh" ? "/zh" : "/"
+  const linkHref = (href: string) => {
+    if (href.startsWith("#")) return `${homeHref}${href}`
+    if (href.startsWith("/")) return locale === "zh" ? `/zh${href}` : href
+    return href
+  }
+
   return (
     <footer className="border-t border-border/60 bg-muted/20">
       <div className="mx-auto grid w-full max-w-6xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-[2fr_repeat(3,1fr)]">
         <div className="flex flex-col gap-3">
           <Link
-            to="/"
+            to={homeHref}
             className="flex items-center gap-2 font-heading text-base font-semibold"
           >
             <Logo />
@@ -28,9 +36,11 @@ export function SiteFooter({ content }: { content: LandingContent }) {
               {group.links.map((link) => (
                 <li key={link.label}>
                   <a
-                    href={link.href}
-                    target={link.href.startsWith("#") ? undefined : "_blank"}
-                    rel={link.href.startsWith("#") ? undefined : "noreferrer"}
+                    href={linkHref(link.href)}
+                    target={link.href.startsWith("http") ? "_blank" : undefined}
+                    rel={
+                      link.href.startsWith("http") ? "noreferrer" : undefined
+                    }
                     className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                   >
                     {link.label}
