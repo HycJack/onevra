@@ -74,6 +74,24 @@ func controlChart(c *ui.Context, s *controlState, name string) {
 			values = []float64{62, 43, 71, 54, 78, 65}
 		}
 		selection := d.selection(name)
+		if name == "Split bar" {
+			// The data action switches between two weeks of traffic.
+			labels := []string{"chartOrganic", "chartDirect", "chartPaid", "chartSocial", "chartReferral", "chartOther"}
+			sessions := []float64{41260, 24610, 15830, 8420, 5310, 3790}
+			if s.on {
+				sessions = []float64{36120, 27940, 11250, 13870, 4980, 2610}
+			}
+			var slices []chart.Slice
+			if !d.empty {
+				for i, label := range labels {
+					slices = append(slices, chart.Slice{ID: label, Label: tr(c, label), Value: sessions[i]})
+				}
+			}
+			chart.SplitBar(c, selection, slices, chart.Options{
+				Label: tr(c, "chartTraffic"), Description: tr(c, "chartTrafficSessions"), EmptyText: tr(c, "chartNoData"),
+			})
+			return
+		}
 		if name == "Donut chart" {
 			components.Text(c, tr(c, "chartDistribution")).Bold()
 			labels := []string{"chartDesign", "chartDevelopment", "chartResearch", "chartPlanning"}

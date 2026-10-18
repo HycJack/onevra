@@ -71,5 +71,8 @@
   "nextSlide": "下一张",
   "startRotation": "开始自动轮播",
   "pauseRotation": "暂停自动轮播",
-  "slideOf": "第 {index} 张，共 {count} 张"
+  "slideOf": "第 {index} 张，共 {count} 张",
+  "chartTotal": "总计",
+  "chartOff": "已关闭",
+  "chartKeepOneSegment": "至少需要保留一个分段"
 }

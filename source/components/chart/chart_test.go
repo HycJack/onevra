@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 	"testing"
+	"time"
 
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/theme"
@@ -228,5 +229,96 @@ func TestLocalStateAndSlots(t *testing.T) {
 	tt.Key(0, ui.KeyHome)
 	if selected[0].Index != 0 || selected[1].Index != -1 || !tt.HasText("Custom empty") {
 		t.Fatalf("element-local state leaked or slots failed: %+v", selected)
+	}
+}
+
+func TestSplitBarHighlightAndToggle(t *testing.T) {
+	data := []Slice{{ID: "a", Label: "Alpha", Value: 3}, {ID: "zero", Label: "Zero"}, {ID: "b", Label: "Beta", Value: 1}}
+	state := State{Index: -1}
+	tt := ui.NewTester(func(c *ui.Context) {
+		theme.Apply(c)
+		SplitBar(c, &state, data, Options{Label: "Plot", FormatValue: func(v float64) string { return fmt.Sprintf("%.0f h", v) }})
+	}, 360, 300)
+	for _, text := range []string{"Total", "4 h", "75.0%", "25.0%"} {
+		if !tt.HasText(text) {
+			t.Fatalf("missing %q", text)
+		}
+	}
+	if tt.HasText("Zero") {
+		t.Fatal("non-positive slice appeared")
+	}
+	// The title shares the bar's name; the bar lies between readout and legend.
+	readout, _ := tt.Find("4 h")
+	legend, ok := tt.Find("Alpha 75.0%")
+	if !ok {
+		t.Fatal("missing legend item")
+	}
+	r := ui.Rect{X: 0, Y: (readout.Y + readout.H + legend.Y) / 2, W: 360}
+	tt.Move(r.X+r.W*.2, r.Y)
+	if state.Index != 0 || !tt.HasText("3 h") {
+		t.Fatalf("hover did not highlight the first segment: %d", state.Index)
+	}
+	tt.Move(r.X+r.W*.97, r.Y)
+	if state.Index != 2 {
+		t.Fatalf("hover did not highlight the last segment: %d", state.Index)
+	}
+	tt.ClickAt(r.X+r.W/2, r.Y)
+	tt.Key(0, ui.KeyHome)
+	tt.Key(0, ui.KeyRight)
+	if state.Index != 2 {
+		t.Fatal("arrow keys did not skip the omitted slice")
+	}
+	tt.Key(0, ui.KeyEnter)
+	if !state.Hidden["b"] || state.Index != -1 || !tt.HasText("100.0%") || !tt.HasText("Off") {
+		t.Fatalf("Enter did not switch the segment off: %+v", state)
+	}
+	tt.Key(0, ui.KeyHome)
+	tt.Key(0, ui.KeyEnter)
+	if state.Hidden["a"] {
+		t.Fatal("the last visible segment was switched off")
+	}
+	if err := tt.Click("Beta Off"); err != nil {
+		t.Fatal(err)
+	}
+	if state.Hidden["b"] || !tt.HasText("25.0%") {
+		t.Fatal("legend did not switch the segment back on")
+	}
+	tt.ClickAt(r.X+r.W/2, r.Y)
+	tt.Key(0, ui.KeyEscape)
+	if state.Index != -1 {
+		t.Fatal("Escape did not clear the highlight")
+	}
+	data = nil
+	tt.Frame()
+	if !tt.HasText("—") {
+		t.Fatal("empty split bar shows no empty state")
+	}
+}
+
+func TestSplitBarEdgesReflow(t *testing.T) {
+	state := State{Index: -1}
+	data := []Slice{{ID: "a", Label: "A", Value: 1}, {ID: "b", Label: "B", Value: 1}}
+	var edges []float64
+	tt := ui.NewTester(func(c *ui.Context) {
+		e := SplitBar(c, &state, data, Options{Label: "Plot", AnimationDuration: time.Second})
+		edges = ui.Local(e, "onevra.chart.split", func() splitMotion { return splitMotion{} }).edges
+	}, 360, 300)
+	edge := func() float64 { return edges[0] }
+	if edge() != .5 {
+		t.Fatalf("initial edge = %v", edge())
+	}
+	data[1].Value = 3
+	tt.Frame()
+	tt.Advance(100 * time.Millisecond)
+	tt.Frame()
+	if v := edge(); v >= .5 || v <= .25 {
+		t.Fatalf("edge did not reflow gradually: %v", v)
+	}
+	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
+	if v := edge(); v != .25 {
+		t.Fatalf("Reduced Motion did not settle the edge: %v", v)
+	}
+	if got := splitTargets([]float64{.9, .1}, 1, .3); math.Abs(got[0]+got[1]-1) > 1e-9 || got[1] != .3 {
+		t.Fatalf("widening broke the 100%% total: %v", got)
 	}
 }

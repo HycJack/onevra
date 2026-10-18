@@ -165,5 +165,8 @@
         "type": "int"
       }
     }
-  }
+  },
+  "chartTotal": "Total",
+  "chartOff": "Off",
+  "chartKeepOneSegment": "At least one segment must stay visible"
 }

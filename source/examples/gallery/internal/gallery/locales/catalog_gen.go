@@ -5344,6 +5344,16 @@ func (msgs Messages) DonutChart() string {
 	return Catalog.Format(msgs.locale, "donutChart", nil)
 }
 
+// SplitBar says "Split bar"
+// in the language the app shows.
+func SplitBar() string { return In(i18n.Locale()).SplitBar() }
+
+// SplitBar says "Split bar"
+// in the language of msgs.
+func (msgs Messages) SplitBar() string {
+	return Catalog.Format(msgs.locale, "splitBar", nil)
+}
+
 // ChartEmpty says "Show empty state"
 // in the language the app shows.
 func ChartEmpty() string { return In(i18n.Locale()).ChartEmpty() }
@@ -5462,6 +5472,86 @@ func ChartPlanning() string { return In(i18n.Locale()).ChartPlanning() }
 // in the language of msgs.
 func (msgs Messages) ChartPlanning() string {
 	return Catalog.Format(msgs.locale, "chartPlanning", nil)
+}
+
+// ChartTraffic says "Traffic by source"
+// in the language the app shows.
+func ChartTraffic() string { return In(i18n.Locale()).ChartTraffic() }
+
+// ChartTraffic says "Traffic by source"
+// in the language of msgs.
+func (msgs Messages) ChartTraffic() string {
+	return Catalog.Format(msgs.locale, "chartTraffic", nil)
+}
+
+// ChartTrafficSessions says "Sessions this week"
+// in the language the app shows.
+func ChartTrafficSessions() string { return In(i18n.Locale()).ChartTrafficSessions() }
+
+// ChartTrafficSessions says "Sessions this week"
+// in the language of msgs.
+func (msgs Messages) ChartTrafficSessions() string {
+	return Catalog.Format(msgs.locale, "chartTrafficSessions", nil)
+}
+
+// ChartOrganic says "Organic search"
+// in the language the app shows.
+func ChartOrganic() string { return In(i18n.Locale()).ChartOrganic() }
+
+// ChartOrganic says "Organic search"
+// in the language of msgs.
+func (msgs Messages) ChartOrganic() string {
+	return Catalog.Format(msgs.locale, "chartOrganic", nil)
+}
+
+// ChartDirect says "Direct"
+// in the language the app shows.
+func ChartDirect() string { return In(i18n.Locale()).ChartDirect() }
+
+// ChartDirect says "Direct"
+// in the language of msgs.
+func (msgs Messages) ChartDirect() string {
+	return Catalog.Format(msgs.locale, "chartDirect", nil)
+}
+
+// ChartPaid says "Paid search"
+// in the language the app shows.
+func ChartPaid() string { return In(i18n.Locale()).ChartPaid() }
+
+// ChartPaid says "Paid search"
+// in the language of msgs.
+func (msgs Messages) ChartPaid() string {
+	return Catalog.Format(msgs.locale, "chartPaid", nil)
+}
+
+// ChartSocial says "Social"
+// in the language the app shows.
+func ChartSocial() string { return In(i18n.Locale()).ChartSocial() }
+
+// ChartSocial says "Social"
+// in the language of msgs.
+func (msgs Messages) ChartSocial() string {
+	return Catalog.Format(msgs.locale, "chartSocial", nil)
+}
+
+// ChartReferral says "Referral"
+// in the language the app shows.
+func ChartReferral() string { return In(i18n.Locale()).ChartReferral() }
+
+// ChartReferral says "Referral"
+// in the language of msgs.
+func (msgs Messages) ChartReferral() string {
+	return Catalog.Format(msgs.locale, "chartReferral", nil)
+}
+
+// ChartOther says "Other"
+// in the language the app shows.
+func ChartOther() string { return In(i18n.Locale()).ChartOther() }
+
+// ChartOther says "Other"
+// in the language of msgs.
+func (msgs Messages) ChartOther() string {
+	return Catalog.Format(msgs.locale, "chartOther", nil)
 }
 
 // Audio says "Audio"

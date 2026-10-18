@@ -10,7 +10,7 @@ import (
 func TestChartPages(t *testing.T) {
 	page := pageFromKey("controls/Data charts")
 	example, ok := controlExampleFor(page)
-	if !ok || example.group != "Charts" || len(example.variants) != 5 {
+	if !ok || example.group != "Charts" || len(example.variants) != 6 {
 		t.Fatal("charts are not one public component page")
 	}
 	for _, language := range []string{"en", "zh-Hans"} {
@@ -53,11 +53,18 @@ func TestChartSelectionsIndependent(t *testing.T) {
 	names := example.variants
 	for i, name := range names {
 		tt := ui.NewTester(func(c *ui.Context) { theme.Apply(c); controlChart(c, s, name) }, 540, 400)
-		r, ok := tt.Find("Chart selection")
+		label := "Chart selection"
+		if name == "Split bar" {
+			label = "Traffic by source" // The title precedes the bar it names.
+		}
+		r, ok := tt.Find(label)
 		if !ok {
 			t.Fatalf("%s: missing plot", name)
 		}
 		tt.ClickAt(r.X+r.W/2, r.Y+r.H/2)
+		if name == "Split bar" {
+			tt.Key(0, ui.KeyTab)
+		}
 		tt.Key(0, ui.KeyHome)
 		tt.Key(0, ui.KeyRight)
 		for j, other := range names {
