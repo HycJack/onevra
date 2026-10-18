@@ -158,7 +158,11 @@ func controlSidebarLeading(c *ui.Context, s *controlState) {
 		}
 	}
 	components.Sidebar(c).Children(func() {
-		components.SidebarSection(c, tr(c, "workspaces"), func() {
+		// The heading ends in a compact add button.
+		add := func(c *ui.Context) {
+			components.IconButton(c, lucide.Plus(), tr(c, "addWorkspace"), components.IconButtonCompact)
+		}
+		components.SidebarSectionWithActions(c, tr(c, "workspaces"), add, func() {
 			item("personal2", monogram(t.Accent, "personal2"))
 			busy("workspaceTeam", monogram(ui.RGB(232, 121, 52), "workspaceTeam"))
 			item("archive", monogram(ui.RGB(120, 120, 128), "archive"))

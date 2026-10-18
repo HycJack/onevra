@@ -8704,6 +8704,16 @@ func (msgs Messages) Workspaces() string {
 	return Catalog.Format(msgs.locale, "workspaces", nil)
 }
 
+// AddWorkspace says "Add workspace"
+// in the language the app shows.
+func AddWorkspace() string { return In(i18n.Locale()).AddWorkspace() }
+
+// AddWorkspace says "Add workspace"
+// in the language of msgs.
+func (msgs Messages) AddWorkspace() string {
+	return Catalog.Format(msgs.locale, "addWorkspace", nil)
+}
+
 // Recent says "Recent"
 // in the language the app shows.
 func Recent() string { return In(i18n.Locale()).Recent() }

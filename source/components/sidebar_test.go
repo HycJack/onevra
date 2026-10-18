@@ -180,3 +180,37 @@ func TestSidebarItemWithContent(t *testing.T) {
 		t.Fatalf("content %v and mark %v overflow item %v", content, mark, item)
 	}
 }
+
+func TestSidebarSectionWithActions(t *testing.T) {
+	clicks := 0
+	build := func(actions bool) *ui.Tester {
+		return ui.NewTester(func(c *ui.Context) {
+			Sidebar(c).Children(func() {
+				var add func(c *ui.Context)
+				if actions {
+					add = func(c *ui.Context) {
+						if IconButton(c, lucide.Plus(), "Add", IconButtonCompact).Clicked() {
+							clicks++
+						}
+					}
+				}
+				SidebarSectionWithActions(c, "Devices", add, func() { SidebarItem(c, "Laptop", nil, false) })
+			})
+		}, 220, 300)
+	}
+	plain, tt := build(false), build(true)
+	before, _ := plain.Find("Laptop")
+	heading, _ := tt.Find("Devices")
+	item, _ := tt.Find("Laptop")
+	add, ok := tt.Find("Add")
+	if !ok || add.W != 20 || add.H != 20 {
+		t.Fatalf("missing compact action: %+v", add)
+	}
+	// The action ends the heading's row without raising the heading.
+	if item.Y != before.Y || add.X+add.W != 208 || add.Y < 0 || add.Y+add.H > item.Y {
+		t.Fatalf("action misplaced: heading %+v action %+v item %+v, item was %+v", heading, add, item, before)
+	}
+	if err := tt.Click("Add"); err != nil || clicks != 1 {
+		t.Fatalf("action not clicked: %v %d", err, clicks)
+	}
+}

@@ -78,6 +78,12 @@ type SettingsOptions struct {
 	Title, SearchLabel, SearchPlaceholder, CategoryLabel, ResultsTitle, EmptyText string
 	// HeaderActions builds optional trailing actions beside the close button.
 	HeaderActions func(c *ui.Context)
+	// SectionActions builds optional trailing controls on a section's
+	// sidebar heading, such as an add button, for each nonempty Section; it
+	// may build nothing for a section. The narrow category selector shows the
+	// selected category's section actions beside it. It follows Build's rules.
+	// A section shows only while a category belongs to it.
+	SectionActions func(c *ui.Context, section string)
 	// Close, when set, shows a trailing close button that calls it, for hosts
 	// that present Settings in a dialog or window. CloseLabel overrides its
 	// accessible name; empty uses Onevra's catalog. Nil omits the button.
@@ -226,7 +232,11 @@ func Settings(c *ui.Context, state *SettingsState, categories []SettingsCategory
 								}
 							}
 							if section != "" {
-								SidebarSection(c, section, items)
+								var actions func(c *ui.Context)
+								if opts.SectionActions != nil {
+									actions = func(c *ui.Context) { opts.SectionActions(c, section) }
+								}
+								SidebarSectionWithActions(c, section, actions, items)
 							} else {
 								ui.Column(c).FillWidth().MinWidth(0).Gap(t.Space(1)).Children(items)
 							}
@@ -251,21 +261,27 @@ func Settings(c *ui.Context, state *SettingsState, categories []SettingsCategory
 			if selector || inlineSearch {
 				ui.Column(c).FillWidth().Padding(0, t.Space(3), t.Space(3), t.Space(3)).Gap(t.Space(2)).Children(func() {
 					if selector {
-						sel := Select(c, &state.Category)
-						sel.Trigger.Label(opts.CategoryLabel).FillWidth().Children(func() { Text(c, categories[selected].Title).SingleLine() })
-						sel.Popup(func(panel ui.Element) {
-							for _, category := range categories {
-								sel.Item(category.ID).Label(category.Title).Children(func() { Text(c, category.Title) })
-							}
-						})
-						if sel.Trigger.Changed() {
-							state.Query = ""
-							for i := range categories {
-								if categories[i].ID == state.Category {
-									selected = i
+						ui.Row(c).FillWidth().MinWidth(0).AlignItems(ui.Center).Gap(t.Space(2)).Children(func() {
+							section := categories[selected].Section
+							sel := Select(c, &state.Category)
+							sel.Trigger.Label(opts.CategoryLabel).Grow(1).Shrink(1).MinWidth(0).Children(func() { Text(c, categories[selected].Title).SingleLine() })
+							sel.Popup(func(panel ui.Element) {
+								for _, category := range categories {
+									sel.Item(category.ID).Label(category.Title).Children(func() { Text(c, category.Title) })
+								}
+							})
+							if sel.Trigger.Changed() {
+								state.Query = ""
+								for i := range categories {
+									if categories[i].ID == state.Category {
+										selected = i
+									}
 								}
 							}
-						}
+							if section != "" && opts.SectionActions != nil {
+								opts.SectionActions(c, section)
+							}
+						})
 					}
 					if inlineSearch {
 						search()

@@ -203,6 +203,49 @@ func TestSettingsGroupActions(t *testing.T) {
 	}
 }
 
+func TestSettingsSectionActions(t *testing.T) {
+	for _, narrow := range []bool{false, true} {
+		state := SettingsState{}
+		var sections []string
+		clicks := 0
+		opts := SettingsOptions{Narrow: narrow, SectionActions: func(c *ui.Context, section string) {
+			sections = append(sections, section)
+			if IconButton(c, lucide.Plus(), "Add "+section, IconButtonCompact).Clicked() {
+				clicks++
+			}
+		}}
+		tt := ui.NewTester(func(c *ui.Context) {
+			sections = nil
+			Settings(c, &state, settingsFixture(), opts)
+		}, 800, 600)
+		tt.Frame()
+		// Only the named section has actions; in the narrow layout, only the
+		// selected category's.
+		if !slices.Equal(sections, []string{"Personal"}) {
+			t.Fatalf("narrow %v: actions built for %v", narrow, sections)
+		}
+		add, ok := tt.Find("Add Personal")
+		anchor := "Personal"
+		if narrow {
+			anchor = "Account"
+		}
+		heading, found := tt.Find(anchor)
+		if !ok || !found || add.X <= heading.X || add.Y > heading.Y+heading.H || add.Y+add.H < heading.Y {
+			t.Fatalf("narrow %v: action not trailing %q: %+v %+v", narrow, anchor, heading, add)
+		}
+		if err := tt.Click("Add Personal"); err != nil || clicks != 1 {
+			t.Fatalf("narrow %v: action not clicked: %v %d", narrow, err, clicks)
+		}
+		if narrow {
+			state.Category = "appearance"
+			tt.Frame()
+			if len(sections) != 0 || tt.HasText("Add Personal") {
+				t.Fatal("actions shown for a category without a section", sections)
+			}
+		}
+	}
+}
+
 func TestSettingsDescriptionContent(t *testing.T) {
 	state := SettingsState{}
 	catalog := settingsFixture()

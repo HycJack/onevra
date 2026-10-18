@@ -14,11 +14,30 @@ func Sidebar(c *ui.Context) ui.Element {
 // SidebarSection builds a muted heading followed by application-owned items.
 // Sections are always expanded; fn may be nil for a heading alone.
 func SidebarSection(c *ui.Context, label string, fn func()) ui.Element {
+	return SidebarSectionWithActions(c, label, nil, fn)
+}
+
+// SidebarSectionWithActions is a SidebarSection whose heading ends in
+// application-built controls, such as an add button. IconButtonCompact fits
+// the heading without raising it. A nil actions builder leaves the heading
+// as SidebarSection's. Like the items, actions run on the UI thread and must
+// not start I/O or background work.
+func SidebarSectionWithActions(c *ui.Context, label string, actions func(c *ui.Context), fn func()) ui.Element {
 	t := c.Theme()
 	section := ui.Column(c).FillWidth().MinWidth(0).Gap(t.Space(1))
 	section.Children(func() {
-		Text(c, label).FontSize(t.Rem(.8)).Bold().TextColor(t.TextMuted).
-			Padding(t.Space(1), t.Space(2), t.Space(1), t.Space(2))
+		heading := func() ui.Element {
+			return Text(c, label).FontSize(t.Rem(.8)).Bold().TextColor(t.TextMuted).
+				Padding(t.Space(1), t.Space(2), t.Space(1), t.Space(2))
+		}
+		if actions == nil {
+			heading()
+		} else {
+			ui.Row(c).FillWidth().MinWidth(0).AlignItems(ui.Center).Gap(t.Space(1)).Children(func() {
+				heading().Grow(1).Shrink(1).MinWidth(0).SingleLine().Ellipsis("…")
+				actions(c)
+			})
+		}
 		if fn != nil {
 			fn()
 		}

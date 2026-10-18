@@ -11,6 +11,9 @@ const (
 	// IconButtonToolbar raises the face, shadowed, as the chosen segment of a
 	// segmented tab list is raised.
 	IconButtonToolbar
+	// IconButtonCompact is IconButtonPlain at a smaller square, for dense
+	// rows such as a SidebarSectionWithActions heading.
+	IconButtonCompact
 )
 
 // IconButton creates an icon-only button with an accessible label and a
@@ -20,10 +23,13 @@ const (
 //
 // IconButtonPlain keeps a transparent face and tints it on hover and press.
 // IconButtonToolbar keeps the raised, shadowed face of ButtonToolbar, matching
-// TabsSegmented's chosen segment.
+// TabsSegmented's chosen segment. IconButtonCompact shrinks the plain face.
 func IconButton(c *ui.Context, icon *ui.SVG, label string, style IconButtonStyle) ui.Element {
 	t := c.Theme()
-	size := max(32, t.Rem(2))
+	size, glyph := max(32, t.Rem(2)), t.Rem(1.25)
+	if style == IconButtonCompact {
+		size, glyph = max(20, t.Rem(1.25)), t.Rem(.875)
+	}
 	var b ui.Element
 	switch style {
 	case IconButtonToolbar:
@@ -51,7 +57,7 @@ func IconButton(c *ui.Context, icon *ui.SVG, label string, style IconButtonStyle
 				p.Fill(r, face, t.Radius)
 			}
 		}).Children(func() {
-			Icon(c, icon).Size(t.Rem(1.25), t.Rem(1.25))
+			Icon(c, icon).Size(glyph, glyph)
 		})
 	}
 	Tooltip(c, b, label)

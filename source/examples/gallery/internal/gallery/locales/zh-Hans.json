@@ -861,6 +861,7 @@
   "sidebarCustomLeading": "自定义前置内容",
   "explorer": "资源管理器",
   "workspaces": "工作区",
+  "addWorkspace": "添加工作区",
   "recent": "最近使用",
   "shared": "共享",
   "workspaceTeam": "团队",

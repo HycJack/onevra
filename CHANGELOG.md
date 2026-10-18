@@ -4,6 +4,9 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Add `components.IconButtonCompact`.
+- Add `components.SettingsOptions.SectionActions`.
+- Add `components.SidebarSectionWithActions`.
 - Add `components.TabsWithLeading`.
 - Localize component and Shell labels in Traditional Chinese, Japanese and Korean.
 

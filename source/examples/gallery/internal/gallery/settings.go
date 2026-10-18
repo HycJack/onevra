@@ -80,6 +80,15 @@ func (g *Gallery) settingsLocalized(c *ui.Context) {
 		components.Settings(c, &g.settings.view, g.settingsCategories(), components.SettingsOptions{
 			Narrow: width < t.Space(170), HideSearch: g.settings.hideSearch, HideSidebar: g.settings.hideSidebar,
 			Close: func() { g.settings.open = false },
+			// The personal section's heading adds a member from the Account page.
+			SectionActions: func(c *ui.Context, section string) {
+				if section != g.text("personal") {
+					return
+				}
+				if components.IconButton(c, lucide.Plus(), g.text("addMember"), components.IconButtonCompact).Clicked() {
+					g.settings.view = components.SettingsState{Category: "account"}
+				}
+			},
 		})
 	})
 }
