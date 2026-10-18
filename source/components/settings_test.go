@@ -246,6 +246,42 @@ func TestSettingsSectionActions(t *testing.T) {
 	}
 }
 
+func TestSettingsPlaceholder(t *testing.T) {
+	for _, narrow := range []bool{false, true} {
+		state := SettingsState{Category: "services"}
+		catalog := append(settingsFixture(), SettingsCategory{
+			ID: "services", Title: "Services", Section: "Connected",
+			Placeholder: func(c *ui.Context) { Text(c, "None yet") },
+			Groups:      []SettingsGroup{{ID: "hidden", Items: []SettingsItem{{ID: "hidden", Title: "Hidden"}}}},
+		})
+		tt := ui.NewTester(func(c *ui.Context) { Settings(c, &state, catalog, SettingsOptions{Narrow: narrow}) }, 800, 600)
+		tt.Frame()
+		// A placeholder is never selected, so Settings opens on the first page.
+		if state.Category != "account" || !tt.HasText("Security") || tt.HasText("Hidden") {
+			t.Fatalf("narrow %v: placeholder selected: %q %v", narrow, state.Category, tt.Texts())
+		}
+		if narrow {
+			if tt.HasText("None yet") {
+				t.Fatal("placeholder shown without a sidebar")
+			}
+			continue
+		}
+		heading, ok := tt.Find("Connected")
+		note, found := tt.Find("None yet")
+		if !ok || !found || note.Y <= heading.Y {
+			t.Fatalf("placeholder not under its section: %+v %+v", heading, note)
+		}
+		if err := tt.Click("None yet"); err != nil || state.Category != "account" {
+			t.Fatalf("placeholder navigated: %v %q", err, state.Category)
+		}
+		state.Query = "Hidden"
+		tt.Frame()
+		if tt.HasText("Hidden") {
+			t.Fatal("placeholder searched", tt.Texts())
+		}
+	}
+}
+
 func TestSettingsDescriptionContent(t *testing.T) {
 	state := SettingsState{}
 	catalog := settingsFixture()

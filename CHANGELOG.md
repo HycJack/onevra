@@ -5,6 +5,7 @@ User-facing updates for Onevra library consumers.
 ## [Unreleased]
 
 - Add `components.IconButtonCompact`.
+- Add `components.SettingsCategory.Placeholder`.
 - Add `components.SettingsOptions.SectionActions`.
 - Add `components.SidebarSectionWithActions`.
 - Add `components.TabsWithLeading`.

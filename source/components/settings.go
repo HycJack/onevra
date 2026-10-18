@@ -25,7 +25,13 @@ type SettingsCategory struct {
 	// sidebar content. It follows SidebarItemWithLeading's builder contract
 	// and is not built in the narrow category selector or during metadata search.
 	Leading func(c *ui.Context, size float32)
-	Groups  []SettingsGroup
+	// Placeholder, when set, shows application-built, non-interactive
+	// content, such as an empty section's note, in the sidebar in place of
+	// the category's navigation item, keeping its Section's heading and
+	// actions. Such a category has no page and is never selected, searched
+	// or offered by the narrow category selector. It follows Build's rules.
+	Placeholder func(c *ui.Context)
+	Groups      []SettingsGroup
 }
 
 // SettingsGroup groups related items. Title may be empty for an unheaded group.
@@ -81,7 +87,8 @@ type SettingsOptions struct {
 	// SectionActions builds optional trailing controls on a section's
 	// sidebar heading, such as an add button, for each nonempty Section; it
 	// may build nothing for a section. The narrow category selector shows the
-	// selected category's section actions beside it. It follows Build's rules.
+	// selected category's section actions beside it, so there a section of
+	// only Placeholder categories has none. It follows Build's rules.
 	// A section shows only while a category belongs to it.
 	SectionActions func(c *ui.Context, section string)
 	// Close, when set, shows a trailing close button that calls it, for hosts
@@ -109,6 +116,9 @@ func SearchSettings(categories []SettingsCategory, query string) []SettingsResul
 	terms := strings.Fields(strings.ToLower(query))
 	var results []SettingsResult
 	for ci, category := range categories {
+		if category.Placeholder != nil {
+			continue
+		}
 		for gi, group := range category.Groups {
 			for ii, item := range group.Items {
 				haystack := strings.ToLower(strings.Join([]string{category.Title, category.Section, category.Description, group.Title, item.Title, item.Description, strings.Join(item.Keywords, " ")}, " "))
@@ -162,14 +172,16 @@ func Settings(c *ui.Context, state *SettingsState, categories []SettingsCategory
 	}
 	selected := -1
 	for i, category := range categories {
-		if category.ID == state.Category {
+		if category.ID == state.Category && category.Placeholder == nil {
 			selected = i
 			break
 		}
 	}
-	if selected < 0 && len(categories) > 0 {
-		selected = 0
-		state.Category = categories[0].ID
+	for i := 0; selected < 0 && i < len(categories); i++ {
+		if categories[i].Placeholder == nil {
+			selected = i
+			state.Category = categories[i].ID
+		}
 	}
 	t := c.Theme()
 	search := func() {
@@ -216,6 +228,10 @@ func Settings(c *ui.Context, state *SettingsState, categories []SettingsCategory
 							items := func() {
 								for i := start; i < end; i++ {
 									category := categories[i]
+									if category.Placeholder != nil {
+										ui.Column(c).FillWidth().MinWidth(0).Padding(t.Space(1), t.Space(2)).Children(func() { category.Placeholder(c) })
+										continue
+									}
 									var item ui.Element
 									if category.Leading != nil {
 										item = SidebarItemWithLeading(c, category.Title, selected == i, category.Leading)
@@ -267,6 +283,9 @@ func Settings(c *ui.Context, state *SettingsState, categories []SettingsCategory
 							sel.Trigger.Label(opts.CategoryLabel).Grow(1).Shrink(1).MinWidth(0).Children(func() { Text(c, categories[selected].Title).SingleLine() })
 							sel.Popup(func(panel ui.Element) {
 								for _, category := range categories {
+									if category.Placeholder != nil {
+										continue
+									}
 									sel.Item(category.ID).Label(category.Title).Children(func() { Text(c, category.Title) })
 								}
 							})

@@ -80,13 +80,16 @@ func (g *Gallery) settingsLocalized(c *ui.Context) {
 		components.Settings(c, &g.settings.view, g.settingsCategories(), components.SettingsOptions{
 			Narrow: width < t.Space(170), HideSearch: g.settings.hideSearch, HideSidebar: g.settings.hideSidebar,
 			Close: func() { g.settings.open = false },
-			// The personal section's heading adds a member from the Account page.
+			// The personal section's heading adds a member from the Account
+			// page; the integrations section's has nothing to add yet.
 			SectionActions: func(c *ui.Context, section string) {
-				if section != g.text("personal") {
-					return
-				}
-				if components.IconButton(c, lucide.Plus(), g.text("addMember"), components.IconButtonCompact).Clicked() {
-					g.settings.view = components.SettingsState{Category: "account"}
+				switch section {
+				case g.text("personal"):
+					if components.IconButton(c, lucide.Plus(), g.text("addMember"), components.IconButtonCompact).Clicked() {
+						g.settings.view = components.SettingsState{Category: "account"}
+					}
+				case g.text("integrations"):
+					components.IconButton(c, lucide.Plus(), g.text("addIntegration"), components.IconButtonCompact).Disabled(true)
 				}
 			},
 		})
@@ -179,6 +182,10 @@ func (g *Gallery) settingsCategories() []components.SettingsCategory {
 		g.editorSettings(),
 		g.storageSettings(),
 		g.aboutSettings(),
+		// An empty section shows a note in the sidebar instead of a page.
+		{ID: "integrations", Title: g.text("integrations"), Section: g.text("integrations"), Placeholder: func(c *ui.Context) {
+			components.Text(c, g.text("noIntegrationsYet")).FontSize(c.Theme().Rem(.875)).TextColor(c.Theme().TextMuted).Wrap()
+		}},
 	}
 }
 

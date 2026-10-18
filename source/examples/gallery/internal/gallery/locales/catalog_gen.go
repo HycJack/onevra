@@ -8714,6 +8714,36 @@ func (msgs Messages) AddWorkspace() string {
 	return Catalog.Format(msgs.locale, "addWorkspace", nil)
 }
 
+// Integrations says "Integrations"
+// in the language the app shows.
+func Integrations() string { return In(i18n.Locale()).Integrations() }
+
+// Integrations says "Integrations"
+// in the language of msgs.
+func (msgs Messages) Integrations() string {
+	return Catalog.Format(msgs.locale, "integrations", nil)
+}
+
+// NoIntegrationsYet says "No integrations yet"
+// in the language the app shows.
+func NoIntegrationsYet() string { return In(i18n.Locale()).NoIntegrationsYet() }
+
+// NoIntegrationsYet says "No integrations yet"
+// in the language of msgs.
+func (msgs Messages) NoIntegrationsYet() string {
+	return Catalog.Format(msgs.locale, "noIntegrationsYet", nil)
+}
+
+// AddIntegration says "Add integration"
+// in the language the app shows.
+func AddIntegration() string { return In(i18n.Locale()).AddIntegration() }
+
+// AddIntegration says "Add integration"
+// in the language of msgs.
+func (msgs Messages) AddIntegration() string {
+	return Catalog.Format(msgs.locale, "addIntegration", nil)
+}
+
 // Recent says "Recent"
 // in the language the app shows.
 func Recent() string { return In(i18n.Locale()).Recent() }
