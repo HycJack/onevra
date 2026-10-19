@@ -22,18 +22,19 @@ type ToastContent struct {
 	Leading func()
 }
 
-// ToastPlacement selects the window edge and side where toasts stack. Bottom
-// placements put the newest toast last, nearest the bottom edge; top
-// placements put it first, nearest the top edge, and stack older ones downward.
+// ToastPlacement selects the window edge and side where toasts stack. The zero
+// value stacks at the top center. Top placements put the newest toast first,
+// nearest the top edge, and stack older ones downward; bottom placements put it
+// last, nearest the bottom edge.
 type ToastPlacement int
 
 const (
-	ToastBottom ToastPlacement = iota
-	ToastBottomStart
-	ToastBottomEnd
-	ToastTop
+	ToastTop ToastPlacement = iota
 	ToastTopStart
 	ToastTopEnd
+	ToastBottom
+	ToastBottomStart
+	ToastBottomEnd
 )
 
 // Top reports whether p places toasts at the top edge.
@@ -49,9 +50,10 @@ func (p ToastPlacement) align() ui.Align {
 	return ui.Center
 }
 
-// ToastOptions customizes where Toasts places the window's toasts. Inset adds
-// DIPs at the placement's edge beyond the standard margin, for example to clear
-// a title bar; Shell adds its header height to top placements itself.
+// ToastOptions customizes where Toasts places the window's toasts. The zero
+// value stacks at the top center. Inset adds DIPs at the placement's edge beyond
+// the standard margin, for example to clear a title bar; Shell adds its header
+// height to top placements itself.
 type ToastOptions struct {
 	Placement ToastPlacement
 	Inset     float32
@@ -65,7 +67,7 @@ type ToastOptions struct {
 // Shell calls Toasts after its content with ShellOptions.Toasts, so
 // applications call it only in standalone hosts; the first options value
 // applies. A view that builds its own ToastViewportBase earlier in the frame
-// keeps its look. Toasts stack at the bottom center by default, each with an
+// keeps its look. Toasts stack at the top center by default, each with an
 // optional action and a close button named by the "onevra.closeToast" message.
 // Older toasts tuck behind the newest one, each peeking out a little further
 // and drawn a little smaller, and fan out while the pointer rests on the stack

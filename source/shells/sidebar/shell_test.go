@@ -429,7 +429,7 @@ func TestShellBuildsLocalizedToasts(t *testing.T) {
 	}
 }
 
-func TestShellTopToastsClearHeader(t *testing.T) {
+func TestShellToastsClearHeaderByDefault(t *testing.T) {
 	s := newShell(ShellOptions{Content: func(c *ui.Context) {
 		ui.Column(c).Padding(HeaderHeight(c), 0, 0, 0).Children(func() {
 			if ui.Button(c, "Save").Clicked() {
@@ -442,14 +442,14 @@ func TestShellTopToastsClearHeader(t *testing.T) {
 	if err := tt.Click("Save"); err != nil {
 		t.Fatal(err)
 	}
-	if r, ok := tt.Find("Saved"); !ok || r.Y < 300 {
-		t.Fatalf("default toast is not at the bottom: %+v", r)
-	}
-	s.SetToasts(components.ToastOptions{Placement: components.ToastTop})
-	tt.Frame()
 	var header float32
 	ui.NewTester(func(c *ui.Context) { header = HeaderHeight(c) }, 820, 600)
 	if r, ok := tt.Find("Saved"); !ok || r.Y < header || r.Y > header+80 {
-		t.Fatalf("top toast does not sit below the header %v: %+v", header, r)
+		t.Fatalf("default toast does not sit below the header %v: %+v", header, r)
+	}
+	s.SetToasts(components.ToastOptions{Placement: components.ToastBottom})
+	tt.Frame()
+	if r, ok := tt.Find("Saved"); !ok || r.Y < 500 {
+		t.Fatalf("bottom toast is not at the bottom: %+v", r)
 	}
 }

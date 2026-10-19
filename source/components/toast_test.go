@@ -31,8 +31,8 @@ func TestToastsActionAndClose(t *testing.T) {
 			t.Fatalf("missing description: %q", tt.Texts())
 		}
 		r, ok := tt.Find("Note deleted")
-		if !ok || r.Y < 280 || r.X < 60 || r.X+r.W > 420 {
-			t.Fatalf("toast is not at the bottom center: %+v", r)
+		if !ok || r.Y > 80 || r.X < 60 || r.X+r.W > 420 {
+			t.Fatalf("toast is not at the top center: %+v", r)
 		}
 		if err := tt.Click("Undo"); err != nil {
 			t.Fatal(err)
