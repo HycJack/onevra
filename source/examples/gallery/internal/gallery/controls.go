@@ -240,7 +240,14 @@ func (g *Gallery) controlsLocalized(c *ui.Context, example controlExample) {
 		})
 		return
 	}
-	if example.name == "Relationship graph" || example.name == "Treemap" || example.name == "Flow diagram" || example.name == "Honeycomb" {
+	if example.name == "Flow diagram" {
+		// The diagram fills the page to its edges.
+		ui.Box(c).Key("controls-" + example.name).Fill().MinWidth(0).MinHeight(0).Children(func() {
+			example.build(c, g.controlState(example.name, "Default"), "Default")
+		})
+		return
+	}
+	if example.name == "Relationship graph" || example.name == "Treemap" || example.name == "Honeycomb" {
 		// These views fill the page instead of scrolling.
 		ui.Column(c).Key("controls-" + example.name).Fill().MinWidth(0).MinHeight(0).Padding(t.Space(6)).Gap(12).Children(func() {
 			example.build(c, g.controlState(example.name, "Default"), "Default")

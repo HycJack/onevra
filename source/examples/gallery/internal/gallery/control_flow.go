@@ -12,11 +12,11 @@ import (
 )
 
 type flowDemoState struct {
-	view             flow.State
-	selected, opened string
-	added            []flowAddition
-	leftToRight      bool
-	empty            bool
+	view        flow.State
+	selected    string
+	added       []flowAddition
+	leftToRight bool
+	empty       bool
 }
 
 // flowAddition is a step added after another, to watch the layout adapt.
@@ -97,13 +97,10 @@ func flowDemo(s *controlState) *flowDemoState {
 	return s.flow
 }
 
-// flowSample maps the plan, and the steps added to it, onto diagram data
-// with the titles of its nodes.
-func flowSample(c *ui.Context, d *flowDemoState) (flow.Data, map[string]string) {
+// flowSample maps the plan, and the steps added to it, onto diagram data.
+func flowSample(c *ui.Context, d *flowDemoState) flow.Data {
 	var data flow.Data
-	titles := map[string]string{}
 	add := func(step flowStep, title, detail string) {
-		titles[step.id] = title
 		data.Nodes = append(data.Nodes, flow.Node{
 			ID: step.id, Label: title, Muted: step.muted,
 			Content: func(c *ui.Context) { flowCard(c, step, title, detail) },
@@ -123,7 +120,7 @@ func flowSample(c *ui.Context, d *flowDemoState) (flow.Data, map[string]string) 
 		add(flowStep{id: a.id, status: flowPlanned}, msg(c).FlowNewStep(i+1), tr(c, "flowNewStepDetail"))
 		data.Edges = append(data.Edges, flow.Edge{Source: a.after, Target: a.id})
 	}
-	return data, titles
+	return data
 }
 
 // flowCard draws a step as a card with its status, kind and activity.
@@ -201,11 +198,9 @@ func flowCard(c *ui.Context, step flowStep, title, detail string) {
 
 func controlFlow(c *ui.Context, s *controlState, _ string) {
 	d := flowDemo(s)
-	t := c.Theme()
 	var data flow.Data
-	var titles map[string]string
 	if !d.empty {
-		data, titles = flowSample(c, d)
+		data = flowSample(c, d)
 	}
 	direction := flow.TopToBottom
 	if d.leftToRight {
@@ -217,15 +212,6 @@ func controlFlow(c *ui.Context, s *controlState, _ string) {
 		Direction: direction,
 		Selected:  d.selected,
 		Select:    func(id string) { d.selected = id },
-		Open:      func(id string) { d.opened = id },
-	}).Grow(1).MinHeight(240)
-	ui.Row(c).Gap(t.Space(4)).TextColor(t.TextMuted).Children(func() {
-		if title, ok := titles[d.selected]; ok {
-			components.Text(c, msg(c).FlowSelected(title))
-		}
-		if title, ok := titles[d.opened]; ok {
-			components.Text(c, msg(c).GraphOpened(title))
-		}
 	})
 }
 

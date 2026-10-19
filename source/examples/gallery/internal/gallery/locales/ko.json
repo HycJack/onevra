@@ -635,7 +635,6 @@
   "flowTopToBottom": "위에서 아래로 배치",
   "flowZoomIn": "확대",
   "flowZoomOut": "축소",
-  "flowSelected": "선택: {title}",
   "flowNewStep": "후속 단계 {number}",
   "flowNewStepDetail": "레이아웃이 맞춰지는 것을 보기 위해 추가됨",
   "flowExperiment": "실험 #{number}",

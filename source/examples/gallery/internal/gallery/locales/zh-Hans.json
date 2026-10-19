@@ -635,7 +635,6 @@
   "flowTopToBottom": "从上到下排列",
   "flowZoomIn": "放大",
   "flowZoomOut": "缩小",
-  "flowSelected": "已选中：{title}",
   "flowNewStep": "后续步骤 {number}",
   "flowNewStepDetail": "新增后布局会自动调整",
   "flowExperiment": "实验 #{number}",

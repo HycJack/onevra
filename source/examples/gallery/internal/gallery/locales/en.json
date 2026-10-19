@@ -991,14 +991,6 @@
   "flowTopToBottom": "Lay out top to bottom",
   "flowZoomIn": "Zoom in",
   "flowZoomOut": "Zoom out",
-  "flowSelected": "Selected: {title}",
-  "@flowSelected": {
-    "placeholders": {
-      "title": {
-        "type": "String"
-      }
-    }
-  },
   "flowNewStep": "Follow-up step {number}",
   "@flowNewStep": {
     "placeholders": {

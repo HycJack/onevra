@@ -6440,16 +6440,6 @@ func (msgs Messages) FlowZoomOut() string {
 	return Catalog.Format(msgs.locale, "flowZoomOut", nil)
 }
 
-// FlowSelected says "Selected: {title}"
-// in the language the app shows.
-func FlowSelected(title string) string { return In(i18n.Locale()).FlowSelected(title) }
-
-// FlowSelected says "Selected: {title}"
-// in the language of msgs.
-func (msgs Messages) FlowSelected(title string) string {
-	return Catalog.Format(msgs.locale, "flowSelected", map[string]any{"title": title})
-}
-
 // FlowNewStep says "Follow-up step {number}"
 // in the language the app shows.
 func FlowNewStep(number int) string { return In(i18n.Locale()).FlowNewStep(number) }

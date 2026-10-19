@@ -635,7 +635,6 @@
   "flowTopToBottom": "上から下に配置",
   "flowZoomIn": "拡大",
   "flowZoomOut": "縮小",
-  "flowSelected": "選択中：{title}",
   "flowNewStep": "後続ステップ {number}",
   "flowNewStepDetail": "レイアウトの変化を確かめるために追加",
   "flowExperiment": "実験 #{number}",
