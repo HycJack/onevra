@@ -5,6 +5,7 @@ import (
 	"slices"
 	"time"
 
+	"github.com/egoist/mygo/plugins/glass"
 	"github.com/egoist/mygo/ui"
 )
 
@@ -28,6 +29,10 @@ type HoneycombItem struct {
 	// Ring colors the ring the item nearest the middle of the view wears, such
 	// as the main color of its image; transparent uses the theme's accent.
 	Ring ui.Color
+	// Caption, when set, shows under the item while it is nearest the middle
+	// of the view, such as its name, fading in and out with its ring. It lies
+	// on a glass label over the items below.
+	Caption string
 	// Menu, when set, fills the item's context menu, which opens where the
 	// item is right-clicked, without choosing it, and, while it has the
 	// focus, from the menu key or Shift+F10.
@@ -81,6 +86,10 @@ const (
 	// through and the ring tints its edge instead of covering it.
 	honeycombRing        = 2
 	honeycombRingOpacity = .5
+	// The caption of the item nearest the middle hangs honeycombCaptionGap
+	// below it, at most honeycombCaptionWidth wide.
+	honeycombCaptionGap   = 6
+	honeycombCaptionWidth = 200
 	// honeycombSpacing is the distance between the centers of neighboring
 	// cells, unmagnified.
 	honeycombSpacing = 66
@@ -128,6 +137,7 @@ var (
 // theme.
 type honeycombMetrics struct {
 	large, small, tiny, fall, tiltFall, spacing, ring, edge, minHeight, width, height float32
+	captionGap, captionWidth                                                          float32
 }
 
 // honeycombMetricsFor scales one design DIP to the theme's spacing, so a
@@ -135,17 +145,19 @@ type honeycombMetrics struct {
 func honeycombMetricsFor(t *ui.Theme) honeycombMetrics {
 	s := t.Space(.25)
 	return honeycombMetrics{
-		large:     honeycombLarge * s,
-		small:     honeycombSmall * s,
-		tiny:      honeycombTiny * s,
-		fall:      honeycombFall * s,
-		tiltFall:  honeycombTiltFall * s,
-		spacing:   honeycombSpacing * s,
-		ring:      honeycombRing * s,
-		edge:      honeycombEdge * s,
-		minHeight: honeycombMinHeight * s,
-		width:     honeycombWidth * s,
-		height:    honeycombHeight * s,
+		large:        honeycombLarge * s,
+		small:        honeycombSmall * s,
+		tiny:         honeycombTiny * s,
+		fall:         honeycombFall * s,
+		tiltFall:     honeycombTiltFall * s,
+		spacing:      honeycombSpacing * s,
+		ring:         honeycombRing * s,
+		edge:         honeycombEdge * s,
+		minHeight:    honeycombMinHeight * s,
+		width:        honeycombWidth * s,
+		height:       honeycombHeight * s,
+		captionGap:   honeycombCaptionGap * s,
+		captionWidth: honeycombCaptionWidth * s,
 	}
 }
 
@@ -156,7 +168,8 @@ func honeycombMetricsFor(t *ui.Theme) honeycombMetrics {
 // further and fade out as they near the edge of the view. The honeycomb lies
 // on the surface of a ball behind it, so each item turns away from the viewer
 // the further out it is, and dragging it pans over that ball. The item nearest
-// the middle wears a ring in its own color or the theme's accent.
+// the middle wears a ring in its own color or the theme's accent, and its
+// caption under it.
 //
 // Dragging the items, or scrolling over them, pans the honeycomb, which then
 // settles with the item nearest the middle centered and chosen; choosing an
@@ -275,8 +288,10 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 	// inset is less in a view too small for it, and none on a flat honeycomb.
 	edge := min(m.edge*curvature, width/2, height/2)
 	middle := p.nearest(p.at)
-	accent := c.Theme().Accent
+	th := c.Theme()
+	accent := th.Accent
 	p.hits = p.hits[:0]
+	var captions []honeycombCaption
 	view.Children(func() {
 		// Items hang from the middle of the view, offset by OffsetY.
 		ui.Box(c).Absolute().LeftPercent(50).TopPercent(50).Size(0, 0).Children(func() {
@@ -344,6 +359,9 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 					opacity = min(1, opacity+.25)
 				}
 				b.Opacity(opacity)
+				if item.Caption != "" && ring > 0 {
+					captions = append(captions, honeycombCaption{item.ID, item.Caption, cx - width/2, cy - height/2 + size/2, ring * opacity})
+				}
 				if item.Menu != nil {
 					b.ContextMenu(item.Menu)
 				}
@@ -379,6 +397,21 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 					p.glide(p.cells[selected], now, honeycombDuration, ui.EaseInOut)
 				}
 			}
+			// Captions follow the items, so they lie over the items below
+			// theirs; the pointer passes through them to the items. Each
+			// centers its label in a row of the widest a label may be.
+			for _, caption := range captions {
+				ui.Row(c).Key(honeycombCaptionKey{caption.id}).Absolute().
+					Left(caption.x - m.captionWidth/2).Top(caption.y + m.captionGap).Width(m.captionWidth).
+					Justify(ui.Center).Opacity(caption.opacity).PassThrough().Children(func() {
+					ui.Row(c).MinWidth(0).Padding(th.Space(.5), th.Space(2)).Radius(th.Space(3)).
+						Material(glass.Glass{Tint: th.Background.Alpha(.92)}).Border(1, th.Border).
+						Shadow(0, th.Space(.5), th.Space(2), 0, ui.RGBA(0, 0, 0, .1)).
+						TextColor(th.Text).FontSize(th.FontSize - 1).FontWeight(500).PassThrough().Children(func() {
+						Text(c, caption.text).SingleLine().Ellipsis("…").MinWidth(0).Unselectable().PassThrough()
+					})
+				})
+			}
 		})
 	})
 	return chosen
@@ -396,6 +429,17 @@ type honeycombRingKey struct{}
 // honeycombCellKey keys the animation of an item's cell, 0 along x and 1
 // along y.
 type honeycombCellKey struct{ axis int }
+
+// honeycombCaptionKey keys the caption of the item with the ID.
+type honeycombCaptionKey struct{ id string }
+
+// honeycombCaption is a caption to show under the item whose bottom middle
+// is at x, y from the middle of the view.
+type honeycombCaption struct {
+	id, text string
+	x, y     float32
+	opacity  float32
+}
 
 // honeycombHit is where an item was drawn in the last frame, for the pointer.
 type honeycombHit struct {

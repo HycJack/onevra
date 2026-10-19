@@ -5,6 +5,7 @@ import (
 	"image"
 	"math"
 	"slices"
+	"strings"
 	"testing"
 	"time"
 
@@ -686,5 +687,66 @@ func TestHoneycombSlidesAsItemsComeAndGo(t *testing.T) {
 	settleHoneycomb(tt)
 	if !centered() {
 		t.Fatal("added item not centered")
+	}
+}
+
+func TestHoneycombCaptionsTheMiddleItem(t *testing.T) {
+	items := honeycombItems(7)
+	for i := range items {
+		items[i].Caption = "Caption " + items[i].ID
+	}
+	items[3].Caption = ""
+	selected := "p00"
+	tt := honeycombTester(items, &selected)
+	settleHoneycomb(tt)
+	// shows returns the captions shown.
+	shows := func() []string {
+		return slices.DeleteFunc(tt.Texts(), func(s string) bool { return !strings.HasPrefix(s, "Caption ") })
+	}
+	captioned := func(id string) ui.Rect {
+		t.Helper()
+		item, _ := tt.Find("Item")
+		caption, _ := tt.Find("Caption " + id)
+		if got := shows(); !slices.Equal(got, []string{"Caption " + id}) {
+			t.Fatalf("captions %v, want %s's alone", got, id)
+		}
+		ix, _ := middle(item)
+		if x, _ := middle(caption); caption.W == 0 || math.Abs(float64(x-ix)) > 1 || caption.Y < item.Y+item.H {
+			t.Fatalf("%s's caption not under it: %+v, item %+v", id, caption, item)
+		}
+		return caption
+	}
+	caption := captioned("p00")
+	// The caption passes to the chosen item, and none shows under an item
+	// without one.
+	selected = "p04"
+	tt.Frame()
+	settleHoneycomb(tt)
+	captioned("p04")
+	selected = "p03"
+	tt.Frame()
+	settleHoneycomb(tt)
+	if got := shows(); len(got) != 0 {
+		t.Fatalf("an item without a caption shows %v", got)
+	}
+	// A click on the caption over an item below chooses that item.
+	selected = "p00"
+	tt.Frame()
+	settleHoneycomb(tt)
+	x, y := caption.X+caption.W-2, caption.Y+caption.H/2
+	under := ""
+	for _, item := range items[1:] {
+		r, _ := tt.Find(item.ID)
+		if cx, cy := middle(r); math.Hypot(float64(x-cx), float64(y-cy)) < float64(r.W/2)-2 {
+			under = item.ID
+		}
+	}
+	if under == "" {
+		t.Fatal("the caption lies over no item")
+	}
+	tt.ClickAt(x, y)
+	tt.Frame()
+	if selected != under {
+		t.Fatalf("a click on the caption over %s chose %q", under, selected)
 	}
 }

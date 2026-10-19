@@ -131,7 +131,7 @@ func controlHoneycomb(c *ui.Context, s *controlState, _ string) {
 		label := honeycombLabel(c, item)
 		ring, icon := item.ring, item.icon
 		items[i] = components.HoneycombItem{
-			ID: item.id, Label: label, Ring: ring,
+			ID: item.id, Label: label, Caption: label, Ring: ring,
 			Content: func(c *ui.Context, size float32) {
 				ui.Box(c).Fill().Radius(size/2).Background(ring.Alpha(.16)).Border(1, ring.Alpha(.45)).Center().Children(func() {
 					components.Icon(c, icon).Size(size*.42, size*.42).TextColor(ring)

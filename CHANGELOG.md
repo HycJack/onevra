@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Add `components.HoneycombItem.Caption`.
+
 ## [0.2026.13] - 2026-10-19
 
 - Breaking: Make `components.Breadcrumbs` fill its parent's width.
