@@ -7,42 +7,28 @@ var navigationGroups = []string{
 	"Feedback & overlays", "Games",
 }
 
-// newPages are the routes added in the latest published version or since; the
-// top New components group lists them in place of their purpose groups. Add
-// new pages alongside the existing entries. When
-// publishing a version, keep the pages it ships and remove those from earlier
-// versions.
+// newPages and updatedPages hold only the routes added or changed since the
+// latest published version (the newest source/v* tag); the top New components
+// and Updated components groups list them in place of their purpose groups.
+// Publishing leaves both lists unchanged, so the release still marks what it
+// ships. The first change after a release removes every route already listed
+// at that tag, unless the route changed again since, before recording its
+// own. A route is in at most one list; a route added since the release stays
+// new however often it changes.
 var newPages = map[string]bool{
-	"controls/Carousel":              true,
-	"controls/Floating button group": true,
-	"controls/ImageCompare":          true,
-	"controls/Shader backgrounds":    true,
-	"controls/Stepper":               true,
-	"controls/TagInput":              true,
-	"controls/HoldToConfirm":         true,
-	"controls/Skeleton":              true,
-	"controls/Avatars":               true,
-	"controls/Treemap":               true,
-	"controls/Flow diagram":          true,
-	"controls/Card stack":            true,
-	"controls/ScrollEdgeBar":         true,
-	"mygo/Native dialogs":            true,
+	"controls/ScrollEdgeBar": true,
+	"mygo/Native dialogs":    true,
 }
 
-// updatedPages are the routes whose components changed in the latest published
-// version or since; the Updated components group lists them in place of their
-// purpose groups. Keep this list disjoint from newPages. When publishing a
-// version, keep the pages it changes and remove those from earlier versions.
 var updatedPages = map[string]bool{
-	"controls/Badge":       true,
-	"controls/Chat":        true,
-	"controls/Dialogs":     true,
-	"controls/Disclosure":  true,
-	"controls/Honeycomb":   true,
-	"controls/Sidebar":     true,
-	"controls/Split panes": true,
-	"controls/Toast":       true,
-	"controls/Tree":        true,
+	"controls/Breadcrumbs":  true,
+	"controls/Button":       true,
+	"controls/Chat":         true,
+	"controls/Data charts":  true,
+	"controls/Flow diagram": true,
+	"controls/Honeycomb":    true,
+	"controls/Sidebar":      true,
+	"controls/Tabs":         true,
 }
 
 type navigationEntry struct {
