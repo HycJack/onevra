@@ -64,13 +64,14 @@ func TestScrollEdgeBar(t *testing.T) {
 					t.Fatalf("content away from the bar changed: %d", middle)
 				}
 				switch style {
-				case ScrollEdgeGlass, ScrollEdgeBlur:
+				case ScrollEdgeGlass:
 					// Uniform black stays black outside the bar.
 					if edge > 8 {
 						t.Fatalf("content outside the bar changed: %d", edge)
 					}
 				default:
-					// Soft and hard edges lay the light background over it.
+					// Soft, hard and tinted blurred edges lay the light
+					// background over it.
 					if edge < 128 {
 						t.Fatalf("edge not toward the background: %d", edge)
 					}
@@ -104,6 +105,44 @@ func TestScrollEdge(t *testing.T) {
 		tt.ClickAt(150, edge.Y+edge.H/2)
 		if clicked != 1 {
 			t.Fatalf("style %d: edge took input", tc.style)
+		}
+	}
+}
+
+// A color lays over the bar in every style, under its controls; glass and
+// blur take the background by default unless uncolored.
+func TestScrollEdgeBarColor(t *testing.T) {
+	red := ui.RGB(255, 0, 0)
+	for _, tc := range []struct {
+		options ScrollEdgeBarOptions
+		r, g    [2]uint8 // the bar's red and green bounds over black
+	}{
+		{ScrollEdgeBarOptions{Style: ScrollEdgeGlass, Color: red}, [2]uint8{240, 255}, [2]uint8{0, 16}},
+		{ScrollEdgeBarOptions{Style: ScrollEdgeSoft, Color: red}, [2]uint8{240, 255}, [2]uint8{0, 16}},
+		{ScrollEdgeBarOptions{Style: ScrollEdgeHard, Color: red}, [2]uint8{240, 255}, [2]uint8{0, 16}},
+		{ScrollEdgeBarOptions{Style: ScrollEdgeBlur, Color: red}, [2]uint8{190, 220}, [2]uint8{0, 16}},
+		{ScrollEdgeBarOptions{Style: ScrollEdgeBlur}, [2]uint8{125, 160}, [2]uint8{125, 160}},
+		// The background at 70% over the glass, and nothing over bare glass
+		// or a transparent bar.
+		{ScrollEdgeBarOptions{Style: ScrollEdgeGlass}, [2]uint8{200, 235}, [2]uint8{200, 235}},
+		{ScrollEdgeBarOptions{Style: ScrollEdgeGlass, Background: red}, [2]uint8{200, 240}, [2]uint8{20, 70}},
+		{ScrollEdgeBarOptions{Style: ScrollEdgeGlass, Color: red, Uncolored: true}, [2]uint8{0, 150}, [2]uint8{0, 150}},
+		{ScrollEdgeBarOptions{Style: ScrollEdgeBlur, Uncolored: true}, [2]uint8{0, 16}, [2]uint8{0, 16}},
+	} {
+		tt := ui.NewTester(func(c *ui.Context) {
+			c.SetTheme(theme.Palette(false))
+			ui.Box(c).Fill().Clip().Children(func() {
+				ui.Box(c).Fill().Background(ui.RGB(0, 0, 0))
+				ScrollEdgeBar(c, tc.options, func() {
+					Button(c, "Action", ButtonSecondary)
+				})
+			})
+		}, 300, 300)
+		img := tt.Image()
+		s := float32(img.Bounds().Dx()) / 300
+		px := img.RGBAAt(int(240*s), int(38*s))
+		if px.R < tc.r[0] || px.R > tc.r[1] || px.G < tc.g[0] || px.G > tc.g[1] {
+			t.Fatalf("%+v: bar %v", tc.options, px)
 		}
 	}
 }

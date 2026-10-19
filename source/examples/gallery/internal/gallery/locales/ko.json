@@ -1031,6 +1031,7 @@
   "glassSoftEdge": "부드러운 가장자리",
   "glassHardEdge": "선명한 가장자리",
   "glassProgressiveBlur": "점진적 흐림",
+  "glassUncoloredBar": "무색 막대",
   "glassContentHint": "유리는 가장자리에서 빛을 굴절시키고 가운데 아래의 내용을 흐리게 만듭니다.",
   "glassBottomBar": "하단 막대",
   "componentScrollEdgeBar": "스크롤 가장자리 막대"

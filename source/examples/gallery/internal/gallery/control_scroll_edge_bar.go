@@ -7,7 +7,8 @@ import (
 )
 
 // controlScrollEdgeBar docks a toolbar and a bottom bar over a scrolling list
-// in one style; the bottom bar picks the section the toolbar names.
+// in one style, uncolored on bare glass; the bottom bar picks the section the
+// toolbar names.
 func controlScrollEdgeBar(c *ui.Context, s *controlState, variant string) {
 	t := c.Theme()
 	style := components.ScrollEdgeGlass
@@ -25,7 +26,9 @@ func controlScrollEdgeBar(c *ui.Context, s *controlState, variant string) {
 		face = components.IconButtonPlain
 	}
 	top := components.ScrollEdgeBarOptions{Style: style}
-	bottom := components.ScrollEdgeBarOptions{Style: style, Bottom: true}
+	top.Uncolored = variant == "Uncolored bar"
+	bottom := top
+	bottom.Bottom = true
 	inset := components.ScrollEdgeBarExtent(c, top)
 	sections := []glassAction{{lucide.House, tr(c, "home")}, {lucide.Search, tr(c, "search")}, {lucide.Settings, tr(c, "settings")}}
 	s.index = min(max(0, s.index), len(sections)-1)

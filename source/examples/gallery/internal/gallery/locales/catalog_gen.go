@@ -10404,6 +10404,16 @@ func (msgs Messages) GlassProgressiveBlur() string {
 	return Catalog.Format(msgs.locale, "glassProgressiveBlur", nil)
 }
 
+// GlassUncoloredBar says "Uncolored bar"
+// in the language the app shows.
+func GlassUncoloredBar() string { return In(i18n.Locale()).GlassUncoloredBar() }
+
+// GlassUncoloredBar says "Uncolored bar"
+// in the language of msgs.
+func (msgs Messages) GlassUncoloredBar() string {
+	return Catalog.Format(msgs.locale, "glassUncoloredBar", nil)
+}
+
 // GlassContentHint says "Glass bends the light along its rim and frosts what is under its middle."
 // in the language the app shows.
 func GlassContentHint() string { return In(i18n.Locale()).GlassContentHint() }

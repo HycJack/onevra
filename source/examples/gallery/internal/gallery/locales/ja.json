@@ -1031,6 +1031,7 @@
   "glassSoftEdge": "ソフトエッジ",
   "glassHardEdge": "ハードエッジ",
   "glassProgressiveBlur": "プログレッシブブラー",
+  "glassUncoloredBar": "無着色バー",
   "glassContentHint": "ガラスは縁で光を屈折させ、中央の下にあるものをすりガラスのようにぼかします。",
   "glassBottomBar": "ボトムバー",
   "componentScrollEdgeBar": "スクロールエッジバー"

@@ -1031,6 +1031,7 @@
   "glassSoftEdge": "柔和边缘",
   "glassHardEdge": "硬边缘",
   "glassProgressiveBlur": "渐进模糊",
+  "glassUncoloredBar": "无着色栏",
   "glassContentHint": "玻璃沿边缘折射光线，并磨砂其中央下方的内容。",
   "glassBottomBar": "底栏",
   "componentScrollEdgeBar": "滚动边缘栏"
