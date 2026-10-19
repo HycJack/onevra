@@ -34,16 +34,16 @@ type EffortState struct {
 // effortTransition is how long the motion takes to settle on a new level.
 const effortTransition = 900 * time.Millisecond
 
-// EffortPicker shows an icon button, suited to the composer's Accessory
-// slot, that opens a panel with the selected level's name and a progress
-// bar above the level names, spread from edge to edge; each level fills
-// the bar to the end of its name. Clicking or dragging across the bar or
-// the names, or the arrows, Home and End, choose a level and keep the
-// panel open; the application applies it. The panel widens to fit the
-// names.
+// EffortPicker shows a Chip with the icon, the selected level's name and
+// a caret, suited to the composer's Accessory slot, that opens a panel
+// with the selected level's name and a progress bar above the level names,
+// spread from edge to edge; each level fills the bar to the end of its
+// name. Clicking or dragging across the bar or the names, or the arrows,
+// Home and End, choose a level and keep the panel open; the application
+// applies it. The panel widens to fit the names.
 //
 // The stronger the level, the livelier all three: the icon turns violet
-// and gains a breathing halo, then a circling comet and sparkles; the
+// and gains a breathing halo, then streams blocks of data outward; the
 // bar's violet fill gains a glint, then streaming blocks of data, a glow,
 // flowing colors, sparkles and rising sparks; the panel gains a violet
 // wash, then drifting aurora, floating motes and a turning border. Motion
@@ -64,27 +64,28 @@ func EffortPicker(c *ui.Context, state *EffortState, options EffortPickerOptions
 	off := options.Off && selected == 0
 	level := options.Levels[selected].Label
 
-	trigger := ui.ButtonBase(c).Label(options.Label).Value(level).Size(26, 26).Shrink(0).Radius(6).Center().Background(ui.Color{})
+	var icon *ui.SVG
+	if options.Icon != nil {
+		icon = options.Icon()
+	}
+	// The icon paints after the build, so it reads the motion animated on
+	// the finished trigger.
+	var m effortMotion
+	trigger := Chip(c, level, ChipOptions{Caret: true, Leading: func(c *ui.Context, size float32) {
+		ui.Box(c).Size(size, size).Shrink(0).Draw(func(p *ui.Painter, r ui.Rect) { paintEffortIcon(p, r, icon, m) })
+	}})
+	trigger.Label(options.Label).Value(level)
 	if state.Open {
 		trigger.Background(overlayStrong(t))
-	} else if trigger.Hovered() || trigger.Focused() {
-		trigger.Background(overlay(t))
 	}
 	// Effects follow these values, not the level, so changing the level
 	// blends them rather than switching.
-	m := effortMotion{
+	m = effortMotion{
 		strength: trigger.Animate("strength", effortStrength(selected, n, options.Off), effortTransition),
 		off:      trigger.Animate("off", effortFlag(off), effortTransition/2),
 		still:    c.Preferences().ReduceMotion,
 		time:     &state.time,
 	}
-	var icon *ui.SVG
-	if options.Icon != nil {
-		icon = options.Icon()
-	}
-	trigger.Children(func() {
-		ui.Box(c).Size(26, 26).Draw(func(p *ui.Painter, r ui.Rect) { paintEffortIcon(p, r, icon, m) })
-	})
 	tooltip := options.Tooltip
 	if tooltip == "" {
 		tooltip = options.Label
@@ -454,8 +455,8 @@ func paintEffortBackdrop(p *ui.Painter, r ui.Rect, radius float32, m effortMotio
 
 // paintEffortIcon draws the trigger's icon: dimmed while off, muted at the
 // weakest level and turning violet with strength, breathing a halo in the
-// upper levels, and at the top shifting color inside a circling comet and
-// orbiting sparkles.
+// upper levels, and at the top shifting color while blocks of data stream
+// outward from it.
 func paintEffortIcon(p *ui.Painter, r ui.Rect, icon *ui.SVG, m effortMotion) {
 	t := p.Theme()
 	cx, cy := r.X+r.W/2, r.Y+r.H/2
@@ -468,28 +469,40 @@ func paintEffortIcon(p *ui.Painter, r ui.Rect, icon *ui.SVG, m effortMotion) {
 			pulse = .5 + .5*float32(math.Sin(clock*1.3))
 		}
 		var circle ui.Path
-		circle.Circle(cx, cy, 8+1.5*pulse)
+		circle.Circle(cx, cy, 7+1.5*pulse)
 		p.FillPath(&circle, effortViolet.Alpha(halo*(.12+.18*pulse)))
 	}
 	if top := smoothstep(.75, 1, s); top > 0 && lively {
 		ink = ink.Mix(effortColor([]ui.Color{effortInk(t, 0), effortInk(t, 1), effortInk(t, .5)}, effortPhase(clock, 12)), top)
-		var ring ui.Path
-		ring.Circle(cx, cy, 11.5)
-		p.StrokePathConicGradient(&ring, 1.5, ui.ConicGradient{Angle: 360 * effortPhase(clock, 3), Stops: []ui.GradientStop{
-			{Color: effortFuchsia.Alpha(0), At: 0}, {Color: effortFuchsia.Alpha(0), At: .45},
-			{Color: effortViolet.Alpha(.8 * top), At: .9}, {Color: effortWhite.Alpha(top), At: 1},
-		}})
-		for j := range 3 {
-			a := clock*.45 + float64(j)*2*math.Pi/3
-			twinkle := .5 + .5*float32(math.Sin(clock*1.7+float64(j)*2))
-			effortStar(p, cx+9*float32(math.Cos(a)), cy+9*float32(math.Sin(a)), 1+1.5*twinkle,
-				effortCycle[j].Mix(effortWhite, .2).Alpha(top*(.4+.6*twinkle)))
-		}
+		effortBurst(p, cx, cy, top, clock)
 	}
 	ink = ink.Alpha(1 - .5*m.off)
 	if icon != nil {
-		const size = 14
+		const size = 12
 		p.Icon(icon, ui.Rect{X: cx - size/2, Y: cy - size/2, W: size, H: size}, ink)
+	}
+}
+
+// effortBurst sends small squares out from the icon's edge like packets
+// of data. Each leaves in a new direction every trip, shrinking and fading
+// as it goes; the burst reaches less far vertically, to stay in the chip.
+func effortBurst(p *ui.Painter, cx, cy, shown float32, clock float64) {
+	for j := range 10 {
+		seed := effortHash(j + 211)
+		period := 1.4 + 1.2*float64(seed)
+		tm := clock + float64(seed)*5
+		f := effortPhase(tm, period)
+		cycle := int(math.Floor(tm/period)) % 1_000_003
+		angle := 2 * math.Pi * float64(effortHash(j*19+cycle))
+		d := 5 + f*(7+3*seed)
+		a := shown * smoothstep(0, .15, f) * (1 - f) * (.6 + .4*seed)
+		if a <= .01 {
+			continue
+		}
+		size := (1.6 + 1.2*seed) * (1 - .4*f)
+		x := cx + d*float32(math.Cos(angle))
+		y := cy + .8*d*float32(math.Sin(angle))
+		p.Fill(ui.Rect{X: x - size/2, Y: y - size/2, W: size, H: size}, effortCycle[j%len(effortCycle)].Mix(effortWhite, .2).Alpha(a), .4)
 	}
 }
 

@@ -144,16 +144,27 @@ func TestEffortPickerChoosesZones(t *testing.T) {
 		})
 	}, 400, 300)
 	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
-	if tt.HasText("Low") {
-		t.Fatal("panel shown before opening")
+	// The chip names the selected level.
+	texts := len(tt.Texts())
+	if !tt.HasText("Low") {
+		t.Fatal("chip does not name the level")
 	}
-	if err := tt.Click("Effort"); err != nil || !state.Open || !tt.HasText("Low") {
+	chip, _ := tt.Find("Effort")
+	if err := tt.Click("Effort"); err != nil || !state.Open || len(tt.Texts()) <= texts {
 		t.Fatalf("open: %v open=%v", err, state.Open)
 	}
-	// The bar fills the panel's 200 DIP content width below the heading,
-	// which ends with the selected level.
-	value, _ := tt.Find("Low")
-	left, top := value.X+value.W-200, value.Y+value.H+10+6
+	// The bar is the first pointer target below the chip, inside the
+	// panel's start; it fills the panel's 200 DIP content width.
+	pointer := func(x, y float32) bool { tt.Move(x, y); return tt.Cursor() == ui.CursorPointer }
+	top := chip.Y + chip.H
+	for !pointer(chip.X+100, top) && top < chip.Y+120 {
+		top++
+	}
+	left := chip.X + 100
+	for pointer(left-1, top) {
+		left--
+	}
+	top += 6
 	for i, k := range []int{2, 3, 0, 1} {
 		// Alternate between the bar and the name beneath it.
 		x, y := left+min(max(float32(k)*200/3, 4), 196), top
