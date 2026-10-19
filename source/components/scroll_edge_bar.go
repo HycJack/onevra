@@ -94,27 +94,7 @@ func ScrollEdgeBarExtent(c *ui.Context, options ScrollEdgeBarOptions) float32 {
 // it beside the bar stays reachable.
 func ScrollEdgeBar(c *ui.Context, options ScrollEdgeBarOptions, content func()) ui.Element {
 	o := options.resolved(c)
-	extent := o.Inset + o.Height
-	if o.Style != ScrollEdgeGlass {
-		edge := ui.Box(c).Absolute().Left(0).Right(0).PassThrough()
-		if o.Bottom {
-			edge.Bottom(0)
-		} else {
-			edge.Top(0)
-		}
-		switch o.Style {
-		case ScrollEdgeHard:
-			edge.Height(extent).Material(glass.ScrollEdge{Hard: true, Bottom: o.Bottom, Background: o.Background})
-		case ScrollEdgeBlur:
-			mask := &ui.LinearGradient{From: ui.RGB(0, 0, 0), To: ui.Transparent, Angle: 180, Start: 0.3, End: 1}
-			if o.Bottom {
-				mask.Angle = 0
-			}
-			edge.Height(extent + scrollEdgeBlurExtra).Material(glass.Blur{Radius: scrollEdgeBlur, Mask: mask})
-		default:
-			edge.Height(extent + scrollEdgeSoftExtra).Material(glass.ScrollEdge{Bottom: o.Bottom, Background: o.Background})
-		}
-	}
+	ScrollEdge(c, ScrollEdgeOptions{Style: o.Style, Bottom: o.Bottom, Extent: o.Inset + o.Height, Background: o.Background})
 	bar := ui.Row(c).Absolute().Left(o.Inset).Right(o.Inset).Height(o.Height).
 		Padding(0, 6).Gap(6).AlignItems(ui.Center).Radius(o.Height / 2)
 	if o.Bottom {
@@ -133,4 +113,46 @@ func ScrollEdgeBar(c *ui.Context, options ScrollEdgeBarOptions, content func()) 
 		bar.Children(content)
 	}
 	return bar
+}
+
+// ScrollEdgeOptions configures a ScrollEdge.
+type ScrollEdgeOptions struct {
+	Style  ScrollEdgeStyle
+	Bottom bool
+	// Extent is how far from its edge the effect reaches in DIPs, such as
+	// the height of the controls floating there; soft edges and progressive
+	// blur fade out a little beyond it.
+	Extent float32
+	// Background is what the content scrolls over, which ScrollEdgeSoft and
+	// ScrollEdgeHard fade toward; unset, the theme's Background.
+	Background ui.Color
+}
+
+// ScrollEdge is ScrollEdgeBar's effect alone, for hosts that float their own
+// controls over an edge of scrolling content, such as a composer. Build it
+// after the content in the same bounded, clipping container. It never takes
+// input; ScrollEdgeGlass has no edge of its own, so it draws nothing.
+func ScrollEdge(c *ui.Context, options ScrollEdgeOptions) ui.Element {
+	edge := ui.Box(c).Absolute().Left(0).Right(0).PassThrough()
+	if options.Bottom {
+		edge.Bottom(0)
+	} else {
+		edge.Top(0)
+	}
+	extent := max(0, options.Extent)
+	switch options.Style {
+	case ScrollEdgeGlass:
+		edge.Height(extent)
+	case ScrollEdgeHard:
+		edge.Height(extent).Material(glass.ScrollEdge{Hard: true, Bottom: options.Bottom, Background: options.Background})
+	case ScrollEdgeBlur:
+		mask := &ui.LinearGradient{From: ui.RGB(0, 0, 0), To: ui.Transparent, Angle: 180, Start: 0.3, End: 1}
+		if options.Bottom {
+			mask.Angle = 0
+		}
+		edge.Height(extent + scrollEdgeBlurExtra).Material(glass.Blur{Radius: scrollEdgeBlur, Mask: mask})
+	default:
+		edge.Height(extent + scrollEdgeSoftExtra).Material(glass.ScrollEdge{Bottom: options.Bottom, Background: options.Background})
+	}
+	return edge
 }

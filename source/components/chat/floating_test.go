@@ -2,7 +2,6 @@ package chat
 
 import (
 	"fmt"
-	"image/color"
 	"math"
 	"strings"
 	"testing"
@@ -104,41 +103,57 @@ func TestFloatingConversationThemedGlassJump(t *testing.T) {
 	}
 }
 
-func TestFloatingConversationFooterFade(t *testing.T) {
-	for _, theme := range []*ui.Theme{ui.LightTheme(), ui.DarkTheme()} {
-		var layout FloatingConversationState
-		var state ConversationState
-		var card ui.Rect
-		draft := "Reply"
-		backdrop := ui.RGB(240, 30, 70)
-		tt := ui.NewTester(func(c *ui.Context) {
-			c.SetTheme(theme)
-			FloatingConversation(c, &layout, &state, "Latest", func(c *ui.Context) {
-				ui.Box(c).Width(900).Height(2000).Margin(0, -90, 0, -90).Shrink(0).Background(backdrop)
-			}, func(c *ui.Context) {
-				result := GlassComposer(c, &layout, &draft, ComposerOptions{
-					Label: "Reply", Footer: func(c *ui.Context) { components.Text(c, "Project / branch") },
-				})
-				card = result.Card.Bounds()
+func TestFloatingConversationBlursBottomEdge(t *testing.T) {
+	var layout FloatingConversationState
+	var state ConversationState
+	var card ui.Rect
+	draft := "Reply"
+	tt := ui.NewTester(func(c *ui.Context) {
+		c.SetTheme(ui.LightTheme())
+		FloatingConversation(c, &layout, &state, "Latest", func(c *ui.Context) {
+			// Fine stripes beside the card, which a blur mixes to gray.
+			ui.Row(c).Width(900).Height(2000).Margin(0, -90, 0, -90).Shrink(0).Children(func() {
+				for i := range 450 {
+					color := ui.RGB(0, 0, 0)
+					if i%2 == 1 {
+						color = ui.RGB(255, 255, 255)
+					}
+					ui.Box(c).Width(2).FillHeight().Shrink(0).Background(color)
+				}
 			})
-		}, 900, 600)
-		for _, text := range []string{"Reply", strings.Repeat("More lines\n", 6)} {
-			draft = text
-			state.Scroll.Y = 200
-			tt.Frame()
-			tt.Frame()
-			img := tt.Image()
-			// Sample beside the card, where only the full-width fade overlays
-			// the transcript; the glass itself does not affect these pixels.
-			x := 30
-			above := img.RGBAAt(x, int(card.Y+card.H/2)-6)
-			middle := img.RGBAAt(x, int(card.Y+card.H*.75))
-			footer := img.RGBAAt(x, int(card.Y+card.H)+14)
-			bg := theme.Background
-			want := color.RGBA{R: bg.R, G: bg.G, B: bg.B, A: 255}
-			if above.R < 230 || middle == above || middle == want || footer != want {
-				t.Fatalf("incorrect fade for card %+v: above=%v middle=%v footer=%v want=%v", card, above, middle, footer, want)
+		}, func(c *ui.Context) {
+			result := GlassComposer(c, &layout, &draft, ComposerOptions{
+				Label: "Reply", Footer: func(c *ui.Context) { components.Text(c, "Project / branch") },
+			})
+			card = result.Card.Bounds()
+		})
+	}, 900, 600)
+	// The blur reaches the middle of the card at rest and stays there as a
+	// longer draft grows the card upward.
+	var middle float32
+	for _, text := range []string{"", strings.Repeat("More lines\n", 6)} {
+		draft = text
+		state.Scroll.Y = 200
+		tt.Frame()
+		tt.Frame()
+		if text == "" {
+			middle = card.Y + card.H/2
+		}
+		img := tt.Image()
+		s := float32(img.Bounds().Dx()) / 900
+		// The widest spread of a row's channel beside the card: crisp stripes
+		// span black to white, blurred ones stay near gray.
+		spread := func(y float32) int {
+			lo, hi := 255, 0
+			for x := 20; x < 40; x++ {
+				v := int(img.RGBAAt(int(float32(x)*s), int(y*s)).R)
+				lo, hi = min(lo, v), max(hi, v)
 			}
+			return hi - lo
+		}
+		top, above, footer := spread(2), spread(middle-2), spread(card.Y+card.H+14)
+		if top < 200 || above < 200 || footer > 128 {
+			t.Fatalf("incorrect blur for card %+v: top=%d above middle=%d footer=%d", card, top, above, footer)
 		}
 	}
 }

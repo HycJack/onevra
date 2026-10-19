@@ -90,7 +90,7 @@ The package supplies chips, pickers, meters, usage limits and a shimmering label
 
 Streaming replies use MyGo's `markdown.Stream`, which parses only appended text and reveals it at an even pace; applications switch to `markdown.View` once the reply completes. Applications may show a running reply as prose after the activity groups and pass it as the final response once complete.
 
-The conversation follows the bottom until the user scrolls away, with a jump control to resume. An optional floating layout lets the transcript scroll behind a glass composer while reserving clearance for the latest turn and fading to an opaque footer for readability. The composer applies MyGo's glass material only to its card, preserving the host's theme and root transparency.
+The conversation follows the bottom until the user scrolls away, with a jump control to resume. An optional floating layout lets the transcript scroll behind a glass composer while reserving clearance for the latest turn; messages blur progressively from the bottom edge to the middle of the resting composer card, which stays fixed as the card grows. The composer applies MyGo's glass material only to its card, preserving the host's theme and root transparency.
 
 Conversations do not manage the window title bar or floating headers. Hosts place titles, actions and status overlays themselves, for example with `GlassPanel`, and pad or position the conversation to clear them.
 

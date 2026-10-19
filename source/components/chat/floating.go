@@ -15,11 +15,21 @@ type FloatingConversationState struct {
 	footerHeight float32
 }
 
+// The composer card's height with one line of draft and no attachments,
+// until a GlassComposer measures it, and how far ScrollEdge's progressive
+// blur fades out beyond its extent.
+const (
+	restingCardHeight = 96
+	edgeBlurFade      = 24
+)
+
 // FloatingConversation lets the transcript scroll behind the composer, but
 // reserves enough trailing content space to leave the latest turn unobscured.
-// Give the parent a bounded height and supply a localized jumpLabel. Build a
-// GlassComposer with the same layout in composer to fade beneath its footer.
-// Applications own both states and all content; builders run synchronously.
+// The transcript blurs progressively from the bottom edge up to the middle of
+// the composer card at rest, without following the card as it grows. Give the
+// parent a bounded height and supply a localized jumpLabel; composer typically
+// builds a GlassComposer. Applications own both states and all content;
+// builders run synchronously.
 func FloatingConversation(c *ui.Context, layout *FloatingConversationState, state *ConversationState, jumpLabel string, content, composer View) ui.Element {
 	return FloatingConversationWith(c, layout, state, FloatingConversationOptions{JumpLabel: jumpLabel, Content: content, Composer: composer})
 }
@@ -68,6 +78,20 @@ func FloatingConversationWith(c *ui.Context, layout *FloatingConversationState, 
 		})
 		// Disclosures may cancel following while building the transcript.
 		viewport.TrackScroll(&state.Scroll)
+		// Messages blur behind the footer and the card's lower half. The
+		// blur stops short of the scroll bar's track, which the content
+		// padding keeps clear.
+		gutter := c.Theme().ScrollbarWidth
+		if gutter <= 0 {
+			gutter = 6
+		}
+		gutter += 6
+		card := layout.cardHeight
+		if card <= 0 {
+			card = restingCardHeight
+		}
+		edge := 8 + layout.footerHeight + card/2 - edgeBlurFade
+		components.ScrollEdge(c, components.ScrollEdgeOptions{Style: components.ScrollEdgeBlur, Bottom: true, Extent: edge}).Key("bottom-edge").Right(gutter)
 		if !follow {
 			b := components.Button(c, "", components.ButtonGhost).Label(jumpLabel).Absolute().Attach(ui.AnchorBottom, ui.AnchorBottom).
 				Bottom(height+12).Size(32, 32).Padding(0).Radius(16)
@@ -93,15 +117,7 @@ func FloatingConversationWith(c *ui.Context, layout *FloatingConversationState, 
 			}
 		}
 		ui.Row(c).Key("floating-composer").Absolute().Attach(ui.AnchorBottom, ui.AnchorBottom).
-			FillWidth().Justify(ui.Center).Padding(0, 20, 8, 20).Draw(func(p *ui.Painter, r ui.Rect) {
-			// Fade behind the card's lower half, reaching an opaque surface
-			// before the footer so scrolling messages cannot obscure its labels.
-			footerHeight := layout.footerHeight + 8
-			fadeHeight := layout.cardHeight / 2
-			bottom := r.Y + r.H
-			p.FillGradient(ui.Rect{X: r.X, Y: bottom - footerHeight - fadeHeight, W: r.W, H: fadeHeight},
-				ui.LinearGradient{From: p.Theme().Background.Alpha(0), To: p.Theme().Background, Angle: 180}, 0)
-			p.Fill(ui.Rect{X: r.X, Y: bottom - footerHeight, W: r.W, H: footerHeight}, p.Theme().Background, 0)
+			FillWidth().Justify(ui.Center).Padding(0, 20, 8, 20).Draw(func(_ *ui.Painter, r ui.Rect) {
 			if layout.height != r.H {
 				layout.height = r.H
 				c.Invalidate()
@@ -132,7 +148,8 @@ func GlassPanel(c *ui.Context, content View) ui.Element {
 
 // GlassComposer keeps Onevra's editor and actions, replacing only its surface.
 // The footer stays outside the glass so the card remains visually lightweight.
-// layout may be nil outside a floating conversation.
+// layout may be nil outside a floating conversation; with it, the
+// conversation's blur reaches the middle of the card at rest.
 func GlassComposer(c *ui.Context, layout *FloatingConversationState, draft *string, options ComposerOptions) ComposerResult {
 	theme := c.Theme()
 	result := Composer(c, draft, options)
@@ -146,12 +163,15 @@ func GlassComposer(c *ui.Context, layout *FloatingConversationState, draft *stri
 		if options.Footer != nil {
 			layout.footerHeight = 28
 		}
-		result.Card.Draw(func(_ *ui.Painter, r ui.Rect) {
-			if layout.cardHeight != r.H {
-				layout.cardHeight = r.H
-				c.Invalidate()
-			}
-		})
+		// Only a single empty line with no attachments shows the card at rest.
+		if *draft == "" && options.Attachments == nil {
+			result.Card.Draw(func(_ *ui.Painter, r ui.Rect) {
+				if layout.cardHeight != r.H {
+					layout.cardHeight = r.H
+					c.Invalidate()
+				}
+			})
+		}
 	}
 	return result
 }

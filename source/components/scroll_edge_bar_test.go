@@ -79,3 +79,31 @@ func TestScrollEdgeBar(t *testing.T) {
 		}
 	}
 }
+
+// An effect alone docks at its edge and reaches its extent plus the style's
+// fade, beside nothing it takes input from.
+func TestScrollEdge(t *testing.T) {
+	for _, tc := range []struct {
+		style  ScrollEdgeStyle
+		bottom bool
+		height float32
+	}{{ScrollEdgeGlass, false, 40}, {ScrollEdgeHard, true, 40}, {ScrollEdgeSoft, false, 50}, {ScrollEdgeBlur, true, 64}} {
+		clicked := 0
+		tt := ui.NewTester(func(c *ui.Context) {
+			ui.Box(c).Fill().Clip().Children(func() {
+				if Button(c, "Under", ButtonSecondary).Fill().Clicked() {
+					clicked++
+				}
+				ScrollEdge(c, ScrollEdgeOptions{Style: tc.style, Bottom: tc.bottom, Extent: 40}).Label("Edge")
+			})
+		}, 300, 300)
+		edge, ok := tt.Find("Edge")
+		if !ok || edge.H != tc.height || edge.W != 300 || (tc.bottom && edge.Y+edge.H != 300) || (!tc.bottom && edge.Y != 0) {
+			t.Fatalf("style %d: edge %v", tc.style, edge)
+		}
+		tt.ClickAt(150, edge.Y+edge.H/2)
+		if clicked != 1 {
+			t.Fatalf("style %d: edge took input", tc.style)
+		}
+	}
+}

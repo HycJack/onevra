@@ -11,7 +11,7 @@ User-facing updates for Onevra library consumers.
 - Add `components.HoneycombItem.Menu` and `components.HoneycombOptions.Curvature`.
 - Add `components.IconButtonCompact`.
 - Add `components.IconButtonToolbarExpanding`.
-- Add `components.ScrollEdgeBar`.
+- Add `components.ScrollEdgeBar` and `components.ScrollEdge`.
 - Add `components.SettingsCategory.Placeholder`.
 - Add `components.SettingsOptions.SectionActions`.
 - Add `components.SidebarSectionWithActions`.
@@ -22,6 +22,7 @@ User-facing updates for Onevra library consumers.
 - Add `treemap.Style` with `treemap.Node.Style` and `treemap.Node.HoverStyle`.
 - Change `components.Breadcrumbs` to collapse overflowing ancestors into an ellipsis menu.
 - Change `chart.Bubble` to show its first pack without growing in.
+- Change `chat.FloatingConversation` to blur the transcript progressively behind the lower half of the composer.
 - Change `flow.View` edges to bend less, with rounded corners.
 - Animate `treemap.View` drilling without stretching tiles, corners or labels.
 - Localize component and Shell labels in Traditional Chinese, Japanese and Korean.
