@@ -2,6 +2,7 @@ package components
 
 import (
 	"bytes"
+	"slices"
 	"testing"
 	"time"
 
@@ -53,6 +54,45 @@ func TestTabsWithLeading(t *testing.T) {
 		}
 		if selected != 1 {
 			t.Errorf("variant=%v: selected=%d, want 1", variant, selected)
+		}
+	}
+}
+
+// A tab's context menu opens on a right-click without choosing it, and a tab
+// whose builder is nil has none.
+func TestTabsMenu(t *testing.T) {
+	for _, variant := range []TabsVariant{TabsUnderline, TabsSegmented, TabsHighlight} {
+		selected := 0
+		opened := -1
+		tt := ui.NewTester(func(c *ui.Context) {
+			TabsWith(c, &selected, TabsOptions{Variant: variant, Menu: func(i int) func(m *ui.Menu) {
+				if i == 0 {
+					return nil
+				}
+				return func(m *ui.Menu) {
+					if m.Item("Open").Chosen() {
+						opened = i
+					}
+				}
+			}}, "General", "Appearance", "Advanced")
+		}, 400, 100)
+		if err := tt.RightClick("Advanced"); err != nil {
+			t.Fatal(err)
+		}
+		if menu := tt.Menu(); !slices.Equal(menu, []string{"Open"}) {
+			t.Fatalf("variant=%v: menu %v", variant, menu)
+		}
+		if err := tt.ChooseMenuItem("Open"); err != nil {
+			t.Fatal(err)
+		}
+		if opened != 2 || selected != 0 {
+			t.Fatalf("variant=%v: opened %d, selected %d", variant, opened, selected)
+		}
+		if err := tt.RightClick("General"); err != nil {
+			t.Fatal(err)
+		}
+		if menu := tt.Menu(); len(menu) != 0 {
+			t.Fatalf("variant=%v: General's menu %v", variant, menu)
 		}
 	}
 }

@@ -14,10 +14,21 @@ func controlTabs(c *ui.Context, s *controlState, variant string) {
 	case "Highlight":
 		tabs = components.TabsHighlight
 	case "Custom leading":
-		// Each tab leads with an application-built icon.
+		// Each tab leads with an application-built icon, and its context menu
+		// opens it.
 		icons := []func() *ui.SVG{lucide.Settings, lucide.Palette}
-		components.TabsWithLeading(c, &s.index, components.TabsSegmented, func(c *ui.Context, i int, size float32) {
-			components.Icon(c, icons[i]).Size(size, size).Shrink(0)
+		components.TabsWith(c, &s.index, components.TabsOptions{
+			Variant: components.TabsSegmented,
+			Leading: func(c *ui.Context, i int, size float32) {
+				components.Icon(c, icons[i]).Size(size, size).Shrink(0)
+			},
+			Menu: func(i int) func(m *ui.Menu) {
+				return func(m *ui.Menu) {
+					if m.Item(tr(c, "open")).Chosen() {
+						s.index = i
+					}
+				}
+			},
 		}, tr(c, "general"), tr(c, "style"))
 		return
 	}

@@ -9,6 +9,7 @@ User-facing updates for Onevra library consumers.
 - Add `components.SettingsCategory.Placeholder`.
 - Add `components.SettingsOptions.SectionActions`.
 - Add `components.SidebarSectionWithActions`.
+- Add `components.TabsWith`.
 - Add `components.TabsWithLeading`.
 - Localize component and Shell labels in Traditional Chinese, Japanese and Korean.
 
