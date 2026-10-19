@@ -165,8 +165,9 @@ func controlHoneycomb(c *ui.Context, s *controlState, _ string) {
 		curvature = -1
 	}
 	if chosen := components.Honeycomb(c, components.HoneycombOptions{Items: items, Selected: selected,
-		SelectedLabel: selectedLabel, Curvature: curvature}); chosen != "" {
+		SelectedLabel: selectedLabel, Curvature: curvature, OffsetY: float32(s.honeycombOffset)}); chosen != "" {
 		s.honeycomb = chosen
 	}
 	components.Slider(c, &s.honeycombCurvature, 0, 2).Label(tr(c, "honeycombCurvature")).FillWidth().MinWidth(0)
+	components.Slider(c, &s.honeycombOffset, -120, 120).Label(tr(c, "honeycombOffset")).FillWidth().MinWidth(0)
 }

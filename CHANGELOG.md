@@ -11,7 +11,7 @@ User-facing updates for Onevra library consumers.
 - Add `chat.EffortPicker` and `chat.EffortState`.
 - Add `chat.FloatingConversationOptions.TopInset`.
 - Add `components.AvatarGroupOptions.Overlap` and `components.AvatarGroupOptions.Reverse`.
-- Add `components.HoneycombItem.Menu` and `components.HoneycombOptions.Curvature`.
+- Add `components.HoneycombItem.Menu`, `components.HoneycombOptions.Curvature` and `components.HoneycombOptions.OffsetY`.
 - Add `components.IconButtonCompact`.
 - Add `components.IconButtonToolbarExpanding`.
 - Add `components.ScrollEdgeBar` and `components.ScrollEdge`.

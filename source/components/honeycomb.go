@@ -57,6 +57,12 @@ type HoneycombOptions struct {
 	// every item at the same size, to show many at once; values above 1 curve
 	// it more, up to 2.
 	Curvature float32
+	// OffsetY shifts the honeycomb, and the point it settles and chooses
+	// around, up or down within its view in DIPs: negative moves it up. Use it
+	// when content floating over one edge leaves less room there, such as a
+	// composer at the bottom, so the honeycomb centers in the visible space.
+	// The view and its edge fade stay where they are.
+	OffsetY float32
 }
 
 const (
@@ -145,12 +151,12 @@ func honeycombMetricsFor(t *ui.Theme) honeycombMetrics {
 
 // Honeycomb draws the items as a honeycomb, as on a watch face, in a view that
 // fills the width and grows into the height of its column. The honeycomb is
-// magnified most in the middle of the view, so items and the space between them
-// shrink smoothly the further out they are, and shrink further and fade out as
-// they near the edge of the view. The honeycomb lies on the surface of a ball
-// behind it, so each item turns away from the viewer the further out it is, and
-// dragging it pans over that ball. The item nearest the middle wears a ring in
-// its own color or the theme's accent.
+// magnified most in the middle of the view, shifted by OffsetY, so items and
+// the space between them shrink smoothly the further out they are, and shrink
+// further and fade out as they near the edge of the view. The honeycomb lies
+// on the surface of a ball behind it, so each item turns away from the viewer
+// the further out it is, and dragging it pans over that ball. The item nearest
+// the middle wears a ring in its own color or the theme's accent.
 //
 // Dragging the items, or scrolling over them, pans the honeycomb, which then
 // settles with the item nearest the middle centered and chosen; choosing an
@@ -258,6 +264,7 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 		view.Invisible()
 		c.AnimationFrame()
 	}
+	centerX, centerY := width/2, height/2+options.OffsetY
 	view.Draw(func(_ *ui.Painter, r ui.Rect) {
 		if r.W != width || r.H != height {
 			c.Invalidate()
@@ -271,7 +278,7 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 	accent := c.Theme().Accent
 	p.hits = p.hits[:0]
 	view.Children(func() {
-		// Items hang from the middle of the view, wherever the layout puts it.
+		// Items hang from the middle of the view, offset by OffsetY.
 		ui.Box(c).Absolute().LeftPercent(50).TopPercent(50).Size(0, 0).Children(func() {
 			for i, item := range options.Items {
 				// Every item keeps its button, faded out or not, so the keyboard
@@ -290,7 +297,7 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 				}
 				dx, dy := cell.x-p.at.x, cell.y-p.at.y
 				d := float32(math.Hypot(float64(dx), float64(dy)))
-				cx, cy := width/2, height/2
+				cx, cy := centerX, centerY
 				if d > 0 {
 					f := m.magnified(d, curvature) / d
 					cx, cy = cx+dx*f, cy+dy*f

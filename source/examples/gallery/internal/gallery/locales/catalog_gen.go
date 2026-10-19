@@ -7862,6 +7862,16 @@ func (msgs Messages) HoneycombCurvature() string {
 	return Catalog.Format(msgs.locale, "honeycombCurvature", nil)
 }
 
+// HoneycombOffset says "Vertical offset"
+// in the language the app shows.
+func HoneycombOffset() string { return In(i18n.Locale()).HoneycombOffset() }
+
+// HoneycombOffset says "Vertical offset"
+// in the language of msgs.
+func (msgs Messages) HoneycombOffset() string {
+	return Catalog.Format(msgs.locale, "honeycombOffset", nil)
+}
+
 // Archive says "Archive"
 // in the language the app shows.
 func Archive() string { return In(i18n.Locale()).Archive() }

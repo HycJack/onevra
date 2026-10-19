@@ -139,6 +139,44 @@ func TestHoneycombCentersTheClickedItem(t *testing.T) {
 	}
 }
 
+func TestHoneycombOffsetsItsMiddle(t *testing.T) {
+	items := honeycombItems(19)
+	selected := "p00"
+	build := func(offset float32) (item, side, view ui.Rect) {
+		tt := ui.NewTester(func(c *ui.Context) {
+			c.SetTheme(theme.Palette(false))
+			ui.Column(c).Fill().Label("Honeycomb").AlignItems(ui.Center).Children(func() {
+				Honeycomb(c, HoneycombOptions{Items: items, Selected: selected, SelectedLabel: "Item", OffsetY: offset})
+			})
+		}, 600, 300)
+		tt.Frame()
+		item, _ = tt.Find("Item")
+		side, _ = tt.Find("p01")
+		view, _ = tt.Find("Honeycomb")
+		return
+	}
+	plain, plainSide, plainView := build(0)
+	shifted, shiftedSide, shiftedView := build(-60)
+	_, cy := middle(plainView)
+	// The selected item and its neighbors move with the offset, while the view
+	// and the edge fade stay put.
+	if _, y := middle(plain); math.Abs(float64(y-cy)) > .01 {
+		t.Fatalf("the middle item is not in the middle: %+v", plain)
+	}
+	if _, y := middle(shifted); math.Abs(float64(y-(cy-60))) > .01 {
+		t.Fatalf("the middle item did not move up: %+v, middle %v", shifted, cy)
+	}
+	if px, _ := middle(plainSide); func() bool {
+		sx, sy := middle(shiftedSide)
+		return math.Abs(float64(sx-px)) > .01 || math.Abs(float64(sy-(cy-60))) > .01
+	}() {
+		t.Fatalf("the item beside the middle did not follow: %+v %+v", plainSide, shiftedSide)
+	}
+	if shifted.W != plain.W || shifted.H != plain.H || shiftedView != plainView {
+		t.Fatalf("the offset resized items or the view: %+v %+v, view %+v %+v", plain, shifted, plainView, shiftedView)
+	}
+}
+
 func TestHoneycombSettlesOnTheItemNearestTheMiddle(t *testing.T) {
 	items := honeycombItems(19)
 	selected := "p00"
