@@ -91,3 +91,60 @@ func TestFloatingConversationScrollbarClearsComposer(t *testing.T) {
 		}
 	}
 }
+
+func TestFloatingConversationTopInsetClearsScrollbar(t *testing.T) {
+	const inset = 48
+	var layout FloatingConversationState
+	var state ConversationState
+	draft := ""
+	theme := ui.LightTheme()
+	// Isolate the scrollbar pixels from the content and glass.
+	theme.Scrollbar = ui.RGB(240, 30, 70)
+	tt := ui.NewTester(func(c *ui.Context) {
+		c.SetTheme(theme)
+		FloatingConversationWith(c, &layout, &state, FloatingConversationOptions{
+			JumpLabel: "Latest",
+			TopInset:  inset,
+			Content: func(c *ui.Context) {
+				components.Text(c, "First message").Height(40).Shrink(0)
+				ui.Box(c).Height(1800).Shrink(0)
+			},
+			Composer: func(c *ui.Context) {
+				GlassComposer(c, &layout, &draft, ComposerOptions{Label: "Reply"})
+			},
+		}).Label("Viewport")
+	}, 900, 600)
+	tt.Frame()
+	tt.Frame()
+	// Read from the top rather than following the latest turn.
+	state.Scroll.Y = 0
+	tt.Frame()
+	x := float32(900 - 6)
+	tt.Move(x, 300)
+	viewport, _ := tt.Find("Viewport")
+	if viewport.Y != 0 || viewport.H != 600 {
+		t.Fatalf("top inset shortened the viewport: %+v", viewport)
+	}
+	first, ok := tt.Find("First message")
+	if !ok || first.Y != inset+22 {
+		t.Fatalf("first message=%+v, want it %v below the top", first, inset+22)
+	}
+	img := tt.Image()
+	top := -1
+	for y := 0; y < 600; y++ {
+		pixel := img.RGBAAt(int(x), y)
+		if pixel.R == 240 && pixel.G == 30 && pixel.B == 70 {
+			top = y
+			break
+		}
+	}
+	if top < inset || top > inset+4 {
+		t.Fatalf("scrollbar top=%d does not start at the inset %d", top, inset)
+	}
+	// Scrolled content passes behind the inset rather than being clipped.
+	state.Scroll.Y = 100
+	tt.Frame()
+	if first, _ = tt.Find("First message"); first.Y >= inset {
+		t.Fatalf("scrolled first message %+v stayed below the inset", first)
+	}
+}

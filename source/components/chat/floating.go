@@ -36,15 +36,20 @@ func FloatingConversation(c *ui.Context, layout *FloatingConversationState, stat
 
 // FloatingConversationOptions supplies FloatingConversation's views. The
 // conversation does not manage a window title bar or floating header: hosts
-// that overlay one position it themselves and may pad Content to clear it.
+// that overlay one position it themselves and set TopInset to clear it.
 type FloatingConversationOptions struct {
 	JumpLabel         string
 	Content, Composer View
+	// TopInset reserves space above the transcript and its scroll bar, such
+	// as for a title bar the conversation scrolls under; the content, and so
+	// the first turn, starts below it. Negative values are treated as zero.
+	TopInset float32
 }
 
 // FloatingConversationWith is FloatingConversation with its views as options.
 func FloatingConversationWith(c *ui.Context, layout *FloatingConversationState, state *ConversationState, options FloatingConversationOptions) ui.Element {
 	jumpLabel, content, composer := options.JumpLabel, options.Content, options.Composer
+	inset := max(0, options.TopInset)
 	return ui.Column(c).FillWidth().Grow(1).MinHeight(0).MinWidth(0).Clip().Children(func() {
 		height := layout.height
 		if height <= 0 {
@@ -61,9 +66,9 @@ func FloatingConversationWith(c *ui.Context, layout *FloatingConversationState, 
 		// Leave a small gap above the floating composer without shortening
 		// the transcript viewport that scrolls behind it.
 		viewport := components.ScrollView(c, components.ScrollViewOptions{}).Key("transcript").FillWidth().Grow(1).MinHeight(0).
-			ScrollbarInsets(0, 0, height+8, 0).TrackScroll(&state.Scroll)
+			ScrollbarInsets(inset, 0, height+8, 0).TrackScroll(&state.Scroll)
 		viewport.Children(func() {
-			ui.Column(c).FillWidth().MinWidth(0).Shrink(0).AlignItems(ui.Center).Padding(22, 20, 0, 20).Children(func() {
+			ui.Column(c).FillWidth().MinWidth(0).Shrink(0).AlignItems(ui.Center).Padding(22+inset, 20, 0, 20).Children(func() {
 				ui.Column(c).FillWidth().MaxWidth(ContentWidth).MinWidth(0).Gap(48).Children(func() {
 					slot := conversationSlot(c)
 					saved := *slot
