@@ -48,6 +48,11 @@ type systemDemo struct {
 
 	cookies      []mygo.Cookie
 	cookieStatus string
+
+	dialogDetached bool
+	dialogType     int
+	dialogRows     [][2]string
+	dialogNote     string
 }
 
 // update applies fn on the UI thread and redraws the gallery.

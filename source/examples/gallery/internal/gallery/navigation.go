@@ -26,6 +26,7 @@ var newPages = map[string]bool{
 	"controls/Treemap":               true,
 	"controls/Flow diagram":          true,
 	"controls/Card stack":            true,
+	"mygo/Native dialogs":            true,
 }
 
 // updatedPages are the routes whose components changed in the latest published

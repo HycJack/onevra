@@ -123,6 +123,7 @@ var mygoDirectExamples = map[string]string{
 	"Recent documents":   "Use MyGo recent documents and the jump list directly; applications own their files",
 	"File watching":      "Use MyGo WatchFiles directly; applications own the watched paths and their lifetime",
 	"Global shortcuts":   "Use MyGo GlobalShortcut directly; applications own the accelerators, their conflicts and what a press does",
+	"Native dialogs":     "Use MyGo Dialog directly for system file and message dialogs; applications own the paths, answers and when to ask",
 	"Audio":              "Use MyGo audio directly for decoding, mixing and device output; applications own sounds and player lifetime",
 	"Gradients & blur":   "Use MyGo element gradients, gradient stops, conic gradients, gradient borders and blur directly; no Onevra styling layer",
 	"Shaders":            "Use MyGo's ui/shader directly for fragment shaders, shader fills, element effects and backdrops; no Onevra drawing layer",

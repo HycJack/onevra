@@ -11,6 +11,7 @@ func TestSystemPagesRenderHeadless(t *testing.T) {
 		"Recent documents": "recentEmpty",
 		"File watching":    "watchEmpty",
 		"Global shortcuts": "shortcutRegistered",
+		"Native dialogs":   "dialogEmpty",
 	}
 	for name, key := range pages {
 		for _, lang := range []string{"en", "zh-Hans"} {

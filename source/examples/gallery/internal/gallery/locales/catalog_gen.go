@@ -7252,6 +7252,206 @@ func (msgs Messages) ShortcutLastPressed() string {
 	return Catalog.Format(msgs.locale, "shortcutLastPressed", nil)
 }
 
+// DialogOpenFiles says "Open images…"
+// in the language the app shows.
+func DialogOpenFiles() string { return In(i18n.Locale()).DialogOpenFiles() }
+
+// DialogOpenFiles says "Open images…"
+// in the language of msgs.
+func (msgs Messages) DialogOpenFiles() string {
+	return Catalog.Format(msgs.locale, "dialogOpenFiles", nil)
+}
+
+// DialogOpenFolder says "Choose a folder…"
+// in the language the app shows.
+func DialogOpenFolder() string { return In(i18n.Locale()).DialogOpenFolder() }
+
+// DialogOpenFolder says "Choose a folder…"
+// in the language of msgs.
+func (msgs Messages) DialogOpenFolder() string {
+	return Catalog.Format(msgs.locale, "dialogOpenFolder", nil)
+}
+
+// DialogSave says "Save as…"
+// in the language the app shows.
+func DialogSave() string { return In(i18n.Locale()).DialogSave() }
+
+// DialogSave says "Save as…"
+// in the language of msgs.
+func (msgs Messages) DialogSave() string {
+	return Catalog.Format(msgs.locale, "dialogSave", nil)
+}
+
+// DialogImages says "Images"
+// in the language the app shows.
+func DialogImages() string { return In(i18n.Locale()).DialogImages() }
+
+// DialogImages says "Images"
+// in the language of msgs.
+func (msgs Messages) DialogImages() string {
+	return Catalog.Format(msgs.locale, "dialogImages", nil)
+}
+
+// DialogDetached says "Show dialogs as separate windows"
+// in the language the app shows.
+func DialogDetached() string { return In(i18n.Locale()).DialogDetached() }
+
+// DialogDetached says "Show dialogs as separate windows"
+// in the language of msgs.
+func (msgs Messages) DialogDetached() string {
+	return Catalog.Format(msgs.locale, "dialogDetached", nil)
+}
+
+// DialogInfo says "Information"
+// in the language the app shows.
+func DialogInfo() string { return In(i18n.Locale()).DialogInfo() }
+
+// DialogInfo says "Information"
+// in the language of msgs.
+func (msgs Messages) DialogInfo() string {
+	return Catalog.Format(msgs.locale, "dialogInfo", nil)
+}
+
+// DialogWarning says "Warning"
+// in the language the app shows.
+func DialogWarning() string { return In(i18n.Locale()).DialogWarning() }
+
+// DialogWarning says "Warning"
+// in the language of msgs.
+func (msgs Messages) DialogWarning() string {
+	return Catalog.Format(msgs.locale, "dialogWarning", nil)
+}
+
+// DialogErrorType says "Error"
+// in the language the app shows.
+func DialogErrorType() string { return In(i18n.Locale()).DialogErrorType() }
+
+// DialogErrorType says "Error"
+// in the language of msgs.
+func (msgs Messages) DialogErrorType() string {
+	return Catalog.Format(msgs.locale, "dialogErrorType", nil)
+}
+
+// DialogQuestion says "Question"
+// in the language the app shows.
+func DialogQuestion() string { return In(i18n.Locale()).DialogQuestion() }
+
+// DialogQuestion says "Question"
+// in the language of msgs.
+func (msgs Messages) DialogQuestion() string {
+	return Catalog.Format(msgs.locale, "dialogQuestion", nil)
+}
+
+// DialogAsk says "Ask a question…"
+// in the language the app shows.
+func DialogAsk() string { return In(i18n.Locale()).DialogAsk() }
+
+// DialogAsk says "Ask a question…"
+// in the language of msgs.
+func (msgs Messages) DialogAsk() string {
+	return Catalog.Format(msgs.locale, "dialogAsk", nil)
+}
+
+// DialogAskMessage says "Delete 3 notes?"
+// in the language the app shows.
+func DialogAskMessage() string { return In(i18n.Locale()).DialogAskMessage() }
+
+// DialogAskMessage says "Delete 3 notes?"
+// in the language of msgs.
+func (msgs Messages) DialogAskMessage() string {
+	return Catalog.Format(msgs.locale, "dialogAskMessage", nil)
+}
+
+// DialogAskDetail says "You cannot undo this."
+// in the language the app shows.
+func DialogAskDetail() string { return In(i18n.Locale()).DialogAskDetail() }
+
+// DialogAskDetail says "You cannot undo this."
+// in the language of msgs.
+func (msgs Messages) DialogAskDetail() string {
+	return Catalog.Format(msgs.locale, "dialogAskDetail", nil)
+}
+
+// DialogDontAsk says "Don't ask again"
+// in the language the app shows.
+func DialogDontAsk() string { return In(i18n.Locale()).DialogDontAsk() }
+
+// DialogDontAsk says "Don't ask again"
+// in the language of msgs.
+func (msgs Messages) DialogDontAsk() string {
+	return Catalog.Format(msgs.locale, "dialogDontAsk", nil)
+}
+
+// DialogShowError says "Show an error…"
+// in the language the app shows.
+func DialogShowError() string { return In(i18n.Locale()).DialogShowError() }
+
+// DialogShowError says "Show an error…"
+// in the language of msgs.
+func (msgs Messages) DialogShowError() string {
+	return Catalog.Format(msgs.locale, "dialogShowError", nil)
+}
+
+// DialogErrorTitle says "Import failed"
+// in the language the app shows.
+func DialogErrorTitle() string { return In(i18n.Locale()).DialogErrorTitle() }
+
+// DialogErrorTitle says "Import failed"
+// in the language of msgs.
+func (msgs Messages) DialogErrorTitle() string {
+	return Catalog.Format(msgs.locale, "dialogErrorTitle", nil)
+}
+
+// DialogErrorDetail says "The file is not a supported image."
+// in the language the app shows.
+func DialogErrorDetail() string { return In(i18n.Locale()).DialogErrorDetail() }
+
+// DialogErrorDetail says "The file is not a supported image."
+// in the language of msgs.
+func (msgs Messages) DialogErrorDetail() string {
+	return Catalog.Format(msgs.locale, "dialogErrorDetail", nil)
+}
+
+// DialogPath says "Path"
+// in the language the app shows.
+func DialogPath() string { return In(i18n.Locale()).DialogPath() }
+
+// DialogPath says "Path"
+// in the language of msgs.
+func (msgs Messages) DialogPath() string {
+	return Catalog.Format(msgs.locale, "dialogPath", nil)
+}
+
+// DialogButton says "Clicked button"
+// in the language the app shows.
+func DialogButton() string { return In(i18n.Locale()).DialogButton() }
+
+// DialogButton says "Clicked button"
+// in the language of msgs.
+func (msgs Messages) DialogButton() string {
+	return Catalog.Format(msgs.locale, "dialogButton", nil)
+}
+
+// DialogCanceled says "The dialog was canceled."
+// in the language the app shows.
+func DialogCanceled() string { return In(i18n.Locale()).DialogCanceled() }
+
+// DialogCanceled says "The dialog was canceled."
+// in the language of msgs.
+func (msgs Messages) DialogCanceled() string {
+	return Catalog.Format(msgs.locale, "dialogCanceled", nil)
+}
+
+// DialogEmpty says "The answers of the dialogs appear here."
+// in the language the app shows.
+func DialogEmpty() string { return In(i18n.Locale()).DialogEmpty() }
+
+// DialogEmpty says "The answers of the dialogs appear here."
+// in the language of msgs.
+func (msgs Messages) DialogEmpty() string {
+	return Catalog.Format(msgs.locale, "dialogEmpty", nil)
+}
+
 // FontsSearch says "Search fonts"
 // in the language the app shows.
 func FontsSearch() string { return In(i18n.Locale()).FontsSearch() }
@@ -7530,6 +7730,16 @@ func ComponentGlobalShortcuts() string { return In(i18n.Locale()).ComponentGloba
 // in the language of msgs.
 func (msgs Messages) ComponentGlobalShortcuts() string {
 	return Catalog.Format(msgs.locale, "componentGlobalShortcuts", nil)
+}
+
+// ComponentNativeDialogs says "Native dialogs"
+// in the language the app shows.
+func ComponentNativeDialogs() string { return In(i18n.Locale()).ComponentNativeDialogs() }
+
+// ComponentNativeDialogs says "Native dialogs"
+// in the language of msgs.
+func (msgs Messages) ComponentNativeDialogs() string {
+	return Catalog.Format(msgs.locale, "componentNativeDialogs", nil)
 }
 
 // ComponentSystemInformation says "System information"
