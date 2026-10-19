@@ -93,7 +93,7 @@ Native resources are never created merely by rendering a page. Platform requirem
 
 ## Interface language
 
-Gallery offers English, Simplified Chinese, Traditional Chinese, Japanese, Korean and Follow system. The saved preference updates application content, component labels, Shell controls and auxiliary windows immediately. Follow system resolves MyGo's locale at startup; unsupported languages fall back to English. Disk-free examples default to English.
+Gallery offers English, Simplified Chinese, Traditional Chinese, Japanese, Korean and Follow system. The saved preference updates application content, component labels, Shell controls and auxiliary windows immediately. Follow system matches the user's preferred languages, never a saved choice, and follows their changes while Gallery runs; unsupported languages fall back to English. Disk-free examples default to English.
 
 Gallery's messages are MyGo catalogs (`locales/en.json` and one file per translation) whose typed functions `mygo generate` writes into the `locales` package. Stable message keys remain independent of source copy, route IDs, widget keys and stored values. Formatted messages use the typed functions; static text uses keys, and existing demonstration metadata resolves through the English catalog. Choosing a language also calls `mygo.App.SetLocale`, so MyGo's and Onevra's [own strings](components.md#localization) follow; MyGo has no Japanese or Korean strings, so its own controls and role menu items stay in English there. Language changes preserve drafts, selection, dialog state and navigation.
 

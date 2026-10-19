@@ -29,7 +29,7 @@ const (
 type application struct {
 	config      config
 	path        string
-	locale      string
+	preferred   []string // The user's languages, most preferred first.
 	native      bool
 	ready       bool
 	quitting    bool
@@ -65,9 +65,7 @@ func (a *application) report(key string, err error) {
 func (a *application) themeSource() mygo.ThemeSource { return mygo.ThemeSource(a.config.Appearance) }
 
 func (a *application) start() {
-	if preferred := mygo.App.PreferredLanguages(); len(preferred) > 0 {
-		a.locale = preferred[0]
-	}
+	a.followSystemLanguages()
 	a.icons, a.iconPending = map[string]*ui.Bitmap{}, map[string]bool{}
 	a.login = mygo.App.OpenAtLogin()
 	a.createPanel()

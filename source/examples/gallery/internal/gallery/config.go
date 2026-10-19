@@ -65,7 +65,7 @@ func (g *Gallery) Configure(path string, override mygo.ThemeSource) {
 		log.Printf("Load gallery config: %v", err)
 	}
 	g.config, g.configPath = config, path
-	g.systemLanguage = mygo.App.Locale()
+	g.followSystemLanguages()
 	g.applyLanguage()
 	source := config.Theme
 	if validTheme(override) {

@@ -121,10 +121,14 @@ func TestLanguages(t *testing.T) {
 		{"system", "zh-CN", "zh-Hans"}, {"system", "zh-SG", "zh-Hans"}, {"system", "zh-TW", "zh-Hant"},
 		{"system", "ja-JP", "ja"}, {"system", "ko-KR", "ko"}, {"system", "de-DE", "en"}, {"en", "zh-CN", "en"}, {"zh-Hans", "en-US", "zh-Hans"},
 	} {
-		a.config.Language, a.locale = tc.choice, tc.system
+		a.config.Language, a.preferred = tc.choice, []string{tc.system}
 		if got := a.language(); got != tc.want {
 			t.Errorf("%+v: %s", tc, got)
 		}
+	}
+	a.config.Language, a.preferred = "system", []string{"de-DE", "ja-JP"}
+	if got := a.language(); got != "ja" {
+		t.Errorf("a later preferred language: %s", got)
 	}
 	catalogs := map[string]map[string]any{}
 	for _, code := range languages {

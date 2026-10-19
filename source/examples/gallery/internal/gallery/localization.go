@@ -106,6 +106,31 @@ func (g *Gallery) applyLanguage() {
 	mygo.App.SetLocale(g.config.Language)
 	g.updateLanguageWindows()
 }
+
+// systemLanguage returns the catalog language that best suits the user's
+// languages, "" for none.
+func systemLanguage() string {
+	return i18n.Match(mygo.App.PreferredLanguages(), locales.Catalog.Languages())
+}
+
+// followSystemLanguages matches the user's languages, never the language the
+// app chose, which the system may keep for the next launch, and keeps matching
+// them while the app runs, so that Follow system updates the gallery as it does
+// MyGo's and Onevra's strings.
+func (g *Gallery) followSystemLanguages() {
+	g.systemLanguage = systemLanguage()
+	if g.stopLocale != nil {
+		g.stopLocale()
+	}
+	g.stopLocale = mygo.App.OnLocaleChanged(func(string) {
+		before := g.systemLanguage
+		g.systemLanguage = systemLanguage()
+		if g.config.Language == "" && g.systemLanguage != before {
+			g.language = newTranslator("", g.systemLanguage)
+			g.updateLanguageWindows()
+		}
+	})
+}
 func (g *Gallery) chooseLanguage(choice string) {
 	if !validLanguage(choice) {
 		return

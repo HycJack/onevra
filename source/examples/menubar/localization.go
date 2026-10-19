@@ -9,12 +9,12 @@ import (
 )
 
 // language returns the catalog language the app shows: the saved choice, or
-// the best match for the user's preferred language.
+// the best match for the user's preferred languages.
 func (a *application) language() string {
 	if a.config.Language != "system" {
 		return a.config.Language
 	}
-	if tag := i18n.Match([]string{a.locale}, locales.Catalog.Languages()); tag != "" {
+	if tag := i18n.Match(a.preferred, locales.Catalog.Languages()); tag != "" {
 		return tag
 	}
 	return locales.Catalog.Source()
@@ -28,6 +28,20 @@ func (a *application) applyLanguage() {
 		tag = ""
 	}
 	mygo.App.SetLocale(tag)
+}
+
+// followSystemLanguages reads the user's languages and keeps reading them
+// when they change while the app runs, so that its own messages follow
+// "system" as MyGo's and Onevra's strings do.
+func (a *application) followSystemLanguages() {
+	a.preferred = mygo.App.PreferredLanguages()
+	mygo.App.OnLocaleChanged(func(string) {
+		before := a.language()
+		a.preferred = mygo.App.PreferredLanguages()
+		if a.ready && a.language() != before {
+			a.refresh()
+		}
+	})
 }
 
 // text says the message of a key chosen at run time, such as a setting's

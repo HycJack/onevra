@@ -14,7 +14,8 @@ import (
 // All application state and native callbacks are owned by the UI thread.
 type application struct {
 	config                                     config
-	path, locale, note                         string
+	path, note                                 string
+	preferred                                  []string // The user's languages, most preferred first.
 	errorKey, errorDetail                      string
 	ready, pendingOpen, quitting, settingsOpen bool
 	main, panel, settings, welcome             *mygo.Window
@@ -31,9 +32,7 @@ func (a *application) report(key string, err error) {
 }
 
 func (a *application) start() {
-	if preferred := mygo.App.PreferredLanguages(); len(preferred) > 0 {
-		a.locale = preferred[0]
-	}
+	a.followSystemLanguages()
 	if appKind != "desktop" {
 		if err := a.createTray(); err != nil {
 			a.report("trayError", err)

@@ -20,7 +20,8 @@ type Gallery struct {
 	appMenu        *mygo.Menu
 	notification   notificationDemo
 	language       *translator
-	systemLanguage string
+	systemLanguage string // The catalog language that suits the user's languages.
+	stopLocale     func()
 	config         Config
 	configPath     string
 	Clicks         int
