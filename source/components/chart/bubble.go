@@ -24,8 +24,9 @@ const (
 // larger values take larger bubbles. The pack keeps to the smallest extent
 // the plot's proportions allow, centered, so the bubbles are as large as
 // possible. Bubbles large enough show their label and formatted value.
-// Bubbles spring to new sizes and places and pop in as they appear. Hover,
-// arrow keys, Home/End and legend buttons select a bubble; Escape clears it.
+// Bubbles show packed at once, then spring to new sizes and places and pop
+// in as they appear. Hover, arrow keys, Home/End and legend buttons select
+// a bubble; Escape clears it.
 // State.Hidden is unused. Invalid and non-positive slices are omitted while
 // State.Index refers to input order.
 func Bubble(c *ui.Context, state *State, data []Slice, opts Options) ui.Element {
@@ -37,7 +38,7 @@ func Bubble(c *ui.Context, state *State, data []Slice, opts Options) ui.Element 
 	}
 	// Pack for the plot measured in the previous frame; Draw repacks at once
 	// when the plot's proportions changed since. Bubbles wait for the first
-	// measurement, so they grow in for the plot's real proportions.
+	// measurement, so they first show packed for the plot's real proportions.
 	width, height := e.LayoutBounds().W, plotHeight(opts)
 	measured := width > 0
 	if !measured {
@@ -198,9 +199,10 @@ func (m *bubbleMotion) layout(ids []string, values []float64, aspect float64) []
 
 // spring moves each bubble toward its place in the pack on MyGo springs,
 // keyed by slice ID so a bubble keeps its velocity when targets change.
-// New bubbles grow from their place; new proportions take effect at once.
+// The first pack and new proportions take effect at once; bubbles added
+// later grow from their place.
 func (m *bubbleMotion) spring(e ui.Element, data []Slice, indices []int, target []bubbleCircle, aspect float64, opts Options) []bubbleCircle {
-	jump := opts.AnimationDuration < 0 || (m.aspect != 0 && m.aspect != aspect)
+	jump := opts.AnimationDuration < 0 || m.shown == nil || (m.aspect != 0 && m.aspect != aspect)
 	spring := ui.SpringOptions{Duration: 550 * time.Millisecond, Bounce: .3}
 	if opts.AnimationDuration > 0 {
 		spring.Duration = opts.AnimationDuration

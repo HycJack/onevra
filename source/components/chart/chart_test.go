@@ -259,13 +259,8 @@ func TestBubbleSprings(t *testing.T) {
 		}
 	}, 400, 500)
 	settled := func(id string, part uint8) bool { return rest[bubbleKey{id, part}] }
-	if settled("a", bubbleR) || !settled("a", bubbleX) {
-		t.Fatal("bubbles should grow in place on first display")
-	}
-	tt.Advance(2 * time.Second)
-	tt.Frame()
-	if !settled("a", bubbleR) || !settled("b", bubbleR) {
-		t.Fatal("springs did not settle")
+	if !settled("a", bubbleR) || !settled("b", bubbleR) || !settled("a", bubbleX) {
+		t.Fatal("bubbles should show packed on first display")
 	}
 	data = append(data, Slice{ID: "c", Label: "Gamma", Value: 1})
 	tt.Frame()

@@ -36,7 +36,7 @@ The [chart component](../../source/components/chart/chart.go) composes categoric
 
 Applications retain data and state, provide stable series or slice identities, and supply localized labels and formatting. Cartesian and split bar legends hide data; donut and bubble legends select slices. Selection exposes formatted values to assistive technology. Empty and detail slots take application content instead of business-specific variants. See the [runnable usage example](../../source/components/chart/example_test.go) and API comments for data and state contracts.
 
-Numeric updates transition together through MyGo's animation channel, including Cartesian domains and donut boundaries; bubbles spring and grow in. Retargeting continues from the current picture; Reduced Motion skips the transition. Split bar edges follow springs; its figures roll with MyGo's numeric content transitions. Data-shape changes appear immediately, and selection details report the latest application values.
+Numeric updates transition together through MyGo's animation channel, including Cartesian domains and donut boundaries; bubbles first show packed, then spring, and added ones grow in. Retargeting continues from the current picture; Reduced Motion skips the transition. Split bar edges follow springs; its figures roll with MyGo's numeric content transitions. Data-shape changes appear immediately, and selection details report the latest application values.
 
 These views target bounded categorical datasets, with work proportional to the data; applications own aggregation or sampling. Continuous/time axes, zooming and specialized charts can compose upstream primitives. The component reuses MyGo's Cartesian selection, with a coordinate adaptation for transformed plots in 0.4.3; donut and bubble selection compose MyGo's shortcuts with shape hit testing.
 
@@ -56,7 +56,7 @@ Layout, camera, hover and reveal advance in `Draw` on the UI thread. Initial tic
 
 The [flow component](../../source/components/flow/flow.go) lays out directed diagrams in ranks: it reverses cycle-closing edges, ranks nodes to keep edges short, orders ranks to reduce crossings and routes orthogonal edges between ranks. Edges cross ranks anywhere their neighbours leave free and bend only where blocked. Applications build node content, or use `Card`, whose regions are slots, and own selection and opening.
 
-Content is measured on the frame after it is built; the diagram shows once every node has a size and lays out again, moving nodes, when content resizes. Layout reruns in full on topology or size changes; applications bound diagram size. The camera uses the graph's [gestures](../../source/components/gesture/gesture.go).
+Content is measured on the frame after it is built; the diagram shows once every node has a size. A change of topology or spacing moves nodes and the camera, as do sizes measured while that motion runs; later size changes place the diagram at once. Layout reruns in full on topology or size changes; applications bound diagram size. The camera uses the graph's [gestures](../../source/components/gesture/gesture.go).
 
 ### Commands
 

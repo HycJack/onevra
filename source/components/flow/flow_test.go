@@ -1,6 +1,7 @@
 package flow
 
 import (
+	"math"
 	"testing"
 	"time"
 
@@ -219,5 +220,61 @@ func TestViewRelaysOutWhenDataChanges(t *testing.T) {
 	h.settle()
 	if !h.tt.HasText("Nothing planned") {
 		t.Fatal("empty state is missing")
+	}
+}
+
+func TestViewShownAgainKeepsLayout(t *testing.T) {
+	var state State
+	data := sample()
+	shown, collapsed := true, false
+	tt := ui.NewTester(func(c *ui.Context) {
+		theme.Apply(c)
+		if !shown {
+			return
+		}
+		View(c, &state, data, Options{Label: "Pipeline"})
+		for _, n := range state.view.nodes {
+			collapsed = collapsed || (state.view.ready && n.width == 0)
+		}
+	}, 900, 700)
+	camera := state.view.camera
+	shown = false
+	tt.Frame()
+	shown = true
+	tt.Frame()
+	if collapsed || state.view.camera != camera || state.view.shown != camera {
+		t.Fatalf("diagram shown again moved: collapsed %v, camera %+v from %+v", collapsed, state.view.camera, camera)
+	}
+}
+
+func TestViewPlacesSettlingContentAtOnce(t *testing.T) {
+	var state State
+	data := sample()
+	tt := ui.NewTester(func(c *ui.Context) {
+		theme.Apply(c)
+		View(c, &state, data, Options{Label: "Pipeline"})
+	}, 900, 700)
+	v := &state.view
+	moved := func() bool {
+		for _, n := range v.nodes {
+			x, y, _ := state.Position(n.id)
+			if math.Abs(n.x-float64(x)) > .01 || math.Abs(n.y-float64(y)) > .01 {
+				return true
+			}
+		}
+		return v.shown != v.camera
+	}
+	// Content that settles to a new size places the diagram at once.
+	data.Nodes[0].Content = func(c *ui.Context) { Card(c, CardOptions{Width: 320, Title: "Plan"}) }
+	tt.Frame()
+	if moved() {
+		t.Fatal("resized content animated the layout")
+	}
+	// A new topology still moves the nodes.
+	data.Nodes = append(data.Nodes, Node{ID: "docs", Label: "Docs", Width: 120, Height: 40})
+	data.Edges = append(data.Edges, Edge{Source: "plan", Target: "docs"})
+	tt.Frame()
+	if !moved() {
+		t.Fatal("new topology did not animate")
 	}
 }

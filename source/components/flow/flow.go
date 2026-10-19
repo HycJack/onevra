@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"math"
 	"slices"
+	"time"
 
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
@@ -168,7 +169,15 @@ func View(c *ui.Context, state *State, data Data, opts Options) ui.Element {
 // next layout; edges paint beneath them.
 func (v *view) build(c *ui.Context, canvas ui.Element, data Data, opts Options) {
 	t := c.Theme()
-	v.prepare()
+	// A diagram shown again builds its nodes anew; they keep their last
+	// size, rather than the empty one of their first frame, until measured.
+	if mounted := ui.Local(canvas, "onevra.flow.mounted", func() bool { return false }); !*mounted {
+		*mounted = true
+		for i := range v.nodes {
+			v.nodes[i].built = false
+		}
+	}
+	v.prepare(c.Now())
 	moving := v.advanceCamera(c.Now())
 	resized := false
 	services := c.Services()
@@ -200,7 +209,10 @@ func (v *view) build(c *ui.Context, canvas ui.Element, data Data, opts Options) 
 					el.Height(src.Height)
 				}
 				x, y := float32(v.result.x[i]), float32(v.result.y[i])
-				if v.ready && n.measured {
+				switch {
+				case v.ready && n.measured && v.snap:
+					x, y = el.Jump("x", x), el.Jump("y", y)
+				case v.ready && n.measured:
 					x, y = el.AnimateTo("x", x, ui.Smooth), el.AnimateTo("y", y, ui.Smooth)
 				}
 				n.x, n.y = float64(x), float64(y)
@@ -363,33 +375,46 @@ func (v *view) update(data Data, opts Options, reduce bool) {
 
 // prepare lays the diagram out again when its topology, node sizes or
 // spacing change, and shows it once every node is measured and the view
-// has a size.
-func (v *view) prepare() {
-	var h hasher
-	h.reset()
-	h.int(int(v.direction))
-	h.float(v.gaps.node)
-	h.float(v.gaps.rank)
-	all := true
-	for i := range v.nodes {
-		n := &v.nodes[i]
-		w, ht := n.size()
-		h.string(n.id)
-		h.float(math.Round(w * 2))
-		h.float(math.Round(ht * 2))
-		all = all && n.measured
+// has a size. Nodes and the camera move to a new topology or spacing, and
+// to sizes measured while they do; other new sizes, such as those of
+// content settling after the diagram appears, take effect at once.
+func (v *view) prepare(now time.Time) {
+	var h, structure hasher
+	structure.reset()
+	structure.int(int(v.direction))
+	structure.float(v.gaps.node)
+	structure.float(v.gaps.rank)
+	for _, n := range v.nodes {
+		structure.string(n.id)
 	}
 	for _, e := range v.edges {
-		h.int(e.source)
-		h.int(e.target)
+		structure.int(e.source)
+		structure.int(e.target)
 		dashed := byte(0)
 		if e.dashed {
 			dashed = 1
 		}
-		h.byte(dashed)
+		structure.byte(dashed)
 	}
+	h.sum = structure.sum
+	all := true
+	for i := range v.nodes {
+		n := &v.nodes[i]
+		w, ht := n.size()
+		h.float(math.Round(w * 2))
+		h.float(math.Round(ht * 2))
+		all = all && n.measured
+	}
+	if structure.sum != v.structureKey {
+		v.structureKey = structure.sum
+		if v.ready {
+			v.structureAt = now
+		}
+	}
+	v.snap = false
 	if h.sum != v.layoutKey || len(v.result.x) != len(v.nodes) {
 		v.layoutKey = h.sum
+		v.snap = now.Sub(v.structureAt) > relayoutMotion
 		nodes := make([]layoutNode, len(v.nodes))
 		for i := range v.nodes {
 			w, ht := v.nodes[i].size()
@@ -401,7 +426,7 @@ func (v *view) prepare() {
 		}
 		v.result = layout(nodes, edges, v.direction, v.gaps)
 		if v.ready && !v.userMoved {
-			v.fit(false)
+			v.fit(v.snap)
 		}
 	}
 	if !v.ready && all && v.width > 0 {

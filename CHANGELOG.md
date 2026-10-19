@@ -13,9 +13,11 @@ User-facing updates for Onevra library consumers.
 - Add `components.TabsWith`.
 - Add `components.TabsWithLeading`.
 - Add `flow.CardOptions.Body` and `flow.CardOptions.Trailing`.
+- Change `chart.Bubble` to show its first pack without growing in.
 - Change `flow.View` edges to bend less, with rounded corners.
 - Localize component and Shell labels in Traditional Chinese, Japanese and Korean.
 - Fix `components.Breadcrumbs` layout shifting as items become current.
+- Fix `flow.View` animating its layout as it appears.
 
 ## [0.2026.12] - 2026-10-18
 

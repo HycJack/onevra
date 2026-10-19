@@ -22,6 +22,9 @@ const (
 	zoomStep         = 1.25
 	fitPadding       = 32
 	cameraResponse   = 90 * time.Millisecond
+	// relayoutMotion is how long after a change of topology or spacing
+	// new node sizes still move nodes rather than placing them.
+	relayoutMotion   = 600 * time.Millisecond
 	maxFrameStep     = 48 * time.Millisecond
 	positionEpsilon  = .05
 	zoomEpsilon      = .0005
@@ -52,6 +55,11 @@ type view struct {
 	gaps        spacing
 	layoutKey   uint64
 	result      layoutResult
+	// structureKey hashes the topology and spacing, which last changed at
+	// structureAt; snap repositions this frame's layout at once.
+	structureKey uint64
+	structureAt  time.Time
+	snap         bool
 
 	reduceMotion bool
 	selected     string
