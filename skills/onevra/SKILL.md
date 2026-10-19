@@ -84,7 +84,7 @@ Use Onevra's control whenever one exists; it replaces MyGo's styled widget of th
 | Flow diagram with automatic layout | `components/flow`: `View` and `Card`; see the [usage example](../../source/components/flow/example_test.go) |
 | Pan and zoom on a custom canvas | `components/gesture`: `Navigation.Handle` for wheel and pinch zoom and touchpad panning, or `Classify` inside an existing `HandleInput` |
 | Settings surface | `components.Settings` |
-| Conversation transcript and composer | `components/chat`: `Turn`, `FloatingConversation`, `GlassComposer`; fill composer slots with `Chip`, `Picker`, `SwitchChip`, `Attachment` (also for images in mixed rows), `ContextMeter` and `QuotaSummary`; stream replies with MyGo's `markdown.Stream` |
+| Conversation transcript and composer | `components/chat`: `Turn`, `FloatingConversation`, `GlassComposer`; fill composer slots with `Chip`, `Picker`, `SwitchChip`, `EffortPicker`, `Attachment` (also for images in mixed rows), `ContextMeter` and `QuotaSummary`; stream replies with MyGo's `markdown.Stream` |
 
 Let a scroll view reach the edges of the surface it scrolls within and balance the visuals with content padding instead of an outer margin: an inset view clips scrollbars, scroll gestures and edge hit targets before they reach the edge. `ScrollbarInsets` moves the track independently of content padding.
 

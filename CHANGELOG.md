@@ -5,6 +5,7 @@ User-facing updates for Onevra library consumers.
 ## [Unreleased]
 
 - Breaking: Make `components.Breadcrumbs` fill its parent's width.
+- Add `chat.EffortPicker` and `chat.EffortState`.
 - Add `components.HoneycombItem.Menu`.
 - Add `components.IconButtonCompact`.
 - Add `components.IconButtonToolbarExpanding`.

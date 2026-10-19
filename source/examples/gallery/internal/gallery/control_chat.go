@@ -52,19 +52,20 @@ type chatDemoTurn struct {
 }
 
 type chatDemoState struct {
-	conversation                            chat.ConversationState
-	layout                                  chat.FloatingConversationState
-	turns                                   []*chatDemoTurn
-	next                                    int
-	draft                                   string
-	files                                   []chatDemoFile
-	model, effort, branch                   string
-	worktree                                bool
-	modelPicker, effortPicker, branchPicker chat.PickerState
-	meter, quota                            chat.MeterState
-	quotaNext, quotaRefreshed               time.Time
-	thumbnail                               *ui.Bitmap
-	markdown                                markdown.Options
+	conversation              chat.ConversationState
+	layout                    chat.FloatingConversationState
+	turns                     []*chatDemoTurn
+	next                      int
+	draft                     string
+	files                     []chatDemoFile
+	model, effort, branch     string
+	worktree                  bool
+	modelPicker, branchPicker chat.PickerState
+	effortPicker              chat.EffortState
+	meter, quota              chat.MeterState
+	quotaNext, quotaRefreshed time.Time
+	thumbnail                 *ui.Bitmap
+	markdown                  markdown.Options
 }
 
 func newChatDemoState(now time.Time) *chatDemoState {

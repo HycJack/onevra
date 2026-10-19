@@ -2,7 +2,9 @@ package chat
 
 import (
 	"fmt"
+	"math"
 	"testing"
+	"time"
 
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/icons/lucide"
@@ -127,5 +129,79 @@ func TestQuotaSummaryPanel(t *testing.T) {
 	tt.Frame()
 	if !tt.HasText("$12.40") {
 		t.Fatal("balance summary should show its value")
+	}
+}
+
+func TestEffortPickerChoosesZones(t *testing.T) {
+	levels := []Option{{ID: "low", Label: "Low"}, {ID: "medium", Label: "Medium"}, {ID: "high", Label: "High"}, {ID: "max", Label: "Max"}}
+	var state EffortState
+	selected := "low"
+	tt := ui.NewTester(func(c *ui.Context) {
+		ui.Column(c).Padding(10).Children(func() {
+			if r := EffortPicker(c, &state, EffortPickerOptions{Label: "Effort", Tooltip: "Effort tip", Levels: levels, Selected: selected, Width: 228}); r.Chosen != "" {
+				selected = r.Chosen
+			}
+		})
+	}, 400, 300)
+	tt.SetPreferences(ui.Preferences{ReduceMotion: true})
+	if tt.HasText("Low") {
+		t.Fatal("panel shown before opening")
+	}
+	if err := tt.Click("Effort"); err != nil || !state.Open || !tt.HasText("Low") {
+		t.Fatalf("open: %v open=%v", err, state.Open)
+	}
+	// The bar fills the panel's 200 DIP content width below the heading,
+	// which ends with the selected level.
+	value, _ := tt.Find("Low")
+	left, top := value.X+value.W-200, value.Y+value.H+10+6
+	for i, k := range []int{2, 3, 0, 1} {
+		// Alternate between the bar and the name beneath it.
+		x, y := left+min(max(float32(k)*200/3, 4), 196), top
+		if i%2 == 1 {
+			y += 9 + 8 + 8
+		}
+		tt.ClickAt(x, y)
+		if selected != levels[k].ID || !state.Open {
+			t.Fatalf("zone %d chose %q open=%v", k, selected, state.Open)
+		}
+	}
+	tt.Key(0, ui.KeyEnd)
+	tt.Key(0, ui.KeyLeft)
+	if selected != "high" {
+		t.Fatalf("keys chose %q", selected)
+	}
+}
+
+func TestEffortStrengthWithOff(t *testing.T) {
+	for _, c := range []struct {
+		selected, n int
+		off         bool
+		want        float32
+	}{{0, 5, true, 0}, {1, 5, true, 0}, {3, 5, true, 2. / 3}, {4, 5, true, 1}, {0, 4, false, 0}, {2, 4, false, 2. / 3}, {0, 1, false, 1}} {
+		if got := effortStrength(c.selected, c.n, c.off); math.Abs(float64(got-c.want)) > 1e-6 {
+			t.Errorf("effortStrength(%d, %d, %v) = %v, want %v", c.selected, c.n, c.off, got, c.want)
+		}
+	}
+	// Leaving Off grows the fill from the bar's start.
+	if got := effortEnd([]float32{0, .3, 1}, .5); got != .15 {
+		t.Errorf("fill between Off and the first level = %v", got)
+	}
+}
+
+func TestEffortTimeAdvancesOncePerFrame(t *testing.T) {
+	var clock effortTime
+	start := time.Unix(100, 0)
+	clock.advance(start, 1)
+	now := start.Add(20 * time.Millisecond)
+	if got := clock.advance(now, 2); math.Abs(got-.04) > 1e-9 {
+		t.Fatalf("paced advance = %v", got)
+	}
+	// Another painter in the same frame, or a stale time, adds nothing.
+	if got := clock.advance(now, 2); math.Abs(got-.04) > 1e-9 {
+		t.Fatalf("repeated frame = %v", got)
+	}
+	// A long pause counts as one short step, so nothing leaps.
+	if got := clock.advance(now.Add(time.Minute), 1); math.Abs(got-.09) > 1e-9 {
+		t.Fatalf("after a pause = %v", got)
 	}
 }

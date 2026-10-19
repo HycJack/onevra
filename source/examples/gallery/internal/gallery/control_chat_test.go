@@ -52,8 +52,13 @@ func TestChatComposerControls(t *testing.T) {
 		t.Fatal("model groups or context sizes missing")
 	}
 	click("Deep demo")
-	click("Medium")
-	click("High")
+	click("Reasoning effort")
+	if !tt.HasText("Reasoning effort") {
+		t.Fatal("effort panel missing")
+	}
+	for _, key := range []ui.Key{ui.KeyHome, ui.KeyRight, ui.KeyRight, ui.KeyRight, ui.KeyEscape} {
+		tt.Key(0, key)
+	}
 	click("main")
 	click("feature/chat-ui")
 	click("Worktree")

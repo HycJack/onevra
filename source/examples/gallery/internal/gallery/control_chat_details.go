@@ -46,7 +46,7 @@ func chatDemoModelFor(id string) chatDemoModel {
 	return chatDemoModels[0]
 }
 
-// chatDemoAccessory holds the model and reasoning pickers inside the card.
+// chatDemoAccessory holds the model and reasoning effort pickers inside the card.
 func chatDemoAccessory(c *ui.Context, s *chatDemoState) {
 	model := chatDemoModelFor(s.model)
 	models := make([]chat.Option, len(chatDemoModels))
@@ -57,14 +57,17 @@ func chatDemoAccessory(c *ui.Context, s *chatDemoState) {
 		SearchLabel: tr(c, "chatSearchModels"), EmptyText: tr(c, "chatNoResults"), Searchable: 2, Width: 280}); r.Chosen != "" {
 		s.model = r.Chosen
 	}
-	efforts := []chat.Option{{ID: "low", Label: tr(c, "chatEffortLow")}, {ID: "medium", Label: tr(c, "chatEffortMedium")}, {ID: "high", Label: tr(c, "chatEffortHigh")}}
+	efforts := []chat.Option{{ID: "off", Label: tr(c, "chatEffortOff")}, {ID: "low", Label: tr(c, "chatEffortLow")},
+		{ID: "medium", Label: tr(c, "chatEffortMedium")}, {ID: "high", Label: tr(c, "chatEffortHigh")}, {ID: "max", Label: tr(c, "chatEffortMax")}}
 	label := tr(c, "chatEffort")
+	tooltip := label
 	for _, o := range efforts {
 		if o.ID == s.effort {
-			label = o.Label
+			tooltip = label + " · " + o.Label
 		}
 	}
-	if r := chat.Picker(c, &s.effortPicker, chat.PickerOptions{Label: label, Icon: lucide.Brain, Options: efforts, Selected: s.effort, Width: 200}); r.Chosen != "" {
+	if r := chat.EffortPicker(c, &s.effortPicker, chat.EffortPickerOptions{Label: label, Tooltip: tooltip, Icon: lucide.Brain,
+		Levels: efforts, Selected: s.effort, Off: true}); r.Chosen != "" {
 		s.effort = r.Chosen
 	}
 }

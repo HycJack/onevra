@@ -4806,6 +4806,16 @@ func (msgs Messages) ChatProviderRemote() string {
 	return Catalog.Format(msgs.locale, "chatProviderRemote", nil)
 }
 
+// ChatEffortOff says "Off"
+// in the language the app shows.
+func ChatEffortOff() string { return In(i18n.Locale()).ChatEffortOff() }
+
+// ChatEffortOff says "Off"
+// in the language of msgs.
+func (msgs Messages) ChatEffortOff() string {
+	return Catalog.Format(msgs.locale, "chatEffortOff", nil)
+}
+
 // ChatEffortLow says "Low"
 // in the language the app shows.
 func ChatEffortLow() string { return In(i18n.Locale()).ChatEffortLow() }
@@ -4834,6 +4844,16 @@ func ChatEffortHigh() string { return In(i18n.Locale()).ChatEffortHigh() }
 // in the language of msgs.
 func (msgs Messages) ChatEffortHigh() string {
 	return Catalog.Format(msgs.locale, "chatEffortHigh", nil)
+}
+
+// ChatEffortMax says "Max"
+// in the language the app shows.
+func ChatEffortMax() string { return In(i18n.Locale()).ChatEffortMax() }
+
+// ChatEffortMax says "Max"
+// in the language of msgs.
+func (msgs Messages) ChatEffortMax() string {
+	return Catalog.Format(msgs.locale, "chatEffortMax", nil)
 }
 
 // ChatUsageLimits says "Usage limits"
