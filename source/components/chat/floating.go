@@ -78,20 +78,14 @@ func FloatingConversationWith(c *ui.Context, layout *FloatingConversationState, 
 		})
 		// Disclosures may cancel following while building the transcript.
 		viewport.TrackScroll(&state.Scroll)
-		// Messages blur behind the footer and the card's lower half. The
-		// blur stops short of the scroll bar's track, which the content
-		// padding keeps clear.
-		gutter := c.Theme().ScrollbarWidth
-		if gutter <= 0 {
-			gutter = 6
-		}
-		gutter += 6
+		// Messages blur behind the footer and the card's lower half, across
+		// the whole width so no unblurred strip shows at the right edge.
 		card := layout.cardHeight
 		if card <= 0 {
 			card = restingCardHeight
 		}
 		edge := 8 + layout.footerHeight + card/2 - edgeBlurFade
-		components.ScrollEdge(c, components.ScrollEdgeOptions{Style: components.ScrollEdgeBlur, Bottom: true, Extent: edge}).Key("bottom-edge").Right(gutter)
+		components.ScrollEdge(c, components.ScrollEdgeOptions{Style: components.ScrollEdgeBlur, Bottom: true, Extent: edge}).Key("bottom-edge")
 		if !follow {
 			b := components.Button(c, "", components.ButtonGhost).Label(jumpLabel).Absolute().Attach(ui.AnchorBottom, ui.AnchorBottom).
 				Bottom(height+12).Size(32, 32).Padding(0).Radius(16)

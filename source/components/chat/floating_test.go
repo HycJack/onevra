@@ -143,17 +143,23 @@ func TestFloatingConversationBlursBottomEdge(t *testing.T) {
 		s := float32(img.Bounds().Dx()) / 900
 		// The widest spread of a row's channel beside the card: crisp stripes
 		// span black to white, blurred ones stay near gray.
-		spread := func(y float32) int {
+		spread := func(y float32, from, to int) int {
 			lo, hi := 255, 0
-			for x := 20; x < 40; x++ {
+			for x := from; x < to; x++ {
 				v := int(img.RGBAAt(int(float32(x)*s), int(y*s)).R)
 				lo, hi = min(lo, v), max(hi, v)
 			}
 			return hi - lo
 		}
-		top, above, footer := spread(2), spread(middle-2), spread(card.Y+card.H+14)
+		top, above, footer := spread(2, 20, 40), spread(middle-2, 20, 40), spread(card.Y+card.H+14, 20, 40)
 		if top < 200 || above < 200 || footer > 128 {
 			t.Fatalf("incorrect blur for card %+v: top=%d above middle=%d footer=%d", card, top, above, footer)
+		}
+		// The blur spans the whole width, leaving no crisp strip at the
+		// right edge.
+		topRight, aboveRight, footerRight := spread(2, 865, 895), spread(middle-2, 865, 895), spread(card.Y+card.H+14, 865, 895)
+		if topRight < 200 || aboveRight < 200 || footerRight > 128 {
+			t.Fatalf("blur gap at the right edge for card %+v: top=%d above middle=%d footer=%d", card, topRight, aboveRight, footerRight)
 		}
 	}
 }
