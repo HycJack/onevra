@@ -21,6 +21,7 @@ var newPages = map[string]bool{
 }
 
 var updatedPages = map[string]bool{
+	"controls/Avatars":      true,
 	"controls/Breadcrumbs":  true,
 	"controls/Button":       true,
 	"controls/Chat":         true,
@@ -29,7 +30,9 @@ var updatedPages = map[string]bool{
 	"controls/Honeycomb":    true,
 	"controls/Sidebar":      true,
 	"controls/Tabs":         true,
+	"controls/Toast":        true,
 	"controls/Treemap":      true,
+	"mygo/Glass":            true,
 }
 
 type navigationEntry struct {

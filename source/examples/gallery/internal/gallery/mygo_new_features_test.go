@@ -232,6 +232,17 @@ func TestUpdatedComponentsGroup(t *testing.T) {
 		}
 		want[pageFromKey(key)] = true
 	}
+	mygoGroups := mygoNavigationGroups()
+	// The MyGo list has an Updated components group only while MyGo pages
+	// are updated, directly after its New components group.
+	if len(updatedNavigationEntries(true)) > 0 {
+		if len(mygoGroups) < 2 || mygoGroups[1].label != updatedGroupLabel {
+			t.Fatalf("MyGo list must follow its New components group with Updated: %v", mygoGroups)
+		}
+	} else {
+		mygoGroups = append([]navigationGroup{{}, {}}, mygoGroups...)
+	}
+	mygoUpdated := mygoGroups[1].entries
 	for _, entry := range groups[2].entries {
 		if isMyGoPage(entry.page) {
 			t.Fatalf("MyGo page %s is listed outside the MyGo entry", entry.label)
@@ -241,15 +252,18 @@ func TestUpdatedComponentsGroup(t *testing.T) {
 		}
 		delete(want, entry.page)
 	}
+	for _, entry := range mygoUpdated {
+		if !want[entry.page] {
+			t.Fatalf("unexpected MyGo Updated components entry: %s", entry.label)
+		}
+		delete(want, entry.page)
+	}
 	if len(want) != 0 {
 		t.Fatalf("missing Updated components entries: %v", want)
 	}
 	// Updated pages leave their purpose group, as new pages do. MyGo pages
 	// belong to the MyGo entry's own Updated group, when it has any.
-	for _, group := range append(groups[3:], mygoNavigationGroups()...) {
-		if group.label == updatedGroupLabel {
-			continue
-		}
+	for _, group := range append(groups[3:], mygoGroups[2:]...) {
 		for _, entry := range group.entries {
 			if updatedPages[pageKey(entry.page)] {
 				t.Fatalf("%s repeats in %s", entry.label, group.label)
