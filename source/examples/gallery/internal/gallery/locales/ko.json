@@ -952,6 +952,8 @@
   "avatarOverflow": "넘침 표시",
   "avatarChangingMembers": "구성원 변경",
   "avatarEditors": "편집자",
+  "avatarReversed": "반전",
+  "avatarSpacing": "간격",
   "addMember": "구성원 추가",
   "removeMember": "구성원 제거",
   "componentCarousel": "캐러셀",

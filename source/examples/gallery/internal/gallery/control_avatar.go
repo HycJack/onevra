@@ -50,6 +50,21 @@ func controlAvatarGroup(c *ui.Context, s *controlState, variant string) {
 				components.AvatarGroup(c, members(len(avatarPeople)), components.AvatarGroupOptions{Max: 3, Size: size, Label: tr(c, "avatarEditors")})
 			}
 		})
+	case "Spacing":
+		ui.Column(c).Gap(12).Children(func() {
+			for _, overlap := range []float32{24, 0, -8} {
+				components.AvatarGroup(c, members(3), components.AvatarGroupOptions{Size: 48, Overlap: overlap, Label: tr(c, "avatarEditors")})
+			}
+		})
+	case "Reversed":
+		ui.Column(c).Gap(12).Children(func() {
+			components.AvatarGroup(c, members(len(avatarPeople)), components.AvatarGroupOptions{
+				Max: 5, Size: 48, Reverse: true, Label: tr(c, "avatarEditors"),
+			})
+			components.AvatarGroup(c, members(3), components.AvatarGroupOptions{
+				Size: 48, Overlap: -8, Reverse: true, Label: tr(c, "avatarEditors"),
+			})
+		})
 	case "Changing members":
 		// index counts the members shown, starting from the first visit.
 		if s.index == 0 {

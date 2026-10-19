@@ -9614,6 +9614,26 @@ func (msgs Messages) AvatarEditors() string {
 	return Catalog.Format(msgs.locale, "avatarEditors", nil)
 }
 
+// AvatarReversed says "Reversed"
+// in the language the app shows.
+func AvatarReversed() string { return In(i18n.Locale()).AvatarReversed() }
+
+// AvatarReversed says "Reversed"
+// in the language of msgs.
+func (msgs Messages) AvatarReversed() string {
+	return Catalog.Format(msgs.locale, "avatarReversed", nil)
+}
+
+// AvatarSpacing says "Spacing"
+// in the language the app shows.
+func AvatarSpacing() string { return In(i18n.Locale()).AvatarSpacing() }
+
+// AvatarSpacing says "Spacing"
+// in the language of msgs.
+func (msgs Messages) AvatarSpacing() string {
+	return Catalog.Format(msgs.locale, "avatarSpacing", nil)
+}
+
 // AddMember says "Add member"
 // in the language the app shows.
 func AddMember() string { return In(i18n.Locale()).AddMember() }

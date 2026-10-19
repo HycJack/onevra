@@ -87,7 +87,7 @@ var controlSections = map[string][]controlExample{
 	},
 	"Avatars": {
 		{"Avatar", "Avatar", "Content display", []string{"Initials", "Photo", "Status"}, controlAvatar},
-		{"AvatarGroup", "AvatarGroup", "Content display", []string{"Default", "Overflow", "Changing members"}, controlAvatarGroup},
+		{"AvatarGroup", "AvatarGroup", "Content display", []string{"Default", "Overflow", "Spacing", "Reversed", "Changing members"}, controlAvatarGroup},
 	},
 	"Split panes": {
 		{"Split", "Split", "Layout & containers", []string{"Horizontal", "Vertical"}, controlSplit},

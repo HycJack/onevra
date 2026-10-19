@@ -34,16 +34,18 @@ type AvatarOptions struct {
 }
 
 // Avatar creates a circular identity marker for a person or account named
-// name: a photo, or up to two initials on a muted surface. Applications own
+// name: a photo, or up to two initials on a muted surface. It draws no
+// outline, so it sits on any surface without a seam. Applications own
 // loading, decoding and caching photos. Assistive technology sees an image
 // named name and its status. Key a parent for identity.
 func Avatar(c *ui.Context, name string, options AvatarOptions) ui.Element {
-	return avatar(c, name, options, 1, c.Theme().Border)
+	return avatar(c, name, options, 0)
 }
 
-// avatar builds an Avatar inside a border of width w, which the photo
-// leaves uncovered.
-func avatar(c *ui.Context, name string, options AvatarOptions, w float32, border ui.Color) ui.Element {
+// avatar builds an Avatar with a separator of width w in the surface color,
+// which the photo leaves uncovered, so overlapping avatars in a group cut
+// into the ones beneath them.
+func avatar(c *ui.Context, name string, options AvatarOptions, w float32) ui.Element {
 	t := c.Theme()
 	d := avatarDiameter(c, options.Size)
 	label := name
@@ -54,7 +56,7 @@ func avatar(c *ui.Context, name string, options AvatarOptions, w float32, border
 		label = l10n.In(c.Locale()).Label("avatarOffline", name)
 	}
 	e := ui.Box(c).Size(d, d).Shrink(0).Center().Radius(d/2).
-		Background(t.SurfaceHover).TextColor(t.Text).Border(w, border).
+		Background(t.SurfaceHover).TextColor(t.Text).Border(w, t.Surface).
 		Role(ui.RoleImage).Label(label)
 	e.Children(func() {
 		if !imageMissing(options.Image) {
@@ -85,7 +87,7 @@ func avatarStatusDot(c *ui.Context, d float32, status AvatarStatus) {
 		color = t.TextMuted
 	}
 	ui.Box(c).Key(status).Absolute().Right(inset).Bottom(inset).Size(size, size).Radius(size/2).
-		Background(color).Border(ring, t.Surface).Shadow(0, 0, 0, 1, t.Border.Alpha(.7)).
+		Background(color).Border(ring, t.Surface).
 		Transition(ui.ElementTransition{
 			Animation: &ui.Snappy,
 			Enter:     &ui.Motion{Scale: .6},

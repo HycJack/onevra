@@ -952,6 +952,8 @@
   "avatarOverflow": "折叠溢出",
   "avatarChangingMembers": "成员变化",
   "avatarEditors": "编辑者",
+  "avatarReversed": "反转",
+  "avatarSpacing": "间距",
   "addMember": "添加成员",
   "removeMember": "移除成员",
   "componentCarousel": "轮播",

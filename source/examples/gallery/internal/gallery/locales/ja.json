@@ -952,6 +952,8 @@
   "avatarOverflow": "あふれ表示",
   "avatarChangingMembers": "メンバーの増減",
   "avatarEditors": "編集者",
+  "avatarReversed": "反転",
+  "avatarSpacing": "間隔",
   "addMember": "メンバーを追加",
   "removeMember": "メンバーを削除",
   "componentCarousel": "カルーセル",

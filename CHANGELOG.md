@@ -9,6 +9,7 @@ User-facing updates for Onevra library consumers.
 - Breaking: Show `treemap.Options.Tip` inside a tooltip like charts' instead of as the whole bubble.
 - Breaking: Stack `components.Toasts` at the top center by default.
 - Add `chat.EffortPicker` and `chat.EffortState`.
+- Add `components.AvatarGroupOptions.Overlap` and `components.AvatarGroupOptions.Reverse`.
 - Add `components.HoneycombItem.Menu` and `components.HoneycombOptions.Curvature`.
 - Add `components.IconButtonCompact`.
 - Add `components.IconButtonToolbarExpanding`.
@@ -21,6 +22,8 @@ User-facing updates for Onevra library consumers.
 - Add `flow.CardOptions.Body` and `flow.CardOptions.Trailing`.
 - Add `treemap.Options.Menu`.
 - Add `treemap.Style` with `treemap.Node.Style` and `treemap.Node.HoverStyle`.
+- Change `components.Avatar` to drop its outline.
+- Change `components.AvatarGroup` to turn the hovered member's separator into the accent.
 - Change `components.Breadcrumbs` to collapse overflowing ancestors into an ellipsis menu.
 - Change `chart.Bubble` to show its first pack without growing in.
 - Change `chat.FloatingConversation` to blur the transcript progressively behind the lower half of the composer.

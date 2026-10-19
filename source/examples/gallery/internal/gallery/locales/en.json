@@ -1360,6 +1360,8 @@
   "avatarOverflow": "Overflow",
   "avatarChangingMembers": "Changing members",
   "avatarEditors": "Editors",
+  "avatarReversed": "Reversed",
+  "avatarSpacing": "Spacing",
   "addMember": "Add member",
   "removeMember": "Remove member",
   "componentCarousel": "Carousel",
