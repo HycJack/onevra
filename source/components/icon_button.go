@@ -14,7 +14,14 @@ const (
 	// IconButtonCompact is IconButtonPlain at a smaller square, for dense
 	// rows such as a SidebarSectionWithActions heading.
 	IconButtonCompact
+	// IconButtonToolbarExpanding is IconButtonToolbar that widens to show its
+	// label after the icon while hovered or keyboard-focused.
+	IconButtonToolbarExpanding
 )
+
+// iconButtonExpand is how an IconButtonToolbarExpanding button widens and
+// narrows around its label.
+var iconButtonExpand = ui.ElementTransition{Animation: &ui.Snappy, Size: true}
 
 // IconButton creates an icon-only button with an accessible label and a
 // tooltip. It uses one theme-scaled square size. Applications own the label and
@@ -24,6 +31,9 @@ const (
 // IconButtonPlain keeps a transparent face and tints it on hover and press.
 // IconButtonToolbar keeps the raised, shadowed face of ButtonToolbar, matching
 // TabsSegmented's chosen segment. IconButtonCompact shrinks the plain face.
+// IconButtonToolbarExpanding rests as the IconButtonToolbar square and, while
+// hovered or keyboard-focused, springs wider to reveal the label beside the
+// icon instead of showing a tooltip; neighbors in the same row move aside.
 func IconButton(c *ui.Context, icon *ui.SVG, label string, style IconButtonStyle) ui.Element {
 	t := c.Theme()
 	size, glyph := max(32, t.Rem(2)), t.Rem(1.25)
@@ -35,6 +45,24 @@ func IconButton(c *ui.Context, icon *ui.SVG, label string, style IconButtonStyle
 	case IconButtonToolbar:
 		b = Button(c, "", ButtonToolbar).Label(label).Size(size, size).Padding(0)
 		b.Children(func() { Icon(c, icon).Size(t.Rem(1.125), t.Rem(1.125)) })
+	case IconButtonToolbarExpanding:
+		glyph = t.Rem(1.125)
+		// The inset centers the icon in the resting square, within the border.
+		b = Button(c, "", ButtonToolbar).Label(label).Height(size).MinWidth(size).
+			Padding(0, (size-glyph)/2-1).Justify(ui.Start).Clip().Transition(iconButtonExpand)
+		expanded := b.Hovered() || b.FocusVisible()
+		b.Children(func() {
+			Icon(c, icon).Size(glyph, glyph).Shrink(0)
+			if expanded {
+				// The gap and trailing room collapse with the label, which keeps
+				// its natural width while the face clips it.
+				ui.Row(c).PaddingStart(t.Space(1.5)).PaddingEnd(t.Space(1)).Shrink(0).
+					Transition(ui.ElementTransition{Animation: &ui.Snappy,
+						Enter: &ui.Motion{Collapse: true}, Exit: &ui.Motion{Collapse: true}}).
+					Children(func() { Text(c, label).SingleLine().Unselectable().Shrink(0) })
+			}
+		})
+		return b
 	default:
 		b = ui.ButtonBase(c).Size(size, size).Radius(t.Radius).TextColor(t.TextMuted).Label(label)
 		// Resolve the face in the build pass's paint, after the caller applies

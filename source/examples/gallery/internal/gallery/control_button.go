@@ -113,6 +113,12 @@ func controlToolbarButton(c *ui.Context, s *controlState) {
 					s.button.count(action.key)
 				}
 			}
+			// Rests as an icon and reveals its label on hover or keyboard focus.
+			ui.Box(c).Key("download").Children(func() {
+				if components.IconButton(c, lucide.Download(), tr(c, "download"), components.IconButtonToolbarExpanding).Clicked() {
+					s.button.count("download")
+				}
+			})
 		})
 		ui.Column(c).Width(240).MaxWidthPercent(100).Gap(12).Children(func() {
 			components.Text(c, tr(c, "shellToolbar")).TextColor(t.TextMuted)
