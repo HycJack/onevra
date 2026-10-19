@@ -2,6 +2,7 @@ package treemap
 
 import (
 	"math"
+	"slices"
 	"strings"
 	"testing"
 	"time"
@@ -180,6 +181,70 @@ func TestKeyboard(t *testing.T) {
 	}
 }
 
+func TestTooltip(t *testing.T) {
+	state, data := State{}, sample
+	tt, at := tester(&state, &data, Options{Label: "Usage", HideHeader: true}, 1)
+	x, y := at("local")
+	tt.Move(x, y)
+	r, ok := tt.Find("local")
+	if !ok || r.X < x || !tt.HasText("900 · 24%") {
+		t.Fatalf("tooltip is not beside the pointer: %+v %q", r, tt.Texts())
+	}
+	tt.Move(x, 900)
+	if tt.HasText("900 · 24%") {
+		t.Fatal("tooltip stayed after the pointer left")
+	}
+	tt.Key(0, ui.KeyTab)
+	tt.Key(0, ui.KeyEnd)
+	if !tt.HasText("900 · 24%") {
+		t.Fatal("keyboard choice has no tooltip")
+	}
+	tt.Key(0, ui.KeyEscape)
+	if tt.HasText("900 · 24%") {
+		t.Fatal("tooltip stayed without an active tile")
+	}
+}
+
+func TestContextMenu(t *testing.T) {
+	state, data := State{}, sample
+	var chosen []string
+	opts := Options{Label: "Usage", HideHeader: true, Menu: func(id string) func(m *ui.Menu) {
+		if id == "local" {
+			return nil
+		}
+		return func(m *ui.Menu) {
+			if m.Item("Reveal " + id).Chosen() {
+				chosen = append(chosen, id)
+			}
+		}
+	}}
+	tt, at := tester(&state, &data, opts, 1)
+	x, y := at("work/app/target")
+	tt.RightClickAt(x, y)
+	if menu := tt.Menu(); len(menu) != 1 || menu[0] != "Reveal work/app/target" {
+		t.Fatalf("right-click opened %q", menu)
+	}
+	tt.Move(x+400, y)
+	if err := tt.ChooseMenuItem("Reveal work/app/target"); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if len(chosen) != 1 || chosen[0] != "work/app/target" || state.Root != "" || state.Active != "" {
+		t.Fatalf("chose %v, root %q, active %q", chosen, state.Root, state.Active)
+	}
+	x, y = at("local")
+	tt.RightClickAt(x, y)
+	if menu := tt.Menu(); menu != nil {
+		t.Fatalf("a node without a menu opened %q", menu)
+	}
+	tt.Key(0, ui.KeyTab)
+	tt.Key(0, ui.KeyHome)
+	tt.Key(ui.Shift, ui.KeyF10)
+	if menu := tt.Menu(); len(menu) != 1 || menu[0] != "Reveal work" {
+		t.Fatalf("the menu key opened %q", menu)
+	}
+}
+
 func TestBreadcrumbs(t *testing.T) {
 	state, data := State{Root: "work/app"}, sample
 	tt, _ := tester(&state, &data, Options{Label: "Usage"}, 1)
@@ -202,13 +267,35 @@ func TestTransitions(t *testing.T) {
 	x, y := at("work")
 	tt.ClickAt(x, y)
 	tt.Frame()
-	if !state.zooming || !state.zoomIn || len(state.old) == 0 {
+	if !state.zooming || !state.zoomIn || state.zoomRoot != "work" {
 		t.Fatal("drilling did not zoom")
 	}
-	for _, tl := range state.old {
-		if strings.HasPrefix(tl.id, "work") {
-			t.Fatalf("the zoom's old picture keeps the drilled tile %q", tl.id)
+	// The branch grows from its tile to the whole view, carrying its old
+	// contents as the new level fades in; corners follow each tile's size.
+	frame := func(e float32, id string, old bool) zoomed {
+		for _, z := range state.zoomFrame(e) {
+			if z.tl.id == id && slices.ContainsFunc(state.old, func(tl tile) bool { return tl == z.tl }) == old {
+				return z
+			}
 		}
+		t.Fatalf("no zoomed tile %q", id)
+		return zoomed{}
+	}
+	branch := state.old[slices.IndexFunc(state.old, func(tl tile) bool { return tl.id == "work" })].rect
+	if z := frame(0, "work", true); !near(z.b, branch) || z.opacity != 1 {
+		t.Fatalf("the branch starts at %+v, opacity %g", z.b, z.opacity)
+	}
+	if z := frame(1, "work", true); !near(z.b, ui.Rect{W: state.width, H: state.height}) || z.opacity != 0 {
+		t.Fatalf("the branch ends at %+v, opacity %g", z.b, z.opacity)
+	}
+	if z := frame(0, "local", true); z.opacity != 1 {
+		t.Fatal("a tile beside the branch fades instead of flying out")
+	}
+	if z := frame(0, "work/kit", false); z.opacity != 0 || z.b.X < branch.X-.5 || z.b.X+z.b.W > branch.X+branch.W+.5 {
+		t.Fatalf("the new level does not open inside the branch: %+v, opacity %g", z.b, z.opacity)
+	}
+	if z := frame(.5, "work/kit", false); z.radius <= 0 || z.radius > min(z.b.W, z.b.H)/3 {
+		t.Fatalf("corners do not follow the tile's size: radius %g for %+v", z.radius, z.b)
 	}
 	tt.Advance(100 * time.Millisecond)
 	if state.zooming || tt.FramePending() {
@@ -218,6 +305,9 @@ func TestTransitions(t *testing.T) {
 	tt.Key(0, ui.KeyEscape)
 	if !state.zooming || state.zoomIn {
 		t.Fatal("going up did not zoom out")
+	}
+	if z := frame(0, "work", false); !near(z.b, ui.Rect{W: state.width, H: state.height}) || z.opacity != 0 {
+		t.Fatalf("zooming out does not shrink the branch from the whole view: %+v, opacity %g", z.b, z.opacity)
 	}
 	tt.Advance(100 * time.Millisecond)
 	data = []Node{sample[0], sample[1], {ID: "local", Label: "local", Value: 2000}}

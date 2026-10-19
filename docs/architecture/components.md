@@ -42,7 +42,7 @@ These views target bounded categorical datasets, with work proportional to the d
 
 ### Treemaps
 
-The [treemap component](../../source/components/treemap/treemap.go) paints squarified, nested tiles on one canvas. Applications own the tree, labels, formatting, shading measure and opening leaves; state keeps the drilled branch. Clicks drill a level and built-in breadcrumbs lead back; one affine zoom carries both levels, and data changes morph tiles. Only the active tile is exposed.
+The [treemap component](../../source/components/treemap/treemap.go) paints squarified, nested tiles on one canvas. Applications own the tree, labels, formatting, shading measure and opening leaves; state keeps the drilled branch. Clicks drill a level and built-in breadcrumbs lead back; drilling lays both levels out at their own size in one frame, and data changes morph tiles. Nodes style themselves and their hover, and the pointer or keyboard raises tooltips and a per-node menu.
 
 ### Relationship graphs
 

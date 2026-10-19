@@ -35,8 +35,17 @@ func treemapSample(c *ui.Context, updated bool) []treemap.Node {
 	file := func(path string, mb, days float64) treemap.Node {
 		return treemap.Node{ID: path, Label: path[strings.LastIndex(path, "/")+1:], Value: mb, Measure: days}
 	}
+	// Reclaimable files stand out with a dashed outline over a flat fill.
 	stale := func(n treemap.Node) treemap.Node {
 		n.Caption, n.Color = reclaimable, clutter
+		n.Style = treemap.Style{Background: clutter.Alpha(.16), Border: clutter, BorderWidth: 1.5, BorderStyle: ui.BorderDashed}
+		n.HoverStyle = treemap.Style{Background: clutter.Alpha(.3), BorderWidth: 2}
+		return n
+	}
+	// A dashed outline marks a whole top-level folder as one to review.
+	outlined := func(n treemap.Node) treemap.Node {
+		n.Style = treemap.Style{Border: c.Theme().TextMuted.Alpha(.7), BorderWidth: 1.5, BorderStyle: ui.BorderDashed}
+		n.HoverStyle = treemap.Style{Border: c.Theme().Text, BorderWidth: 2}
 		return n
 	}
 	folder := func(path string, children ...treemap.Node) treemap.Node {
@@ -55,10 +64,10 @@ func treemapSample(c *ui.Context, updated bool) []treemap.Node {
 			folder("Pictures/2025", file("Pictures/2025/Summer", 860, 90), file("Pictures/2025/Winter", 540, 280)),
 			folder("Pictures/2026", file("Pictures/2026/Spring", 720, 12), file("Pictures/2026/Trip", trips, 1)),
 			file("Pictures/Wallpapers", 180, 45)),
-		folder("Downloads",
+		outlined(folder("Downloads",
 			stale(file("Downloads/Installers", installers, 160)),
 			file("Downloads/Archive.zip", 640, 120),
-			file("Downloads/Manual.pdf", 48, 60), file("Downloads/Slides.key", 96, 8)),
+			file("Downloads/Manual.pdf", 48, 60), file("Downloads/Slides.key", 96, 8))),
 		folder("Documents",
 			folder("Documents/Projects", file("Documents/Projects/Website", 420, 3), file("Documents/Projects/Garden", 160, 20),
 				file("Documents/Projects/Budget.xlsx", 12, 6)),
@@ -96,6 +105,21 @@ func controlTreemap(c *ui.Context, s *controlState, _ string) {
 		MeasureLabel:  tr(c, "treemapUnused"),
 		FormatMeasure: func(days float64) string { return m.TreemapDays(int(days + .5)) },
 		Open:          func(id string) { d.opened = id },
+		// A folder's menu can also drill into it, and a file's opens it.
+		Menu: func(id string) func(m *ui.Menu) {
+			path := treemap.Path(data, id)
+			if path == nil {
+				return nil
+			}
+			return func(m *ui.Menu) {
+				if m.Item(tr(c, "treemapOpen")).Chosen() {
+					d.opened = id
+				}
+				if len(path[len(path)-1].Children) > 0 && m.Item(tr(c, "treemapShowContents")).Chosen() {
+					d.view.Root, d.view.Active = id, ""
+				}
+			}
+		},
 	}).Grow(1).MinHeight(240)
 	status := tr(c, "treemapKeys")
 	if opened := treemap.Path(data, d.opened); opened != nil {

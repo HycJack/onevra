@@ -19,6 +19,7 @@ type tile struct {
 	rect, from         ui.Rect
 	amount, fromAmount float32
 	color              ui.Color
+	style, hover       Style
 	branch             bool
 	// label and value share the top row; big and caption stack below it in
 	// large leaves. Each is fitted to the tile, or empty where it has no room.
@@ -43,16 +44,24 @@ type view struct {
 	morphStart   time.Time
 	zooming      bool
 	zoomIn       bool
-	zoomRect     ui.Rect
-	zoomStart    time.Time
-	old          []tile
+	// zoomRoot is the branch drilled into or out of.
+	zoomRoot  string
+	zoomStart time.Time
+	old       []tile
 	// hoverID is the tile the pointer is on and hoverOut the one it left,
 	// whose highlights cross-fade from hoverStart.
 	hoverID, hoverOut string
 	hoverStart        time.Time
-	pressed           bool
-	pressX, pressY    float32
-	clicks            []click
+	// The tooltip follows the pointer, at tipX, tipY, while it moved since
+	// the keyboard last changed activeID, the active tile as last built.
+	tipPointer, tipOver bool
+	tipX, tipY          float32
+	activeID            string
+	// menuID is the node the context menu was last asked for.
+	menuID         string
+	pressed        bool
+	pressX, pressY float32
+	clicks         []click
 
 	sizes           map[*Node]float64
 	measures        map[*Node]float64
@@ -279,33 +288,24 @@ func (v *view) place(c *ui.Context, root string, shown level) {
 	v.root, v.placed, v.placedW, v.placedH = root, true, v.width, v.height
 }
 
-// startZoom drills from the previous layout. Zooming in grows the chosen
-// tile to fill the view as its siblings fly outward and its children open
-// inside it; zooming out shrinks the old level into its tile.
+// startZoom drills from the previous layout, into a branch tiled there or
+// out of the old root, tiled in the new layout.
 func (v *view) startZoom(root string, previous []tile, now time.Time) {
 	old := v.root
 	v.zooming, v.morphing, v.old = false, false, nil
 	if v.duration == 0 {
 		return
 	}
-	for i, p := range previous {
-		if root != "" && p.id == root {
-			end := i + 1
-			for end < len(previous) && previous[end].depth > p.depth {
-				end++
-			}
-			v.old = append(slices.Clone(previous[:i]), previous[end:]...)
-			v.zooming, v.zoomIn, v.zoomRect, v.zoomStart = true, true, p.rect, now
-			return
-		}
+	in := root != "" && slices.ContainsFunc(previous, func(p tile) bool { return p.id == root })
+	switch {
+	case in:
+		v.zoomRoot = root
+	case old != "" && v.index(old) >= 0:
+		v.zoomRoot = old
+	default:
+		return
 	}
-	for _, tl := range v.tiles {
-		if old != "" && tl.id == old {
-			v.old = previous
-			v.zooming, v.zoomIn, v.zoomRect, v.zoomStart = true, false, tl.rect, now
-			return
-		}
-	}
+	v.zooming, v.zoomIn, v.zoomStart, v.old = true, in, now, previous
 }
 
 // morph carries tiles from where they were shown to their new places and
@@ -394,7 +394,7 @@ func (v *view) layout(list []Node, extra float64, r ui.Rect, parent int, color u
 		if n.Color != (ui.Color{}) {
 			shade = n.Color
 		}
-		tl := tile{id: n.ID, parent: parent, depth: depth, rect: cell, color: shade, branch: v.branch(n)}
+		tl := tile{id: n.ID, parent: parent, depth: depth, rect: cell, color: shade, style: n.Style, hover: n.HoverStyle, branch: v.branch(n)}
 		tl.amount = min(m.tint+m.step*float32(depth), .45)
 		if v.measured && !tl.branch {
 			if mv := v.measure(n); finite(mv) && v.domain[1] > v.domain[0] {

@@ -29,6 +29,7 @@ var updatedPages = map[string]bool{
 	"controls/Honeycomb":    true,
 	"controls/Sidebar":      true,
 	"controls/Tabs":         true,
+	"controls/Treemap":      true,
 }
 
 type navigationEntry struct {

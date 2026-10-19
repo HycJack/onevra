@@ -25,11 +25,26 @@ import (
 // Options.MeasureLabel is set; branches report their leaves' size-weighted
 // mean. A nonzero Color tints the node and its descendants; other nodes
 // inherit their parent's, and top-level nodes take a palette color by order.
+//
+// Style overrides how the node's own tile paints, and HoverStyle how it
+// paints while the pointer is on it rather than on a descendant.
 type Node struct {
 	ID, Label, Caption string
 	Value, Measure     float64
 	Color              ui.Color
+	Style, HoverStyle  Style
 	Children           []Node
+}
+
+// Style overrides a tile's appearance; zero fields keep the tile's own.
+// Background replaces the tinted gradient with a flat fill. Border, BorderWidth
+// and BorderStyle replace the faint edge, such as with a dashed outline. A
+// HoverStyle's fields blend from the tile's as the pointer arrives, and a
+// border in it replaces the hover ring.
+type Style struct {
+	Background, Border ui.Color
+	BorderWidth        float32
+	BorderStyle        ui.BorderStyle
 }
 
 // State retains navigation between frames. Root is the branch drilled into,
@@ -66,9 +81,15 @@ type Detail struct {
 // to the largest and smallest; Enter or Space drills in, and Escape or
 // Backspace goes up a level. Opening a leaf calls Open on the UI thread.
 //
-// Tip builds the bubble that follows the pointer for the deepest hovered
-// node; nil shows its path, size, share and measure, and a Tip that builds
-// nothing hides it. Empty replaces the tiles when nothing has a positive size
+// Menu, when set, returns the builder of a node's context menu, or nil for a
+// node without one. The menu opens where the deepest tile is right-clicked,
+// without drilling or choosing it, and for the active tile from the menu key
+// or Shift+F10.
+//
+// As in charts, a tooltip follows the pointer for the deepest hovered node, or
+// sits beside the active tile the keyboard chose while the view has the
+// focus. Tip replaces its content, which by default shows the node's path,
+// size, share, measure and caption. Empty replaces the tiles when nothing has a positive size
 // (EmptyText, default "—", otherwise). AnimationDuration controls drilling and
 // data transitions: zero uses 400 ms, negative disables them, and Reduced
 // Motion always skips them.
@@ -81,6 +102,7 @@ type Options struct {
 	MeasureDomain                 [2]float64
 	FormatMeasure                 func(float64) string
 	Open                          func(id string)
+	Menu                          func(id string) func(m *ui.Menu)
 	Tip                           func(c *ui.Context, d Detail)
 	Empty                         func(*ui.Context)
 	AnimationDuration             time.Duration
@@ -142,6 +164,18 @@ func View(c *ui.Context, state *State, nodes []Node, opts Options) ui.Element {
 		canvas := ui.Box(c).Key("onevra.treemap.canvas").FillWidth().Grow(1).MinHeight(0).Clip().
 			Focusable().Label(opts.Label).Description(opts.Description)
 		canvas.HandleInput(v.input)
+		if opts.Menu != nil {
+			// The input handler chose the node as the menu was asked for; it
+			// stays the same when the menu builds again for the item chosen.
+			canvas.ContextMenu(func(m *ui.Menu) {
+				if v.menuID == "" {
+					return
+				}
+				if build := opts.Menu(v.menuID); build != nil {
+					build(m)
+				}
+			})
+		}
 		if v.keyboard(c, canvas, state, nodes, shown, opts) {
 			shown = v.resolve(state, nodes)
 		}
@@ -186,9 +220,33 @@ func View(c *ui.Context, state *State, nodes []Node, opts Options) ui.Element {
 			}
 			v.draw(p, r, t, active, focused)
 		})
-		if v.hovered >= 0 && !v.pressed {
-			if d, ok := v.detail(nodes, v.tiles[v.hovered].id); ok {
-				canvas.Children(func() { v.tip(c, d, x, y, opts) })
+		// As in charts, the tooltip follows the pointer while it moved last,
+		// and sits beside the active tile while the keyboard did.
+		if over && (!v.tipOver || x != v.tipX || y != v.tipY) {
+			v.tipPointer = true
+		} else if state.Active != v.activeID {
+			v.tipPointer = false
+		}
+		v.tipX, v.tipY, v.tipOver, v.activeID = x, y, over, state.Active
+		shownTip := -1
+		switch {
+		case v.tipPointer && v.hovered >= 0 && !v.pressed:
+			shownTip = v.hovered
+		case !v.tipPointer && active >= 0 && canvas.Focused() && !v.zooming:
+			shownTip = active
+		}
+		if shownTip >= 0 {
+			tl := v.tiles[shownTip]
+			if d, ok := v.detail(nodes, tl.id); ok {
+				canvas.Children(func() {
+					var anchor ui.Element
+					if v.tipPointer {
+						anchor = ui.Box(c).Absolute().Left(x).Top(y).Size(0, 0)
+					} else {
+						anchor = ui.Box(c).Absolute().Left(tl.rect.X).Top(tl.rect.Y).Size(tl.rect.W, tl.rect.H)
+					}
+					v.tip(c, anchor.PassThrough(), d, tl.color, opts)
+				})
 			}
 		}
 	})
@@ -251,40 +309,39 @@ func (v *view) header(c *ui.Context, state *State, shown level, opts Options) bo
 	return changed
 }
 
-// tip places the hover bubble beside the pointer, on the side with more room.
-func (v *view) tip(c *ui.Context, d Detail, x, y float32, opts Options) {
+// tip shows a node's detail in a tooltip beside anchor, styled as charts'.
+func (v *view) tip(c *ui.Context, anchor ui.Element, d Detail, color ui.Color, opts Options) {
 	t := c.Theme()
-	offset := t.Space(3)
-	box := ui.Box(c).Absolute()
-	if x > v.width/2 {
-		box.Right(v.width - x + offset)
-	} else {
-		box.Left(x + offset)
-	}
-	if y > v.height/2 {
-		box.Bottom(v.height - y + offset)
-	} else {
-		box.Top(y + offset)
-	}
-	box.Children(func() {
-		if opts.Tip != nil {
-			opts.Tip(c, d)
-			return
-		}
-		n := d.Path[len(d.Path)-1]
-		ui.Column(c).MaxWidth(t.Space(70)).Padding(t.Space(1.5), t.Space(2)).Gap(t.Space(.5)).
-			Radius(t.Radius).Material(glass.Glass{Style: glass.Clear, Tint: t.Text}).TextColor(t.Background).FontSize(t.FontSize-1).
-			Shadow(0, t.Space(.5), t.Space(2), 0, ui.RGBA(0, 0, 0, .14)).Children(func() {
-			if len(d.Path) > 1 {
-				components.Text(c, pathLabel(d.Path[:len(d.Path)-1])).Opacity(.7)
+	ui.Overlay(c, func() {
+		ui.Column(c).Absolute().PassThrough().Role(ui.RoleTooltip).
+			AttachTo(anchor, ui.AnchorEnd, ui.AnchorStart).MarginStart(t.Space(3)).
+			MinWidth(t.Space(30)).MaxWidth(t.Space(80)).Padding(t.Space(2), t.Space(2.5)).Gap(t.Space(1)).
+			Radius(t.Radius).Material(glass.Glass{Tint: t.Background.Alpha(.92)}).Border(1, t.Border).
+			TextColor(t.Text).FontSize(t.FontSize-1).
+			Shadow(0, t.Space(1), t.Space(4), 0, ui.RGBA(0, 0, 0, .14)).Children(func() {
+			if opts.Tip != nil {
+				opts.Tip(c, d)
+				return
 			}
-			components.Text(c, n.Label).Bold()
-			components.Text(c, v.format(d.Size)+" · "+percent(d.Share))
+			n := d.Path[len(d.Path)-1]
+			if len(d.Path) > 1 {
+				components.Text(c, pathLabel(d.Path[:len(d.Path)-1])).TextColor(t.TextMuted).NoWrap().Ellipsis("…")
+			}
+			ui.Row(c).FillWidth().MinWidth(0).AlignItems(ui.Center).Gap(t.Space(1.5)).Children(func() {
+				ui.Box(c).Size(8, 8).Shrink(0).Radius(3).Background(color)
+				components.Text(c, n.Label).MinWidth(0).Shrink(1).NoWrap().Ellipsis("…")
+				ui.Box(c).Grow(1)
+				components.Text(c, v.format(d.Size)+" · "+percent(d.Share)).Bold().NoWrap()
+			})
 			if !math.IsNaN(d.Measure) {
-				components.Text(c, opts.MeasureLabel+": "+v.formatMeasure(d.Measure))
+				ui.Row(c).FillWidth().MinWidth(0).AlignItems(ui.Center).Gap(t.Space(1.5)).Children(func() {
+					components.Text(c, opts.MeasureLabel).TextColor(t.TextMuted).MinWidth(0).Shrink(1).NoWrap().Ellipsis("…")
+					ui.Box(c).Grow(1)
+					components.Text(c, v.formatMeasure(d.Measure)).Bold().NoWrap()
+				})
 			}
 			if n.Caption != "" {
-				components.Text(c, n.Caption).Opacity(.75)
+				components.Text(c, n.Caption).TextColor(t.TextMuted)
 			}
 		})
 	})

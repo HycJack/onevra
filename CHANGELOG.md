@@ -6,6 +6,7 @@ User-facing updates for Onevra library consumers.
 
 - Breaking: Make `components.Breadcrumbs` fill its parent's width.
 - Breaking: Show `chart.Options.Detail` in a selection tooltip instead of a panel below the plot.
+- Breaking: Show `treemap.Options.Tip` inside a tooltip like charts' instead of as the whole bubble.
 - Add `chat.EffortPicker` and `chat.EffortState`.
 - Add `components.HoneycombItem.Menu` and `components.HoneycombOptions.Curvature`.
 - Add `components.IconButtonCompact`.
@@ -17,9 +18,12 @@ User-facing updates for Onevra library consumers.
 - Add `components.TabsWith`.
 - Add `components.TabsWithLeading`.
 - Add `flow.CardOptions.Body` and `flow.CardOptions.Trailing`.
+- Add `treemap.Options.Menu`.
+- Add `treemap.Style` with `treemap.Node.Style` and `treemap.Node.HoverStyle`.
 - Change `components.Breadcrumbs` to collapse overflowing ancestors into an ellipsis menu.
 - Change `chart.Bubble` to show its first pack without growing in.
 - Change `flow.View` edges to bend less, with rounded corners.
+- Animate `treemap.View` drilling without stretching tiles, corners or labels.
 - Localize component and Shell labels in Traditional Chinese, Japanese and Korean.
 - Fix `chart.SplitBar` showing a focus ring after a click.
 - Fix `components.Breadcrumbs` layout shifting as items become current.

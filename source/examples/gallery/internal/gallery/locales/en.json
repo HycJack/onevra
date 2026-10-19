@@ -972,8 +972,10 @@
   "treemapHome": "Home",
   "treemapReclaimable": "Reclaimable",
   "treemapEmpty": "No folders to measure",
-  "treemapKeys": "Click a folder to drill in and use the breadcrumbs to go back. Arrow keys move between folders, Enter drills in and Escape goes up.",
+  "treemapKeys": "Click a folder to drill in and use the breadcrumbs to go back. Arrow keys move between folders, Enter drills in and Escape goes up. Right-click a tile for its menu.",
   "treemapOpened": "Opened: {name}",
+  "treemapOpen": "Open",
+  "treemapShowContents": "Show contents",
   "treemapUnused": "Days unused",
   "treemapDays": "{count, plural, one {# day} other {# days}}",
   "@graphOpened": {

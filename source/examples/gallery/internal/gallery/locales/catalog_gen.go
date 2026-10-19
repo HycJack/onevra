@@ -6370,6 +6370,26 @@ func (msgs Messages) TreemapOpened(name string) string {
 	return Catalog.Format(msgs.locale, "treemapOpened", map[string]any{"name": name})
 }
 
+// TreemapOpen says "Open"
+// in the language the app shows.
+func TreemapOpen() string { return In(i18n.Locale()).TreemapOpen() }
+
+// TreemapOpen says "Open"
+// in the language of msgs.
+func (msgs Messages) TreemapOpen() string {
+	return Catalog.Format(msgs.locale, "treemapOpen", nil)
+}
+
+// TreemapShowContents says "Show contents"
+// in the language the app shows.
+func TreemapShowContents() string { return In(i18n.Locale()).TreemapShowContents() }
+
+// TreemapShowContents says "Show contents"
+// in the language of msgs.
+func (msgs Messages) TreemapShowContents() string {
+	return Catalog.Format(msgs.locale, "treemapShowContents", nil)
+}
+
 // TreemapUnused says "Days unused"
 // in the language the app shows.
 func TreemapUnused() string { return In(i18n.Locale()).TreemapUnused() }
