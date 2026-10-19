@@ -32,6 +32,7 @@ User-facing updates for Onevra library consumers.
 - Change `flow.View` edges to bend less, with rounded corners.
 - Animate `treemap.View` drilling without stretching tiles, corners or labels.
 - Localize component and Shell labels in Traditional Chinese, Japanese and Korean.
+- Fix `chart.SplitBar` flashing segment labels in the theme text color as they fade.
 - Fix `chart.SplitBar` showing a focus ring after a click.
 - Fix `components.Breadcrumbs` layout shifting as items become current.
 - Fix `flow.View` animating its layout as it appears.

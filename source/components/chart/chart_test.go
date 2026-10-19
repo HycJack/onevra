@@ -2,6 +2,8 @@ package chart
 
 import (
 	"fmt"
+	"image"
+	stdcolor "image/color"
 	"math"
 	"testing"
 	"time"
@@ -470,5 +472,82 @@ func TestSplitBarEdgesReflow(t *testing.T) {
 	}
 	if got := splitTargets([]float64{.9, .1}, 1, .3); math.Abs(got[0]+got[1]-1) > 1e-9 || got[1] != .3 {
 		t.Fatalf("widening broke the 100%% total: %v", got)
+	}
+}
+
+func TestSplitBarFadingLabelStaysInvisible(t *testing.T) {
+	slices := []Slice{
+		{ID: "a", Label: "Alpha", Value: 3, Color: ui.Hex("#8a2c00")},
+		{ID: "b", Label: "Beta", Value: 1, Color: ui.Hex("#cbbfae")},
+	}
+	state := State{Index: -1}
+	var text ui.Color
+	tt := ui.NewTester(func(c *ui.Context) {
+		theme.Apply(c)
+		text = c.Theme().Text
+		SplitBar(c, &state, slices, Options{Label: "Plot"})
+	}, 360, 300)
+	// The bar's width is known only after a frame, then labels fade in.
+	for range 2 {
+		tt.Advance(time.Second)
+		tt.Frame()
+	}
+	near := func(got stdcolor.RGBA, want ui.Color) bool {
+		diff := func(a, b uint8) bool { return int(a)-int(b) <= 2 && int(b)-int(a) <= 2 }
+		return got.A == 255 && diff(got.R, want.R) && diff(got.G, want.G) && diff(got.B, want.B)
+	}
+	// paint counts the segment's white and theme-text glyph pixels.
+	paint := func(img *image.RGBA) (white, dark int, found bool) {
+		fill := ui.Hex("#8a2c00")
+		var rows []int
+		for y := img.Bounds().Min.Y; y < img.Bounds().Max.Y; y++ {
+			n := 0
+			for x := img.Bounds().Min.X; x < img.Bounds().Max.X; x++ {
+				if near(img.RGBAAt(x, y), fill) {
+					n++
+				}
+			}
+			if n >= 20 {
+				rows = append(rows, y)
+			}
+		}
+		if len(rows) == 0 {
+			return 0, 0, false
+		}
+		y0, y1 := rows[0], rows[len(rows)-1]
+		x0, x1 := img.Bounds().Max.X, img.Bounds().Min.X
+		for y := y0; y <= y1; y++ {
+			for x := img.Bounds().Min.X; x < img.Bounds().Max.X; x++ {
+				if near(img.RGBAAt(x, y), fill) {
+					x0, x1 = min(x0, x), max(x1, x)
+				}
+			}
+		}
+		for y := y0; y <= y1; y++ {
+			for x := x0; x <= x1; x++ {
+				switch got := img.RGBAAt(x, y); {
+				case got.R == 255 && got.G == 255 && got.B == 255:
+					white++
+				case near(got, text):
+					dark++
+				}
+			}
+		}
+		return white, dark, true
+	}
+	if white, _, ok := paint(tt.Image()); !ok || white == 0 {
+		t.Fatal("the segment's label is not painted")
+	}
+	slices[0].Value, slices[1].Value = 1, 4
+	tt.Frame()
+	for range 60 {
+		tt.Advance(20 * time.Millisecond)
+		tt.Frame()
+		if _, dark, ok := paint(tt.Image()); !ok || dark > 0 {
+			t.Fatalf("fading label fell back to the theme text color: %d pixels", dark)
+		}
+	}
+	if white, _, _ := paint(tt.Image()); white > 0 {
+		t.Fatal("the label did not finish fading out")
 	}
 }

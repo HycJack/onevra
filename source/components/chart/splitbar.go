@@ -498,10 +498,14 @@ func splitPlot(c *ui.Context, plot ui.Element, st *splitMotion, s split, data []
 				p.Clip(seg, 0, func() {
 					x, y := seg.X+pad, seg.Y+(seg.H-lineH)/2
 					if k := nameK[j]; k > 0 {
-						p.RichText(x, y, 0, ui.Span{Text: names[j], Size: size, Weight: 600, Color: fg.Alpha(dims[j] * k)})
+						if col, ok := faded(fg, dims[j]*k); ok {
+							p.RichText(x, y, 0, ui.Span{Text: names[j], Size: size, Weight: 600, Color: col})
+						}
 						x += (nameW[j] + gapW) * k
 					}
-					p.RichText(x, y, 0, ui.Span{Text: shares[j], Size: size, Features: "tnum", Color: fg.Alpha(dims[j] * .85)})
+					if col, ok := faded(fg, dims[j]*.85); ok {
+						p.RichText(x, y, 0, ui.Span{Text: shares[j], Size: size, Features: "tnum", Color: col})
+					}
 				})
 			}
 		})
@@ -561,6 +565,14 @@ func outsideSpans(t *ui.Theme, name, share string, size, alpha float32) []ui.Spa
 		{Text: name + " ", Size: size, Color: t.TextMuted.Alpha(alpha)},
 		{Text: share, Size: size, Weight: 600, Features: "tnum", Color: t.Text.Alpha(alpha)},
 	}
+}
+
+// faded returns c with its alpha multiplied by k, and whether it paints
+// anything: a span whose alpha rounds to zero takes the theme's text color
+// instead, which would flash a fading label in that color.
+func faded(c ui.Color, k float32) (ui.Color, bool) {
+	c = c.Alpha(k)
+	return c, c.A > 0
 }
 
 // contrastText picks dark or light text for a segment color.
