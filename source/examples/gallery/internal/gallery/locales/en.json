@@ -341,6 +341,15 @@
   "liquidGlass": "Liquid Glass",
   "list": "List",
   "loading": "Loading",
+  "longPath": "Long path",
+  "longPathFolder": "Folder {number}",
+  "@longPathFolder": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
   "avatar": "Avatar",
   "loadedContent": "Content",
   "skeletonSampleName": "Ada Lovelace",

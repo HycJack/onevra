@@ -112,7 +112,7 @@ var controlCatalog = []controlExample{
 	{"Chat", "Chat", "Conversation", []string{"Default"}, controlChat},
 	{"RichText", "RichText", "Content display", []string{"Default"}, controlRichText},
 	{"Avatars", "Avatars", "Content display", nil, nil},
-	{"Breadcrumbs", "Breadcrumbs", "Actions & navigation", []string{"Default"}, controlBreadcrumbs},
+	{"Breadcrumbs", "Breadcrumbs", "Actions & navigation", []string{"Default", "Long path"}, controlBreadcrumbs},
 	{"Rating", "Rating", "Selection & values", []string{"Default"}, controlRating},
 	{"Text", "Text", "Content display", []string{"Default", "Editable"}, controlText},
 	{"TextBox", "TextBox", "Text input", nil, nil},

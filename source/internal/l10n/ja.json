@@ -63,6 +63,7 @@
   "holdHint": "{seconds} 秒間長押しして確定します。キーボードでは Space キーまたは Enter キーを長押しします。",
   "avatarOnline": "{label}、オンライン",
   "avatarOffline": "{label}、オフライン",
+  "breadcrumbsMore": "非表示のパスを表示",
   "avatarGroup": "チームメンバー",
   "avatarGroupMore": "ほか {count} 人のメンバー",
   "slides": "スライド",

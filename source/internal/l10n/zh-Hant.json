@@ -63,6 +63,7 @@
   "holdHint": "按住 {seconds} 秒以確認。使用鍵盤時，按住空白鍵或 Enter 鍵。",
   "avatarOnline": "{label}，線上",
   "avatarOffline": "{label}，離線",
+  "breadcrumbsMore": "顯示隱藏的路徑",
   "avatarGroup": "團隊成員",
   "avatarGroupMore": "另外 {count} 位成員",
   "slides": "投影片",

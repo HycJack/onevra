@@ -219,6 +219,8 @@
   "liquidGlass": "液態玻璃",
   "list": "清單",
   "loading": "載入中",
+  "longPath": "長路徑",
+  "longPathFolder": "資料夾 {number}",
   "avatar": "頭像",
   "loadedContent": "內容",
   "skeletonSampleName": "艾達·洛夫萊斯",

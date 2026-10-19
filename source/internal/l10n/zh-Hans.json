@@ -63,6 +63,7 @@
   "holdHint": "按住 {seconds} 秒以确认。使用键盘时，按住空格键或回车键。",
   "avatarOnline": "{label}，在线",
   "avatarOffline": "{label}，离线",
+  "breadcrumbsMore": "显示隐藏的路径",
   "avatarGroup": "团队成员",
   "avatarGroupMore": "另外 {count} 位成员",
   "slides": "幻灯片",

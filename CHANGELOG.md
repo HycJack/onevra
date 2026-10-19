@@ -4,6 +4,7 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Breaking: Make `components.Breadcrumbs` fill its parent's width.
 - Add `components.HoneycombItem.Menu`.
 - Add `components.IconButtonCompact`.
 - Add `components.IconButtonToolbarExpanding`.
@@ -13,6 +14,7 @@ User-facing updates for Onevra library consumers.
 - Add `components.TabsWith`.
 - Add `components.TabsWithLeading`.
 - Add `flow.CardOptions.Body` and `flow.CardOptions.Trailing`.
+- Change `components.Breadcrumbs` to collapse overflowing ancestors into an ellipsis menu.
 - Change `chart.Bubble` to show its first pack without growing in.
 - Change `flow.View` edges to bend less, with rounded corners.
 - Localize component and Shell labels in Traditional Chinese, Japanese and Korean.

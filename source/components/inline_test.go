@@ -2,6 +2,8 @@ package components
 
 import (
 	"bytes"
+	"fmt"
+	"slices"
 	"testing"
 	"time"
 
@@ -100,6 +102,49 @@ func TestBreadcrumbsActivation(t *testing.T) {
 		}
 		if changes > 2 {
 			t.Fatal("current item navigated")
+		}
+	}
+}
+
+func TestBreadcrumbsOverflow(t *testing.T) {
+	items := []string{"Home"}
+	for i := 1; i < 19; i++ {
+		items = append(items, fmt.Sprintf("Level %d", i))
+	}
+	items = append(items, "Current")
+	for _, width := range []int{400, 2400} {
+		chosen, changes := -1, 0
+		tt := ui.NewTester(func(c *ui.Context) {
+			if Breadcrumbs(c, items, &chosen).Changed() {
+				changes++
+			}
+		}, width, 100)
+		_, more := tt.Find("Show hidden path")
+		_, middle := tt.Find("Level 9")
+		if width > 400 {
+			if more || !middle {
+				t.Fatal("wide path collapsed")
+			}
+			continue
+		}
+		_, home := tt.Find("Home")
+		last, current := tt.Find("Current")
+		_, nearest := tt.Find("Level 18")
+		if !more || middle || !home || !current || !nearest || last.X+last.W > float32(width) {
+			t.Fatalf("collapsed: more %v, middle %v, ends %v/%v, nearest %v, last %v", more, middle, home, current, nearest, last)
+		}
+		if err := tt.Click("Show hidden path"); err != nil {
+			t.Fatal(err)
+		}
+		menu := tt.Menu()
+		if len(menu) == 0 || menu[0] != "Level 1" || !slices.Contains(menu, "Level 9") || slices.Contains(menu, "Level 18") {
+			t.Fatalf("menu %v", menu)
+		}
+		if err := tt.ChooseMenuItem("Level 9"); err != nil {
+			t.Fatal(err)
+		}
+		if chosen != 9 || changes != 1 {
+			t.Fatalf("chose %d/%d", chosen, changes)
 		}
 	}
 }

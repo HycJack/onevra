@@ -67,7 +67,23 @@ func controlRichText(c *ui.Context, s *controlState, _ string) {
 	}).MaxWidth(320)
 }
 
-func controlBreadcrumbs(c *ui.Context, s *controlState, _ string) {
+func controlBreadcrumbs(c *ui.Context, s *controlState, variant string) {
+	if variant == "Long path" {
+		// Twenty levels collapse their middle into an ellipsis menu.
+		path := []string{tr(c, "home")}
+		for i := 1; i < 20; i++ {
+			path = append(path, msg(c).LongPathFolder(i))
+		}
+		b := components.Breadcrumbs(c, path, &s.index)
+		b.Label(tr(c, "path"))
+		if b.Changed() {
+			s.text = path[s.index]
+		}
+		if s.text != "" {
+			components.Text(c, s.text).TextColor(c.Theme().TextMuted)
+		}
+		return
+	}
 	path := []string{tr(c, "home"), tr(c, "components"), "Breadcrumbs"}
 	b := components.Breadcrumbs(c, path, &s.index)
 	b.Label(tr(c, "path"))

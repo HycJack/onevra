@@ -219,6 +219,8 @@
   "liquidGlass": "Liquid Glass",
   "list": "リスト",
   "loading": "読み込み中",
+  "longPath": "長いパス",
+  "longPathFolder": "フォルダー {number}",
   "avatar": "アバター",
   "loadedContent": "コンテンツ",
   "skeletonSampleName": "エイダ・ラブレス",

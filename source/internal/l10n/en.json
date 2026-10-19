@@ -140,6 +140,7 @@
       }
     }
   },
+  "breadcrumbsMore": "Show hidden path",
   "avatarGroup": "Team members",
   "avatarGroupMore": "{count, plural, one {# more member} other {# more members}}",
   "@avatarGroupMore": {

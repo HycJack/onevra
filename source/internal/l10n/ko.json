@@ -63,6 +63,7 @@
   "holdHint": "확인하려면 {seconds}초 동안 길게 누르세요. 키보드에서는 Space 키나 Enter 키를 길게 누르세요.",
   "avatarOnline": "{label}, 온라인",
   "avatarOffline": "{label}, 오프라인",
+  "breadcrumbsMore": "숨겨진 경로 표시",
   "avatarGroup": "팀 구성원",
   "avatarGroupMore": "외 구성원 {count}명",
   "slides": "슬라이드",

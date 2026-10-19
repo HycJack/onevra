@@ -219,6 +219,8 @@
   "liquidGlass": "Liquid Glass",
   "list": "목록",
   "loading": "불러오는 중",
+  "longPath": "긴 경로",
+  "longPathFolder": "폴더 {number}",
   "avatar": "아바타",
   "loadedContent": "콘텐츠",
   "skeletonSampleName": "에이다 러브레이스",

@@ -2244,6 +2244,26 @@ func (msgs Messages) Loading() string {
 	return Catalog.Format(msgs.locale, "loading", nil)
 }
 
+// LongPath says "Long path"
+// in the language the app shows.
+func LongPath() string { return In(i18n.Locale()).LongPath() }
+
+// LongPath says "Long path"
+// in the language of msgs.
+func (msgs Messages) LongPath() string {
+	return Catalog.Format(msgs.locale, "longPath", nil)
+}
+
+// LongPathFolder says "Folder {number}"
+// in the language the app shows.
+func LongPathFolder(number int) string { return In(i18n.Locale()).LongPathFolder(number) }
+
+// LongPathFolder says "Folder {number}"
+// in the language of msgs.
+func (msgs Messages) LongPathFolder(number int) string {
+	return Catalog.Format(msgs.locale, "longPathFolder", map[string]any{"number": number})
+}
+
 // Avatar says "Avatar"
 // in the language the app shows.
 func Avatar() string { return In(i18n.Locale()).Avatar() }
