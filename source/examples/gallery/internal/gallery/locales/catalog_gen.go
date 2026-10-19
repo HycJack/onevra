@@ -10293,3 +10293,83 @@ func DestinationQueenstownNote() string { return In(i18n.Locale()).DestinationQu
 func (msgs Messages) DestinationQueenstownNote() string {
 	return Catalog.Format(msgs.locale, "destinationQueenstownNote", nil)
 }
+
+// GlassUnderBars says "Under the bars"
+// in the language the app shows.
+func GlassUnderBars() string { return In(i18n.Locale()).GlassUnderBars() }
+
+// GlassUnderBars says "Under the bars"
+// in the language of msgs.
+func (msgs Messages) GlassUnderBars() string {
+	return Catalog.Format(msgs.locale, "glassUnderBars", nil)
+}
+
+// GlassBar says "Glass bar"
+// in the language the app shows.
+func GlassBar() string { return In(i18n.Locale()).GlassBar() }
+
+// GlassBar says "Glass bar"
+// in the language of msgs.
+func (msgs Messages) GlassBar() string {
+	return Catalog.Format(msgs.locale, "glassBar", nil)
+}
+
+// GlassSoftEdge says "Soft edge"
+// in the language the app shows.
+func GlassSoftEdge() string { return In(i18n.Locale()).GlassSoftEdge() }
+
+// GlassSoftEdge says "Soft edge"
+// in the language of msgs.
+func (msgs Messages) GlassSoftEdge() string {
+	return Catalog.Format(msgs.locale, "glassSoftEdge", nil)
+}
+
+// GlassHardEdge says "Hard edge"
+// in the language the app shows.
+func GlassHardEdge() string { return In(i18n.Locale()).GlassHardEdge() }
+
+// GlassHardEdge says "Hard edge"
+// in the language of msgs.
+func (msgs Messages) GlassHardEdge() string {
+	return Catalog.Format(msgs.locale, "glassHardEdge", nil)
+}
+
+// GlassProgressiveBlur says "Progressive blur"
+// in the language the app shows.
+func GlassProgressiveBlur() string { return In(i18n.Locale()).GlassProgressiveBlur() }
+
+// GlassProgressiveBlur says "Progressive blur"
+// in the language of msgs.
+func (msgs Messages) GlassProgressiveBlur() string {
+	return Catalog.Format(msgs.locale, "glassProgressiveBlur", nil)
+}
+
+// GlassContentHint says "Glass bends the light along its rim and frosts what is under its middle."
+// in the language the app shows.
+func GlassContentHint() string { return In(i18n.Locale()).GlassContentHint() }
+
+// GlassContentHint says "Glass bends the light along its rim and frosts what is under its middle."
+// in the language of msgs.
+func (msgs Messages) GlassContentHint() string {
+	return Catalog.Format(msgs.locale, "glassContentHint", nil)
+}
+
+// GlassBottomBar says "Bottom bar"
+// in the language the app shows.
+func GlassBottomBar() string { return In(i18n.Locale()).GlassBottomBar() }
+
+// GlassBottomBar says "Bottom bar"
+// in the language of msgs.
+func (msgs Messages) GlassBottomBar() string {
+	return Catalog.Format(msgs.locale, "glassBottomBar", nil)
+}
+
+// ComponentScrollEdgeBar says "Scroll edge bar"
+// in the language the app shows.
+func ComponentScrollEdgeBar() string { return In(i18n.Locale()).ComponentScrollEdgeBar() }
+
+// ComponentScrollEdgeBar says "Scroll edge bar"
+// in the language of msgs.
+func (msgs Messages) ComponentScrollEdgeBar() string {
+	return Catalog.Format(msgs.locale, "componentScrollEdgeBar", nil)
+}

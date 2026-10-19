@@ -10,6 +10,7 @@ User-facing updates for Onevra library consumers.
 - Add `components.HoneycombItem.Menu`.
 - Add `components.IconButtonCompact`.
 - Add `components.IconButtonToolbarExpanding`.
+- Add `components.ScrollEdgeBar`.
 - Add `components.SettingsCategory.Placeholder`.
 - Add `components.SettingsOptions.SectionActions`.
 - Add `components.SidebarSectionWithActions`.

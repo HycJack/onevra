@@ -1441,5 +1441,13 @@
   "destinationMarrakeshNote": "Spice markets, riads and rooftop sunsets.",
   "destinationQueenstown": "Queenstown",
   "destinationQueenstownPlace": "New Zealand",
-  "destinationQueenstownNote": "Alpine lakes and mountains made for adventure."
+  "destinationQueenstownNote": "Alpine lakes and mountains made for adventure.",
+  "glassUnderBars": "Under the bars",
+  "glassBar": "Glass bar",
+  "glassSoftEdge": "Soft edge",
+  "glassHardEdge": "Hard edge",
+  "glassProgressiveBlur": "Progressive blur",
+  "glassContentHint": "Glass bends the light along its rim and frosts what is under its middle.",
+  "glassBottomBar": "Bottom bar",
+  "componentScrollEdgeBar": "Scroll edge bar"
 }

@@ -62,6 +62,7 @@ var navigationIcons = map[string]func() *ui.SVG{
 	"Split":                 lucide.Columns2,
 	"Split panes":           lucide.Columns2,
 	"ScrollView":            lucide.ArrowDownUp,
+	"ScrollEdgeBar":         lucide.PanelTop,
 	"CheckboxGroup":         lucide.ListChecks,
 	"RadioGroup":            lucide.CircleDot,
 	"StepSlider":            lucide.SlidersHorizontal,

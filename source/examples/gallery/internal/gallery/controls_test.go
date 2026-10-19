@@ -37,7 +37,7 @@ func controlComponents() []controlExample {
 }
 
 func TestControlPages(t *testing.T) {
-	if len(controlCatalog) != 45 {
+	if len(controlCatalog) != 46 {
 		t.Fatal("missing control examples")
 	}
 	for i, example := range controlCatalog {
@@ -406,6 +406,9 @@ func TestControlExampleInteractions(t *testing.T) {
 					changed = s.index == 1
 				case "Stepper":
 					click("Next")
+					changed = s.index == 1
+				case "ScrollEdgeBar":
+					click("Search")
 					changed = s.index == 1
 				case "Shader backgrounds":
 					click("Pause drift")

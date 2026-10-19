@@ -1019,5 +1019,13 @@
   "destinationMarrakeshNote": "香料集市、庭院旅館和屋頂日落。",
   "destinationQueenstown": "皇后鎮",
   "destinationQueenstownPlace": "紐西蘭",
-  "destinationQueenstownNote": "為冒險而生的高山湖泊與群峰。"
+  "destinationQueenstownNote": "為冒險而生的高山湖泊與群峰。",
+  "glassUnderBars": "列下方",
+  "glassBar": "玻璃列",
+  "glassSoftEdge": "柔和邊緣",
+  "glassHardEdge": "硬邊緣",
+  "glassProgressiveBlur": "漸進模糊",
+  "glassContentHint": "玻璃沿邊緣折射光線，並霧化其中央下方的內容。",
+  "glassBottomBar": "底部列",
+  "componentScrollEdgeBar": "捲動邊緣列"
 }

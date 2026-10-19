@@ -1019,5 +1019,13 @@
   "destinationMarrakeshNote": "スパイスの市場、リヤド、屋上から眺める夕日。",
   "destinationQueenstown": "クイーンズタウン",
   "destinationQueenstownPlace": "ニュージーランド",
-  "destinationQueenstownNote": "冒険のためにあるような高山の湖と山々。"
+  "destinationQueenstownNote": "冒険のためにあるような高山の湖と山々。",
+  "glassUnderBars": "バーの下",
+  "glassBar": "ガラスバー",
+  "glassSoftEdge": "ソフトエッジ",
+  "glassHardEdge": "ハードエッジ",
+  "glassProgressiveBlur": "プログレッシブブラー",
+  "glassContentHint": "ガラスは縁で光を屈折させ、中央の下にあるものをすりガラスのようにぼかします。",
+  "glassBottomBar": "ボトムバー",
+  "componentScrollEdgeBar": "スクロールエッジバー"
 }

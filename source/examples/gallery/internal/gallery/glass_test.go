@@ -17,7 +17,7 @@ func TestGlassPreview(t *testing.T) {
 			s := newDemoState()
 			tt := ui.NewTester(func(c *ui.Context) {
 				ui.Column(c).Fill().Gap(12).Children(func() { glassPreview(c, s, bitmap) })
-			}, width, 600)
+			}, width, 720)
 			tt.SetDark(dark)
 			find := func(label string) ui.Rect {
 				t.Helper()
@@ -36,6 +36,16 @@ func TestGlassPreview(t *testing.T) {
 					t.Fatalf("material selection: got %d, want %d", s.index, i)
 				}
 			}
+			for i, label := range []string{"Glass bar", "Soft edge", "Hard edge", "Progressive blur"} {
+				if err := tt.Click(label); err != nil {
+					t.Fatal(err)
+				}
+				if s.glass.edge != i {
+					t.Fatalf("edge selection: got %d, want %d", s.glass.edge, i)
+				}
+				find("Toolbar")
+				find("Bottom bar")
+			}
 			r := find("Draggable glass")
 			before := bytes.Clone(tt.Image().Pix)
 			x, y := r.X+r.W/2, r.Y+r.H/2
@@ -49,7 +59,7 @@ func TestGlassPreview(t *testing.T) {
 			tt.Press(moved.X+10, moved.Y+10)
 			tt.Move(2000, 2000)
 			tt.Release(2000, 2000)
-			tt.SetSize(260, 600)
+			tt.SetSize(260, 720)
 			pane, canvas := find("Draggable glass"), find("Glass canvas")
 			if pane.X < canvas.X || pane.Y < canvas.Y || pane.X+pane.W > canvas.X+canvas.W || pane.Y+pane.H > canvas.Y+canvas.H {
 				t.Fatalf("glass escaped canvas: %v in %v", pane, canvas)
@@ -57,7 +67,7 @@ func TestGlassPreview(t *testing.T) {
 			if err := tt.Click("Reset position"); err != nil {
 				t.Fatal(err)
 			}
-			if s.glass != (glassDemo{}) {
+			if s.glass.x != 0 || s.glass.y != 0 || s.glass.edge != 3 {
 				t.Fatalf("reset did not clear position: %+v", s.glass)
 			}
 		}

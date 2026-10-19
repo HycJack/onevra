@@ -1019,5 +1019,13 @@
   "destinationMarrakeshNote": "향신료 시장, 리아드, 옥상에서 보는 석양.",
   "destinationQueenstown": "퀸스타운",
   "destinationQueenstownPlace": "뉴질랜드",
-  "destinationQueenstownNote": "모험을 위해 만들어진 듯한 고산 호수와 산."
+  "destinationQueenstownNote": "모험을 위해 만들어진 듯한 고산 호수와 산.",
+  "glassUnderBars": "막대 아래",
+  "glassBar": "유리 막대",
+  "glassSoftEdge": "부드러운 가장자리",
+  "glassHardEdge": "선명한 가장자리",
+  "glassProgressiveBlur": "점진적 흐림",
+  "glassContentHint": "유리는 가장자리에서 빛을 굴절시키고 가운데 아래의 내용을 흐리게 만듭니다.",
+  "glassBottomBar": "하단 막대",
+  "componentScrollEdgeBar": "스크롤 가장자리 막대"
 }

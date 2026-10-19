@@ -1019,5 +1019,13 @@
   "destinationMarrakeshNote": "香料集市、庭院旅馆和屋顶日落。",
   "destinationQueenstown": "皇后镇",
   "destinationQueenstownPlace": "新西兰",
-  "destinationQueenstownNote": "为冒险而生的高山湖泊与群峰。"
+  "destinationQueenstownNote": "为冒险而生的高山湖泊与群峰。",
+  "glassUnderBars": "栏下方",
+  "glassBar": "玻璃栏",
+  "glassSoftEdge": "柔和边缘",
+  "glassHardEdge": "硬边缘",
+  "glassProgressiveBlur": "渐进模糊",
+  "glassContentHint": "玻璃沿边缘折射光线，并磨砂其中央下方的内容。",
+  "glassBottomBar": "底栏",
+  "componentScrollEdgeBar": "滚动边缘栏"
 }

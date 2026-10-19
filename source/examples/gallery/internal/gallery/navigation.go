@@ -25,6 +25,7 @@ var newPages = map[string]bool{
 	"controls/Treemap":               true,
 	"controls/Flow diagram":          true,
 	"controls/Card stack":            true,
+	"controls/ScrollEdgeBar":         true,
 	"mygo/Native dialogs":            true,
 }
 

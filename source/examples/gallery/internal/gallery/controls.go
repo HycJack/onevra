@@ -140,6 +140,7 @@ var controlCatalog = []controlExample{
 	{"Card stack", "Card stack", "Selection & values", []string{"Default"}, controlCardStack},
 	{"Split panes", "Split panes", "Layout & containers", nil, nil},
 	{"ScrollView", "Scroll views", "Layout & containers", []string{"Vertical", "Horizontal", "Both", "Insets"}, controlScrollView},
+	{"ScrollEdgeBar", "Scroll edge bar", "Layout & containers", []string{"Glass bar", "Soft edge", "Hard edge", "Progressive blur"}, controlScrollEdgeBar},
 }
 
 // controlToolbars hold page-level sample actions, which the titlebar shows
