@@ -20,6 +20,7 @@ User-facing updates for Onevra library consumers.
 - Add `components.SidebarSectionWithActions`.
 - Add `components.TabsWith`.
 - Add `components.TabsWithLeading`.
+- Add `plain.ShellOptions.ContentBehindHeader`.
 - Add `flow.CardOptions.Body` and `flow.CardOptions.Trailing`.
 - Add `treemap.Options.Menu`.
 - Add `treemap.Style` with `treemap.Node.Style` and `treemap.Node.HoverStyle`.

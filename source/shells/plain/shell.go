@@ -41,6 +41,10 @@ type ShellOptions struct {
 	// Content is automatically inset below the draggable window-control area.
 	// Dialogs inherit its drag strip and remain relative to the whole window.
 	Content func(*ui.Context)
+	// ContentBehindHeader extends Content to the top of the window, behind
+	// the unpainted header, such as for content that scrolls under it. Use
+	// HeaderHeight(c) as top padding to keep controls below the header.
+	ContentBehindHeader bool
 	// Theme, when set, returns the frame's theme; Shell installs it before
 	// building anything, so its own surfaces and all content use it. It runs
 	// on every frame, so it can follow application state; pass theme.Onevra
@@ -142,7 +146,7 @@ func (s *Shell) headerTitle(c *ui.Context) {
 }
 
 // HeaderHeight is the frame's native-control clearance and modal drag height.
-// Shell already insets ordinary content by this amount.
+// Shell insets content by this amount unless ContentBehindHeader is set.
 func HeaderHeight(c *ui.Context) float32 { return max(48, c.TitleBar().Height, c.Theme().Rem(3)) }
 
 func (s *Shell) view(c *ui.Context) {
@@ -150,9 +154,13 @@ func (s *Shell) view(c *ui.Context) {
 		c.SetTheme(s.options.Theme(c))
 	}
 	height := HeaderHeight(c)
+	inset := height
+	if s.options.ContentBehindHeader {
+		inset = 0
+	}
 	components.WithDialogWindowDrag(c, height, func() {
 		ui.Column(c).Fill().Background(c.Theme().Background).Clip().Children(func() {
-			ui.Column(c).Key("content").Fill().Padding(height, 0, 0, 0).Children(func() {
+			ui.Column(c).Key("content").Fill().Padding(inset, 0, 0, 0).Children(func() {
 				if s.options.Content != nil {
 					s.options.Content(c)
 				}

@@ -85,6 +85,16 @@ func TestContentAndDialogClearance(t *testing.T) {
 	}
 }
 
+func TestContentBehindHeader(t *testing.T) {
+	s := newShell(ShellOptions{ContentBehindHeader: true, Content: func(c *ui.Context) {
+		components.Button(c, "Body action", components.ButtonPrimary)
+	}})
+	tt := ui.NewTester(s.view, 760, 560)
+	if r, ok := tt.Find("Body action"); !ok || r.Y != 0 {
+		t.Fatalf("content not behind header: %+v", r)
+	}
+}
+
 func TestCaptionActionsAndTheme(t *testing.T) {
 	s := newShell(ShellOptions{})
 	w := &testWindow{}
