@@ -104,6 +104,29 @@ func TestBreadcrumbsActivation(t *testing.T) {
 	}
 }
 
+func TestBreadcrumbsLayoutStable(t *testing.T) {
+	var heights, widths []float32
+	for _, items := range [][]string{{"Home"}, {"Home", "Current"}} {
+		chosen := -1
+		var h float32
+		tt := ui.NewTester(func(c *ui.Context) {
+			ui.Column(c).AlignItems(ui.Start).Children(func() {
+				Breadcrumbs(c, items, &chosen).DrawOver(func(_ *ui.Painter, r ui.Rect) { h = r.H })
+			})
+		}, 300, 100)
+		home, ok := tt.Find("Home")
+		if !ok {
+			t.Fatal("missing Home")
+		}
+		heights, widths = append(heights, h), append(widths, home.W)
+	}
+	// Matching padding places current and linked Home text identically; the
+	// current item's heavier weight alone may widen its glyphs slightly.
+	if d := widths[0] - widths[1]; heights[0] == 0 || heights[0] != heights[1] || d < -1 || d > 1 {
+		t.Fatalf("heights %v, Home widths %v", heights, widths)
+	}
+}
+
 func TestRatingInput(t *testing.T) {
 	for _, disabled := range []bool{false, true} {
 		value, changes := 0, 0

@@ -12,6 +12,7 @@ User-facing updates for Onevra library consumers.
 - Add `components.TabsWith`.
 - Add `components.TabsWithLeading`.
 - Localize component and Shell labels in Traditional Chinese, Japanese and Korean.
+- Fix `components.Breadcrumbs` layout shifting as items become current.
 
 ## [0.2026.12] - 2026-10-18
 

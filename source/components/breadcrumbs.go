@@ -30,7 +30,9 @@ func Breadcrumbs(c *ui.Context, items []string, chosen *int) *BreadcrumbsControl
 				Icon(c, lucide.ChevronRight).Size(t.Space(3), t.Space(3)).Shrink(0).TextColor(t.TextMuted).Role(ui.RoleNone)
 			}
 			if i == len(items)-1 {
-				Text(c, item).SingleLine().MinWidth(0).FontWeight(500)
+				// Match the links' padding and border so the path keeps its
+				// height and text position as items become current.
+				Text(c, item).SingleLine().MinWidth(0).FontWeight(500).Padding(t.Space(.5)+1, t.Space(1.5)+1)
 				continue
 			}
 			ui.Box(c).Key(i).MinWidth(0).Children(func() {
