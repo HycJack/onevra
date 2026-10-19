@@ -7812,6 +7812,16 @@ func (msgs Messages) HoneycombAdd() string {
 	return Catalog.Format(msgs.locale, "honeycombAdd", nil)
 }
 
+// HoneycombAddTen says "Add 10 items"
+// in the language the app shows.
+func HoneycombAddTen() string { return In(i18n.Locale()).HoneycombAddTen() }
+
+// HoneycombAddTen says "Add 10 items"
+// in the language of msgs.
+func (msgs Messages) HoneycombAddTen() string {
+	return Catalog.Format(msgs.locale, "honeycombAddTen", nil)
+}
+
 // HoneycombRemove says "Remove item"
 // in the language the app shows.
 func HoneycombRemove() string { return In(i18n.Locale()).HoneycombRemove() }
@@ -7820,6 +7830,16 @@ func HoneycombRemove() string { return In(i18n.Locale()).HoneycombRemove() }
 // in the language of msgs.
 func (msgs Messages) HoneycombRemove() string {
 	return Catalog.Format(msgs.locale, "honeycombRemove", nil)
+}
+
+// HoneycombCurvature says "Curvature"
+// in the language the app shows.
+func HoneycombCurvature() string { return In(i18n.Locale()).HoneycombCurvature() }
+
+// HoneycombCurvature says "Curvature"
+// in the language of msgs.
+func (msgs Messages) HoneycombCurvature() string {
+	return Catalog.Format(msgs.locale, "honeycombCurvature", nil)
 }
 
 // Archive says "Archive"

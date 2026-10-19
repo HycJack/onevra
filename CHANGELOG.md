@@ -7,7 +7,7 @@ User-facing updates for Onevra library consumers.
 - Breaking: Make `components.Breadcrumbs` fill its parent's width.
 - Breaking: Show `chart.Options.Detail` in a selection tooltip instead of a panel below the plot.
 - Add `chat.EffortPicker` and `chat.EffortState`.
-- Add `components.HoneycombItem.Menu`.
+- Add `components.HoneycombItem.Menu` and `components.HoneycombOptions.Curvature`.
 - Add `components.IconButtonCompact`.
 - Add `components.IconButtonToolbarExpanding`.
 - Add `components.ScrollEdgeBar`.

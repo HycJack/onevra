@@ -100,6 +100,12 @@ func honeycombToolbar(c *ui.Context, s *controlState) {
 	if sidebar.IconButton(c, lucide.Plus(), tr(c, "honeycombAdd")).Clicked() {
 		honeycombAdd(s)
 	}
+	// Ten at once, to try many items.
+	if sidebar.IconButton(c, lucide.CopyPlus(), tr(c, "honeycombAddTen")).Clicked() {
+		for range 10 {
+			honeycombAdd(s)
+		}
+	}
 	if sidebar.IconButton(c, lucide.Minus(), tr(c, "honeycombRemove")).Disabled(len(s.honeycombItems) == 0).Clicked() {
 		honeycombRemove(s)
 	}
@@ -109,6 +115,7 @@ func controlHoneycomb(c *ui.Context, s *controlState, _ string) {
 	if s.honeycombItems == nil {
 		s.honeycombItems = honeycombDefaults()
 		s.honeycomb = s.honeycombItems[0].id
+		s.honeycombCurvature = 1
 	}
 	if !slices.ContainsFunc(s.honeycombItems, func(item honeycombDemoItem) bool { return item.id == s.honeycomb }) {
 		if len(s.honeycombItems) > 0 {
@@ -151,8 +158,15 @@ func controlHoneycomb(c *ui.Context, s *controlState, _ string) {
 			selectedLabel = msg(c).SelectedS(label)
 		}
 	}
+	// Zero curvature is the default one, so the slider's flat end asks for a
+	// negative one.
+	curvature := float32(s.honeycombCurvature)
+	if curvature == 0 {
+		curvature = -1
+	}
 	if chosen := components.Honeycomb(c, components.HoneycombOptions{Items: items, Selected: selected,
-		SelectedLabel: selectedLabel}); chosen != "" {
+		SelectedLabel: selectedLabel, Curvature: curvature}); chosen != "" {
 		s.honeycomb = chosen
 	}
+	components.Slider(c, &s.honeycombCurvature, 0, 2).Label(tr(c, "honeycombCurvature")).FillWidth().MinWidth(0)
 }

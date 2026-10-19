@@ -46,6 +46,7 @@ type controlState struct {
 	cards                  components.CardStackState
 	honeycombItems         []honeycombDemoItem
 	honeycombNext          int
+	honeycombCurvature     float64
 	split, splitPercent    float32
 	compare                float32
 	color                  ui.Color

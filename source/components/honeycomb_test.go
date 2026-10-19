@@ -57,7 +57,7 @@ func TestHoneycombLaysOutRowsAroundTheSelection(t *testing.T) {
 	}
 	cx, cy := middle(first)
 	right, _ := tt.Find("p01")
-	if x, y := middle(right); math.Abs(float64(x-cx-m.magnified(m.spacing))) > 1 || y != cy || right.W >= first.W {
+	if x, y := middle(right); math.Abs(float64(x-cx-m.magnified(m.spacing, 1))) > 1 || y != cy || right.W >= first.W {
 		t.Fatalf("neighbor not a smaller item beside the selected one: %+v %+v", right, first)
 	}
 	// Items fill rows above and below, none smaller than the smallest item.
@@ -289,6 +289,56 @@ func TestHoneycombTiltsItemsOnABall(t *testing.T) {
 	}
 	if above.H >= above.W {
 		t.Fatalf("the item above did not turn away: %+v", above)
+	}
+}
+
+func TestHoneycombCurvatureScalesTheTiltAndEdge(t *testing.T) {
+	items := honeycombItems(19)
+	// build returns the item beside the middle and the item furthest above
+	// it, which nears the top edge of the view.
+	build := func(curvature float32) (side, top ui.Rect) {
+		tt := ui.NewTester(func(c *ui.Context) {
+			c.SetTheme(theme.Palette(false))
+			ui.Column(c).Fill().AlignItems(ui.Center).Children(func() {
+				Honeycomb(c, HoneycombOptions{Items: items, Selected: "p00", Curvature: curvature})
+			})
+		}, 600, 300)
+		settleHoneycomb(tt)
+		center, _ := tt.Find("p00")
+		cx, cy := middle(center)
+		side, _ = tt.Find("p01")
+		for _, item := range items[1:] {
+			r, _ := tt.Find(item.ID)
+			if x, y := middle(r); math.Abs(float64(x-cx)) <= 1 && y < cy-1 && (top.W == 0 || r.Y < top.Y) {
+				top = r
+			}
+		}
+		if side.W == 0 || top.W == 0 {
+			t.Fatal("items not found")
+		}
+		return side, top
+	}
+	// More curvature turns the item beside the middle further away, so it is
+	// narrower for its height.
+	flatSide, flatTop := build(-1)
+	side, top := build(0)
+	curvedSide, curvedTop := build(2)
+	// A flat honeycomb has no lens either: every item is its unmagnified size,
+	// unmagnified spacing apart, to show many at once.
+	m := honeycombTestMetrics()
+	if flatSide.W != flatSide.H || flatSide.W != m.small || flatTop.W != m.small {
+		t.Fatalf("a flat honeycomb magnified or tilted items: %+v %+v", flatSide, flatTop)
+	}
+	if squash := func(r ui.Rect) float32 { return r.W / r.H }; !(squash(curvedSide) < squash(side) && squash(side) < squash(flatSide)) {
+		t.Fatalf("curvature did not scale the tilt: flat %+v, default %+v, curved %+v", flatSide, side, curvedSide)
+	}
+	// Turning around the horizontal axis keeps the top item's width, which the
+	// lens and the edge shrink more the more the honeycomb curves.
+	if !(curvedTop.W < top.W && top.W < flatTop.W) {
+		t.Fatalf("curvature did not scale the edge: flat %+v, default %+v, curved %+v", flatTop, top, curvedTop)
+	}
+	if oneSide, oneTop := build(1); oneSide != side || oneTop != top {
+		t.Fatalf("zero curvature differs from 1")
 	}
 }
 

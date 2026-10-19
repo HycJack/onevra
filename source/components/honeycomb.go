@@ -50,6 +50,13 @@ type HoneycombOptions struct {
 	// it does not reach elements around it, such as a background that
 	// ripples where the pointer presses.
 	OnPress func()
+	// Curvature scales how sharply the ball the honeycomb lies on curves:
+	// how far items further out turn away, how much smaller they are than the
+	// one in the middle, and how far in from the edge of the view they shrink
+	// and fade out. Zero uses 1. Negative values lay the honeycomb flat, with
+	// every item at the same size, to show many at once; values above 1 curve
+	// it more, up to 2.
+	Curvature float32
 }
 
 const (
@@ -57,7 +64,8 @@ const (
 	// in the middle of the view, shrinking smoothly towards honeycombTiny
 	// further out, over about honeycombFall of the honeycomb, and the space
 	// between items shrinks with them. honeycombSmall is an item's size
-	// unmagnified.
+	// unmagnified, which every item has on a flat honeycomb; a curvature
+	// below 1 weakens the lens towards it, and one above 1 shortens the fall.
 	honeycombLarge = 84
 	honeycombSmall = 56
 	honeycombTiny  = 14
@@ -94,8 +102,13 @@ const (
 	// in the direction of its distance from the middle, up to honeycombTilt
 	// degrees at the far edge. A larger honeycombTiltFall makes a larger,
 	// gentler ball; this one covers the whole view, so its surface spans it.
+	// HoneycombOptions.Curvature scales the tilt, which stays below
+	// honeycombTiltMax so items edge-on to the viewer do not vanish.
 	honeycombTilt     = 60
 	honeycombTiltFall = 420
+	honeycombTiltMax  = 80
+	// honeycombCurvatureMax is the largest HoneycombOptions.Curvature.
+	honeycombCurvatureMax = 2
 )
 
 var (
@@ -151,6 +164,7 @@ func honeycombMetricsFor(t *ui.Theme) honeycombMetrics {
 // from the space left to it, keeping at least two rows visible.
 func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 	m := honeycombMetricsFor(c.Theme())
+	curvature := honeycombCurvature(options.Curvature)
 	view := ui.Box(c).FillWidth().MinWidth(0).Height(m.height).Grow(1).Shrink(1).MinHeight(m.minHeight).Clip()
 	n := len(options.Items)
 	selected := slices.IndexFunc(options.Items, func(item HoneycombItem) bool { return item.ID == options.Selected })
@@ -182,6 +196,7 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 		}
 	}
 	p.ready = true
+	p.curvature = curvature
 	if p.pressedNow {
 		p.pressedNow = false
 		if options.OnPress != nil {
@@ -248,9 +263,10 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 			c.Invalidate()
 		}
 	})
-	// Within honeycombEdge of the edge, items shrink and fade out; the inset is
-	// less in a view too small for it.
-	edge := min(m.edge, width/2, height/2)
+	// Within honeycombEdge of the edge, scaled by the curvature as items
+	// further round the ball fall away sooner, items shrink and fade out; the
+	// inset is less in a view too small for it, and none on a flat honeycomb.
+	edge := min(m.edge*curvature, width/2, height/2)
 	middle := p.nearest(p.at)
 	accent := c.Theme().Accent
 	p.hits = p.hits[:0]
@@ -276,14 +292,14 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 				d := float32(math.Hypot(float64(dx), float64(dy)))
 				cx, cy := width/2, height/2
 				if d > 0 {
-					f := m.magnified(d) / d
+					f := m.magnified(d, curvature) / d
 					cx, cy = cx+dx*f, cy+dy*f
 				}
 				// How far into the inset along the edge, rounded at the corners as
 				// on a watch face, from 0 inside it to 1 at the edge.
 				ox, oy := max(edge-cx, cx-width+edge, 0), max(edge-cy, cy-height+edge, 0)
 				out := min(float32(math.Hypot(float64(ox), float64(oy)))/max(edge, 1), 1)
-				size := m.tiny + (m.size(d)-m.tiny)*(1-out)
+				size := m.tiny + (m.size(d, curvature)-m.tiny)*(1-out)
 				opacity := 1 - honeycombRamp(out, .35, .85)
 				label := item.Label
 				if i == selected && options.SelectedLabel != "" {
@@ -295,7 +311,7 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 				// every frame. Items draw their own circle instead.
 				b.Absolute().Left(cx-width/2-size/2).Top(cy-height/2-size/2).Size(size, size)
 				// Turn the item on the ball's surface, so dragging pans over it.
-				b.Transform(honeycombBall(dx, dy, m.tiltAt(d)))
+				b.Transform(honeycombBall(dx, dy, m.tiltAt(d, curvature)))
 				// The ring passes from item to item as the honeycomb pans. It is
 				// painted over the item rather than set as a border, which would
 				// take room within the cell and push the item off center.
@@ -406,7 +422,9 @@ type honeycombPan struct {
 	scrolling      bool
 	scrolled       time.Time
 	hits           []honeycombHit
-	clicked        string
+	// curvature is the last frame's, which sets how far a drag pans.
+	curvature float32
+	clicked   string
 }
 
 // glide eases the pan to the point to, unless it is going there already.
@@ -448,7 +466,8 @@ func (p *honeycombPan) input(ev ui.InputEvent) bool {
 		p.lastX, p.lastY = ev.X, ev.Y
 		p.travel += float32(math.Hypot(float64(dx), float64(dy)))
 		// The magnified middle follows the pointer.
-		p.pan(-dx*honeycombSmall/honeycombLarge, -dy*honeycombSmall/honeycombLarge)
+		k := p.drag()
+		p.pan(-dx*k, -dy*k)
 		if dt := float32(ev.Time.Sub(p.moved).Seconds()); dt > 0 {
 			// The speed of the last moves, smoothed.
 			p.vx = .7*(-dx/dt) + .3*p.vx
@@ -471,12 +490,19 @@ func (p *honeycombPan) input(ev ui.InputEvent) bool {
 		p.released = true
 	case ui.InputScroll:
 		p.gliding, p.scrolling = false, true
-		p.pan(ev.DX*honeycombSmall/honeycombLarge, ev.DY*honeycombSmall/honeycombLarge)
+		k := p.drag()
+		p.pan(ev.DX*k, ev.DY*k)
 		p.scrolled = ev.Time
 	default:
 		return false
 	}
 	return true
+}
+
+// drag is how far the pan moves for each DIP the pointer travels, so the
+// middle of the view, magnified by the curvature, follows the pointer.
+func (p *honeycombPan) drag() float32 {
+	return 1 / (1 + (honeycombLarge/float32(honeycombSmall)-1)*min(p.curvature, 1))
 }
 
 // pan moves the pan by dx, dy, less past the edge of the honeycomb.
@@ -574,23 +600,51 @@ func honeycombBounds(cells []honeycombPoint) (lo, hi honeycombPoint) {
 	return lo, hi
 }
 
-// size is the size of an item d from the middle of the view, unmagnified.
-func (m honeycombMetrics) size(d float32) float32 {
-	return m.tiny + (m.large-m.tiny)*float32(math.Exp(float64(-d/m.fall)))
+// size is the size of an item d from the middle of the view, unmagnified, as
+// the lens of a honeycomb of the given curvature magnifies it.
+func (m honeycombMetrics) size(d, curvature float32) float32 {
+	return m.lens(curvature, m.small, func(fall float32) float32 {
+		return m.tiny + (m.large-m.tiny)*float32(math.Exp(float64(-d/fall)))
+	})
 }
 
 // tiltAt is how far, in degrees, an item d from the middle of the view turns
 // away from the viewer: it faces the viewer in the middle and turns up to
-// honeycombTilt as it nears the edge, as the surface of a ball does.
-func (m honeycombMetrics) tiltAt(d float32) float32 {
-	return honeycombTilt * (1 - float32(math.Exp(float64(-d/m.tiltFall))))
+// honeycombTilt, scaled by curvature, as it nears the edge, as the surface of
+// a ball does.
+func (m honeycombMetrics) tiltAt(d, curvature float32) float32 {
+	return min(honeycombTilt*curvature*(1-float32(math.Exp(float64(-d/m.tiltFall)))), honeycombTiltMax)
+}
+
+// honeycombCurvature resolves HoneycombOptions.Curvature: zero is 1, negative
+// is flat and the rest is at most honeycombCurvatureMax.
+func honeycombCurvature(v float32) float32 {
+	switch {
+	case v == 0:
+		return 1
+	case v < 0 || math.IsNaN(float64(v)):
+		return 0
+	}
+	return min(v, honeycombCurvatureMax)
 }
 
 // magnified is how far from the middle of the view a point d from it,
 // unmagnified, is drawn: the space up to it, magnified as the items there.
-func (m honeycombMetrics) magnified(d float32) float32 {
-	e := float32(math.Exp(float64(-d / m.fall)))
-	return (m.tiny*d + (m.large-m.tiny)*m.fall*(1-e)) / m.small
+func (m honeycombMetrics) magnified(d, curvature float32) float32 {
+	return m.lens(curvature, d, func(fall float32) float32 {
+		e := float32(math.Exp(float64(-d / fall)))
+		return (m.tiny*d + (m.large-m.tiny)*fall*(1-e)) / m.small
+	})
+}
+
+// lens applies the curvature to a measure of the lens, given as a function of
+// its fall: below 1 the lens weakens towards flat, the measure unmagnified,
+// and above 1 it falls off sooner.
+func (m honeycombMetrics) lens(curvature, flat float32, measure func(fall float32) float32) float32 {
+	if curvature >= 1 {
+		return measure(m.fall / curvature)
+	}
+	return flat + (measure(m.fall)-flat)*curvature
 }
 
 // honeycombBall turns an item at dx, dy from the middle of the view to lie on
