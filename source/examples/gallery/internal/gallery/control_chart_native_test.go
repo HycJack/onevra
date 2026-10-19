@@ -69,14 +69,19 @@ func TestNativeCharts(t *testing.T) {
 				for _, index := range []int{-1, 1} {
 					mygo.RunOnMain(func() {
 						for _, name := range example.variants {
-							chartDemo(state).selection(name).Index = index
+							chartDemo(state).tile(name).selection.Index = index
 						}
 						win.Invalidate()
 					})
 					time.Sleep(180 * time.Millisecond)
 					capture(fmt.Sprint(index))
 				}
-				mygo.RunOnMain(func() { state.on = true; win.Invalidate() })
+				mygo.RunOnMain(func() {
+					for _, name := range example.variants {
+						chartDemo(state).tile(name).round++
+					}
+					win.Invalidate()
+				})
 				time.Sleep(90 * time.Millisecond)
 				capture("updating")
 				time.Sleep(300 * time.Millisecond)

@@ -60,6 +60,37 @@ func TestCartesianInteraction(t *testing.T) {
 	}
 }
 
+func TestSelectionTooltip(t *testing.T) {
+	state := State{Index: -1}
+	tt := ui.NewTester(func(c *ui.Context) {
+		Bar(c, &state, sample, Options{Label: "Plot", Detail: func(c *ui.Context, s Selection) { ui.Text(c, "Tip "+s.Label) }})
+	}, 400, 500)
+	r, _ := tt.Find("Plot")
+	tt.Move(r.X+r.W*.92, r.Y+r.H*.3)
+	high, ok := tt.Find("Tip Thu")
+	tt.Move(r.X+r.W*.92, r.Y+r.H*.6)
+	low, _ := tt.Find("Tip Thu")
+	if !ok || low.Y <= high.Y || low.X < r.X+r.W*.92 && low.X+low.W > r.X+r.W*.92 {
+		t.Fatalf("tooltip does not follow the pointer beside it: %+v %+v", high, low)
+	}
+	tt.Move(r.X+r.W/2, r.Y+r.H+200)
+	if tt.HasText("Tip Thu") {
+		t.Fatal("tooltip stayed after the pointer left")
+	}
+	tt.ClickAt(r.X+r.W/2, r.Y+r.H/2)
+	tt.Move(r.X+r.W/2, r.Y+r.H+200)
+	tt.Key(0, ui.KeyHome)
+	if !tt.HasText("Tip Mon") {
+		t.Fatal("keyboard selection has no tooltip")
+	}
+	if err := tt.Click("Alpha"); err != nil {
+		t.Fatal(err)
+	}
+	if tt.HasText("Tip Mon") {
+		t.Fatal("tooltip stayed after the plot lost the focus")
+	}
+}
+
 func TestLegendEmptyAndDataChanges(t *testing.T) {
 	for name, view := range cartesianViews {
 		t.Run(name, func(t *testing.T) {
@@ -72,7 +103,8 @@ func TestLegendEmptyAndDataChanges(t *testing.T) {
 			if err := tt.Click("Beta"); err != nil {
 				t.Fatal(err)
 			}
-			tt.Frame()
+			r, _ := tt.Find("Plot")
+			tt.Move(r.X+r.W*.92, r.Y+r.H/2)
 			if !state.Hidden["b"] || len(selected.Values) != 1 || selected.Values[0].ID != "a" {
 				t.Fatalf("legend did not hide series: %+v", selected)
 			}
@@ -176,7 +208,7 @@ func TestDonutSelectionAndFiltering(t *testing.T) {
 	if err := tt.Click("Beta"); err != nil {
 		t.Fatal(err)
 	}
-	if state.Index != 2 || !tt.HasText("Beta  1 h") {
+	if state.Index != 2 || !tt.HasText("1 h") {
 		t.Fatal("legend selection lost input index or formatting")
 	}
 	if err := tt.Click("Plot"); err != nil {
@@ -290,16 +322,16 @@ func TestBubbleSelectionAndFiltering(t *testing.T) {
 	if err := tt.Click("Beta"); err != nil {
 		t.Fatal(err)
 	}
-	if state.Index != 2 || !tt.HasText("Beta  1 h") {
-		t.Fatal("legend selection lost input index or formatting")
+	if state.Index != 2 || tt.HasText("1 h") {
+		t.Fatal("legend selection lost input index or showed a tooltip")
 	}
 	if err := tt.Click("Plot"); err != nil {
 		t.Fatal(err)
 	}
 	tt.Key(0, ui.KeyHome)
 	tt.Key(0, ui.KeyRight)
-	if state.Index != 2 {
-		t.Fatal("keyboard selection did not skip zero values")
+	if state.Index != 2 || !tt.HasText("1 h") {
+		t.Fatal("keyboard selection did not skip zero values or show its tooltip")
 	}
 	tt.Key(0, ui.KeyEscape)
 	if state.Index != -1 {
@@ -329,7 +361,7 @@ func TestBubbleSelectionAndFiltering(t *testing.T) {
 }
 
 func TestLocalStateAndSlots(t *testing.T) {
-	selected := [2]Selection{}
+	selected := [2]Selection{{Index: -1}, {Index: -1}}
 	tt := ui.NewTester(func(c *ui.Context) {
 		ui.Column(c).Fill().Children(func() {
 			for i := range 2 {

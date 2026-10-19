@@ -10,7 +10,7 @@ import (
 func TestChartPages(t *testing.T) {
 	page := pageFromKey("controls/Data charts")
 	example, ok := controlExampleFor(page)
-	if !ok || example.group != "Charts" || len(example.variants) != 6 {
+	if !ok || example.group != "Charts" || len(example.variants) != 7 {
 		t.Fatal("charts are not one public component page")
 	}
 	for _, language := range []string{"en", "zh-Hans"} {
@@ -55,21 +55,22 @@ func TestChartSelectionsIndependent(t *testing.T) {
 		tt := ui.NewTester(func(c *ui.Context) { theme.Apply(c); controlChart(c, s, name) }, 540, 400)
 		label := "Chart selection"
 		if name == "Split bar" {
-			label = "Traffic by source" // The title precedes the bar it names.
+			label = "Traffic by source"
 		}
 		r, ok := tt.Find(label)
 		if !ok {
 			t.Fatalf("%s: missing plot", name)
 		}
 		tt.ClickAt(r.X+r.W/2, r.Y+r.H/2)
-		if name == "Split bar" {
+		// The title precedes the bar, after the tile's tools.
+		for n := 0; name == "Split bar" && !tt.Focused(label) && n < 8; n++ {
 			tt.Key(0, ui.KeyTab)
 		}
 		tt.Key(0, ui.KeyHome)
 		tt.Key(0, ui.KeyRight)
 		for j, other := range names {
-			if want := map[bool]int{true: 1, false: -1}[j <= i]; chartDemo(s).selection(other).Index != want {
-				t.Fatalf("after %s, %s selection = %d", name, other, chartDemo(s).selection(other).Index)
+			if want := map[bool]int{true: 1, false: -1}[j <= i]; chartDemo(s).tile(other).selection.Index != want {
+				t.Fatalf("after %s, %s selection = %d", name, other, chartDemo(s).tile(other).selection.Index)
 			}
 		}
 	}

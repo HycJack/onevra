@@ -467,7 +467,7 @@ func splitPlot(c *ui.Context, plot ui.Element, st *splitMotion, s split, data []
 		colors[j] = color(c, i, data[i].Color)
 		rowOf[j] = st.rows[data[i].ID]
 	}
-	focused := plot.Focused()
+	focused := plot.FocusVisible()
 	plot.Draw(func(p *ui.Painter, r ui.Rect) {
 		if r.W <= 0 {
 			return

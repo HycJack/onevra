@@ -111,7 +111,6 @@ func cartesian(c *ui.Context, state *State, data Data, opts Options, kind kind) 
 		if !opts.HideLegend {
 			seriesLegend(c, state, data)
 		}
-		detail(c, opts, selection(state.Index))
 	})
 	return e
 }
@@ -216,6 +215,7 @@ func plot(c *ui.Context, state *State, data Data, opts Options, kind kind, p pre
 			if selected >= 0 {
 				base.RuleX(c, xs[selected], 1).Background(t.TextMuted.Alpha(.3))
 			}
+			tip(c, area, opts, selection(selected), func() ui.Element { return base.RuleX(c, xs[selected], 0) })
 		}).Fill().MinWidth(0).Gap(10)
 	})
 }

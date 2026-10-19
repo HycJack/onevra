@@ -9,7 +9,6 @@ import (
 var navigationIcons = map[string]func() *ui.SVG{
 	"Shader backgrounds": lucide.Orbit,
 	"Data charts":        lucide.ChartColumn,
-	"Bubble chart":       lucide.ChartScatter,
 	"Relationship graph": lucide.Waypoints,
 	"Treemap":            lucide.LayoutDashboard,
 	"Flow diagram":       lucide.Workflow,

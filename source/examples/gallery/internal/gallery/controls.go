@@ -17,7 +17,6 @@ type controlExample struct {
 type controlState struct {
 	chat                   *chatDemoState
 	chart                  *chartDemoState
-	bubble                 *bubbleDemoState
 	graph                  *graphDemoState
 	treemap                *treemapDemoState
 	flow                   *flowDemoState
@@ -97,8 +96,7 @@ var controlSections = map[string][]controlExample{
 
 var controlCatalog = []controlExample{
 	{"Shader backgrounds", "Shader backgrounds", "Shaders", []string{"Default"}, controlShaderBackgrounds},
-	{"Data charts", "Data charts", "Charts", []string{"Bar chart", "Line chart", "Area chart", "Stacked bar chart", "Donut chart", "Split bar"}, controlChart},
-	{"Bubble chart", "Bubble chart", "Charts", []string{"Default"}, controlBubbleChart},
+	{"Data charts", "Data charts", "Charts", []string{"Bar chart", "Line chart", "Area chart", "Stacked bar chart", "Donut chart", "Bubble chart", "Split bar"}, controlChart},
 	{"Relationship graph", "Relationship graph", "Charts", []string{"Default"}, controlGraph},
 	{"Treemap", "Treemap", "Charts", []string{"Default"}, controlTreemap},
 	{"Flow diagram", "Flow diagram", "Charts", []string{"Default"}, controlFlow},
@@ -147,7 +145,7 @@ var controlCatalog = []controlExample{
 // controlToolbars hold page-level sample actions, which the titlebar shows
 // after the page title so the content stays with the example itself.
 var controlToolbars = map[string]func(*ui.Context, *controlState){
-	"Data charts": chartToolbar, "Bubble chart": bubbleToolbar, "Relationship graph": graphToolbar, "Treemap": treemapToolbar, "Flow diagram": flowToolbar, "Honeycomb": honeycombToolbar, "Chat": chatToolbar,
+	"Relationship graph": graphToolbar, "Treemap": treemapToolbar, "Flow diagram": flowToolbar, "Honeycomb": honeycombToolbar, "Chat": chatToolbar,
 }
 
 func controlPageStart() galleryPage { return mygoPageStart + galleryPage(len(mygoCatalog)) }
@@ -265,9 +263,11 @@ func (g *Gallery) controlsLocalized(c *ui.Context, example controlExample) {
 			if example.name == "Data charts" {
 				// Every chart follows the titlebar's data actions.
 				s := g.controlState(example.name, "Default")
-				for _, variant := range example.variants {
-					g.controlSection(c, variant, func() { example.build(c, s, variant) })
-				}
+				ui.Row(c).FillWidth().MinWidth(0).Wrap().AlignItems(ui.Start).Gap(t.Space(4)).Children(func() {
+					for _, variant := range example.variants {
+						ui.Box(c).Key(variant).MaxWidthPercent(100).Children(func() { example.build(c, s, variant) })
+					}
+				})
 				return
 			}
 			if example.name == "Select" {
@@ -304,7 +304,7 @@ func (g *Gallery) controlVariants(c *ui.Context, example controlExample, heading
 			for _, variant := range example.variants {
 				cell := ui.Column(c).Key(variant).MinWidth(0).MaxWidthPercent(100).Gap(12)
 				switch example.name {
-				case "Text", "GridView", "Bubble chart", "Card stack":
+				case "Text", "GridView", "Card stack":
 					cell.FillWidth()
 				case "TagInput":
 					cell.Width(320)

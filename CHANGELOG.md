@@ -5,6 +5,7 @@ User-facing updates for Onevra library consumers.
 ## [Unreleased]
 
 - Breaking: Make `components.Breadcrumbs` fill its parent's width.
+- Breaking: Show `chart.Options.Detail` in a selection tooltip instead of a panel below the plot.
 - Add `chat.EffortPicker` and `chat.EffortState`.
 - Add `components.HoneycombItem.Menu`.
 - Add `components.IconButtonCompact`.
@@ -19,6 +20,7 @@ User-facing updates for Onevra library consumers.
 - Change `chart.Bubble` to show its first pack without growing in.
 - Change `flow.View` edges to bend less, with rounded corners.
 - Localize component and Shell labels in Traditional Chinese, Japanese and Korean.
+- Fix `chart.SplitBar` showing a focus ring after a click.
 - Fix `components.Breadcrumbs` layout shifting as items become current.
 - Fix `flow.View` animating its layout as it appears.
 

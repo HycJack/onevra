@@ -60,11 +60,14 @@ type Selection struct {
 }
 
 // Options supplies presentation and application-owned content. PlotHeight
-// defaults to 220 DIPs; legends and details add their own height below the plot.
-// FormatValue formats axes, details and accessible values (nil uses numbers).
-// Detail replaces the selection panel and is called even when Index is -1.
-// Empty replaces the empty plot, including when all series are hidden; legends
-// remain available. With no Empty slot, EmptyText is shown (default "—").
+// defaults to 220 DIPs; legends add their own height below the plot.
+// FormatValue formats axes, tooltips and accessible values (nil uses numbers).
+// Description describes the plot to assistive technology.
+// Detail replaces the content of the selection tooltip, which follows the
+// pointer over the plot or sits beside a selection the keyboard made; it is
+// called only while the tooltip shows. Empty replaces the empty plot,
+// including when all series are hidden; legends remain available. With no
+// Empty slot, EmptyText is shown (default "—").
 type Options struct {
 	Label, Description, EmptyText string
 	PlotHeight                    float32
@@ -75,7 +78,7 @@ type Options struct {
 	// AnimationDuration controls numeric data transitions: zero uses 300 ms,
 	// negative disables them. Reduced Motion always skips intermediate frames.
 	// Initial data, category/series changes and missing-value changes appear
-	// immediately. Details and accessible values always report the latest data.
+	// immediately. Tooltips and accessible values always report the latest data.
 	AnimationDuration time.Duration
 }
 
@@ -142,34 +145,6 @@ func describe(opts Options, selection Selection) string {
 		parts = append(parts, v.Label+": "+format(opts, v.Value))
 	}
 	return strings.Join(parts, "; ")
-}
-
-func detail(c *ui.Context, opts Options, selection Selection) {
-	if opts.Detail != nil {
-		opts.Detail(c, selection)
-		return
-	}
-	t := c.Theme()
-	ui.Column(c).FillWidth().MinWidth(0).MinHeight(t.Space(10)).Padding(t.Space(2), t.Space(3)).
-		Radius(t.Radius).Background(t.Text.Alpha(.035)).Gap(t.Space(1)).Children(func() {
-		if selection.Index < 0 {
-			text := opts.Description
-			if text == "" {
-				text = "—"
-			}
-			components.Text(c, text).FontSize(t.FontSize - 1).TextColor(t.TextMuted)
-			return
-		}
-		components.Text(c, selection.Label).FontSize(t.FontSize - 1).Bold()
-		ui.Row(c).FillWidth().MinWidth(0).Wrap().Gap(t.Space(3)).Children(func() {
-			for _, v := range selection.Values {
-				ui.Row(c).MinWidth(0).MaxWidthPercent(100).AlignItems(ui.Center).Gap(t.Space(1.5)).Children(func() {
-					swatch(c, v.Color)
-					components.Text(c, v.Label+"  "+format(opts, v.Value)).FontSize(t.FontSize - 1)
-				})
-			}
-		})
-	})
 }
 
 func swatch(c *ui.Context, color ui.Color) {

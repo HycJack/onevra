@@ -108,9 +108,15 @@ func Bubble(c *ui.Context, state *State, data []Slice, opts Options) ui.Element 
 					bubbleText(p, t, b, data[i].Label, format(opts, data[i].Value))
 				}
 			})
+			area.Children(func() {
+				tip(c, area, opts, sliceSelection(c, data, selected), func() ui.Element {
+					r := area.LayoutBounds()
+					b := viewBubbles(circles, ui.Rect{W: r.W, H: r.H}, aspect)[slices.Index(indices, selected)]
+					return ui.Box(c).Absolute().Left(b.x-b.r).Top(b.y-b.r).Size(2*b.r, 2*b.r)
+				})
+			})
 		}
 		sliceLegend(c, state, data, indices, opts)
-		detail(c, opts, sliceSelection(c, data, state.Index))
 	})
 	return e
 }

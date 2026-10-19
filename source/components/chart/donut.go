@@ -1,6 +1,7 @@
 package chart
 
 import (
+	"math"
 	"slices"
 
 	"github.com/egoist/mygo/ui"
@@ -66,10 +67,16 @@ func Donut(c *ui.Context, state *State, data []Slice, opts Options) ui.Element {
 					}
 					components.Text(c, text).FontSize(t.FontSize * 1.7).Bold().NoWrap().MaxWidthPercent(100).Ellipsis("…")
 				})
+				tip(c, ring, opts, sliceSelection(c, data, selected), func() ui.Element {
+					// Beside the middle of the selected slice's band.
+					r, arc := ring.LayoutBounds(), arcs[slices.Index(indices, selected)]
+					radius := float64(max(0, min(r.W, r.H)/2-8)) * .82
+					angle := (arc.Start + arc.End) / 2
+					return ui.Box(c).Absolute().Left(r.W/2+float32(math.Sin(angle)*radius)).Top(r.H/2-float32(math.Cos(angle)*radius)).Size(0, 0)
+				})
 			})
 		}
 		sliceLegend(c, state, data, indices, opts)
-		detail(c, opts, sliceSelection(c, data, state.Index))
 	})
 	return e
 }

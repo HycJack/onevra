@@ -5156,16 +5156,6 @@ func (msgs Messages) ChartSelection() string {
 	return Catalog.Format(msgs.locale, "chartSelection", nil)
 }
 
-// ChartDaily says "Daily values"
-// in the language the app shows.
-func ChartDaily() string { return In(i18n.Locale()).ChartDaily() }
-
-// ChartDaily says "Daily values"
-// in the language of msgs.
-func (msgs Messages) ChartDaily() string {
-	return Catalog.Format(msgs.locale, "chartDaily", nil)
-}
-
 // ChartKeys says "Point at the chart, or focus it and use the arrow keys."
 // in the language the app shows.
 func ChartKeys() string { return In(i18n.Locale()).ChartKeys() }
@@ -5416,6 +5406,26 @@ func (msgs Messages) ChartEmpty() string {
 	return Catalog.Format(msgs.locale, "chartEmpty", nil)
 }
 
+// ChartHideLegend says "Hide legend"
+// in the language the app shows.
+func ChartHideLegend() string { return In(i18n.Locale()).ChartHideLegend() }
+
+// ChartHideLegend says "Hide legend"
+// in the language of msgs.
+func (msgs Messages) ChartHideLegend() string {
+	return Catalog.Format(msgs.locale, "chartHideLegend", nil)
+}
+
+// ChartShowLegend says "Show legend"
+// in the language the app shows.
+func ChartShowLegend() string { return In(i18n.Locale()).ChartShowLegend() }
+
+// ChartShowLegend says "Show legend"
+// in the language of msgs.
+func (msgs Messages) ChartShowLegend() string {
+	return Catalog.Format(msgs.locale, "chartShowLegend", nil)
+}
+
 // ChartRestore says "Restore data"
 // in the language the app shows.
 func ChartRestore() string { return In(i18n.Locale()).ChartRestore() }
@@ -5474,16 +5484,6 @@ func ChartPrevious() string { return In(i18n.Locale()).ChartPrevious() }
 // in the language of msgs.
 func (msgs Messages) ChartPrevious() string {
 	return Catalog.Format(msgs.locale, "chartPrevious", nil)
-}
-
-// ChartDistribution says "Time distribution"
-// in the language the app shows.
-func ChartDistribution() string { return In(i18n.Locale()).ChartDistribution() }
-
-// ChartDistribution says "Time distribution"
-// in the language of msgs.
-func (msgs Messages) ChartDistribution() string {
-	return Catalog.Format(msgs.locale, "chartDistribution", nil)
 }
 
 // ChartDesign says "Design"
