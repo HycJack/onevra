@@ -27,11 +27,13 @@ const (
 	zoomEpsilon      = .0005
 	clickTolerance   = 4
 	revealMargin     = 16
-	defaultEdgeWidth = 1.25
-	arrowLength      = 7
-	arrowHalfWidth   = 4
-	dashLength       = 5
-	dashGap          = 4
+	defaultEdgeWidth = 1.5
+	cornerRadius     = 12
+	cornerSteps      = 6
+	arrowLength      = 6
+	arrowHalfWidth   = 3.5
+	dashLength       = 4
+	dashGap          = 5
 	ringGap          = 3
 	ringWidth        = 2
 	labelSize        = 11
@@ -269,8 +271,8 @@ type colors struct {
 
 func (v *view) palette(t *ui.Theme) colors {
 	return colors{
-		line: t.TextMuted, emphasis: t.Accent, ring: t.Accent,
-		label: t.TextMuted, labelFace: t.Background, labelBorder: t.Border,
+		line: t.TextMuted.Mix(t.Background, .45), emphasis: t.Accent.Alpha(.85), ring: t.Accent.Alpha(.7),
+		label: t.TextMuted, labelFace: t.Background, labelBorder: t.Border.Alpha(.7),
 	}
 }
 
@@ -403,9 +405,7 @@ func labelAnchor(points []point) (float64, float64) {
 	return (a.x + b.x) / 2, (a.y + b.y) / 2
 }
 
-// drawRoute draws a route as axis-aligned fills, which the GPU draws
-// directly, ending in an arrowhead. Segments a transition bends off the
-// axes draw as paths.
+// drawRoute draws a route with rounded bends, ending in an arrowhead.
 func drawRoute(p *ui.Painter, points []point, width float32, c ui.Color, dashed bool) {
 	n := len(points)
 	end, before := points[n-1], points[n-2]
@@ -418,61 +418,106 @@ func drawRoute(p *ui.Painter, points []point, width float32, c ui.Color, dashed 
 	head := math.Min(arrowLength, length)
 	line := append([]point(nil), points...)
 	line[n-1] = point{end.x - ux*head*.8, end.y - uy*head*.8}
-	phase := 0.0
-	for k := 1; k < n; k++ {
-		a, b := line[k-1], line[k]
-		if dashed {
-			phase = dashes(p, a, b, phase, width, c)
-		} else {
-			segment(p, a, b, width, c)
-		}
+	var path ui.Path
+	if dashed {
+		dashes(&path, rounded(line))
+	} else {
+		path.MoveTo(float32(line[0].x), float32(line[0].y))
+		corners(line, func(a, control, b point) {
+			path.LineTo(float32(a.x), float32(a.y)).QuadTo(float32(control.x), float32(control.y), float32(b.x), float32(b.y))
+		})
+		last := line[n-1]
+		path.LineTo(float32(last.x), float32(last.y))
 	}
+	p.StrokePath(&path, width, c)
 	var arrow ui.Path
 	arrow.MoveTo(float32(end.x), float32(end.y)).
 		LineTo(float32(end.x-ux*head-uy*arrowHalfWidth), float32(end.y-uy*head+ux*arrowHalfWidth)).
 		LineTo(float32(end.x-ux*head+uy*arrowHalfWidth), float32(end.y-uy*head-ux*arrowHalfWidth)).
 		Close()
+	// The stroke's round joins soften the head's points.
 	p.FillPath(&arrow, c)
+	p.StrokePath(&arrow, 1, c)
 }
 
-// segment draws a straight line with square ends, so that bends join.
-func segment(p *ui.Painter, a, b point, width float32, c ui.Color) {
-	half := float64(width) / 2
-	switch {
-	case math.Abs(a.y-b.y) < .01:
-		p.Fill(ui.Rect{X: float32(min(a.x, b.x) - half), Y: float32(a.y - half), W: float32(math.Abs(b.x-a.x) + 2*half), H: width}, c, 0)
-	case math.Abs(a.x-b.x) < .01:
-		p.Fill(ui.Rect{X: float32(a.x - half), Y: float32(min(a.y, b.y) - half), W: width, H: float32(math.Abs(b.y-a.y) + 2*half)}, c, 0)
-	default:
-		var line ui.Path
-		line.MoveTo(float32(a.x), float32(a.y)).LineTo(float32(b.x), float32(b.y))
-		p.StrokePath(&line, width, c)
-	}
-}
-
-// dashes draws a dashed segment continuing the pattern at phase, and
-// returns the phase at its end.
-func dashes(p *ui.Painter, a, b point, phase float64, width float32, c ui.Color) float64 {
-	length := math.Hypot(b.x-a.x, b.y-a.y)
-	if length == 0 {
-		return phase
-	}
-	ux, uy := (b.x-a.x)/length, (b.y-a.y)/length
-	period := float64(dashLength + dashGap)
-	at := 0.0
-	for at < length {
-		offset := math.Mod(phase+at, period)
-		if offset < dashLength {
-			run := math.Min(dashLength-offset, length-at)
-			from := point{a.x + ux*at, a.y + uy*at}
-			to := point{a.x + ux*(at+run), a.y + uy*(at+run)}
-			segment(p, from, to, width, c)
-			at += run
-		} else {
-			at += period - offset
+// corners calls bend for each interior point of a route with where its
+// curve leaves the incoming segment, the point itself as control and where
+// it joins the outgoing one. Bends take at most half of either segment, so
+// short jogs become smooth steps.
+func corners(points []point, bend func(a, control, b point)) {
+	for k := 1; k+1 < len(points); k++ {
+		prev, at, next := points[k-1], points[k], points[k+1]
+		in, out := math.Hypot(at.x-prev.x, at.y-prev.y), math.Hypot(next.x-at.x, next.y-at.y)
+		if in == 0 || out == 0 {
+			continue
 		}
+		r := math.Min(cornerRadius, math.Min(in, out)/2)
+		bend(point{at.x - (at.x-prev.x)/in*r, at.y - (at.y-prev.y)/in*r}, at,
+			point{at.x + (next.x-at.x)/out*r, at.y + (next.y-at.y)/out*r})
 	}
-	return math.Mod(phase+length, period)
+}
+
+// rounded returns a route as a polyline whose bends follow the same curves
+// as a solid route's.
+func rounded(points []point) []point {
+	out := []point{points[0]}
+	corners(points, func(a, control, b point) {
+		out = append(out, a)
+		for step := 1; step <= cornerSteps; step++ {
+			t := float64(step) / cornerSteps
+			u := 1 - t
+			out = append(out, point{u*u*a.x + 2*u*t*control.x + t*t*b.x, u*u*a.y + 2*u*t*control.y + t*t*b.y})
+		}
+	})
+	return append(out, points[len(points)-1])
+}
+
+// dashes adds the dashes of a polyline to path. Straight segments along an
+// axis anchor the pattern to the plane, so edges sharing a track dash in
+// step whichever way they run; curves continue it.
+func dashes(path *ui.Path, points []point) {
+	const period = dashLength + dashGap
+	phase, drawing := 0.0, false
+	for k := 1; k < len(points); k++ {
+		a, b := points[k-1], points[k]
+		length := math.Hypot(b.x-a.x, b.y-a.y)
+		if length == 0 {
+			continue
+		}
+		ux, uy := (b.x-a.x)/length, (b.y-a.y)/length
+		if math.Abs(ux) > .999 || math.Abs(uy) > .999 {
+			// Along the axis a dash covers [k·period, k·period+dashLength]
+			// of the plane's coordinate, entered from either end.
+			anchor := ux*a.x + uy*a.y
+			if ux < 0 || uy < 0 {
+				anchor += dashLength
+			}
+			if next := math.Mod(math.Mod(anchor, period)+period, period); math.Abs(next-phase) > .01 {
+				drawing = false
+				phase = next
+			}
+		}
+		at := 0.0
+		for at < length {
+			offset := math.Mod(phase+at, period)
+			run := period - offset
+			if offset < dashLength {
+				run = dashLength - offset
+			}
+			run = math.Min(run, length-at)
+			if offset < dashLength {
+				if !drawing {
+					path.MoveTo(float32(a.x+ux*at), float32(a.y+uy*at))
+					drawing = true
+				}
+				path.LineTo(float32(a.x+ux*(at+run)), float32(a.y+uy*(at+run)))
+			} else {
+				drawing = false
+			}
+			at += run
+		}
+		phase = math.Mod(phase+length, period)
+	}
 }
 
 func clamp(v, lo, hi float64) float64 { return math.Max(lo, math.Min(v, hi)) }

@@ -17,11 +17,19 @@ import (
 // down the ranks. Top to bottom maps them to x and y, left to right to y
 // and x.
 
+// portInset keeps an edge's end this far inside a node's side, clear of
+// its rounded corners.
+const portInset = 24
+
 type point struct{ x, y float64 }
 
 type layoutNode struct{ width, height float64 }
 
-type layoutEdge struct{ source, target int }
+// layoutEdge joins two nodes; dashed edges keep off solid ones' tracks.
+type layoutEdge struct {
+	source, target int
+	dashed         bool
+}
 
 type spacing struct {
 	// node separates nodes across a rank, rank separates the ranks and edge
@@ -139,23 +147,24 @@ func layout(nodes []layoutNode, edges []layoutEdge, direction Direction, gaps sp
 		result.width, result.height = max(result.width, corner.x+size.x), max(result.height, corner.y+size.y)
 	}
 
-	tracks := assignTracks(vertices, chains, n)
+	lines := straighten(vertices, layers, chains, gaps)
+	tracks := assignTracks(vertices, chains, lines, edges, n)
 	for i, chain := range chains {
 		if chain == nil {
 			continue
 		}
+		xs := lines[i]
 		first, last := chain[0], chain[len(chain)-1]
-		points := []point{{vertices[first].pos, start(first) + vertices[first].depth}}
+		points := []point{{xs[0], start(first) + vertices[first].depth}}
 		for j := 1; j < len(chain); j++ {
-			a, b := vertices[chain[j-1]], vertices[chain[j]]
-			if math.Abs(a.pos-b.pos) < .5 {
+			if math.Abs(xs[j-1]-xs[j]) < .5 {
 				continue
 			}
-			r := a.rank
+			r := vertices[chain[j-1]].rank
 			bottom := top[r] + depth[r]
 			k := tracks[trackKey{i, j}]
 			d := bottom + gaps.rank*float64(k.index+1)/float64(k.count+1)
-			points = append(points, point{a.pos, d}, point{b.pos, d})
+			points = append(points, point{xs[j-1], d}, point{xs[j], d})
 		}
 		// Runs straighter than half a DIP stay straight, so the edge ends
 		// in line with its last bend.
@@ -497,11 +506,97 @@ type trackKey struct{ edge, step int }
 
 type track struct{ index, count int }
 
+// straighten chooses where each edge crosses each rank of its chain so that
+// it bends as rarely as possible. A dummy may move within the corridor its
+// neighbours leave, and an edge may end anywhere along a node's side that
+// no other edge uses; edges sharing a side meet at its middle, as branches
+// of one line. Each straight run settles as near its vertices' placed
+// positions as its corridors allow.
+func straighten(vertices []vertex, layers [][]int, chains [][]int, gaps spacing) [][]float64 {
+	clearance := gaps.edge * .75
+	// side bounds the lines through a beside its neighbour b, on b's side.
+	side := func(a, b *vertex) float64 {
+		if b.dummy {
+			return (a.pos + b.pos) / 2
+		}
+		if b.pos < a.pos {
+			return b.pos + b.breadth/2 + clearance
+		}
+		return b.pos - b.breadth/2 - clearance
+	}
+	corridor := func(v int, edges int) (float64, float64) {
+		vx := &vertices[v]
+		if !vx.dummy {
+			if edges > 1 {
+				return vx.pos, vx.pos
+			}
+			inset := min(vx.breadth/2, portInset)
+			return vx.pos - vx.breadth/2 + inset, vx.pos + vx.breadth/2 - inset
+		}
+		lo, hi := math.Inf(-1), math.Inf(1)
+		layer := layers[vx.rank]
+		if k := vx.index; k > 0 {
+			lo = side(vx, &vertices[layer[k-1]])
+			if vertices[layer[k-1]].dummy {
+				lo += gaps.edge / 4
+			}
+		}
+		if k := vx.index; k+1 < len(layer) {
+			hi = side(vx, &vertices[layer[k+1]])
+			if vertices[layer[k+1]].dummy {
+				hi -= gaps.edge / 4
+			}
+		}
+		return min(lo, vx.pos), max(hi, vx.pos)
+	}
+	lines := make([][]float64, len(chains))
+	for i, chain := range chains {
+		if chain == nil {
+			continue
+		}
+		xs := make([]float64, len(chain))
+		begin := 0
+		var lo, hi float64
+		settle := func(end int) {
+			sum := 0.0
+			for _, v := range chain[begin:end] {
+				sum += vertices[v].pos
+			}
+			x := clamp(sum/float64(end-begin), lo, hi)
+			for k := begin; k < end; k++ {
+				xs[k] = x
+			}
+		}
+		for j, v := range chain {
+			edges := 0
+			switch j {
+			case 0:
+				edges = len(vertices[v].down)
+			case len(chain) - 1:
+				edges = len(vertices[v].up)
+			}
+			l, h := corridor(v, edges)
+			if j > 0 && (l > hi || h < lo) {
+				settle(j)
+				begin = j
+			}
+			if j == begin {
+				lo, hi = l, h
+			} else {
+				lo, hi = max(lo, l), min(hi, h)
+			}
+		}
+		settle(len(chain))
+		lines[i] = xs
+	}
+	return lines
+}
+
 // assignTracks spreads the cross-rank runs of edges between each pair of
-// ranks over separate tracks wherever they would overlap. Runs leaving the
-// same node, or else reaching the same node, share a track, as branches of
-// one line.
-func assignTracks(vertices []vertex, chains [][]int, real int) map[trackKey]track {
+// ranks over separate tracks wherever they would overlap. Runs that branch
+// from a node's shared side share a track, as do runs of one style that
+// meet at a node's shared side, as branches of one line.
+func assignTracks(vertices []vertex, chains [][]int, lines [][]float64, edges []layoutEdge, real int) map[trackKey]track {
 	type run struct {
 		key    trackKey
 		lo, hi float64
@@ -511,17 +606,21 @@ func assignTracks(vertices []vertex, chains [][]int, real int) map[trackKey]trac
 	for i, chain := range chains {
 		for j := 1; j < len(chain); j++ {
 			a, b := chain[j-1], chain[j]
-			if math.Abs(vertices[a].pos-vertices[b].pos) < .5 {
+			xa, xb := lines[i][j-1], lines[i][j]
+			if math.Abs(xa-xb) < .5 {
 				continue
 			}
-			owner := 2*real + i
+			owner := 3*real + i
 			switch {
-			case a < real:
+			case a < real && len(vertices[a].down) > 1:
 				owner = a
-			case b < real:
-				owner = real + b
+			case b < real && len(vertices[b].up) > 1:
+				owner = real + 2*b
+				if edges[i].dashed {
+					owner++
+				}
 			}
-			lo, hi := min(vertices[a].pos, vertices[b].pos), max(vertices[a].pos, vertices[b].pos)
+			lo, hi := min(xa, xb), max(xa, xb)
 			r := vertices[a].rank
 			byRank[r] = append(byRank[r], run{trackKey{i, j}, lo, hi, owner})
 		}

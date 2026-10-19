@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/egoist/mygo/ui"
+	"github.com/oneo-me/onevra/source/components"
 	"github.com/oneo-me/onevra/source/theme"
 )
 
@@ -104,6 +105,35 @@ func TestViewMeasuresAndLaysOut(t *testing.T) {
 	}
 	if _, ok := h.tt.Find("Pipeline"); !ok {
 		t.Fatal("diagram has no accessible label")
+	}
+}
+
+func TestCardSlots(t *testing.T) {
+	tt := ui.NewTester(func(c *ui.Context) {
+		theme.Apply(c)
+		Card(c, CardOptions{
+			Title:    "Replaced title",
+			Header:   func(c *ui.Context) { components.Text(c, "Status") },
+			Leading:  func(c *ui.Context) { components.Text(c, "Icon") },
+			Body:     func(c *ui.Context) { components.Text(c, "Custom body") },
+			Trailing: func(c *ui.Context) { components.Text(c, "Badge") },
+			Footer:   func(c *ui.Context) { components.Text(c, "Counts") },
+		})
+	}, 400, 300)
+	tt.Frame()
+	if _, ok := tt.Find("Replaced title"); ok {
+		t.Fatal("title shows beside a body slot")
+	}
+	var boxes []ui.Rect
+	for _, s := range []string{"Status", "Icon", "Custom body", "Badge", "Counts"} {
+		r, ok := tt.Find(s)
+		if !ok {
+			t.Fatalf("slot %q does not show", s)
+		}
+		boxes = append(boxes, r)
+	}
+	if !(boxes[0].Y < boxes[2].Y && boxes[2].Y < boxes[4].Y) || !(boxes[1].X < boxes[2].X && boxes[2].X < boxes[3].X) {
+		t.Fatalf("slots out of place: %v", boxes)
 	}
 }
 

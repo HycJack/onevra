@@ -48,7 +48,9 @@ type flowStep struct {
 	title, detail string
 	experiment    int
 	notes, files  int
-	muted         bool
+	// checked of checks shows as progress in the card's body.
+	checked, checks int
+	muted           bool
 }
 
 type flowLink struct {
@@ -66,7 +68,7 @@ var flowSteps = []flowStep{
 	{id: "menus", kind: flowFinding, title: "flowMenus", detail: "flowMenusDetail"},
 	{id: "retest", status: flowWaiting, title: "flowRetest", detail: "flowRetestDetail", muted: true},
 	{id: "images", kind: flowFinding, title: "flowImages", detail: "flowImagesDetail"},
-	{id: "review", status: flowRunning, title: "flowReview", detail: "flowReviewDetail", notes: 1},
+	{id: "review", status: flowRunning, title: "flowReview", detail: "flowReviewDetail", notes: 1, checked: 3, checks: 5},
 	{id: "ready", kind: flowFinding, title: "flowReady", detail: "flowReadyDetail"},
 	{id: "notes", status: flowPlanned, title: "flowNotes", detail: "flowNotesDetail", muted: true},
 }
@@ -144,6 +146,16 @@ func flowCard(c *ui.Context, step flowStep, title, detail string) {
 				components.Icon(c, icon).Size(16, 16)
 			})
 		},
+	}
+	if step.checks > 0 {
+		opts.Body = func(c *ui.Context) {
+			components.Text(c, title).SingleLine().FontWeight(600)
+			components.Text(c, detail).SingleLine().FontSize(t.Rem(.85)).TextColor(t.TextMuted)
+			ui.Row(c).Gap(t.Space(2)).AlignItems(ui.Center).Padding(t.Space(1.5), 0, 0, 0).Children(func() {
+				components.Progress(c, float64(step.checked)/float64(step.checks)).Grow(1)
+				components.Text(c, fmt.Sprintf("%d/%d", step.checked, step.checks)).FontSize(t.Rem(.75)).TextColor(t.TextMuted)
+			})
+		}
 	}
 	if step.status == flowRunning {
 		opts.Border = t.Accent.Alpha(.6)

@@ -11,6 +11,8 @@ User-facing updates for Onevra library consumers.
 - Add `components.SidebarSectionWithActions`.
 - Add `components.TabsWith`.
 - Add `components.TabsWithLeading`.
+- Add `flow.CardOptions.Body` and `flow.CardOptions.Trailing`.
+- Change `flow.View` edges to bend less, with rounded corners.
 - Localize component and Shell labels in Traditional Chinese, Japanese and Korean.
 - Fix `components.Breadcrumbs` layout shifting as items become current.
 

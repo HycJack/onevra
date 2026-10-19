@@ -43,7 +43,7 @@ type Node struct {
 // Edge points from Source to Target. Edges to unknown nodes and self-loops
 // are ignored; edges closing a cycle are drawn against the layout's
 // direction. Label, when set, sits on the line. Zero Color and Width use
-// the theme's muted line, 1.25 DIPs wide.
+// the theme's soft line, 1.5 DIPs wide.
 type Edge struct {
 	Source, Target string
 	Label          string
@@ -382,6 +382,11 @@ func (v *view) prepare() {
 	for _, e := range v.edges {
 		h.int(e.source)
 		h.int(e.target)
+		dashed := byte(0)
+		if e.dashed {
+			dashed = 1
+		}
+		h.byte(dashed)
 	}
 	if h.sum != v.layoutKey || len(v.result.x) != len(v.nodes) {
 		v.layoutKey = h.sum
@@ -392,7 +397,7 @@ func (v *view) prepare() {
 		}
 		edges := make([]layoutEdge, len(v.edges))
 		for i, e := range v.edges {
-			edges[i] = layoutEdge{e.source, e.target}
+			edges[i] = layoutEdge{e.source, e.target, e.dashed}
 		}
 		v.result = layout(nodes, edges, v.direction, v.gaps)
 		if v.ready && !v.userMoved {

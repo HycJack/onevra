@@ -54,7 +54,7 @@ Layout, camera, hover and reveal advance in `Draw` on the UI thread. Initial tic
 
 ### Flow diagrams
 
-The [flow component](../../source/components/flow/flow.go) lays out directed diagrams in ranks: it reverses cycle-closing edges, ranks nodes to keep edges short, orders ranks to reduce crossings and routes orthogonal edges between ranks. Applications build node content, or use `Card`, and own selection and opening.
+The [flow component](../../source/components/flow/flow.go) lays out directed diagrams in ranks: it reverses cycle-closing edges, ranks nodes to keep edges short, orders ranks to reduce crossings and routes orthogonal edges between ranks. Edges cross ranks anywhere their neighbours leave free and bend only where blocked. Applications build node content, or use `Card`, whose regions are slots, and own selection and opening.
 
 Content is measured on the frame after it is built; the diagram shows once every node has a size and lays out again, moving nodes, when content resizes. Layout reruns in full on topology or size changes; applications bound diagram size. The camera uses the graph's [gestures](../../source/components/gesture/gesture.go).
 
