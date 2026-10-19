@@ -4,6 +4,8 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+## [0.2026.13] - 2026-10-19
+
 - Breaking: Make `components.Breadcrumbs` fill its parent's width.
 - Breaking: Show `chart.Options.Detail` in a selection tooltip instead of a panel below the plot.
 - Breaking: Show `treemap.Options.Tip` inside a tooltip like charts' instead of as the whole bubble.
