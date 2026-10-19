@@ -400,6 +400,42 @@ func TestHoneycombKeyboardChoosesItems(t *testing.T) {
 	}
 }
 
+func TestHoneycombItemMenu(t *testing.T) {
+	items := honeycombItems(5)
+	opened := ""
+	for i := range items {
+		id := items[i].ID
+		items[i].Menu = func(m *ui.Menu) {
+			if m.Item("Open " + id).Chosen() {
+				opened = id
+			}
+		}
+	}
+	selected := "p00"
+	tt := honeycombTester(items, &selected)
+	tt.Frame()
+	// A right-click opens the item's own menu without choosing it.
+	if err := tt.RightClick("p02"); err != nil {
+		t.Fatal(err)
+	}
+	if menu := tt.Menu(); !slices.Equal(menu, []string{"Open p02"}) {
+		t.Fatalf("menu %v", menu)
+	}
+	if err := tt.ChooseMenuItem("Open p02"); err != nil {
+		t.Fatal(err)
+	}
+	if opened != "p02" || selected != "p00" {
+		t.Fatalf("opened %q, selected %q", opened, selected)
+	}
+	// Shift+F10 opens the focused item's menu.
+	tt.Key(0, ui.KeyTab)
+	tt.Key(0, ui.KeyTab)
+	tt.Key(ui.Shift, ui.KeyF10)
+	if menu := tt.Menu(); !slices.Equal(menu, []string{"Open p01"}) {
+		t.Fatalf("keyboard menu %v", menu)
+	}
+}
+
 func TestHoneycombRingsInTheItemsColor(t *testing.T) {
 	ring := ui.RGB(0, 200, 0)
 	rings := func(items []HoneycombItem) int {

@@ -509,6 +509,18 @@ func TestHoneycombExampleAddRemove(t *testing.T) {
 		}
 		return false
 	}
+	// A cell's context menu removes that cell.
+	target := s.honeycombItems[1] // Images
+	if err := tt.RightClick("Images"); err != nil {
+		t.Fatal(err)
+	}
+	if err := tt.ChooseMenuItem("Remove item"); err != nil {
+		t.Fatal(err)
+	}
+	tt.Frame()
+	if slices.ContainsFunc(s.honeycombItems, func(item honeycombDemoItem) bool { return item.id == target.id }) {
+		t.Fatalf("context menu kept %q", target.id)
+	}
 	// Remove until empty; the selection stays valid as items disappear.
 	for len(s.honeycombItems) > 0 {
 		count := len(s.honeycombItems)

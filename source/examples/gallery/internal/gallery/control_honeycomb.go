@@ -140,6 +140,13 @@ func controlHoneycomb(c *ui.Context, s *controlState, _ string) {
 				})
 			}
 		}
+		// Each cell's context menu removes that cell.
+		id := item.id
+		items[i].Menu = func(m *ui.Menu) {
+			if m.Item(tr(c, "honeycombRemove")).Chosen() {
+				s.honeycombItems = slices.DeleteFunc(s.honeycombItems, func(item honeycombDemoItem) bool { return item.id == id })
+			}
+		}
 		if item.id == selected {
 			selectedLabel = msg(c).SelectedS(label)
 		}

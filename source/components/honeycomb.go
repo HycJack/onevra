@@ -28,6 +28,10 @@ type HoneycombItem struct {
 	// Ring colors the ring the item nearest the middle of the view wears, such
 	// as the main color of its image; transparent uses the theme's accent.
 	Ring ui.Color
+	// Menu, when set, fills the item's context menu, which opens where the
+	// item is right-clicked, without choosing it, and, while it has the
+	// focus, from the menu key or Shift+F10.
+	Menu func(m *ui.Menu)
 }
 
 // HoneycombOptions configures a Honeycomb.
@@ -317,6 +321,9 @@ func Honeycomb(c *ui.Context, options HoneycombOptions) string {
 					opacity = min(1, opacity+.25)
 				}
 				b.Opacity(opacity)
+				if item.Menu != nil {
+					b.ContextMenu(item.Menu)
+				}
 				if opacity > .15 {
 					p.hits = append(p.hits, honeycombHit{item.ID, ui.Rect{X: cx - size/2, Y: cy - size/2, W: size, H: size}})
 				}
