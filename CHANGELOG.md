@@ -5,6 +5,7 @@ User-facing updates for Onevra library consumers.
 ## [Unreleased]
 
 - Add `components.HoneycombItem.Caption`.
+- Change `components.ScrollEdgeBar` to make its default surface and edge more opaque.
 
 ## [0.2026.13] - 2026-10-19
 

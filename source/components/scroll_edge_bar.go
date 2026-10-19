@@ -44,8 +44,8 @@ type ScrollEdgeBarOptions struct {
 	// Color makes the bar less see-through: it lays over the glass in
 	// ScrollEdgeGlass, over the blur in ScrollEdgeBlur, fading out with it,
 	// and is the bar's own surface in ScrollEdgeSoft and ScrollEdgeHard.
-	// Unset, glass and blur take Background at 70%; soft and hard bars stay
-	// transparent.
+	// Unset, glass takes Background at 85% and blur at 93%; soft and hard
+	// bars stay transparent.
 	Color ui.Color
 	// Uncolored leaves glass and blur bare, without Color.
 	Uncolored bool
@@ -63,8 +63,20 @@ const (
 	scrollEdgeBlur      = 6
 )
 
-// scrollEdgeBarColor is the alpha of the default color of glass and blur.
-const scrollEdgeBarColor = 0.7
+// The alphas of the default color of glass and blur, and of the background
+// at the bar's edge in every style but glass.
+const (
+	scrollEdgeGlassColor = 0.85
+	scrollEdgeBlurColor  = 0.93
+	scrollEdgeBackground = 0.93
+)
+
+// The alphas at which MyGo's glass.ScrollEdge lays the background over the
+// content at the bar's edge, soft and hard.
+const (
+	glassSoftEdge = 0.85
+	glassHardEdge = 0.8245
+)
 
 func (o ScrollEdgeBarOptions) resolved(c *ui.Context) ScrollEdgeBarOptions {
 	if o.Height <= 0 {
@@ -80,7 +92,11 @@ func (o ScrollEdgeBarOptions) resolved(c *ui.Context) ScrollEdgeBarOptions {
 		if o.Color.A == 0 {
 			o.Color = c.Theme().Background
 		}
-		o.Color = o.Color.Alpha(scrollEdgeBarColor)
+		if o.Style == ScrollEdgeGlass {
+			o.Color = o.Color.Alpha(scrollEdgeGlassColor)
+		} else {
+			o.Color = o.Color.Alpha(scrollEdgeBlurColor)
+		}
 	}
 	return o
 }
@@ -191,11 +207,22 @@ func ScrollEdge(c *ui.Context, options ScrollEdgeOptions) ui.Element {
 		edge.Top(0)
 	}
 	extent := max(0, options.Extent)
+	// More of the background over MyGo's soft and hard edges, so that
+	// together they reach scrollEdgeBackground at the bar's edge.
+	bg := options.Background
+	if bg.A == 0 {
+		bg = c.Theme().Background
+	}
+	thicken := func(base float32) ui.Color {
+		return bg.Alpha(1 - (1-scrollEdgeBackground)/(1-base))
+	}
 	switch options.Style {
 	case ScrollEdgeGlass:
 		edge.Height(extent)
 	case ScrollEdgeHard:
-		edge.Height(extent).Material(glass.ScrollEdge{Hard: true, Bottom: options.Bottom, Background: options.Background})
+		over := thicken(glassHardEdge)
+		material := glass.ScrollEdge{Hard: true, Bottom: options.Bottom, Background: options.Background}
+		edge.Height(extent).Material(tinted{material, ui.LinearGradient{From: over, To: over}})
 	case ScrollEdgeBlur:
 		mask := &ui.LinearGradient{From: ui.RGB(0, 0, 0), To: ui.Transparent, Angle: 180, Start: 0.3, End: 1}
 		if options.Bottom {
@@ -211,7 +238,12 @@ func ScrollEdge(c *ui.Context, options ScrollEdgeOptions) ui.Element {
 			edge.Material(blur)
 		}
 	default:
-		edge.Height(extent + scrollEdgeSoftExtra).Material(glass.ScrollEdge{Bottom: options.Bottom, Background: options.Background})
+		over := ui.LinearGradient{From: thicken(glassSoftEdge), To: bg.Alpha(0), Angle: 180}
+		if options.Bottom {
+			over.Angle = 0
+		}
+		material := glass.ScrollEdge{Bottom: options.Bottom, Background: options.Background}
+		edge.Height(extent + scrollEdgeSoftExtra).Material(tinted{material, over})
 	}
 	return edge
 }

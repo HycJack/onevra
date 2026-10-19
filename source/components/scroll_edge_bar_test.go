@@ -71,8 +71,8 @@ func TestScrollEdgeBar(t *testing.T) {
 					}
 				default:
 					// Soft, hard and tinted blurred edges lay the light
-					// background over it.
-					if edge < 128 {
+					// background over it, at about 93% next to the bar.
+					if edge < 218 {
 						t.Fatalf("edge not toward the background: %d", edge)
 					}
 				}
@@ -121,11 +121,11 @@ func TestScrollEdgeBarColor(t *testing.T) {
 		{ScrollEdgeBarOptions{Style: ScrollEdgeSoft, Color: red}, [2]uint8{240, 255}, [2]uint8{0, 16}},
 		{ScrollEdgeBarOptions{Style: ScrollEdgeHard, Color: red}, [2]uint8{240, 255}, [2]uint8{0, 16}},
 		{ScrollEdgeBarOptions{Style: ScrollEdgeBlur, Color: red}, [2]uint8{190, 220}, [2]uint8{0, 16}},
-		{ScrollEdgeBarOptions{Style: ScrollEdgeBlur}, [2]uint8{125, 160}, [2]uint8{125, 160}},
-		// The background at 70% over the glass, and nothing over bare glass
-		// or a transparent bar.
-		{ScrollEdgeBarOptions{Style: ScrollEdgeGlass}, [2]uint8{200, 235}, [2]uint8{200, 235}},
-		{ScrollEdgeBarOptions{Style: ScrollEdgeGlass, Background: red}, [2]uint8{200, 240}, [2]uint8{20, 70}},
+		// The background at 93% over the blur and 85% over the glass, and
+		// nothing over bare glass or a transparent bar.
+		{ScrollEdgeBarOptions{Style: ScrollEdgeBlur}, [2]uint8{180, 205}, [2]uint8{180, 205}},
+		{ScrollEdgeBarOptions{Style: ScrollEdgeGlass}, [2]uint8{220, 250}, [2]uint8{220, 250}},
+		{ScrollEdgeBarOptions{Style: ScrollEdgeGlass, Background: red}, [2]uint8{220, 255}, [2]uint8{0, 45}},
 		{ScrollEdgeBarOptions{Style: ScrollEdgeGlass, Color: red, Uncolored: true}, [2]uint8{0, 150}, [2]uint8{0, 150}},
 		{ScrollEdgeBarOptions{Style: ScrollEdgeBlur, Uncolored: true}, [2]uint8{0, 16}, [2]uint8{0, 16}},
 	} {
