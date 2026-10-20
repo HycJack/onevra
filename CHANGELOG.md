@@ -4,6 +4,7 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Add `chat.ComposerOptions.StopDisabled`.
 - Add `components.HoneycombItem.Caption`.
 - Add `components.SwitchOptions.Compact`.
 - Add `components.TabsOptions.Trailing`.

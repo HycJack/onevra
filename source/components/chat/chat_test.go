@@ -314,10 +314,10 @@ func TestComposerSubmitOnEnterAndSteering(t *testing.T) {
 			}
 			draft := ""
 			sends, stops := 0, 0
-			running := false
+			running, stopDisabled := false, false
 			tt := ui.NewTester(func(c *ui.Context) {
 				p := composer(c, &draft, ComposerOptions{Label: "Message", SendLabel: "Send", StopLabel: "Stop",
-					Running: running})
+					Running: running, StopDisabled: stopDisabled})
 				if p.Send {
 					sends++
 				}
@@ -363,7 +363,11 @@ func TestComposerSubmitOnEnterAndSteering(t *testing.T) {
 			if err := tt.Click("Stop"); err != nil || stops != 1 {
 				t.Fatal("stop failed")
 			}
-
+			stopDisabled = true
+			tt.Frame()
+			if err := tt.Click("Stop"); err != nil || stops != 1 {
+				t.Fatalf("disabled stop: %v %d", err, stops)
+			}
 		})
 	}
 }

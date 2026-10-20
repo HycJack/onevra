@@ -510,6 +510,9 @@ type ComposerOptions struct {
 	// SendDisabled prevents sending while the host prepares attachments or is
 	// otherwise not ready. Editing and Stop remain available.
 	SendDisabled bool
+	// StopDisabled keeps Stop shown but inactive while the host's run cannot
+	// be interrupted yet. Editing and Send remain available.
+	StopDisabled bool
 }
 
 type composerEnterKey struct{}
@@ -559,7 +562,13 @@ func Composer(c *ui.Context, draft *string, options ComposerOptions) ComposerRes
 					ui.Row(c).Key("trailing").Shrink(0).AlignItems(ui.Center).Gap(8).Children(func() { options.Trailing(c) })
 				}
 				if options.Running && empty {
-					result.Stop = pillAction(c, options.StopLabel, t.Danger.Alpha(.14), t.Danger).Clicked()
+					background, foreground := t.Danger.Alpha(.14), t.Danger
+					if options.StopDisabled {
+						background, foreground = overlayStrong(t), tertiary(t)
+					}
+					ui.Box(c).Disabled(options.StopDisabled).Children(func() {
+						result.Stop = pillAction(c, options.StopLabel, background, foreground).Clicked()
+					})
 				}
 				if !options.Running || !empty {
 					background, foreground := t.Accent, t.AccentText
