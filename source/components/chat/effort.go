@@ -205,13 +205,21 @@ type effortMotion struct {
 	time          *effortTime
 }
 
+// effortFrame is how often the panel's effects move. The trigger's icon,
+// shown all the time, moves every effortIconFrame: its halo breathes and
+// its blocks drift slowly, and each of its frames paints the whole window.
+const (
+	effortFrame     = 16 * time.Millisecond
+	effortIconFrame = 33 * time.Millisecond
+)
+
 // clock advances the animation clock and reports whether the effects
-// move, asking for the next frame when they do.
-func (m effortMotion) clock(p *ui.Painter) (float64, bool) {
+// move, asking for the next frame after every when they do.
+func (m effortMotion) clock(p *ui.Painter, every time.Duration) (float64, bool) {
 	if m.still || m.strength < .001 {
 		return m.time.seconds, false
 	}
-	p.After(16 * time.Millisecond)
+	p.After(every)
 	return m.time.advance(p.Now(), 1+.8*float64(smoothstep(.6, 1, m.strength))), true
 }
 
@@ -292,7 +300,7 @@ func paintEffort(p *ui.Painter, r ui.Rect, e effortPaint) {
 		return ui.Rect{X: min(x0, x1), Y: track.Y, W: abs32(x1 - x0), H: track.H}
 	}
 	end := track.W * clamp01(e.fraction)
-	clock, lively := e.clock(p)
+	clock, lively := e.clock(p, effortFrame)
 	s := e.strength
 	top := smoothstep(.75, 1, s)
 	// The fill runs from indigo across to a violet warming with strength,
@@ -397,7 +405,7 @@ func paintEffortBackdrop(p *ui.Painter, r ui.Rect, radius float32, m effortMotio
 	if wash <= 0 {
 		return
 	}
-	clock, lively := m.clock(p)
+	clock, lively := m.clock(p, effortFrame)
 	// Dark panels need more color for the same presence.
 	boost := float32(1)
 	if t.Dark {
@@ -460,10 +468,15 @@ func paintEffortBackdrop(p *ui.Painter, r ui.Rect, radius float32, m effortMotio
 func paintEffortIcon(p *ui.Painter, r ui.Rect, icon *ui.SVG, m effortMotion) {
 	t := p.Theme()
 	cx, cy := r.X+r.W/2, r.Y+r.H/2
-	clock, lively := m.clock(p)
 	s := m.strength
+	// Below the halo nothing of the icon moves, so it asks for no frames.
+	halo := smoothstep(.4, 1, s)
+	clock, lively := m.time.seconds, false
+	if halo > 0 {
+		clock, lively = m.clock(p, effortIconFrame)
+	}
 	ink := tertiary(t).Mix(effortInk(t, s), min(1, s*1.5))
-	if halo := smoothstep(.4, 1, s); halo > 0 {
+	if halo > 0 {
 		pulse := float32(.6)
 		if lively {
 			pulse = .5 + .5*float32(math.Sin(clock*1.3))

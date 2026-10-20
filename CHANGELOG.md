@@ -9,6 +9,7 @@ User-facing updates for Onevra library consumers.
 - Add `components.TabsOptions.Trailing`.
 - Change `components.ScrollEdgeBar` to make its default surface and edge more opaque.
 - Change `components.Switch` to widen its knob and lift it as draggable glass while held.
+- Fix `chat.EffortPicker` repainting the window while its icon stands still.
 
 ## [0.2026.13] - 2026-10-19
 

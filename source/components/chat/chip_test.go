@@ -199,6 +199,33 @@ func TestEffortStrengthWithOff(t *testing.T) {
 	}
 }
 
+// The trigger's icon shows all the time, and each of its frames paints
+// the whole window again: it asks for frames only while something of it
+// moves, not at the weaker levels, and at most every effortIconFrame.
+func TestEffortIconPaintsOnlyWhileMoving(t *testing.T) {
+	levels := []Option{{ID: "low", Label: "Low"}, {ID: "medium", Label: "Medium"}, {ID: "high", Label: "High"}, {ID: "max", Label: "Max"}}
+	frames := func(selected string) int {
+		var state EffortState
+		paints := 0
+		tt := ui.NewTester(func(c *ui.Context) {
+			ui.Column(c).Children(func() {
+				ui.Box(c).Size(1, 1).Draw(func(*ui.Painter, ui.Rect) { paints++ })
+				EffortPicker(c, &state, EffortPickerOptions{Label: "Effort", Icon: lucide.Brain, Levels: levels, Selected: selected})
+			})
+		}, 300, 100)
+		tt.Advance(2 * effortTransition)
+		paints = 0
+		tt.Advance(time.Second)
+		return paints
+	}
+	if n := frames("medium"); n != 0 {
+		t.Fatalf("a still icon painted %d frames in a second", n)
+	}
+	if n := frames("max"); n == 0 || n > int(time.Second/effortIconFrame)+1 {
+		t.Fatalf("a moving icon painted %d frames in a second", n)
+	}
+}
+
 func TestEffortTimeAdvancesOncePerFrame(t *testing.T) {
 	var clock effortTime
 	start := time.Unix(100, 0)
