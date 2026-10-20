@@ -4,10 +4,13 @@ User-facing updates for Onevra library consumers.
 
 ## [Unreleased]
 
+- Breaking: Remove `chat.SwitchChip` in favor of `components.SwitchOptions.Compact`.
 - Add `chat.ComposerOptions.StopDisabled`.
 - Add `components.HoneycombItem.Caption`.
+- Add `components.ScrollEdgeOptions.Uncolored`.
 - Add `components.SwitchOptions.Compact`.
 - Add `components.TabsOptions.Trailing`.
+- Change `components.ScrollEdge` to tint its progressive blur with the background by default.
 - Change `components.ScrollEdgeBar` to make its default surface and edge more opaque.
 - Change `components.Switch` to widen its knob and lift it as draggable glass while held.
 - Change `shaders.SignalField` to repaint its drift 20 times a second.

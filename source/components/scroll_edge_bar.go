@@ -134,7 +134,7 @@ func ScrollEdgeBar(c *ui.Context, options ScrollEdgeBarOptions, content func()) 
 	o := options.resolved(c)
 	edge := ScrollEdgeOptions{Style: o.Style, Bottom: o.Bottom, Extent: o.Inset + o.Height, Background: o.Background}
 	if o.Style == ScrollEdgeBlur {
-		edge.Color = o.Color
+		edge.Color, edge.Uncolored = o.Color, o.Uncolored
 	}
 	ScrollEdge(c, edge)
 	bar := ui.Row(c).Absolute().Left(o.Inset).Right(o.Inset).Height(o.Height).
@@ -190,9 +190,11 @@ type ScrollEdgeOptions struct {
 	// Background is what the content scrolls over, which ScrollEdgeSoft and
 	// ScrollEdgeHard fade toward; unset, the theme's Background.
 	Background ui.Color
-	// Color tints ScrollEdgeBlur's blur, fading out with it; unset, the
-	// blur is bare.
+	// Color tints ScrollEdgeBlur's blur, fading out with it, so that
+	// controls over it stay legible; unset, Background at 93%.
 	Color ui.Color
+	// Uncolored leaves the blur bare, without Color.
+	Uncolored bool
 }
 
 // ScrollEdge is ScrollEdgeBar's effect alone, for hosts that float their own
@@ -230,9 +232,13 @@ func ScrollEdge(c *ui.Context, options ScrollEdgeOptions) ui.Element {
 		}
 		blur := glass.Blur{Radius: scrollEdgeBlur, Mask: mask}
 		edge.Height(extent + scrollEdgeBlurExtra)
-		if options.Color.A > 0 {
+		color := options.Color
+		if color.A == 0 {
+			color = bg.Alpha(scrollEdgeBlurColor)
+		}
+		if !options.Uncolored {
 			tint := *mask
-			tint.From, tint.To = options.Color, options.Color.Alpha(0)
+			tint.From, tint.To = color, color.Alpha(0)
 			edge.Material(tinted{blur, tint})
 		} else {
 			edge.Material(blur)

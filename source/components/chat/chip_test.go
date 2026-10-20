@@ -10,15 +10,14 @@ import (
 	"github.com/oneo-me/onevra/source/icons/lucide"
 )
 
-func TestChipAndSwitchChip(t *testing.T) {
-	clicks, on := 0, false
+func TestChip(t *testing.T) {
+	clicks := 0
 	tt := ui.NewTester(func(c *ui.Context) {
 		ui.Row(c).Children(func() {
 			if Chip(c, "Branch", ChipOptions{Icon: lucide.GitBranch, Caret: true}).Clicked() {
 				clicks++
 			}
 			Chip(c, "Project", ChipOptions{ReadOnly: true})
-			SwitchChip(c, &on, "Worktree")
 		})
 	}, 500, 100)
 	tt.Key(0, ui.KeyTab)
@@ -26,13 +25,8 @@ func TestChipAndSwitchChip(t *testing.T) {
 	if tt.Focused("Project") {
 		t.Fatal("read-only chip took focus")
 	}
-	for _, label := range []string{"Branch", "Worktree"} {
-		if err := tt.Click(label); err != nil {
-			t.Fatal(err)
-		}
-	}
-	if clicks != 1 || !on {
-		t.Fatalf("clicks=%d on=%v", clicks, on)
+	if err := tt.Click("Branch"); err != nil || clicks != 1 {
+		t.Fatalf("click: %v clicks=%d", err, clicks)
 	}
 }
 

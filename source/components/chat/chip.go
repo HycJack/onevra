@@ -1,8 +1,6 @@
 package chat
 
 import (
-	"time"
-
 	"github.com/egoist/mygo/ui"
 	"github.com/oneo-me/onevra/source/components"
 	"github.com/oneo-me/onevra/source/icons/lucide"
@@ -58,37 +56,6 @@ func Chip(c *ui.Context, label string, options ChipOptions) ui.Element {
 		if options.Caret && !options.ReadOnly {
 			components.Icon(c, lucide.ChevronDown).Size(10.5, 10.5).Shrink(0).TextColor(tertiary(t).Alpha(.7))
 		}
-	})
-	return b
-}
-
-// SwitchChip is a small switch with a Chip's proportions for composer
-// options, such as working in a separate branch. Read Changed for the toggle.
-func SwitchChip(c *ui.Context, on *bool, label string) ui.Element {
-	t := c.Theme()
-	b := ui.SwitchBase(c, on).Label(label).Height(26).MinWidth(0).Shrink(1).Padding(0, 7).Radius(6).AlignItems(ui.Center).Gap(6).
-		Background(ui.Color{})
-	if b.Hovered() || b.Focused() {
-		b.Background(overlay(t))
-	}
-	if b.IsDisabled() {
-		b.Opacity(.7)
-	}
-	var target float32
-	if *on {
-		target = 1
-	}
-	pos := b.Animate("knob", target, 140*time.Millisecond)
-	b.Children(func() {
-		off := t.Border.Mix(t.Text, .12)
-		ui.Box(c).Size(22, 13).Shrink(0).Radius(6.5).Background(off.Mix(t.Accent, pos)).Draw(func(p *ui.Painter, r ui.Rect) {
-			in := float32(1.5)
-			d := r.H - 2*in
-			knob := ui.Rect{X: r.X + in + pos*(r.W-r.H), Y: r.Y + in, W: d, H: d}
-			p.Shadow(knob, d/2, 0, .5, 1.5, 0, ui.RGBA(0, 0, 0, .2))
-			p.Fill(knob, ui.RGB(255, 255, 255), d/2)
-		})
-		components.Text(c, label).MinWidth(0).SingleLine().Ellipsis("…").FontSize(12.5).TextColor(secondary(t))
 	})
 	return b
 }

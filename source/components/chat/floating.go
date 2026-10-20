@@ -90,7 +90,8 @@ func FloatingConversationWith(c *ui.Context, layout *FloatingConversationState, 
 			card = restingCardHeight
 		}
 		edge := 8 + layout.footerHeight + card/2 - edgeBlurFade
-		components.ScrollEdge(c, components.ScrollEdgeOptions{Style: components.ScrollEdgeBlur, Bottom: true, Extent: edge}).Key("bottom-edge")
+		// Bare blur: the default background tint would wash out the transcript.
+		components.ScrollEdge(c, components.ScrollEdgeOptions{Style: components.ScrollEdgeBlur, Bottom: true, Extent: edge, Uncolored: true}).Key("bottom-edge")
 		if !follow {
 			b := components.Button(c, "", components.ButtonGhost).Label(jumpLabel).Absolute().Attach(ui.AnchorBottom, ui.AnchorBottom).
 				Bottom(height+12).Size(32, 32).Padding(0).Radius(16)

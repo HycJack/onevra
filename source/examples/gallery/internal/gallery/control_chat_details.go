@@ -107,7 +107,9 @@ func chatDemoFooter(c *ui.Context, s *chatDemoState) {
 		SearchLabel: tr(c, "chatSearchBranches"), EmptyText: tr(c, "chatNoResults"), Searchable: 2}); r.Chosen != "" {
 		s.branch = r.Chosen
 	}
-	chat.SwitchChip(c, &s.worktree, tr(c, "chatWorktree"))
+	// The label matches the chips beside it.
+	components.Switch(c, &s.worktree, tr(c, "chatWorktree"), components.SwitchOptions{Compact: true}).
+		AlignItems(ui.Center).Margin(0, 0, 0, 7).FontSize(12.5).TextColor(t.Text.Mix(t.TextMuted, .45))
 	ui.Spacer(c)
 	if s.running() != nil {
 		chat.Shimmer(c, tr(c, "chatStreaming"), 12.5, t.TextMuted, t.Text)

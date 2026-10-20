@@ -109,6 +109,31 @@ func TestScrollEdge(t *testing.T) {
 	}
 }
 
+// A blurred edge alone takes the background over it by default, so text
+// over it stays legible, and stays bare uncolored.
+func TestScrollEdgeBlurColor(t *testing.T) {
+	for _, tc := range []struct {
+		options ScrollEdgeOptions
+		r       [2]uint8 // the edge's red bounds over black
+	}{
+		{ScrollEdgeOptions{Style: ScrollEdgeBlur, Bottom: true, Extent: 40}, [2]uint8{218, 255}},
+		{ScrollEdgeOptions{Style: ScrollEdgeBlur, Bottom: true, Extent: 40, Uncolored: true}, [2]uint8{0, 16}},
+	} {
+		tt := ui.NewTester(func(c *ui.Context) {
+			c.SetTheme(theme.Palette(false))
+			ui.Box(c).Fill().Clip().Children(func() {
+				ui.Box(c).Fill().Background(ui.RGB(0, 0, 0))
+				ScrollEdge(c, tc.options)
+			})
+		}, 300, 300)
+		img := tt.Image()
+		s := float32(img.Bounds().Dx()) / 300
+		if px := img.RGBAAt(int(150*s), int(294*s)); px.R < tc.r[0] || px.R > tc.r[1] {
+			t.Fatalf("%+v: edge %v", tc.options, px)
+		}
+	}
+}
+
 // A color lays over the bar in every style, under its controls; glass and
 // blur take the background by default unless uncolored.
 func TestScrollEdgeBarColor(t *testing.T) {
