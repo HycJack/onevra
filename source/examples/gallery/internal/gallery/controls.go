@@ -127,7 +127,7 @@ var controlCatalog = []controlExample{
 	{"Progress", "Progress", "Feedback & overlays", nil, nil},
 	{"Skeleton", "Skeleton", "Feedback & overlays", []string{"Default", "Avatar", "Content"}, controlSkeleton},
 	{"Stepper", "Steps", "Feedback & overlays", []string{"Horizontal", "Vertical", "Compact"}, controlStepper},
-	{"Tabs", "Tabs", "Actions & navigation", []string{"Underline", "Segmented control", "Highlight", "Custom leading"}, controlTabs},
+	{"Tabs", "Tabs", "Actions & navigation", []string{"Underline", "Segmented control", "Highlight", "Custom leading", "Custom trailing"}, controlTabs},
 	{"Floating button group", "Floating button group", "Actions & navigation", []string{"Muted", "Raised", "Vertical"}, controlFloatingButtonGroup},
 	{"Disclosure", "Disclosure", "Layout & containers", nil, nil},
 	{"Image", "Images", "Content display", []string{"Contain", "Cover", "Stretch", "Rounded", "Grayscale"}, controlImage},

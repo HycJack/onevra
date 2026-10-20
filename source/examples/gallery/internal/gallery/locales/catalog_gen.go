@@ -8974,6 +8974,16 @@ func (msgs Messages) SidebarCustomLeading() string {
 	return Catalog.Format(msgs.locale, "sidebarCustomLeading", nil)
 }
 
+// TabsCustomTrailing says "Custom trailing"
+// in the language the app shows.
+func TabsCustomTrailing() string { return In(i18n.Locale()).TabsCustomTrailing() }
+
+// TabsCustomTrailing says "Custom trailing"
+// in the language of msgs.
+func (msgs Messages) TabsCustomTrailing() string {
+	return Catalog.Format(msgs.locale, "tabsCustomTrailing", nil)
+}
+
 // Explorer says "Explorer"
 // in the language the app shows.
 func Explorer() string { return In(i18n.Locale()).Explorer() }

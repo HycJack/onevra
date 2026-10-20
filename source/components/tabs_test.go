@@ -58,6 +58,30 @@ func TestTabsWithLeading(t *testing.T) {
 	}
 }
 
+// Each tab's trailing slot follows its label and leaves the tab clickable.
+func TestTabsTrailing(t *testing.T) {
+	for _, variant := range []TabsVariant{TabsUnderline, TabsSegmented, TabsHighlight} {
+		selected := 0
+		counts := []string{"[3]", "[5]"}
+		tt := ui.NewTester(func(c *ui.Context) {
+			TabsWith(c, &selected, TabsOptions{Variant: variant, Trailing: func(c *ui.Context, i int, _ float32) { Text(c, counts[i]) }}, "General", "Appearance")
+		}, 400, 100)
+		for i, label := range []string{"General", "Appearance"} {
+			count, ok := tt.Find(counts[i])
+			text, _ := tt.Find(label)
+			if !ok || count.X < text.X+text.W {
+				t.Fatalf("variant=%v: %s at %v, label at %v", variant, counts[i], count, text)
+			}
+		}
+		if err := tt.Click("[5]"); err != nil {
+			t.Fatal(err)
+		}
+		if selected != 1 {
+			t.Errorf("variant=%v: selected=%d, want 1", variant, selected)
+		}
+	}
+}
+
 // A tab's context menu opens on a right-click without choosing it, and a tab
 // whose builder is nil has none.
 func TestTabsMenu(t *testing.T) {

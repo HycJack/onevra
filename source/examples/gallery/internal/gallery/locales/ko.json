@@ -888,6 +888,7 @@
   "sidebarFileTree": "파일 트리",
   "sidebarCollapsibleGroups": "접을 수 있는 그룹",
   "sidebarCustomLeading": "사용자 지정 앞부분",
+  "tabsCustomTrailing": "사용자 지정 뒷부분",
   "explorer": "탐색기",
   "workspaces": "작업 공간",
   "addWorkspace": "작업 공간 추가",

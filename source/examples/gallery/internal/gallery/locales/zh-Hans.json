@@ -888,6 +888,7 @@
   "sidebarFileTree": "文件树",
   "sidebarCollapsibleGroups": "可折叠分组",
   "sidebarCustomLeading": "自定义前置内容",
+  "tabsCustomTrailing": "自定义后置内容",
   "explorer": "资源管理器",
   "workspaces": "工作区",
   "addWorkspace": "添加工作区",

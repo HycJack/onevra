@@ -1289,6 +1289,7 @@
   "sidebarFileTree": "File tree",
   "sidebarCollapsibleGroups": "Collapsible groups",
   "sidebarCustomLeading": "Custom leading",
+  "tabsCustomTrailing": "Custom trailing",
   "explorer": "Explorer",
   "workspaces": "Workspaces",
   "addWorkspace": "Add workspace",

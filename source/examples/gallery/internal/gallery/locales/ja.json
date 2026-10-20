@@ -888,6 +888,7 @@
   "sidebarFileTree": "ファイルツリー",
   "sidebarCollapsibleGroups": "折りたためるグループ",
   "sidebarCustomLeading": "カスタムの先頭要素",
+  "tabsCustomTrailing": "カスタムの末尾要素",
   "explorer": "エクスプローラ",
   "workspaces": "ワークスペース",
   "addWorkspace": "ワークスペースを追加",

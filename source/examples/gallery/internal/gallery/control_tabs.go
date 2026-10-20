@@ -31,6 +31,16 @@ func controlTabs(c *ui.Context, s *controlState, variant string) {
 			},
 		}, tr(c, "general"), tr(c, "style"))
 		return
+	case "Custom trailing":
+		// Each tab ends with an application-built count.
+		counts := []string{"12", "3"}
+		components.TabsWith(c, &s.index, components.TabsOptions{
+			Variant: components.TabsSegmented,
+			Trailing: func(c *ui.Context, i int, _ float32) {
+				components.Text(c, counts[i]).TextColor(c.Theme().TextMuted)
+			},
+		}, tr(c, "general"), tr(c, "style"))
+		return
 	}
 	components.Tabs(c, &s.index, tabs, tr(c, "general"), tr(c, "style"))
 }

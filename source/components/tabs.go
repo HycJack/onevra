@@ -53,6 +53,9 @@ type TabsOptions struct {
 	// Leading, when set, builds the slot before each tab's label, as
 	// TabsWithLeading describes.
 	Leading func(c *ui.Context, i int, size float32)
+	// Trailing, when set, builds the slot after each tab's label, for
+	// example a count, receiving and inheriting what Leading does.
+	Trailing func(c *ui.Context, i int, size float32)
 	// Menu, when set, returns the builder of tab i's context menu, or nil for
 	// a tab without one. The menu opens where the tab is right-clicked,
 	// without choosing it, and, while it has the focus, from the menu key or
@@ -72,8 +75,8 @@ func TabsWith(c *ui.Context, selected *int, options TabsOptions, labels ...strin
 	return underlinedTabs(c, tabs, selected, labels, options)
 }
 
-// tabContent builds tab i's leading slot, when given, and its label, and
-// gives the tab its context menu.
+// tabContent builds tab i's leading and trailing slots, when given, around
+// its label, and gives the tab its context menu.
 func tabContent(c *ui.Context, tab ui.Element, i int, label string, options TabsOptions) ui.Element {
 	t := c.Theme()
 	if options.Menu != nil {
@@ -87,6 +90,9 @@ func tabContent(c *ui.Context, tab ui.Element, i int, label string, options Tabs
 			options.Leading(c, i, t.Space(3.5))
 		}
 		text = Text(c, label).SingleLine()
+		if options.Trailing != nil {
+			options.Trailing(c, i, t.Space(3.5))
+		}
 	})
 	return text
 }
