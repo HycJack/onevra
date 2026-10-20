@@ -49,6 +49,12 @@ const rippleLife = 1400 * time.Millisecond
 // drift is slow, so the jump once in this period goes unnoticed.
 const timeWrap = 3600.0
 
+// driftFrame is how often the ambient drift moves on. It is slow, and each
+// of its frames paints the whole window again, so following every refresh
+// of the display would cost much for nothing to see. Ripples spread fast,
+// and move with the display.
+const driftFrame = 50 * time.Millisecond
+
 type ripple struct {
 	x, y float32
 	at   time.Time
@@ -205,8 +211,11 @@ func (fx *effect) build(c *ui.Context, o Options) ui.Element {
 			Float(fx.level, level).
 			Float(fx.scale, scale)
 		fx.shader.Draw(p, r, shader.Options{Values: s.values})
-		if drifting || live > 0 {
+		switch {
+		case live > 0:
 			p.AnimationFrame()
+		case drifting:
+			p.After(driftFrame)
 		}
 	})
 }
