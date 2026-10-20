@@ -119,7 +119,7 @@ var controlCatalog = []controlExample{
 	{"TagInput", "TagInput", "Text input", []string{"Default", "Empty"}, controlTagInput},
 	{"Button", "Buttons", "Actions & navigation", []string{"Button", "Icon and text", "IconButton", "Toolbar", "ToggleButton"}, controlButton},
 	{"HoldToConfirm", "HoldToConfirm", "Actions & navigation", []string{"Accent", "Danger", "Neutral"}, controlHoldToConfirm},
-	{"Selection", "Selection", "Selection & values", []string{"Checkbox", "Switch", "Radio"}, controlSelection},
+	{"Selection", "Selection", "Selection & values", []string{"Checkbox", "Switch", "Compact switch", "Radio"}, controlSelection},
 	{"Select", "Selects", "Selection & values", []string{"Default", "Selected", "Searchable", "NativeSelect"}, controlSelect},
 	{"Menu", "Menus", "Feedback & overlays", []string{"Left-click", "Right-click"}, controlMenu},
 	{"NumberInput", "NumberInput", "Selection & values", []string{"Integer", "Decimal", "Scrub", "Without stepper"}, controlNumberInput},

@@ -28,6 +28,7 @@ var updatedPages = map[string]bool{
 	"controls/Data charts":  true,
 	"controls/Flow diagram": true,
 	"controls/Honeycomb":    true,
+	"controls/Selection":    true,
 	"controls/Sidebar":      true,
 	"controls/Tabs":         true,
 	"controls/Toast":        true,

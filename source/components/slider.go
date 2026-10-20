@@ -160,6 +160,12 @@ func sliderKnobRect(t *ui.Theme, x, y, held float32) ui.Rect {
 
 // MyGo owns the glass rendering and backdrop sampling.
 func paintSliderKnob(p *ui.Painter, t *ui.Theme, k ui.Rect, held float32, focus bool) {
+	paintKnob(p, k, held, focus, func(rad float32) { glass.Paint(p, k, rad, glass.Glass{Style: glass.Clear}) })
+}
+
+// paintKnob paints an opaque knob that turns into the glass lens paints
+// as held goes to 1.
+func paintKnob(p *ui.Painter, k ui.Rect, held float32, focus bool, lens func(rad float32)) {
 	face, drop := ui.RGB(255, 255, 255), ui.RGBA(0, 0, 0, .14)
 	rad := min(k.W, k.H) / 2
 	if held > 0 {
@@ -170,7 +176,7 @@ func paintSliderKnob(p *ui.Painter, t *ui.Theme, k ui.Rect, held float32, focus 
 		p.Shadow(k, rad, 0, 1.5, 7, 0, ui.RGBA(0, 0, 0, .1*(1-held)))
 	}
 	if held > 0 {
-		glass.Paint(p, k, rad, glass.Glass{Style: glass.Clear})
+		lens(rad)
 	}
 	// Keep the original opaque face at rest, revealing Clear glass on press.
 	if held < 1 {

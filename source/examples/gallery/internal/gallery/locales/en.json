@@ -162,6 +162,7 @@
   "componentStepper": "Stepper",
   "componentStepslider": "StepSlider",
   "componentSwitch": "Switch",
+  "compactSwitch": "Compact switch",
   "componentTable": "Table",
   "componentTabs": "Tabs",
   "componentTerminal": "Terminal",

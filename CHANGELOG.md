@@ -5,8 +5,10 @@ User-facing updates for Onevra library consumers.
 ## [Unreleased]
 
 - Add `components.HoneycombItem.Caption`.
+- Add `components.SwitchOptions.Compact`.
 - Add `components.TabsOptions.Trailing`.
 - Change `components.ScrollEdgeBar` to make its default surface and edge more opaque.
+- Change `components.Switch` to widen its knob and lift it as draggable glass while held.
 
 ## [0.2026.13] - 2026-10-19
 

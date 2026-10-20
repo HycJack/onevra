@@ -6,7 +6,7 @@ The [components package](../../source/components/doc.go) provides common control
 
 Shell reuses the common Icon and IconButton components; components remain independent of Shell.
 
-Common controls expose at most one visual variant axis, such as button style. Each control has one theme-scaled standard size rather than a separate size enumeration. Interaction and value states are not visual variants.
+Common controls expose at most one visual variant axis, such as button style. Each control has one theme-scaled standard size rather than a separate size enumeration; a few add a compact form for dense hosts. Interaction and value states are not visual variants.
 
 ## Composition and ownership
 

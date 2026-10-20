@@ -1076,6 +1076,16 @@ func (msgs Messages) ComponentSwitch() string {
 	return Catalog.Format(msgs.locale, "componentSwitch", nil)
 }
 
+// CompactSwitch says "Compact switch"
+// in the language the app shows.
+func CompactSwitch() string { return In(i18n.Locale()).CompactSwitch() }
+
+// CompactSwitch says "Compact switch"
+// in the language of msgs.
+func (msgs Messages) CompactSwitch() string {
+	return Catalog.Format(msgs.locale, "compactSwitch", nil)
+}
+
 // ComponentTable says "Table"
 // in the language the app shows.
 func ComponentTable() string { return In(i18n.Locale()).ComponentTable() }

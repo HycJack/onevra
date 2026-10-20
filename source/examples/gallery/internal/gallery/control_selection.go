@@ -8,7 +8,7 @@ func controlSelection(c *ui.Context, s *controlState, component string) {
 	switch component {
 	case "Checkbox":
 		controlCheckbox(c, s, component)
-	case "Switch":
+	case "Switch", "Compact switch":
 		controlSwitch(c, s, component)
 	case "Radio":
 		controlRadio(c, s, component)

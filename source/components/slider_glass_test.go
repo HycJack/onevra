@@ -84,3 +84,31 @@ func TestSliderPressAndReleaseAppearance(t *testing.T) {
 		}
 	}
 }
+
+// paintClearLens builds glass.Paint's Clear parameters itself; at the
+// plugin's own bezel it must paint the same pixels.
+func TestClearLensMatchesGlass(t *testing.T) {
+	k := ui.Rect{X: 20, Y: 15, W: 50, H: 34}
+	for _, scale := range []float32{1, 2} {
+		images := [2][]byte{}
+		for i := range images {
+			tt := ui.NewTester(func(c *ui.Context) {
+				ui.Box(c).Fill().Background(ui.RGB(250, 250, 250)).Draw(func(p *ui.Painter, r ui.Rect) {
+					for x := float32(0); x < r.W; x += 8 {
+						p.Fill(ui.Rect{X: x, Y: 0, W: 4, H: r.H}, ui.RGB(30, 90, 200), 0)
+					}
+					if i == 0 {
+						glass.Paint(p, k, k.H/2, glass.Glass{Style: glass.Clear})
+					} else {
+						paintClearLens(p, k, k.H/2, min(36, k.H/2))
+					}
+				})
+			}, 90, 64)
+			tt.SetScale(scale)
+			images[i] = bytes.Clone(tt.Image().Pix)
+		}
+		if !bytes.Equal(images[0], images[1]) {
+			t.Fatalf("scale %v: paintClearLens no longer matches glass.Paint's Clear material", scale)
+		}
+	}
+}
